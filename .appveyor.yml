@@ -1,0 +1,67 @@
+os: Visual Studio 2017
+platform: x64
+
+#
+# Custom environment variables
+#
+environment:
+  global:
+    CYG_ROOT: C:\cygwin_bareflank
+    CYG_BASH: C:\cygwin_bareflank\bin\bash
+    CYG_MIRROR: http://mirrors.kernel.org/sourceware/cygwin/
+    CYG_PACKAGES: git,make,gcc-core,gcc-g++,nasm,clang,clang++,cmake,wget
+
+test: off
+
+#
+# Setup Cygwin
+#
+install:
+  - ps: 'Start-FileDownload "https://cygwin.com/setup-x86_64.exe" -FileName "setup-x86_64.exe"'
+  - 'setup-x86_64.exe --quiet-mode --no-shortcuts --only-site --root "%CYG_ROOT%" --site "%CYG_MIRROR%" --local-package-dir "%CYG_ROOT%\var\cache\setup" --packages "%CYG_PACKAGES%"'
+  - 'copy setup-x86_64.exe %CYG_ROOT%\bin\'
+
+#
+# Build
+#
+build_script:
+
+  #
+  # bfsdk (Cygwin)
+  #
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER; git clone https://github.com/Bareflank/bfsdk.git bfsdk_cygwin"'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER; mkdir bfsdk_cygwin/build_cygwin"'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/bfsdk_cygwin/build_cygwin; cmake .."'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/bfsdk_cygwin/build_cygwin; make install"'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/bfsdk_cygwin/build_cygwin; ../scripts/export_path.sh"'
+
+  #
+  # bfvmm (Cygwin)
+  #
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER; mkdir build_cygwin"'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; cmake .."'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; make"'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; make test"'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; make install"'
+
+  #
+  # bfsdk (MSBuild)
+  #
+  - git clone https://github.com/Bareflank/bfsdk.git bfsdk_msbuild"
+  - mkdir bfsdk_msbuild\build_msbuild
+  - cd bfsdk_msbuild\build_msbuild
+  - cmake -G "Visual Studio 15 2017 Win64" ..
+  - msbuild bfsdk.sln
+  - cmake --build . --target install
+  - cd ..
+
+  #
+  # bfvmm (MSBuild)
+  #
+  - mkdir build_msbuild
+  - cd build_msbuild
+  - cmake -G "Visual Studio 15 2017 Win64" ..
+  - msbuild bfvmm.sln
+  - ctest
+  - cmake --build . --target install
+  - cd ..

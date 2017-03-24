@@ -1,0 +1,197 @@
+#
+# Configuration
+#
+
+language: cpp
+
+dist: trusty
+sudo: required
+
+#
+# Compilers
+#
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-trusty-3.8
+      - llvm-toolchain-trusty-3.9
+      - llvm-toolchain-trusty-4.0
+    packages:
+      - clang-3.8
+      - clang-3.9
+      - clang-4.0
+      - clang-tidy-4.0
+      - clang-format-4.0
+      - llvm-4.0
+      - gcc-6
+      - g++-6
+      - nasm
+      - doxygen
+
+#
+# Update Build Environment
+#
+# Currently GCC and CMake are out of date. We require:
+# - GCC 5+
+# - CMake 3.4+
+#
+# The following updates these packages, along with settings added to the addon
+# pages like gcc. Also to keep things simple, we install cmake into the home
+# directory. Finally, we add the bfprefix to the path so that installed scripts
+# can be located
+#
+before_install:
+  - mkdir $HOME/usr
+  - export PATH="$HOME/usr/bin:$PATH"
+  - wget https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.sh
+  - chmod +x cmake-3.7.2-Linux-x86_64.sh
+  - ./cmake-3.7.2-Linux-x86_64.sh --prefix=$HOME/usr --exclude-subdir --skip-license
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 100
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 100
+  - export PATH="$HOME/bfprefix/bin:$PATH"
+
+#
+# Build Dependencies
+#
+before_script:
+  - mkdir build
+  - cd build
+
+#
+# bfsdk
+#
+  - git clone https://github.com/Bareflank/bfsdk.git
+  - mkdir bfsdk/build
+  - pushd bfsdk/build
+  - cmake ..
+  - make install
+  - popd
+
+#
+# Build Matrix
+#
+matrix:
+  include:
+
+  #
+  # Doxygen
+  #
+  - os: linux
+    env:
+      - TEST="Doxygen"
+    script:
+      - cd ..
+      - doxygen .doxygen.txt
+      - |
+        if [[ -s doxygen_warnings.txt ]]; then
+          echo "You must fix doxygen before submitting a pull request"
+          echo ""
+          cat doxygen_warnings.txt
+          exit -1
+        fi
+
+  #
+  # Git Check
+  #
+  - os: linux
+    env:
+      - TEST="Git Check"
+    script:
+      - |
+        if [[ -n $(git diff --check HEAD^) ]]; then
+          echo "You must remove whitespace before submitting a pull request"
+          echo ""
+          git diff --check HEAD^
+          exit -1
+        fi
+
+  #
+  # Astyle Format
+  #
+  - os: linux
+    env:
+      - TEST="Astyle Format"
+    script:
+      - cmake ..
+      - make install
+      - bareflank_astyle_format.sh ..
+      - |
+        if [[ -n $(git diff) ]]; then
+          echo "You must run bareflank_astyle_format.sh before submitting a pull request"
+          echo ""
+          git diff
+          exit -1
+        fi
+
+  #
+  # Clang Tidy
+  #
+  - os: linux
+    env:
+      - TEST="Clang Tidy"
+    script:
+      - |
+        cmake \
+          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+          ..
+      - make install
+      - bareflank_clang_tidy.sh
+
+  #
+  # Codecov
+  #
+  - os: linux
+    env:
+      - TEST="Codecov"
+    install:
+      - pip install --user git+git://github.com/eddyxu/cpp-coveralls.git
+    script:
+      - |
+        cmake \
+          -DENABLE_COVERAGE=ON \
+          ..
+      - make
+      - make test
+      - cd ..
+      - bash <(curl -s https://codecov.io/bash) -t 6b48f961-b643-459e-ada7-16b2b0678761 -x "llvm-cov-4.0 gcov" -c
+
+  #
+  # Google Address Sanitizer
+  #
+  - os: linux
+    env:
+      - TEST="Google Address Sanitizer"
+    script:
+      - |
+        cmake \
+          -DENABLE_DYNAMIC_ASAN=on \
+          ..
+      - make
+      - make test
+
+  #
+  # Google Undefined Sanitizer
+  #
+  - os: linux
+    env:
+      - TEST="Google Undefined Sanitizer"
+    script:
+      - |
+        cmake \
+          -DENABLE_DYNAMIC_USAN=on \
+          ..
+      - make
+      - make test
+
+  #
+  # Native Test
+  #
+  - os: linux
+    env:
+      - TEST="Native Test"
+    script:
+      - cmake ..
+      - make
+      - make test
+      - make install
