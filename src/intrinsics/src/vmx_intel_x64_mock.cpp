@@ -25,7 +25,7 @@
 #include <intrinsics/vmx_intel_x64.h>
 
 extern "C" bool
-__attribute__((weak)) __vmxon(void *ptr) noexcept
+__vmxon(void *ptr) noexcept
 {
     (void) ptr;
 
@@ -34,23 +34,14 @@ __attribute__((weak)) __vmxon(void *ptr) noexcept
 }
 
 extern "C" bool
-__attribute__((weak)) __vmxoff(void) noexcept
+__vmxoff(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" bool
-__attribute__((weak)) __vmclear(void *ptr) noexcept
-{
-    (void) ptr;
-
-    std::cerr << __FUNC__ << " called" << '\n';
-    abort();
-}
-
-extern "C" bool
-__attribute__((weak)) __vmptrld(void *ptr) noexcept
+__vmclear(void *ptr) noexcept
 {
     (void) ptr;
 
@@ -59,7 +50,7 @@ __attribute__((weak)) __vmptrld(void *ptr) noexcept
 }
 
 extern "C" bool
-__attribute__((weak)) __vmptrst(void *ptr) noexcept
+__vmptrld(void *ptr) noexcept
 {
     (void) ptr;
 
@@ -68,7 +59,16 @@ __attribute__((weak)) __vmptrst(void *ptr) noexcept
 }
 
 extern "C" bool
-__attribute__((weak)) __vmread(uint64_t field, const uint64_t *value) noexcept
+__vmptrst(void *ptr) noexcept
+{
+    (void) ptr;
+
+    std::cerr << __FUNC__ << " called" << '\n';
+    abort();
+}
+
+extern "C" bool
+__vmread(uint64_t field, const uint64_t *value) noexcept
 {
     (void) value;
 
@@ -78,7 +78,7 @@ __attribute__((weak)) __vmread(uint64_t field, const uint64_t *value) noexcept
 }
 
 extern "C" bool
-__attribute__((weak)) __vmwrite(uint64_t field, uint64_t value) noexcept
+__vmwrite(uint64_t field, uint64_t value) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << '\n';
     std::cerr << "    - field: " << view_as_pointer(field) << '\n';
@@ -87,14 +87,14 @@ __attribute__((weak)) __vmwrite(uint64_t field, uint64_t value) noexcept
 }
 
 extern "C" bool
-__attribute__((weak)) __vmlaunch_demote(void) noexcept
+__vmlaunch_demote(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" bool
-__attribute__((weak)) __invept(uint64_t type, void *ptr) noexcept
+__invept(uint64_t type, void *ptr) noexcept
 {
     (void) type;
     (void) ptr;
@@ -104,7 +104,7 @@ __attribute__((weak)) __invept(uint64_t type, void *ptr) noexcept
 }
 
 extern "C" bool
-__attribute__((weak)) __invvpid(uint64_t type, void *ptr) noexcept
+__invvpid(uint64_t type, void *ptr) noexcept
 {
     (void) type;
     (void) ptr;

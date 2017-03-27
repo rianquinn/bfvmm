@@ -25,8 +25,8 @@
 namespace bfn
 {
 
-void
-__attribute__((weak)) map_with_cr3(
+EXPORT_MEMORY_MANAGER void
+WEAK_SYM map_with_cr3(
     uintptr_t vmap,
     uintptr_t virt,
     uintptr_t cr3,

@@ -19,21 +19,28 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#include <bfgsl.h>
-#include <bfdebug.h>
+#ifndef THREAD_CONTEXT_X64_H
+#define THREAD_CONTEXT_X64_H
 
-#include <intrinsics/debug_x64.h>
+#include <cstdint>
 
-extern "C" uint64_t
-__read_dr7(void) noexcept
-{
-    std::cerr << __FUNC__ << " called" << '\n';
-    abort();
-}
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
 
-extern "C" void
-__write_dr7(uint64_t val) noexcept
-{
-    std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
-    abort();
-}
+#include <bfexports.h>
+
+#ifdef COMPILING_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
+extern "C" EXPORT_INTRINSICS uint64_t thread_context_cpuid(void);
+extern "C" EXPORT_INTRINSICS uint64_t thread_context_tlsptr(void);
+
+#endif

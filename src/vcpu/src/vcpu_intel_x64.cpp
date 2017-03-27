@@ -20,7 +20,9 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <bfgsl.h>
+
 #include <vcpu/vcpu_intel_x64.h>
+#include <exit_handler/exit_handler_intel_x64_support.h>
 
 vcpu_intel_x64::vcpu_intel_x64(
     vcpuid::type id,
@@ -75,6 +77,7 @@ vcpu_intel_x64::init(user_data *data)
     m_state_save->exit_handler_ptr = reinterpret_cast<uintptr_t>(m_exit_handler.get());
 
     m_vmcs->set_state_save(m_state_save.get());
+    m_vmcs->set_exit_handler_entry(reinterpret_cast<void *>(exit_handler_entry));
 
     m_exit_handler->set_vmcs(m_vmcs.get());
     m_exit_handler->set_state_save(m_state_save.get());

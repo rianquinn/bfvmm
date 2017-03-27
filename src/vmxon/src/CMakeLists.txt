@@ -23,7 +23,12 @@ list(APPEND SOURCES
     vmxon_intel_x64.cpp
 )
 
-add_library(bfvmm_vmxon ${SOURCES})
+add_library(vmxon OBJECT ${SOURCES})
+add_library(bfvmm_vmxon SHARED $<TARGET_OBJECTS:vmxon>)
+add_library(bfvmm_vmxon_static STATIC $<TARGET_OBJECTS:vmxon>)
+
+target_link_libraries(bfvmm_vmxon bfvmm_intrinsics)
+target_link_libraries(bfvmm_vmxon bfvmm_memory_manager)
 
 # ------------------------------------------------------------------------------
 # Install
@@ -31,4 +36,5 @@ add_library(bfvmm_vmxon ${SOURCES})
 
 if(CMAKE_TOOLCHAIN_FILE)
     install(TARGETS bfvmm_vmxon DESTINATION ${BAREFLANK_SYSROOT_PATH}/lib)
+    install(TARGETS bfvmm_vmxon_static DESTINATION ${BAREFLANK_SYSROOT_PATH}/lib)
 endif()

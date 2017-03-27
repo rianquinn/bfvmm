@@ -25,112 +25,112 @@
 #include <intrinsics/srs_x64.h>
 
 extern "C" uint16_t
-__attribute__((weak)) __read_es(void) noexcept
+__read_es(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __write_es(uint16_t val) noexcept
+__write_es(uint16_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint16_t
-__attribute__((weak)) __read_cs(void) noexcept
+__read_cs(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __write_cs(uint16_t val) noexcept
+__write_cs(uint16_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint16_t
-__attribute__((weak)) __read_ss(void) noexcept
+__read_ss(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __write_ss(uint16_t val) noexcept
+__write_ss(uint16_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint16_t
-__attribute__((weak)) __read_ds(void) noexcept
+__read_ds(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __write_ds(uint16_t val) noexcept
+__write_ds(uint16_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint16_t
-__attribute__((weak)) __read_fs(void) noexcept
+__read_fs(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __write_fs(uint16_t val) noexcept
+__write_fs(uint16_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint16_t
-__attribute__((weak)) __read_gs(void) noexcept
+__read_gs(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __write_gs(uint16_t val) noexcept
+__write_gs(uint16_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint16_t
-__attribute__((weak)) __read_ldtr(void) noexcept
+__read_ldtr(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __write_ldtr(uint16_t val) noexcept
+__write_ldtr(uint16_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint16_t
-__attribute__((weak)) __read_tr(void) noexcept
+__read_tr(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __write_tr(uint16_t val) noexcept
+__write_tr(uint16_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();

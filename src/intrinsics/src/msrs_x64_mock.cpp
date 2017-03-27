@@ -25,7 +25,7 @@
 #include <intrinsics/msrs_x64.h>
 
 extern "C" uint64_t
-__attribute__((weak)) __read_msr(uint32_t addr) noexcept
+__read_msr(uint32_t addr) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << '\n';
     std::cerr << "    - msr: " << view_as_pointer(addr) << '\n';
@@ -33,7 +33,7 @@ __attribute__((weak)) __read_msr(uint32_t addr) noexcept
 }
 
 extern "C" void
-__attribute__((weak)) __write_msr(uint32_t addr, uint64_t val) noexcept
+__write_msr(uint32_t addr, uint64_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << '\n';
     std::cerr << "    - msr: " << view_as_pointer(addr) << '\n';

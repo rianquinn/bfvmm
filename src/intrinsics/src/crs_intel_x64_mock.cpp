@@ -25,56 +25,56 @@
 #include <intrinsics/crs_intel_x64.h>
 
 extern "C" uint64_t
-__attribute__((weak)) __read_cr0(void) noexcept
+__read_cr0(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __write_cr0(uint64_t val) noexcept
+__write_cr0(uint64_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint64_t
-__attribute__((weak)) __read_cr2(void) noexcept
+__read_cr2(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __write_cr2(uint64_t val) noexcept
+__write_cr2(uint64_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint64_t
-__attribute__((weak)) __read_cr3(void) noexcept
+__read_cr3(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __write_cr3(uint64_t val) noexcept
+__write_cr3(uint64_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint64_t
-__attribute__((weak)) __read_cr4(void) noexcept
+__read_cr4(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __write_cr4(uint64_t val) noexcept
+__write_cr4(uint64_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();

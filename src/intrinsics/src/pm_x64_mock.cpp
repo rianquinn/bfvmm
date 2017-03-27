@@ -25,14 +25,14 @@
 #include <intrinsics/pm_x64.h>
 
 extern "C" void
-__attribute__((weak)) __halt(void) noexcept
+__halt(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __stop(void) noexcept
+__stop(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();

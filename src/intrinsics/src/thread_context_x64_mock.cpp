@@ -19,12 +19,12 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#include <cstdint>
+#include <intrinsics/thread_context_x64.h>
 
 extern "C" uint64_t
-__attribute__((weak)) thread_context_cpuid(void)
+thread_context_cpuid(void)
 { return 0; }
 
 extern "C" uint64_t
-__attribute__((weak)) thread_context_tlsptr(void)
+thread_context_tlsptr(void)
 { return 0; }

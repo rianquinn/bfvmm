@@ -28,35 +28,35 @@
 #include <intrinsics/cpuid_x64.h>
 
 extern "C" uint32_t
-__attribute__((weak)) __cpuid_eax(uint32_t val) noexcept
+__cpuid_eax(uint32_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint32_t
-__attribute__((weak)) __cpuid_ebx(uint32_t val) noexcept
+__cpuid_ebx(uint32_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint32_t
-__attribute__((weak)) __cpuid_ecx(uint32_t val) noexcept
+__cpuid_ecx(uint32_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint32_t
-__attribute__((weak)) __cpuid_edx(uint32_t val) noexcept
+__cpuid_edx(uint32_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __cpuid(void *rax, void *rbx, void *rcx, void *rdx) noexcept
+__cpuid(void *rax, void *rbx, void *rcx, void *rdx) noexcept
 {
     ignored(rax);
     ignored(rbx);

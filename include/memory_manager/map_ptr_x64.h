@@ -43,6 +43,18 @@
 #include <intrinsics/cache_x64.h>
 
 // -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_MEMORY_MANAGER
+#define EXPORT_MEMORY_MANAGER EXPORT_SYM
+#else
+#define EXPORT_MEMORY_MANAGER IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
 // Definitions
 // -----------------------------------------------------------------------------
 

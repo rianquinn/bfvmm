@@ -294,7 +294,7 @@ public:
 /// @expects
 /// @ensures ret != nullptr
 ///
-root_page_table_x64 *root_pt() noexcept;
+EXPORT_MEMORY_MANAGER root_page_table_x64 *root_pt() noexcept;
 
 /// Root Page Table Macro
 ///

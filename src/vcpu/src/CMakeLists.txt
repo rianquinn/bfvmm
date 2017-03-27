@@ -23,9 +23,19 @@ list(APPEND SOURCES
     vcpu.cpp
     vcpu_intel_x64.cpp
     vcpu_manager.cpp
+    vcpu_factory.cpp
 )
 
-add_library(bfvmm_vcpu ${SOURCES})
+add_library(vcpu OBJECT ${SOURCES})
+add_library(bfvmm_vcpu SHARED $<TARGET_OBJECTS:vcpu>)
+add_library(bfvmm_vcpu_static STATIC $<TARGET_OBJECTS:vcpu>)
+
+target_link_libraries(bfvmm_vcpu bfvmm_debug_ring)
+target_link_libraries(bfvmm_vcpu bfvmm_intrinsics)
+target_link_libraries(bfvmm_vcpu bfvmm_memory_manager)
+target_link_libraries(bfvmm_vcpu bfvmm_vmxon)
+target_link_libraries(bfvmm_vcpu bfvmm_vmcs)
+target_link_libraries(bfvmm_vcpu bfvmm_exit_handler)
 
 # ------------------------------------------------------------------------------
 # Install
@@ -33,4 +43,5 @@ add_library(bfvmm_vcpu ${SOURCES})
 
 if(CMAKE_TOOLCHAIN_FILE)
     install(TARGETS bfvmm_vcpu DESTINATION ${BAREFLANK_SYSROOT_PATH}/lib)
+    install(TARGETS bfvmm_vcpu_static DESTINATION ${BAREFLANK_SYSROOT_PATH}/lib)
 endif()
