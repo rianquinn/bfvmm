@@ -9,30 +9,29 @@ endif()
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
 
 # ------------------------------------------------------------------------------
-# Exports
-# ------------------------------------------------------------------------------
-
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DCOMPILING_MEMORY_MANAGER")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMPILING_MEMORY_MANAGER")
-
-# ------------------------------------------------------------------------------
 # Targets
 # ------------------------------------------------------------------------------
 
 list(APPEND SOURCES
-    map_ptr_x64.cpp
-    memory_manager_x64.cpp
-    page_table_entry_x64.cpp
-    page_table_x64.cpp
-    root_page_table_x64.cpp
+    main.cpp
 )
 
-add_library(bfvmm_memory_manager ${SOURCES})
+add_executable(bfvmm_main ${SOURCES})
+
+target_link_libraries(bfvmm_main bfvmm_debug_ring)
+target_link_libraries(bfvmm_main bfvmm_exit_handler)
+target_link_libraries(bfvmm_main bfvmm_intrinsics)
+target_link_libraries(bfvmm_main bfvmm_memory_manager)
+target_link_libraries(bfvmm_main bfvmm_serial)
+target_link_libraries(bfvmm_main bfvmm_vcpu)
+target_link_libraries(bfvmm_main bfvmm_vcpu_factory)
+target_link_libraries(bfvmm_main bfvmm_vmcs)
+target_link_libraries(bfvmm_main bfvmm_vmxon)
 
 # ------------------------------------------------------------------------------
 # Install
 # ------------------------------------------------------------------------------
 
 if(CMAKE_TOOLCHAIN_FILE)
-    install(TARGETS bfvmm_memory_manager DESTINATION ${BAREFLANK_SYSROOT_PATH}/lib)
+    install(TARGETS bfvmm_main DESTINATION ${BAREFLANK_SYSROOT_PATH}/lib)
 endif()

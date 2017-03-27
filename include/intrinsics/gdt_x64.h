@@ -29,12 +29,24 @@
 #include <bfexception.h>
 
 // -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
 // Global Descriptor Table Register
 // -----------------------------------------------------------------------------
 
 #pragma pack(push, 1)
 
-struct gdt_reg_x64_t {
+struct EXPORT_INTRINSICS gdt_reg_x64_t {
     using limit_type = uint16_t;
     using base_type = uint64_t *;
 
@@ -55,8 +67,8 @@ struct gdt_reg_x64_t {
 // Intrinsics
 // -----------------------------------------------------------------------------
 
-extern "C" void __read_gdt(gdt_reg_x64_t *gdt_reg) noexcept;
-extern "C" void __write_gdt(gdt_reg_x64_t *gdt_reg) noexcept;
+extern "C" EXPORT_INTRINSICS void __read_gdt(gdt_reg_x64_t *gdt_reg) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_gdt(gdt_reg_x64_t *gdt_reg) noexcept;
 
 // -----------------------------------------------------------------------------
 // GDT Functions
@@ -181,7 +193,7 @@ namespace gdt
 /// The solution is to mark the host OS's TSS descriptor as not busy
 /// manually before loading it.
 ///
-class gdt_x64
+class EXPORT_INTRINSICS gdt_x64
 {
 public:
 

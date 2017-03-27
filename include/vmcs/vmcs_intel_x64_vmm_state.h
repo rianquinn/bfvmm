@@ -31,6 +31,22 @@ extern tss_x64 g_tss;
 extern gdt_x64 g_gdt;
 extern idt_x64 g_idt;
 
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_VMCS
+#define EXPORT_VMCS EXPORT_SYM
+#else
+#define EXPORT_VMCS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
 /// VMCS VMM State
 ///
 /// Defines the VMM's CPU state. Note that the Intel Manual calls this the
@@ -45,7 +61,7 @@ extern idt_x64 g_idt;
 /// answer here is, when you see "host" in the VMCS, it's really the VMM, and
 /// when you see "guest", it could either be the host VM or a guest VM.
 ///
-class vmcs_intel_x64_vmm_state : public vmcs_intel_x64_state
+class EXPORT_VMCS vmcs_intel_x64_vmm_state : public vmcs_intel_x64_state
 {
 public:
 

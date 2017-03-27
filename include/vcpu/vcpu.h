@@ -29,6 +29,22 @@
 #include <user_data.h>
 #include <debug_ring/debug_ring.h>
 
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_VCPU
+#define EXPORT_VCPU EXPORT_SYM
+#else
+#define EXPORT_VCPU IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
 /// Virtual CPU
 ///
 /// The vCPU represents a "core" for a virtual machine. There are different
@@ -91,7 +107,7 @@
 /// Also note that the vCPU is a base class. The vcpu_factory really should
 /// be creating architectural vCPUs as this class doesn't do much.
 ///
-class vcpu
+class EXPORT_VCPU vcpu
 {
 public:
 

@@ -22,25 +22,21 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
-#include <intrinsics/cache_x64.h>
+#include <intrinsics/msrs_x64.h>
 
-extern "C" void
-__attribute__((weak)) __invd(void) noexcept
+extern "C" uint64_t
+__attribute__((weak)) __read_msr(uint32_t addr) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << "    - msr: " << view_as_pointer(addr) << '\n';
     abort();
 }
 
 extern "C" void
-__attribute__((weak)) __wbinvd(void) noexcept
+__attribute__((weak)) __write_msr(uint32_t addr, uint64_t val) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
-    abort();
-}
-
-extern "C" void
-__attribute__((weak)) __clflush(void *addr) noexcept
-{
-    std::cerr << __FUNC__ << " called with: " << addr << '\n';
+    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << "    - msr: " << view_as_pointer(addr) << '\n';
+    std::cerr << "    - val: " << view_as_pointer(val) << '\n';
     abort();
 }

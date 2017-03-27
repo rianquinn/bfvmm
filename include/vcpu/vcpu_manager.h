@@ -29,6 +29,22 @@
 #include <user_data.h>
 #include <vcpu/vcpu_factory.h>
 
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_VCPU
+#define EXPORT_VCPU EXPORT_SYM
+#else
+#define EXPORT_VCPU IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
 /// vCPU Manager
 ///
 /// The vCPU manager is responsible for creating / destroying vCPUs, and
@@ -36,7 +52,7 @@
 /// need to work with a vCPU, but all you have is a vcpuid, this is the class
 /// to use.
 ///
-class vcpu_manager
+class EXPORT_VCPU vcpu_manager
 {
 public:
 

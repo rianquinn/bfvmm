@@ -32,6 +32,22 @@
 #include <intrinsics/crs_intel_x64.h>
 #include <intrinsics/msrs_intel_x64.h>
 
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_VMCS
+#define EXPORT_VMCS EXPORT_SYM
+#else
+#define EXPORT_VMCS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
 /// VMCS State
 ///
 /// This is a base class that other classes inherit to define the state
@@ -53,7 +69,7 @@
 /// functions. If you intended for a value to be 0 (or unusable), use
 /// the defaults that this class provides.
 ///
-class vmcs_intel_x64_state
+class EXPORT_VMCS vmcs_intel_x64_state
 {
 public:
 

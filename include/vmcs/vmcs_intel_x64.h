@@ -27,7 +27,21 @@
 #include <vmcs/vmcs_intel_x64_helpers.h>
 #include <exit_handler/state_save_intel_x64.h>
 
-class vcpu_intel_x64;
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_VMCS
+#define EXPORT_VMCS EXPORT_SYM
+#else
+#define EXPORT_VMCS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
 
 /// Intel x86_64 VMCS
 ///
@@ -46,15 +60,7 @@ class vcpu_intel_x64;
 /// for more details. Pro tip: auto-complete works great with the VMCS
 /// namespace logic.
 ///
-/// To use this class, subclass vmcs_intel_x64, and overload the virtual
-/// functions for setting up the guest / host state to provide the desired
-/// functionality. Don't forget to call the base class function when complete
-/// unless you intend to provide the same functionality. For an example of
-/// how to do this, please see:
-///
-/// <a href="https://github.com/Bareflank/hypervisor_example_vpid">Bareflank Hypervisor VPID Example</a>
-///
-class vmcs_intel_x64
+class EXPORT_VMCS vmcs_intel_x64
 {
 public:
 

@@ -31,6 +31,22 @@
 #include <intrinsics/x64.h>
 #include <memory_manager/mem_pool.h>
 
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_MEMORY_MANAGER
+#define EXPORT_MEMORY_MANAGER EXPORT_SYM
+#else
+#define EXPORT_MEMORY_MANAGER IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
 /// The memory manager has a couple specific functions:
 /// - alloc / free memory
 /// - virt_to_phys / phys_to_virt conversions
@@ -69,7 +85,7 @@
 ///     class to inherit that provides shared APIs for both ARM and Intel. For
 ///     now the memory manager is Intel specific
 ///
-class memory_manager_x64
+class EXPORT_MEMORY_MANAGER memory_manager_x64
 {
 public:
 

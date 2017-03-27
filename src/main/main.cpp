@@ -20,21 +20,12 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <bfgsl.h>
-#include <bfdebug.h>
 
-extern "C" uint64_t
-__attribute__((weak)) __read_msr(uint32_t addr) noexcept
+int
+main(int argc, char *argv[])
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
-    std::cerr << "    - msr: " << view_as_pointer(addr) << '\n';
-    abort();
-}
+    ignored(argc);
+    ignored(argv);
 
-extern "C" void
-__attribute__((weak)) __write_msr(uint32_t addr, uint64_t val) noexcept
-{
-    std::cerr << __FUNC__ << " called with: " << '\n';
-    std::cerr << "    - msr: " << view_as_pointer(addr) << '\n';
-    std::cerr << "    - val: " << view_as_pointer(val) << '\n';
-    abort();
+    return 0;
 }

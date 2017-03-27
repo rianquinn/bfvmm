@@ -25,17 +25,33 @@
 #include <bfdebug.h>
 #include <bfbitmanip.h>
 
-extern "C" uint64_t __read_cr0(void) noexcept;
-extern "C" void __write_cr0(uint64_t val) noexcept;
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
 
-extern "C" uint64_t __read_cr2(void) noexcept;
-extern "C" void __write_cr2(uint64_t val) noexcept;
+#include <bfexports.h>
 
-extern "C" uint64_t __read_cr3(void) noexcept;
-extern "C" void __write_cr3(uint64_t val) noexcept;
+#ifdef COMPILING_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
 
-extern "C" uint64_t __read_cr4(void) noexcept;
-extern "C" void __write_cr4(uint64_t val) noexcept;
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
+extern "C" EXPORT_INTRINSICS uint64_t __read_cr0(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_cr0(uint64_t val) noexcept;
+
+extern "C" EXPORT_INTRINSICS uint64_t __read_cr2(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_cr2(uint64_t val) noexcept;
+
+extern "C" EXPORT_INTRINSICS uint64_t __read_cr3(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_cr3(uint64_t val) noexcept;
+
+extern "C" EXPORT_INTRINSICS uint64_t __read_cr4(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_cr4(uint64_t val) noexcept;
 
 // *INDENT-OFF*
 

@@ -29,12 +29,24 @@
 #include <bfexception.h>
 
 // -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
 // Interrupt Descriptor Table Register
 // -----------------------------------------------------------------------------
 
 #pragma pack(push, 1)
 
-struct idt_reg_x64_t {
+struct EXPORT_INTRINSICS idt_reg_x64_t {
     using limit_type = uint16_t;
     using base_type = uint64_t *;
 
@@ -55,8 +67,8 @@ struct idt_reg_x64_t {
 // Intrinsics
 // -----------------------------------------------------------------------------
 
-extern "C" void __read_idt(idt_reg_x64_t *idt_reg) noexcept;
-extern "C" void __write_idt(idt_reg_x64_t *idt_reg) noexcept;
+extern "C" EXPORT_INTRINSICS void __read_idt(idt_reg_x64_t *idt_reg) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_idt(idt_reg_x64_t *idt_reg) noexcept;
 
 // -----------------------------------------------------------------------------
 // IDT Functions
@@ -145,7 +157,7 @@ namespace idt
 ///     disabled. At some point when we decide to add support for
 ///     interrupts we will need to implement this class completely.
 ///
-class idt_x64
+class EXPORT_INTRINSICS idt_x64
 {
 public:
 

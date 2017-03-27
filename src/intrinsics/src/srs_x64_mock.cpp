@@ -22,6 +22,8 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
+#include <intrinsics/srs_x64.h>
+
 extern "C" uint16_t
 __attribute__((weak)) __read_es(void) noexcept
 {

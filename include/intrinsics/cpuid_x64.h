@@ -25,11 +25,27 @@
 #include <bfdebug.h>
 #include <bfbitmanip.h>
 
-extern "C" uint32_t __cpuid_eax(uint32_t val) noexcept;
-extern "C" uint32_t __cpuid_ebx(uint32_t val) noexcept;
-extern "C" uint32_t __cpuid_ecx(uint32_t val) noexcept;
-extern "C" uint32_t __cpuid_edx(uint32_t val) noexcept;
-extern "C" void __cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept;
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
+extern "C" EXPORT_INTRINSICS uint32_t __cpuid_eax(uint32_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint32_t __cpuid_ebx(uint32_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint32_t __cpuid_ecx(uint32_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint32_t __cpuid_edx(uint32_t val) noexcept;
+extern "C" EXPORT_INTRINSICS void __cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept;
 
 // *INDENT-OFF*
 

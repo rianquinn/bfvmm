@@ -25,7 +25,19 @@
 #include <memory>
 
 // -----------------------------------------------------------------------------
-// Definition
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_VMXON
+#define EXPORT_VMXON EXPORT_SYM
+#else
+#define EXPORT_VMXON IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
 // -----------------------------------------------------------------------------
 
 /// VMXON (Intel x86_64)
@@ -36,7 +48,7 @@
 ///
 /// This class is managed by vcpu_intel_x64
 ///
-class vmxon_intel_x64
+class EXPORT_VMXON vmxon_intel_x64
 {
 public:
 

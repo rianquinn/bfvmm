@@ -24,29 +24,45 @@
 
 #include <bfgsl.h>
 
-extern "C" uint8_t __inb(uint16_t port) noexcept;
-extern "C" uint16_t __inw(uint16_t port) noexcept;
-extern "C" uint32_t __ind(uint16_t port) noexcept;
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
 
-extern "C" void __insb(uint16_t port, uint64_t m8) noexcept;
-extern "C" void __insw(uint16_t port, uint64_t m16) noexcept;
-extern "C" void __insd(uint16_t port, uint64_t m32) noexcept;
+#include <bfexports.h>
 
-extern "C" void __insbrep(uint16_t port, uint64_t m8, uint32_t count) noexcept;
-extern "C" void __inswrep(uint16_t port, uint64_t m16, uint32_t count) noexcept;
-extern "C" void __insdrep(uint16_t port, uint64_t m32, uint32_t count) noexcept;
+#ifdef COMPILING_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
 
-extern "C" void __outb(uint16_t port, uint8_t val) noexcept;
-extern "C" void __outw(uint16_t port, uint16_t val) noexcept;
-extern "C" void __outd(uint16_t port, uint32_t val) noexcept;
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
 
-extern "C" void __outsb(uint16_t port, uint64_t m8) noexcept;
-extern "C" void __outsw(uint16_t port, uint64_t m16) noexcept;
-extern "C" void __outsd(uint16_t port, uint64_t m32) noexcept;
+extern "C" EXPORT_INTRINSICS uint8_t __inb(uint16_t port) noexcept;
+extern "C" EXPORT_INTRINSICS uint16_t __inw(uint16_t port) noexcept;
+extern "C" EXPORT_INTRINSICS uint32_t __ind(uint16_t port) noexcept;
 
-extern "C" void __outsbrep(uint16_t port, uint64_t m8, uint32_t count) noexcept;
-extern "C" void __outswrep(uint16_t port, uint64_t m16, uint32_t count) noexcept;
-extern "C" void __outsdrep(uint16_t port, uint64_t m32, uint32_t count) noexcept;
+extern "C" EXPORT_INTRINSICS void __insb(uint16_t port, uint64_t m8) noexcept;
+extern "C" EXPORT_INTRINSICS void __insw(uint16_t port, uint64_t m16) noexcept;
+extern "C" EXPORT_INTRINSICS void __insd(uint16_t port, uint64_t m32) noexcept;
+
+extern "C" EXPORT_INTRINSICS void __insbrep(uint16_t port, uint64_t m8, uint32_t count) noexcept;
+extern "C" EXPORT_INTRINSICS void __inswrep(uint16_t port, uint64_t m16, uint32_t count) noexcept;
+extern "C" EXPORT_INTRINSICS void __insdrep(uint16_t port, uint64_t m32, uint32_t count) noexcept;
+
+extern "C" EXPORT_INTRINSICS void __outb(uint16_t port, uint8_t val) noexcept;
+extern "C" EXPORT_INTRINSICS void __outw(uint16_t port, uint16_t val) noexcept;
+extern "C" EXPORT_INTRINSICS void __outd(uint16_t port, uint32_t val) noexcept;
+
+extern "C" EXPORT_INTRINSICS void __outsb(uint16_t port, uint64_t m8) noexcept;
+extern "C" EXPORT_INTRINSICS void __outsw(uint16_t port, uint64_t m16) noexcept;
+extern "C" EXPORT_INTRINSICS void __outsd(uint16_t port, uint64_t m32) noexcept;
+
+extern "C" EXPORT_INTRINSICS void __outsbrep(uint16_t port, uint64_t m8, uint32_t count) noexcept;
+extern "C" EXPORT_INTRINSICS void __outswrep(uint16_t port, uint64_t m16, uint32_t count) noexcept;
+extern "C" EXPORT_INTRINSICS void __outsdrep(uint16_t port, uint64_t m32, uint32_t count) noexcept;
 
 // *INDENT-OFF*
 

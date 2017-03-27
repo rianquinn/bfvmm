@@ -31,6 +31,22 @@
 #include <vmcs/vmcs_intel_x64_host_vm_state.h>
 #include <exit_handler/exit_handler_intel_x64.h>
 
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_VCPU
+#define EXPORT_VCPU EXPORT_SYM
+#else
+#define EXPORT_VCPU IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
 /// Virtual CPU (Intel x86_64)
 ///
 /// The Virtual CPU represents a "CPU" to the hypervisor that is specific to
@@ -45,7 +61,7 @@
 /// created by the vcpu_manager, which uses the vcpu_factory to actually
 /// create a vcpu.
 ///
-class vcpu_intel_x64 : public vcpu
+class EXPORT_VCPU vcpu_intel_x64 : public vcpu
 {
 public:
 

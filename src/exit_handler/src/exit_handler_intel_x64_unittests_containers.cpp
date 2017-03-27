@@ -19,6 +19,7 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+#include <exit_handler/exit_handler_intel_x64.h>
 #include <exit_handler/exit_handler_intel_x64_unittests.h>
 
 #ifdef INCLUDE_LIBCXX_UNITTESTS

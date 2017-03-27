@@ -26,8 +26,24 @@
 #include <bfdebug.h>
 #include <bfbitmanip.h>
 
-extern "C" uint64_t __read_msr(uint32_t addr) noexcept;
-extern "C" void __write_msr(uint32_t addr, uint64_t val) noexcept;
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
+extern "C" EXPORT_INTRINSICS uint64_t __read_msr(uint32_t addr) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_msr(uint32_t addr, uint64_t val) noexcept;
 
 // *INDENT-OFF*
 

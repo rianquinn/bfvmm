@@ -9,6 +9,13 @@ endif()
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
 
 # ------------------------------------------------------------------------------
+# Exports
+# ------------------------------------------------------------------------------
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DCOMPILING_INTRINSICS")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMPILING_INTRINSICS")
+
+# ------------------------------------------------------------------------------
 # Targets
 # ------------------------------------------------------------------------------
 
@@ -21,7 +28,7 @@ if(NOT CMAKE_TOOLCHAIN_FILE)
         debug_x64_mock.cpp
         gdt_x64_mock.cpp
         idt_x64_mock.cpp
-        msrs_intel_x64_mock.cpp
+        msrs_x64_mock.cpp
         pm_x64_mock.cpp
         portio_x64_mock.cpp
         rdtsc_x64_mock.cpp
@@ -41,7 +48,7 @@ else()
         debug_x64.asm
         gdt_x64.asm
         idt_x64.asm
-        msrs_intel_x64.asm
+        msrs_x64.asm
         pm_x64.asm
         portio_x64.asm
         rdtsc_x64.asm

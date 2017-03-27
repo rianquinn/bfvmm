@@ -27,6 +27,22 @@
 #include <bfdebug.h>
 #include <vmcs/vmcs_intel_x64_state.h>
 
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_VMCS
+#define EXPORT_VMCS EXPORT_SYM
+#else
+#define EXPORT_VMCS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
 /// VMCS Host VM State
 ///
 /// Define's the Host VM's CPU state. The Host VM runs the Host OS that
@@ -34,7 +50,7 @@
 /// the state is defined by Bareflank. With the Host VM, the state is defined
 /// by the Host OS, so we have to get this information from the hardware.
 ///
-class vmcs_intel_x64_host_vm_state : public vmcs_intel_x64_state
+class EXPORT_VMCS vmcs_intel_x64_host_vm_state : public vmcs_intel_x64_state
 {
 public:
 

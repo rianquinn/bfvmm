@@ -28,6 +28,22 @@
 #include <user_data.h>
 #include <vcpu/vcpu.h>
 
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_VCPU
+#define EXPORT_VCPU EXPORT_SYM
+#else
+#define EXPORT_VCPU IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
 /// vCPU Factory
 ///
 /// This class is used by the vcpu_manager to create vCPUs. Specifically,
@@ -45,7 +61,7 @@
 /// <br>
 /// <a href="https://github.com/Bareflank/hypervisor_example_cpuidcount">Bareflank Hypervisor CPUID Example</a>
 ///
-class vcpu_factory
+class EXPORT_VCPU vcpu_factory
 {
 public:
 

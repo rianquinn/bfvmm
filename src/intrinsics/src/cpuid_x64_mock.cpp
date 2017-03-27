@@ -25,6 +25,8 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
+#include <intrinsics/cpuid_x64.h>
+
 extern "C" uint32_t
 __attribute__((weak)) __cpuid_eax(uint32_t val) noexcept
 {
@@ -54,17 +56,13 @@ __attribute__((weak)) __cpuid_edx(uint32_t val) noexcept
 }
 
 extern "C" void
-__attribute__((weak)) __cpuid(uint64_t *rax, uint64_t *rbx, uint64_t *rcx, uint64_t *rdx) noexcept
+__attribute__((weak)) __cpuid(void *rax, void *rbx, void *rcx, void *rdx) noexcept
 {
-    expects(rax);
-    expects(rbx);
-    expects(rcx);
-    expects(rdx);
+    ignored(rax);
+    ignored(rbx);
+    ignored(rcx);
+    ignored(rdx);
 
-    std::cerr << __FUNC__ << " called with: " << '\n';
-    std::cerr << "    - rax: " << view_as_pointer(*rax) << '\n';
-    std::cerr << "    - rbx: " << view_as_pointer(*rbx) << '\n';
-    std::cerr << "    - rcx: " << view_as_pointer(*rcx) << '\n';
-    std::cerr << "    - rdx: " << view_as_pointer(*rdx) << '\n';
+    std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }

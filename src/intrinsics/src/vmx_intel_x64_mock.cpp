@@ -22,8 +22,10 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
+#include <intrinsics/vmx_intel_x64.h>
+
 extern "C" bool
-__attribute__((weak)) __vmxon(void *ptr)
+__attribute__((weak)) __vmxon(void *ptr) noexcept
 {
     (void) ptr;
 
@@ -66,21 +68,21 @@ __attribute__((weak)) __vmptrst(void *ptr) noexcept
 }
 
 extern "C" bool
-__attribute__((weak)) __vmwrite(uint64_t field, uint64_t value) noexcept
-{
-    std::cerr << __FUNC__ << " called with: " << '\n';
-    std::cerr << "    - field: " << view_as_pointer(field) << '\n';
-    std::cerr << "    - value: " << view_as_pointer(value) << '\n';
-    abort();
-}
-
-extern "C" bool
 __attribute__((weak)) __vmread(uint64_t field, const uint64_t *value) noexcept
 {
     (void) value;
 
     std::cerr << __FUNC__ << " called with: " << '\n';
     std::cerr << "    - field: " << view_as_pointer(field) << '\n';
+    abort();
+}
+
+extern "C" bool
+__attribute__((weak)) __vmwrite(uint64_t field, uint64_t value) noexcept
+{
+    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << "    - field: " << view_as_pointer(field) << '\n';
+    std::cerr << "    - value: " << view_as_pointer(value) << '\n';
     abort();
 }
 

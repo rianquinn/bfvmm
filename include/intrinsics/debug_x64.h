@@ -22,8 +22,24 @@
 #ifndef DEBUG_X64_H
 #define DEBUG_X64_H
 
-extern "C" uint64_t __read_dr7(void) noexcept;
-extern "C" void __write_dr7(uint64_t val) noexcept;
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
+extern "C" EXPORT_INTRINSICS uint64_t __read_dr7(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_dr7(uint64_t val) noexcept;
 
 // *INDENT-OFF*
 

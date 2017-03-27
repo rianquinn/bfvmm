@@ -28,8 +28,25 @@
 #include <bfconstants.h>
 #include <intrinsics/portio_x64.h>
 
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_SERIAL
+#define EXPORT_SERIAL EXPORT_SYM
+#else
+#define EXPORT_SERIAL IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Constants
+// -----------------------------------------------------------------------------
+
 namespace serial_intel_x64
 {
+
 constexpr const x64::portio::port_8bit_type dlab = 1U << 7;
 
 constexpr const x64::portio::port_addr_type baud_rate_lo_reg = 0U;
@@ -56,7 +73,12 @@ constexpr const x64::portio::port_8bit_type line_status_recieved_fifo_error = 1U
 constexpr const x64::portio::port_8bit_type line_control_data_mask = 0x03;
 constexpr const x64::portio::port_8bit_type line_control_stop_mask = 0x04;
 constexpr const x64::portio::port_8bit_type line_control_parity_mask = 0x38;
+
 }
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
 
 /// Serial Port (Intel x64)
 ///
@@ -71,7 +93,7 @@ constexpr const x64::portio::port_8bit_type line_control_parity_mask = 0x38;
 /// Also note, that by default, a FIFO is used / required, and interrupts are
 /// disabled.
 ///
-class serial_port_intel_x64
+class EXPORT_SERIAL serial_port_intel_x64
 {
 public:
 

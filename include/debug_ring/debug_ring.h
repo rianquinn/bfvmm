@@ -28,6 +28,22 @@
 #include <vcpuid.h>
 #include <bfdebugringinterface.h>
 
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_DEBUG_RING
+#define EXPORT_DEBUG_RING EXPORT_SYM
+#else
+#define EXPORT_DEBUG_RING IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
 /// Debug Ring
 ///
 /// The debug ring is a simple debug facility that allows the vmm to write
@@ -35,7 +51,7 @@
 /// the same buffer can read from the debug ring to extract the strings
 /// that are written to the buffer.
 ///
-class debug_ring
+class EXPORT_DEBUG_RING debug_ring
 {
 public:
 
@@ -93,6 +109,6 @@ public:
 /// @param drr the resulting debug ring
 /// @return the debug_ring_resources_t for the provided vcpuid
 ///
-extern "C" int64_t get_drr(uint64_t vcpuid, struct debug_ring_resources_t **drr) noexcept;
+extern "C" EXPORT_DEBUG_RING int64_t get_drr(uint64_t vcpuid, struct debug_ring_resources_t **drr) noexcept;
 
 #endif

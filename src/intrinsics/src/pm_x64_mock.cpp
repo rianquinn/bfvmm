@@ -22,6 +22,8 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
+#include <intrinsics/pm_x64.h>
+
 extern "C" void
 __attribute__((weak)) __halt(void) noexcept
 {

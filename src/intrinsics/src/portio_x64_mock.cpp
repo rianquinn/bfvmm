@@ -22,6 +22,8 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
+#include <intrinsics/portio_x64.h>
+
 extern "C" uint8_t
 __attribute__((weak)) __inb(uint16_t port) noexcept
 {

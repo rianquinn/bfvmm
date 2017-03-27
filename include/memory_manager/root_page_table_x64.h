@@ -34,6 +34,22 @@
 
 #include <intrinsics/x64.h>
 
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_MEMORY_MANAGER
+#define EXPORT_MEMORY_MANAGER EXPORT_SYM
+#else
+#define EXPORT_MEMORY_MANAGER IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
 /// Root Page Tables
 ///
 /// The VMM has to have a set of page tables for itself to map in memory
@@ -44,7 +60,7 @@
 /// This needs to be done manually. In general, this class should not be used
 /// directly, but instead mapping should be done via a unique_map_ptr_x64.
 ///
-class root_page_table_x64
+class EXPORT_MEMORY_MANAGER root_page_table_x64
 {
 public:
 

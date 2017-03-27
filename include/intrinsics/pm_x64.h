@@ -22,8 +22,24 @@
 #ifndef PM_X64_H
 #define PM_X64_H
 
-extern "C" void __halt(void) noexcept;
-extern "C" void __stop(void) noexcept;
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
+extern "C" EXPORT_INTRINSICS void __halt(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __stop(void) noexcept;
 
 // *INDENT-OFF*
 

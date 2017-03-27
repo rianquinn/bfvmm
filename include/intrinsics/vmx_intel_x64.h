@@ -26,16 +26,32 @@
 #include <bfdebug.h>
 #include <bfbitmanip.h>
 
-extern "C" bool __vmxon(void *ptr) noexcept;
-extern "C" bool __vmxoff(void) noexcept;
-extern "C" bool __vmclear(void *ptr) noexcept;
-extern "C" bool __vmptrld(void *ptr) noexcept;
-extern "C" bool __vmptrst(void *ptr) noexcept;
-extern "C" bool __vmread(uint64_t field, uint64_t *val) noexcept;
-extern "C" bool __vmwrite(uint64_t field, uint64_t val) noexcept;
-extern "C" bool __vmlaunch_demote(void) noexcept;
-extern "C" bool __invept(uint64_t type, void *ptr) noexcept;
-extern "C" bool __invvpid(uint64_t type, void *ptr) noexcept;
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
+extern "C" EXPORT_INTRINSICS bool __vmxon(void *ptr) noexcept;
+extern "C" EXPORT_INTRINSICS bool __vmxoff(void) noexcept;
+extern "C" EXPORT_INTRINSICS bool __vmclear(void *ptr) noexcept;
+extern "C" EXPORT_INTRINSICS bool __vmptrld(void *ptr) noexcept;
+extern "C" EXPORT_INTRINSICS bool __vmptrst(void *ptr) noexcept;
+extern "C" EXPORT_INTRINSICS bool __vmread(uint64_t field, const uint64_t *val) noexcept;
+extern "C" EXPORT_INTRINSICS bool __vmwrite(uint64_t field, uint64_t val) noexcept;
+extern "C" EXPORT_INTRINSICS bool __vmlaunch_demote(void) noexcept;
+extern "C" EXPORT_INTRINSICS bool __invept(uint64_t type, void *ptr) noexcept;
+extern "C" EXPORT_INTRINSICS bool __invvpid(uint64_t type, void *ptr) noexcept;
 
 // *INDENT-OFF*
 

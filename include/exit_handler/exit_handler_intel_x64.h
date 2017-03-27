@@ -29,10 +29,20 @@
 
 #include <bfvmcallinterface.h>
 
-class vcpu_intel_x64;
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_EXIT_HANDLER
+#define EXPORT_EXIT_HANDLER EXPORT_SYM
+#else
+#define EXPORT_EXIT_HANDLER IMPORT_SYM
+#endif
 
 // -----------------------------------------------------------------------------
-// Exit Handler
+// Exit Handlers
 // -----------------------------------------------------------------------------
 
 /// Exit Handler
@@ -49,7 +59,7 @@ class vcpu_intel_x64;
 /// can subclass this class, and overload the handlers that are needed. The
 /// basics are provided with this class to ease development.
 ///
-class exit_handler_intel_x64
+class EXPORT_EXIT_HANDLER exit_handler_intel_x64
 {
 public:
 

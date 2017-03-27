@@ -24,11 +24,27 @@
 
 #include <cstdint>
 
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
 #pragma pack(push, 1)
 
 /* @cond */
 
-struct tss_x64 {
+struct EXPORT_INTRINSICS tss_x64 {
     using integer_pointer = uintptr_t;
 
     uint32_t reserved1{0};

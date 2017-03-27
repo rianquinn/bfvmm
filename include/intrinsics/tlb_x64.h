@@ -22,7 +22,23 @@
 #ifndef TLB_X64_H
 #define TLB_X64_H
 
-extern "C" void __invlpg(const void *virt) noexcept;
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
+extern "C" EXPORT_INTRINSICS void __invlpg(const void *virt) noexcept;
 
 // *INDENT-OFF*
 

@@ -30,7 +30,23 @@
 
 #include <memory_manager/page_table_entry_x64.h>
 
-class page_table_x64
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_MEMORY_MANAGER
+#define EXPORT_MEMORY_MANAGER EXPORT_SYM
+#else
+#define EXPORT_MEMORY_MANAGER IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
+class EXPORT_MEMORY_MANAGER page_table_x64
 {
 public:
 

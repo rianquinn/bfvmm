@@ -25,6 +25,18 @@
 #include <bfgsl.h>
 
 // -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifdef COMPILING_MEMORY_MANAGER
+#define EXPORT_MEMORY_MANAGER EXPORT_SYM
+#else
+#define EXPORT_MEMORY_MANAGER IMPORT_SYM
+#endif
+
+// -----------------------------------------------------------------------------
 // Constants
 // -----------------------------------------------------------------------------
 
@@ -76,7 +88,7 @@ namespace page_table
 // Definition
 // -----------------------------------------------------------------------------
 
-class page_table_entry_x64
+class EXPORT_MEMORY_MANAGER page_table_entry_x64
 {
 public:
 

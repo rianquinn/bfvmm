@@ -26,29 +26,45 @@
 #include <bfdebug.h>
 #include <bfbitmanip.h>
 
-extern "C" uint16_t __read_es(void) noexcept;
-extern "C" void __write_es(uint16_t val) noexcept;
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
 
-extern "C" uint16_t __read_cs(void) noexcept;
-extern "C" void __write_cs(uint16_t val) noexcept;
+#include <bfexports.h>
 
-extern "C" uint16_t __read_ss(void) noexcept;
-extern "C" void __write_ss(uint16_t val) noexcept;
+#ifdef COMPILING_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
 
-extern "C" uint16_t __read_ds(void) noexcept;
-extern "C" void __write_ds(uint16_t val) noexcept;
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
 
-extern "C" uint16_t __read_fs(void) noexcept;
-extern "C" void __write_fs(uint16_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint16_t __read_es(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_es(uint16_t val) noexcept;
 
-extern "C" uint16_t __read_gs(void) noexcept;
-extern "C" void __write_gs(uint16_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint16_t __read_cs(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_cs(uint16_t val) noexcept;
 
-extern "C" uint16_t __read_ldtr(void) noexcept;
-extern "C" void __write_ldtr(uint16_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint16_t __read_ss(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_ss(uint16_t val) noexcept;
 
-extern "C" uint16_t __read_tr(void) noexcept;
-extern "C" void __write_tr(uint16_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint16_t __read_ds(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_ds(uint16_t val) noexcept;
+
+extern "C" EXPORT_INTRINSICS uint16_t __read_fs(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_fs(uint16_t val) noexcept;
+
+extern "C" EXPORT_INTRINSICS uint16_t __read_gs(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_gs(uint16_t val) noexcept;
+
+extern "C" EXPORT_INTRINSICS uint16_t __read_ldtr(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_ldtr(uint16_t val) noexcept;
+
+extern "C" EXPORT_INTRINSICS uint16_t __read_tr(void) noexcept;
+extern "C" EXPORT_INTRINSICS void __write_tr(uint16_t val) noexcept;
 
 // *INDENT-OFF*
 

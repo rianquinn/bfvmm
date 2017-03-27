@@ -23,7 +23,7 @@
 #define EXIT_HANDLER_INTEL_X64_UNITTESTS_H
 
 #include <bfdebug.h>
-#include <exit_handler/exit_handler_intel_x64.h>
+#include <bfstring.h>
 
 inline void
 expect_true_with_args(bool cond, const char *func, int line)
