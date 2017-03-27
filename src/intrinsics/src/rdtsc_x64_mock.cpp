@@ -25,14 +25,14 @@
 #include <intrinsics/rdtsc_x64.h>
 
 extern "C" uint64_t
-__attribute__((weak)) __read_tsc(void) noexcept
+__read_tsc(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" uint64_t
-__attribute__((weak)) __read_tscp(void) noexcept
+__read_tscp(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();

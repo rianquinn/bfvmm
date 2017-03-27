@@ -412,8 +412,8 @@ exit_handler_intel_x64::unimplemented_handler() noexcept
         bferror << "VM-entry failure detected!!!" << bfendl;
         bferror << bfendl;
 
-        guard_exceptions([&]
-        { vmcs::check::all(); });
+        // guard_exceptions([&]
+        // { vmcs::check::all(); });
 
         guard_exceptions([&]
         { vmcs::debug::dump(); });

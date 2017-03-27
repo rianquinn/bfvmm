@@ -24,7 +24,6 @@
 #include <bfthreadcontext.h>
 
 #include <memory_manager/memory_manager_x64.h>
-#include <exit_handler/exit_handler_intel_x64_support.h>
 
 #include <vmcs/vmcs_intel_x64.h>
 #include <vmcs/vmcs_intel_x64_debug.h>
@@ -379,6 +378,7 @@ vmcs_intel_x64::write_32bit_host_state(gsl::not_null<vmcs_intel_x64_state *> sta
 void
 vmcs_intel_x64::write_natural_host_state(gsl::not_null<vmcs_intel_x64_state *> state)
 {
+    auto exit_handler_entry = reinterpret_cast<uintptr_t>(m_exit_handler_entry);
     auto exit_handler_stack = reinterpret_cast<uintptr_t>(m_exit_handler_stack.get());
 
     auto stack_top = exit_handler_stack + (STACK_SIZE * 2);

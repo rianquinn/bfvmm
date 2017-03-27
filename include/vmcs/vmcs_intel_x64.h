@@ -204,6 +204,8 @@ protected:
     state_save_intel_x64 *m_state_save{nullptr};
     std::unique_ptr<char[]> m_exit_handler_stack;
 
+    void *m_exit_handler_entry{nullptr};
+
 private:
 
     friend class vcpu_ut;
@@ -214,6 +216,9 @@ private:
 
     virtual void set_state_save(gsl::not_null<state_save_intel_x64 *> state_save)
     { m_state_save = state_save; }
+
+    virtual void set_exit_handler_entry(void *entry)
+    { m_exit_handler_entry = entry; }
 
 public:
 

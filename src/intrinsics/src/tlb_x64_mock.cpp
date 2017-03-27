@@ -25,7 +25,7 @@
 #include <intrinsics/tlb_x64.h>
 
 extern "C" void
-__attribute__((weak)) __invlpg(const void *virt) noexcept
+__invlpg(const void *virt) noexcept
 {
     (void) virt;
 

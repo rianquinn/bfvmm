@@ -19,21 +19,12 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#include <bfgsl.h>
-#include <bfdebug.h>
+#include <vcpu/vcpu.h>
+#include <vcpu/vcpu_factory.h>
 
-#include <intrinsics/debug_x64.h>
-
-extern "C" uint64_t
-__read_dr7(void) noexcept
+std::unique_ptr<vcpu>
+WEAK_SYM vcpu_factory::make_vcpu(vcpuid::type vcpuid, user_data *data)
 {
-    std::cerr << __FUNC__ << " called" << '\n';
-    abort();
-}
-
-extern "C" void
-__write_dr7(uint64_t val) noexcept
-{
-    std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
-    abort();
+    (void) data;
+    return std::make_unique<vcpu>(vcpuid);
 }

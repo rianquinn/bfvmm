@@ -61,8 +61,12 @@ else()
 
 endif()
 
-add_library(bfvmm_intrinsics ${SOURCES})
+add_library(intrinsics OBJECT ${SOURCES})
+add_library(bfvmm_intrinsics SHARED $<TARGET_OBJECTS:intrinsics>)
+add_library(bfvmm_intrinsics_static STATIC $<TARGET_OBJECTS:intrinsics>)
+
 set_target_properties(bfvmm_intrinsics PROPERTIES LINKER_LANGUAGE C)
+set_target_properties(bfvmm_intrinsics_static PROPERTIES LINKER_LANGUAGE C)
 
 # ------------------------------------------------------------------------------
 # Install
@@ -70,4 +74,5 @@ set_target_properties(bfvmm_intrinsics PROPERTIES LINKER_LANGUAGE C)
 
 if(CMAKE_TOOLCHAIN_FILE)
     install(TARGETS bfvmm_intrinsics DESTINATION ${BAREFLANK_SYSROOT_PATH}/lib)
+    install(TARGETS bfvmm_intrinsics_static DESTINATION ${BAREFLANK_SYSROOT_PATH}/lib)
 endif()

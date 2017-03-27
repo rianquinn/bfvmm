@@ -22,6 +22,8 @@
 #ifndef EXIT_HANDLER_INTEL_X64_SUPPORT_H
 #define EXIT_HANDLER_INTEL_X64_SUPPORT_H
 
+#include <exit_handler/exit_handler_intel_x64.h>
+
 /// Exit Handler Entry
 ///
 /// This is the starting point of the VMM. It is written in pure assembly
@@ -33,6 +35,6 @@
 /// @expects none
 /// @ensures none
 ///
-extern "C" void exit_handler_entry(void);
+extern "C" EXPORT_EXIT_HANDLER void exit_handler_entry(void) noexcept;
 
 #endif

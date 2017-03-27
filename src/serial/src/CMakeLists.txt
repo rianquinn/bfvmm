@@ -23,7 +23,11 @@ list(APPEND SOURCES
     serial_port_intel_x64.cpp
 )
 
-add_library(bfvmm_serial ${SOURCES})
+add_library(serial OBJECT ${SOURCES})
+add_library(bfvmm_serial SHARED $<TARGET_OBJECTS:serial>)
+add_library(bfvmm_serial_static STATIC $<TARGET_OBJECTS:serial>)
+
+target_link_libraries(bfvmm_serial bfvmm_intrinsics)
 
 # ------------------------------------------------------------------------------
 # Install
@@ -31,4 +35,5 @@ add_library(bfvmm_serial ${SOURCES})
 
 if(CMAKE_TOOLCHAIN_FILE)
     install(TARGETS bfvmm_serial DESTINATION ${BAREFLANK_SYSROOT_PATH}/lib)
+    install(TARGETS bfvmm_serial_static DESTINATION ${BAREFLANK_SYSROOT_PATH}/lib)
 endif()
