@@ -48,7 +48,7 @@ namespace vmcs
 
 namespace guest_cr0
 {
-    constexpr const auto addr = 0x0000000000006800UL;
+    constexpr const auto addr = 0x0000000000006800ULL;
     constexpr const auto name = "guest_cr0";
 
     inline auto exists()
@@ -69,7 +69,7 @@ namespace guest_cr0
 
     namespace protection_enable
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "protection_enable";
 
@@ -112,7 +112,7 @@ namespace guest_cr0
 
     namespace monitor_coprocessor
     {
-        constexpr const auto mask = 0x0000000000000002UL;
+        constexpr const auto mask = 0x0000000000000002ULL;
         constexpr const auto from = 1;
         constexpr const auto name = "monitor_coprocessor";
 
@@ -155,7 +155,7 @@ namespace guest_cr0
 
     namespace emulation
     {
-        constexpr const auto mask = 0x0000000000000004UL;
+        constexpr const auto mask = 0x0000000000000004ULL;
         constexpr const auto from = 2;
         constexpr const auto name = "emulation";
 
@@ -198,7 +198,7 @@ namespace guest_cr0
 
     namespace task_switched
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "task_switched";
 
@@ -241,7 +241,7 @@ namespace guest_cr0
 
     namespace extension_type
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "extension_type";
 
@@ -284,7 +284,7 @@ namespace guest_cr0
 
     namespace numeric_error
     {
-        constexpr const auto mask = 0x0000000000000020UL;
+        constexpr const auto mask = 0x0000000000000020ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "numeric_error";
 
@@ -327,7 +327,7 @@ namespace guest_cr0
 
     namespace write_protect
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "write_protect";
 
@@ -370,7 +370,7 @@ namespace guest_cr0
 
     namespace alignment_mask
     {
-        constexpr const auto mask = 0x0000000000040000UL;
+        constexpr const auto mask = 0x0000000000040000ULL;
         constexpr const auto from = 18;
         constexpr const auto name = "alignment_mask";
 
@@ -413,7 +413,7 @@ namespace guest_cr0
 
     namespace not_write_through
     {
-        constexpr const auto mask = 0x0000000020000000UL;
+        constexpr const auto mask = 0x0000000020000000ULL;
         constexpr const auto from = 29;
         constexpr const auto name = "not_write_through";
 
@@ -456,7 +456,7 @@ namespace guest_cr0
 
     namespace cache_disable
     {
-        constexpr const auto mask = 0x0000000040000000UL;
+        constexpr const auto mask = 0x0000000040000000ULL;
         constexpr const auto from = 30;
         constexpr const auto name = "cache_disable";
 
@@ -499,7 +499,7 @@ namespace guest_cr0
 
     namespace paging
     {
-        constexpr const auto mask = 0x0000000080000000UL;
+        constexpr const auto mask = 0x0000000080000000ULL;
         constexpr const auto from = 31;
         constexpr const auto name = "paging";
 
@@ -592,7 +592,7 @@ namespace guest_cr0
 
 namespace guest_cr3
 {
-    constexpr const auto addr = 0x0000000000006802UL;
+    constexpr const auto addr = 0x0000000000006802ULL;
     constexpr const auto name = "guest_cr3";
 
     inline bool exists() noexcept
@@ -614,7 +614,7 @@ namespace guest_cr3
 
 namespace guest_cr4
 {
-    constexpr const auto addr = 0x0000000000006804UL;
+    constexpr const auto addr = 0x0000000000006804ULL;
     constexpr const auto name = "guest_cr4";
 
     inline bool exists() noexcept
@@ -635,7 +635,7 @@ namespace guest_cr4
 
     namespace v8086_mode_extensions
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "v8086_mode_extensions";
 
@@ -678,7 +678,7 @@ namespace guest_cr4
 
     namespace protected_mode_virtual_interrupts
     {
-        constexpr const auto mask = 0x0000000000000002UL;
+        constexpr const auto mask = 0x0000000000000002ULL;
         constexpr const auto from = 1;
         constexpr const auto name = "protected_mode_virtual_interrupts";
 
@@ -721,7 +721,7 @@ namespace guest_cr4
 
     namespace time_stamp_disable
     {
-        constexpr const auto mask = 0x0000000000000004UL;
+        constexpr const auto mask = 0x0000000000000004ULL;
         constexpr const auto from = 2;
         constexpr const auto name = "time_stamp_disable";
 
@@ -764,7 +764,7 @@ namespace guest_cr4
 
     namespace debugging_extensions
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "debugging_extensions";
 
@@ -807,7 +807,7 @@ namespace guest_cr4
 
     namespace page_size_extensions
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "page_size_extensions";
 
@@ -850,7 +850,7 @@ namespace guest_cr4
 
     namespace physical_address_extensions
     {
-        constexpr const auto mask = 0x0000000000000020UL;
+        constexpr const auto mask = 0x0000000000000020ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "physical_address_extensions";
 
@@ -893,7 +893,7 @@ namespace guest_cr4
 
     namespace machine_check_enable
     {
-        constexpr const auto mask = 0x0000000000000040UL;
+        constexpr const auto mask = 0x0000000000000040ULL;
         constexpr const auto from = 6;
         constexpr const auto name = "machine_check_enable";
 
@@ -936,7 +936,7 @@ namespace guest_cr4
 
     namespace page_global_enable
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "page_global_enable";
 
@@ -979,7 +979,7 @@ namespace guest_cr4
 
     namespace performance_monitor_counter_enable
     {
-        constexpr const auto mask = 0x0000000000000100UL;
+        constexpr const auto mask = 0x0000000000000100ULL;
         constexpr const auto from = 8;
         constexpr const auto name = "performance_monitor_counter_enable";
 
@@ -1022,7 +1022,7 @@ namespace guest_cr4
 
     namespace osfxsr
     {
-        constexpr const auto mask = 0x0000000000000200UL;
+        constexpr const auto mask = 0x0000000000000200ULL;
         constexpr const auto from = 9;
         constexpr const auto name = "osfxsr";
 
@@ -1065,7 +1065,7 @@ namespace guest_cr4
 
     namespace osxmmexcpt
     {
-        constexpr const auto mask = 0x0000000000000400UL;
+        constexpr const auto mask = 0x0000000000000400ULL;
         constexpr const auto from = 10;
         constexpr const auto name = "osxmmexcpt";
 
@@ -1108,7 +1108,7 @@ namespace guest_cr4
 
     namespace vmx_enable_bit
     {
-        constexpr const auto mask = 0x0000000000002000UL;
+        constexpr const auto mask = 0x0000000000002000ULL;
         constexpr const auto from = 13;
         constexpr const auto name = "vmx_enable_bit";
 
@@ -1151,7 +1151,7 @@ namespace guest_cr4
 
     namespace smx_enable_bit
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "smx_enable_bit";
 
@@ -1194,7 +1194,7 @@ namespace guest_cr4
 
     namespace fsgsbase_enable_bit
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "fsgsbase_enable_bit";
 
@@ -1237,7 +1237,7 @@ namespace guest_cr4
 
     namespace pcid_enable_bit
     {
-        constexpr const auto mask = 0x0000000000020000UL;
+        constexpr const auto mask = 0x0000000000020000ULL;
         constexpr const auto from = 17;
         constexpr const auto name = "pcid_enable_bit";
 
@@ -1280,7 +1280,7 @@ namespace guest_cr4
 
     namespace osxsave
     {
-        constexpr const auto mask = 0x0000000000040000UL;
+        constexpr const auto mask = 0x0000000000040000ULL;
         constexpr const auto from = 18;
         constexpr const auto name = "osxsave";
 
@@ -1323,7 +1323,7 @@ namespace guest_cr4
 
     namespace smep_enable_bit
     {
-        constexpr const auto mask = 0x0000000000100000UL;
+        constexpr const auto mask = 0x0000000000100000ULL;
         constexpr const auto from = 20;
         constexpr const auto name = "smep_enable_bit";
 
@@ -1366,7 +1366,7 @@ namespace guest_cr4
 
     namespace smap_enable_bit
     {
-        constexpr const auto mask = 0x0000000000200000UL;
+        constexpr const auto mask = 0x0000000000200000ULL;
         constexpr const auto from = 21;
         constexpr const auto name = "smap_enable_bit";
 
@@ -1409,7 +1409,7 @@ namespace guest_cr4
 
     namespace protection_key_enable_bit
     {
-        constexpr const auto mask = 0x0000000000400000UL;
+        constexpr const auto mask = 0x0000000000400000ULL;
         constexpr const auto from = 22;
         constexpr const auto name = "protection_key_enable_bit";
 
@@ -1538,7 +1538,7 @@ namespace guest_cr4
 
 namespace guest_es_base
 {
-    constexpr const auto addr = 0x0000000000006806UL;
+    constexpr const auto addr = 0x0000000000006806ULL;
     constexpr const auto name = "guest_es_base";
 
     inline bool exists() noexcept
@@ -1560,7 +1560,7 @@ namespace guest_es_base
 
 namespace guest_cs_base
 {
-    constexpr const auto addr = 0x0000000000006808UL;
+    constexpr const auto addr = 0x0000000000006808ULL;
     constexpr const auto name = "guest_cs_base";
 
     inline bool exists() noexcept
@@ -1582,7 +1582,7 @@ namespace guest_cs_base
 
 namespace guest_ss_base
 {
-    constexpr const auto addr = 0x000000000000680AUL;
+    constexpr const auto addr = 0x000000000000680AULL;
     constexpr const auto name = "guest_ss_base";
 
     inline bool exists() noexcept
@@ -1604,7 +1604,7 @@ namespace guest_ss_base
 
 namespace guest_ds_base
 {
-    constexpr const auto addr = 0x000000000000680CUL;
+    constexpr const auto addr = 0x000000000000680CULL;
     constexpr const auto name = "guest_ds_base";
 
     inline bool exists() noexcept
@@ -1626,7 +1626,7 @@ namespace guest_ds_base
 
 namespace guest_fs_base
 {
-    constexpr const auto addr = 0x000000000000680EUL;
+    constexpr const auto addr = 0x000000000000680EULL;
     constexpr const auto name = "guest_fs_base";
 
     inline bool exists() noexcept
@@ -1648,7 +1648,7 @@ namespace guest_fs_base
 
 namespace guest_gs_base
 {
-    constexpr const auto addr = 0x0000000000006810UL;
+    constexpr const auto addr = 0x0000000000006810ULL;
     constexpr const auto name = "guest_gs_base";
 
     inline bool exists() noexcept
@@ -1670,7 +1670,7 @@ namespace guest_gs_base
 
 namespace guest_ldtr_base
 {
-    constexpr const auto addr = 0x0000000000006812UL;
+    constexpr const auto addr = 0x0000000000006812ULL;
     constexpr const auto name = "guest_ldtr_base";
 
     inline bool exists() noexcept
@@ -1692,7 +1692,7 @@ namespace guest_ldtr_base
 
 namespace guest_tr_base
 {
-    constexpr const auto addr = 0x0000000000006814UL;
+    constexpr const auto addr = 0x0000000000006814ULL;
     constexpr const auto name = "guest_tr_base";
 
     inline bool exists() noexcept
@@ -1714,7 +1714,7 @@ namespace guest_tr_base
 
 namespace guest_gdtr_base
 {
-    constexpr const auto addr = 0x0000000000006816UL;
+    constexpr const auto addr = 0x0000000000006816ULL;
     constexpr const auto name = "guest_gdtr_base";
 
     inline bool exists() noexcept
@@ -1736,7 +1736,7 @@ namespace guest_gdtr_base
 
 namespace guest_idtr_base
 {
-    constexpr const auto addr = 0x0000000000006818UL;
+    constexpr const auto addr = 0x0000000000006818ULL;
     constexpr const auto name = "guest_idtr_base";
 
     inline bool exists() noexcept
@@ -1758,7 +1758,7 @@ namespace guest_idtr_base
 
 namespace guest_dr7
 {
-    constexpr const auto addr = 0x000000000000681AUL;
+    constexpr const auto addr = 0x000000000000681AULL;
     constexpr const auto name = "guest_dr7";
 
     inline bool exists() noexcept
@@ -1780,7 +1780,7 @@ namespace guest_dr7
 
 namespace guest_rsp
 {
-    constexpr const auto addr = 0x000000000000681CUL;
+    constexpr const auto addr = 0x000000000000681CULL;
     constexpr const auto name = "guest_rsp";
 
     inline bool exists() noexcept
@@ -1802,7 +1802,7 @@ namespace guest_rsp
 
 namespace guest_rip
 {
-    constexpr const auto addr = 0x000000000000681EUL;
+    constexpr const auto addr = 0x000000000000681EULL;
     constexpr const auto name = "guest_rip";
 
     inline bool exists() noexcept
@@ -1824,7 +1824,7 @@ namespace guest_rip
 
 namespace guest_rflags
 {
-    constexpr const auto addr = 0x0000000000006820UL;
+    constexpr const auto addr = 0x0000000000006820ULL;
     constexpr const auto name = "guest_rflags";
 
     inline bool exists() noexcept
@@ -1845,7 +1845,7 @@ namespace guest_rflags
 
     namespace carry_flag
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "carry_flag";
 
@@ -1888,7 +1888,7 @@ namespace guest_rflags
 
     namespace parity_flag
     {
-        constexpr const auto mask = 0x0000000000000004UL;
+        constexpr const auto mask = 0x0000000000000004ULL;
         constexpr const auto from = 2;
         constexpr const auto name = "parity_flag";
 
@@ -1931,7 +1931,7 @@ namespace guest_rflags
 
     namespace auxiliary_carry_flag
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "auxiliary_carry_flag";
 
@@ -1974,7 +1974,7 @@ namespace guest_rflags
 
     namespace zero_flag
     {
-        constexpr const auto mask = 0x0000000000000040UL;
+        constexpr const auto mask = 0x0000000000000040ULL;
         constexpr const auto from = 6;
         constexpr const auto name = "zero_flag";
 
@@ -2017,7 +2017,7 @@ namespace guest_rflags
 
     namespace sign_flag
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "sign_flag";
 
@@ -2060,7 +2060,7 @@ namespace guest_rflags
 
     namespace trap_flag
     {
-        constexpr const auto mask = 0x0000000000000100UL;
+        constexpr const auto mask = 0x0000000000000100ULL;
         constexpr const auto from = 8;
         constexpr const auto name = "trap_flag";
 
@@ -2103,7 +2103,7 @@ namespace guest_rflags
 
     namespace interrupt_enable_flag
     {
-        constexpr const auto mask = 0x0000000000000200UL;
+        constexpr const auto mask = 0x0000000000000200ULL;
         constexpr const auto from = 9;
         constexpr const auto name = "interrupt_enable_flag";
 
@@ -2146,7 +2146,7 @@ namespace guest_rflags
 
     namespace direction_flag
     {
-        constexpr const auto mask = 0x0000000000000400UL;
+        constexpr const auto mask = 0x0000000000000400ULL;
         constexpr const auto from = 10;
         constexpr const auto name = "direction_flag";
 
@@ -2189,7 +2189,7 @@ namespace guest_rflags
 
     namespace overflow_flag
     {
-        constexpr const auto mask = 0x0000000000000800UL;
+        constexpr const auto mask = 0x0000000000000800ULL;
         constexpr const auto from = 11;
         constexpr const auto name = "overflow_flag";
 
@@ -2232,7 +2232,7 @@ namespace guest_rflags
 
     namespace privilege_level
     {
-        constexpr const auto mask = 0x0000000000003000UL;
+        constexpr const auto mask = 0x0000000000003000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "privilege_level";
 
@@ -2259,7 +2259,7 @@ namespace guest_rflags
 
     namespace nested_task
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "nested_task";
 
@@ -2302,7 +2302,7 @@ namespace guest_rflags
 
     namespace resume_flag
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "resume_flag";
 
@@ -2345,7 +2345,7 @@ namespace guest_rflags
 
     namespace virtual_8086_mode
     {
-        constexpr const auto mask = 0x0000000000020000UL;
+        constexpr const auto mask = 0x0000000000020000ULL;
         constexpr const auto from = 17;
         constexpr const auto name = "virtual_8086_mode";
 
@@ -2388,7 +2388,7 @@ namespace guest_rflags
 
     namespace alignment_check_access_control
     {
-        constexpr const auto mask = 0x0000000000040000UL;
+        constexpr const auto mask = 0x0000000000040000ULL;
         constexpr const auto from = 18;
         constexpr const auto name = "alignment_check_access_control";
 
@@ -2431,7 +2431,7 @@ namespace guest_rflags
 
     namespace virtual_interrupt_flag
     {
-        constexpr const auto mask = 0x0000000000080000UL;
+        constexpr const auto mask = 0x0000000000080000ULL;
         constexpr const auto from = 19;
         constexpr const auto name = "virtual_interrupt_flag";
 
@@ -2474,7 +2474,7 @@ namespace guest_rflags
 
     namespace virtual_interrupt_pending
     {
-        constexpr const auto mask = 0x0000000000100000UL;
+        constexpr const auto mask = 0x0000000000100000ULL;
         constexpr const auto from = 20;
         constexpr const auto name = "virtual_interrupt_pending";
 
@@ -2517,7 +2517,7 @@ namespace guest_rflags
 
     namespace id_flag
     {
-        constexpr const auto mask = 0x0000000000200000UL;
+        constexpr const auto mask = 0x0000000000200000ULL;
         constexpr const auto from = 21;
         constexpr const auto name = "id_flag";
 
@@ -2560,7 +2560,7 @@ namespace guest_rflags
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFFFFFC08028UL;
+        constexpr const auto mask = 0xFFFFFFFFFFC08028ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -2587,7 +2587,7 @@ namespace guest_rflags
 
     namespace always_disabled
     {
-        constexpr const auto mask = 0xFFFFFFFFFFC08028UL;
+        constexpr const auto mask = 0xFFFFFFFFFFC08028ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "always_disabled";
 
@@ -2614,7 +2614,7 @@ namespace guest_rflags
 
     namespace always_enabled
     {
-        constexpr const auto mask = 0x0000000000000002UL;
+        constexpr const auto mask = 0x0000000000000002ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "always_enabled";
 
@@ -2642,7 +2642,7 @@ namespace guest_rflags
 
 namespace guest_pending_debug_exceptions
 {
-    constexpr const auto addr = 0x0000000000006822UL;
+    constexpr const auto addr = 0x0000000000006822ULL;
     constexpr const auto name = "guest_pending_debug_exceptions";
 
     inline bool exists() noexcept
@@ -2663,7 +2663,7 @@ namespace guest_pending_debug_exceptions
 
     namespace b0
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "b0";
 
@@ -2706,7 +2706,7 @@ namespace guest_pending_debug_exceptions
 
     namespace b1
     {
-        constexpr const auto mask = 0x0000000000000002UL;
+        constexpr const auto mask = 0x0000000000000002ULL;
         constexpr const auto from = 1;
         constexpr const auto name = "b1";
 
@@ -2749,7 +2749,7 @@ namespace guest_pending_debug_exceptions
 
     namespace b2
     {
-        constexpr const auto mask = 0x0000000000000004UL;
+        constexpr const auto mask = 0x0000000000000004ULL;
         constexpr const auto from = 2;
         constexpr const auto name = "b2";
 
@@ -2792,7 +2792,7 @@ namespace guest_pending_debug_exceptions
 
     namespace b3
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "b3";
 
@@ -2835,7 +2835,7 @@ namespace guest_pending_debug_exceptions
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFFFFFFEAFF0UL;
+        constexpr const auto mask = 0xFFFFFFFFFFFEAFF0ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -2862,7 +2862,7 @@ namespace guest_pending_debug_exceptions
 
     namespace enabled_breakpoint
     {
-        constexpr const auto mask = 0x0000000000001000UL;
+        constexpr const auto mask = 0x0000000000001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "enabled_breakpoint";
 
@@ -2905,7 +2905,7 @@ namespace guest_pending_debug_exceptions
 
     namespace bs
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "bs";
 
@@ -2948,7 +2948,7 @@ namespace guest_pending_debug_exceptions
 
     namespace rtm
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "rtm";
 
@@ -2992,7 +2992,7 @@ namespace guest_pending_debug_exceptions
 
 namespace guest_ia32_sysenter_esp
 {
-    constexpr const auto addr = 0x0000000000006824UL;
+    constexpr const auto addr = 0x0000000000006824ULL;
     constexpr const auto name = "guest_ia32_sysenter_esp";
 
     inline bool exists() noexcept
@@ -3014,7 +3014,7 @@ namespace guest_ia32_sysenter_esp
 
 namespace guest_ia32_sysenter_eip
 {
-    constexpr const auto addr = 0x0000000000006826UL;
+    constexpr const auto addr = 0x0000000000006826ULL;
     constexpr const auto name = "guest_ia32_sysenter_eip";
 
     inline bool exists() noexcept

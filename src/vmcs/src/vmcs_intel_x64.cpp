@@ -403,8 +403,8 @@ vmcs_intel_x64::write_natural_host_state(gsl::not_null<vmcs_intel_x64_state *> s
     vmcs::host_ia32_sysenter_esp::set(state->ia32_sysenter_esp_msr());
     vmcs::host_ia32_sysenter_eip::set(state->ia32_sysenter_eip_msr());
 
-    vmcs::host_rsp::set(reinterpret_cast<uintptr_t>(exit_handler_stack));
-    vmcs::host_rip::set(reinterpret_cast<uintptr_t>(exit_handler_entry));
+    vmcs::host_rsp::set(exit_handler_stack);
+    vmcs::host_rip::set(exit_handler_entry);
 }
 
 void

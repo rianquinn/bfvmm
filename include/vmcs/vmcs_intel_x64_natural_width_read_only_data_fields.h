@@ -42,7 +42,7 @@ namespace vmcs
 
 namespace exit_qualification
 {
-    constexpr const auto addr = 0x0000000000006400UL;
+    constexpr const auto addr = 0x0000000000006400ULL;
     constexpr const auto name = "exit_qualification";
 
     inline bool exists() noexcept
@@ -69,7 +69,7 @@ namespace exit_qualification
 
         namespace b0
         {
-            constexpr const auto mask = 0x0000000000000001UL;
+            constexpr const auto mask = 0x0000000000000001ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "b0";
 
@@ -96,7 +96,7 @@ namespace exit_qualification
 
         namespace b1
         {
-            constexpr const auto mask = 0x0000000000000002UL;
+            constexpr const auto mask = 0x0000000000000002ULL;
             constexpr const auto from = 1;
             constexpr const auto name = "b1";
 
@@ -123,7 +123,7 @@ namespace exit_qualification
 
         namespace b2
         {
-            constexpr const auto mask = 0x0000000000000004UL;
+            constexpr const auto mask = 0x0000000000000004ULL;
             constexpr const auto from = 2;
             constexpr const auto name = "b2";
 
@@ -150,7 +150,7 @@ namespace exit_qualification
 
         namespace b3
         {
-            constexpr const auto mask = 0x0000000000000008UL;
+            constexpr const auto mask = 0x0000000000000008ULL;
             constexpr const auto from = 3;
             constexpr const auto name = "b3";
 
@@ -177,7 +177,7 @@ namespace exit_qualification
 
         namespace reserved
         {
-            constexpr const auto mask = 0xFFFFFFFFFFFF9FF0UL;
+            constexpr const auto mask = 0xFFFFFFFFFFFF9FF0ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "reserved";
 
@@ -194,7 +194,7 @@ namespace exit_qualification
 
         namespace bd
         {
-            constexpr const auto mask = 0x0000000000002000UL;
+            constexpr const auto mask = 0x0000000000002000ULL;
             constexpr const auto from = 13;
             constexpr const auto name = "bd";
 
@@ -221,7 +221,7 @@ namespace exit_qualification
 
         namespace bs
         {
-            constexpr const auto mask = 0x0000000000004000UL;
+            constexpr const auto mask = 0x0000000000004000ULL;
             constexpr const auto from = 14;
             constexpr const auto name = "bs";
 
@@ -276,7 +276,7 @@ namespace exit_qualification
 
         namespace vector
         {
-            constexpr const auto mask = 0x00000000000000FFUL;
+            constexpr const auto mask = 0x00000000000000FFULL;
             constexpr const auto from = 0;
             constexpr const auto name = "vector";
 
@@ -307,7 +307,7 @@ namespace exit_qualification
 
         namespace tss_selector
         {
-            constexpr const auto mask = 0x000000000000FFFFUL;
+            constexpr const auto mask = 0x000000000000FFFFULL;
             constexpr const auto from = 0;
             constexpr const auto name = "tss_selector";
 
@@ -324,7 +324,7 @@ namespace exit_qualification
 
         namespace reserved
         {
-            constexpr const auto mask = 0xFFFFFFFF3FFF0000UL;
+            constexpr const auto mask = 0xFFFFFFFF3FFF0000ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "reserved";
 
@@ -341,7 +341,7 @@ namespace exit_qualification
 
         namespace source_of_task_switch_init
         {
-            constexpr const auto mask = 0x00000000C0000000UL;
+            constexpr const auto mask = 0x00000000C0000000ULL;
             constexpr const auto from = 30;
             constexpr const auto name = "task_switch_init_source";
 
@@ -643,7 +643,7 @@ namespace exit_qualification
 
         namespace control_register_number
         {
-            constexpr const auto mask = 0x000000000000000FUL;
+            constexpr const auto mask = 0x000000000000000FULL;
             constexpr const auto from = 0;
             constexpr const auto name = "control_register_number";
 
@@ -660,7 +660,7 @@ namespace exit_qualification
 
         namespace access_type
         {
-            constexpr const auto mask = 0x0000000000000030UL;
+            constexpr const auto mask = 0x0000000000000030ULL;
             constexpr const auto from = 4;
             constexpr const auto name = "access_type";
 
@@ -682,7 +682,7 @@ namespace exit_qualification
 
         namespace lmsw_operand_type
         {
-            constexpr const auto mask = 0x0000000000000040UL;
+            constexpr const auto mask = 0x0000000000000040ULL;
             constexpr const auto from = 6;
             constexpr const auto name = "lmsw_operand_type";
 
@@ -702,7 +702,7 @@ namespace exit_qualification
 
         namespace reserved
         {
-            constexpr const auto mask = 0xFFFFFFFF0000F080UL;
+            constexpr const auto mask = 0xFFFFFFFF0000F080ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "reserved";
 
@@ -719,7 +719,7 @@ namespace exit_qualification
 
         namespace general_purpose_register
         {
-            constexpr const auto mask = 0x0000000000000F00UL;
+            constexpr const auto mask = 0x0000000000000F00ULL;
             constexpr const auto from = 8;
             constexpr const auto name = "general_purpose_register";
 
@@ -753,7 +753,7 @@ namespace exit_qualification
 
         namespace source_data
         {
-            constexpr const auto mask = 0x00000000FFFF0000UL;
+            constexpr const auto mask = 0x00000000FFFF0000ULL;
             constexpr const auto from = 16;
             constexpr const auto name = "source_data";
 
@@ -785,7 +785,7 @@ namespace exit_qualification
 
         namespace debug_register_number
         {
-            constexpr const auto mask = 0x0000000000000007UL;
+            constexpr const auto mask = 0x0000000000000007ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "debug_register_number";
 
@@ -802,7 +802,7 @@ namespace exit_qualification
 
         namespace reserved
         {
-            constexpr const auto mask = 0xFFFFFFFFFFFFF0E8UL;
+            constexpr const auto mask = 0xFFFFFFFFFFFFF0E8ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "reserved";
 
@@ -819,7 +819,7 @@ namespace exit_qualification
 
         namespace direction_of_access
         {
-            constexpr const auto mask = 0x0000000000000010UL;
+            constexpr const auto mask = 0x0000000000000010ULL;
             constexpr const auto from = 4;
             constexpr const auto name = "direction_of_access";
 
@@ -839,7 +839,7 @@ namespace exit_qualification
 
         namespace general_purpose_register
         {
-            constexpr const auto mask = 0x0000000000000F00UL;
+            constexpr const auto mask = 0x0000000000000F00ULL;
             constexpr const auto from = 8;
             constexpr const auto name = "general_purpose_register";
 
@@ -887,7 +887,7 @@ namespace exit_qualification
 
         namespace size_of_access
         {
-            constexpr const auto mask = 0x0000000000000007UL;
+            constexpr const auto mask = 0x0000000000000007ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "size_of_access";
 
@@ -908,7 +908,7 @@ namespace exit_qualification
 
         namespace direction_of_access
         {
-            constexpr const auto mask = 0x0000000000000008UL;
+            constexpr const auto mask = 0x0000000000000008ULL;
             constexpr const auto from = 3;
             constexpr const auto name = "direction_of_access";
 
@@ -928,7 +928,7 @@ namespace exit_qualification
 
         namespace string_instruction
         {
-            constexpr const auto mask = 0x0000000000000010UL;
+            constexpr const auto mask = 0x0000000000000010ULL;
             constexpr const auto from = 4;
             constexpr const auto name = "string_instruction";
 
@@ -948,7 +948,7 @@ namespace exit_qualification
 
         namespace rep_prefixed
         {
-            constexpr const auto mask = 0x0000000000000020UL;
+            constexpr const auto mask = 0x0000000000000020ULL;
             constexpr const auto from = 5;
             constexpr const auto name = "rep_prefixed";
 
@@ -968,7 +968,7 @@ namespace exit_qualification
 
         namespace operand_encoding
         {
-            constexpr const auto mask = 0x0000000000000040UL;
+            constexpr const auto mask = 0x0000000000000040ULL;
             constexpr const auto from = 6;
             constexpr const auto name = "operand_encoding";
 
@@ -988,7 +988,7 @@ namespace exit_qualification
 
         namespace reserved
         {
-            constexpr const auto mask = 0xFFFFFFFF0000FF80UL;
+            constexpr const auto mask = 0xFFFFFFFF0000FF80ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "reserved";
 
@@ -1005,7 +1005,7 @@ namespace exit_qualification
 
         namespace port_number
         {
-            constexpr const auto mask = 0x00000000FFFF0000UL;
+            constexpr const auto mask = 0x00000000FFFF0000ULL;
             constexpr const auto from = 16;
             constexpr const auto name = "port_number";
 
@@ -1050,7 +1050,7 @@ namespace exit_qualification
 
         namespace offset
         {
-            constexpr const auto mask = 0x0000000000000FFFUL;
+            constexpr const auto mask = 0x0000000000000FFFULL;
             constexpr const auto from = 0;
             constexpr const auto name = "offset";
 
@@ -1067,7 +1067,7 @@ namespace exit_qualification
 
         namespace access_type
         {
-            constexpr const auto mask = 0x000000000000F000UL;
+            constexpr const auto mask = 0x000000000000F000ULL;
             constexpr const auto from = 12;
             constexpr const auto name = "access_type";
 
@@ -1089,7 +1089,7 @@ namespace exit_qualification
 
         namespace reserved
         {
-            constexpr const auto mask = 0xFFFFFFFFFFFF0000UL;
+            constexpr const auto mask = 0xFFFFFFFFFFFF0000ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "reserved";
 
@@ -1120,7 +1120,7 @@ namespace exit_qualification
 
         namespace access_type
         {
-            constexpr const auto mask = 0x000000000000F000UL;
+            constexpr const auto mask = 0x000000000000F000ULL;
             constexpr const auto from = 12;
             constexpr const auto name = "access_type";
 
@@ -1140,7 +1140,7 @@ namespace exit_qualification
 
         namespace reserved
         {
-            constexpr const auto mask = 0xFFFFFFFFFFFF0000UL;
+            constexpr const auto mask = 0xFFFFFFFFFFFF0000ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "reserved";
 
@@ -1171,7 +1171,7 @@ namespace exit_qualification
 
         namespace data_read
         {
-            constexpr const auto mask = 0x0000000000000001UL;
+            constexpr const auto mask = 0x0000000000000001ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "data_read";
 
@@ -1198,7 +1198,7 @@ namespace exit_qualification
 
         namespace data_write
         {
-            constexpr const auto mask = 0x0000000000000002UL;
+            constexpr const auto mask = 0x0000000000000002ULL;
             constexpr const auto from = 1;
             constexpr const auto name = "data_write";
 
@@ -1225,7 +1225,7 @@ namespace exit_qualification
 
         namespace instruction_fetch
         {
-            constexpr const auto mask = 0x0000000000000004UL;
+            constexpr const auto mask = 0x0000000000000004ULL;
             constexpr const auto from = 2;
             constexpr const auto name = "instruction_fetch";
 
@@ -1252,7 +1252,7 @@ namespace exit_qualification
 
         namespace readable
         {
-            constexpr const auto mask = 0x0000000000000008UL;
+            constexpr const auto mask = 0x0000000000000008ULL;
             constexpr const auto from = 3;
             constexpr const auto name = "readable";
 
@@ -1279,7 +1279,7 @@ namespace exit_qualification
 
         namespace writeable
         {
-            constexpr const auto mask = 0x0000000000000010UL;
+            constexpr const auto mask = 0x0000000000000010ULL;
             constexpr const auto from = 4;
             constexpr const auto name = "writeable";
 
@@ -1306,7 +1306,7 @@ namespace exit_qualification
 
         namespace executable
         {
-            constexpr const auto mask = 0x0000000000000020UL;
+            constexpr const auto mask = 0x0000000000000020ULL;
             constexpr const auto from = 5;
             constexpr const auto name = "executable";
 
@@ -1334,7 +1334,7 @@ namespace exit_qualification
         // bit 8 may be reserved to 0 if bit 7 is 0
         namespace reserved
         {
-            constexpr const auto mask = 0xFFFFFFFFFFFFEE40UL;
+            constexpr const auto mask = 0xFFFFFFFFFFFFEE40ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "reserved";
 
@@ -1351,7 +1351,7 @@ namespace exit_qualification
 
         namespace valid_guest_linear_address
         {
-            constexpr const auto mask = 0x0000000000000080UL;
+            constexpr const auto mask = 0x0000000000000080ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "valid_guest_linear_address";
 
@@ -1380,7 +1380,7 @@ namespace exit_qualification
 
         namespace nmi_unblocking_due_to_iret
         {
-            constexpr const auto mask = 0x0000000000001000UL;
+            constexpr const auto mask = 0x0000000000001000ULL;
             constexpr const auto from = 12;
             constexpr const auto name = "nmi_unblocking_due_to_iret";
 
@@ -1421,7 +1421,7 @@ namespace exit_qualification
 
         namespace vector
         {
-            constexpr const auto mask = 0x00000000000000FFUL;
+            constexpr const auto mask = 0x00000000000000FFULL;
             constexpr const auto from = 0;
             constexpr const auto name = "vector";
 
@@ -1452,7 +1452,7 @@ namespace exit_qualification
 
         namespace offset
         {
-            constexpr const auto mask = 0x0000000000000FFFUL;
+            constexpr const auto mask = 0x0000000000000FFFULL;
             constexpr const auto from = 0;
             constexpr const auto name = "offset";
 
@@ -1471,7 +1471,7 @@ namespace exit_qualification
 
 namespace io_rcx
 {
-    constexpr const auto addr = 0x0000000000006402UL;
+    constexpr const auto addr = 0x0000000000006402ULL;
     constexpr const auto name = "io_rcx";
 
     inline auto exists()
@@ -1486,7 +1486,7 @@ namespace io_rcx
 
 namespace io_rsi
 {
-    constexpr const auto addr = 0x0000000000006404UL;
+    constexpr const auto addr = 0x0000000000006404ULL;
     constexpr const auto name = "io_rsi";
 
     inline auto exists()
@@ -1501,7 +1501,7 @@ namespace io_rsi
 
 namespace io_rdi
 {
-    constexpr const auto addr = 0x0000000000006406UL;
+    constexpr const auto addr = 0x0000000000006406ULL;
     constexpr const auto name = "io_rdi";
 
     inline auto exists()
@@ -1516,7 +1516,7 @@ namespace io_rdi
 
 namespace io_rip
 {
-    constexpr const auto addr = 0x0000000000006408UL;
+    constexpr const auto addr = 0x0000000000006408ULL;
     constexpr const auto name = "io_rip";
 
     inline auto exists()
@@ -1531,7 +1531,7 @@ namespace io_rip
 
 namespace guest_linear_address
 {
-    constexpr const auto addr = 0x000000000000640AUL;
+    constexpr const auto addr = 0x000000000000640AULL;
     constexpr const auto name = "guest_linear_address";
 
     inline auto exists()

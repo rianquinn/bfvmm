@@ -38,8 +38,8 @@
 // Definitions
 // -----------------------------------------------------------------------------
 
-extern "C" EXPORT_INTRINSICS uint64_t __read_tsc(void) noexcept;
-extern "C" EXPORT_INTRINSICS uint64_t __read_tscp(void) noexcept;
+extern "C" EXPORT_INTRINSICS uint64_t _read_tsc(void) noexcept;
+extern "C" EXPORT_INTRINSICS uint64_t _read_tscp(void) noexcept;
 
 // *INDENT-OFF*
 
@@ -51,7 +51,7 @@ namespace read_tsc
     using value_type = uint64_t;
 
     inline auto get() noexcept
-    { return __read_tsc(); }
+    { return _read_tsc(); }
 }
 
 namespace read_tscp
@@ -59,7 +59,7 @@ namespace read_tscp
     using value_type = uint64_t;
 
     inline auto get() noexcept
-    { return __read_tscp(); }
+    { return _read_tscp(); }
 }
 
 }

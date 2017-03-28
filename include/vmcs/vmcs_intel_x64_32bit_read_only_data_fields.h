@@ -42,7 +42,7 @@ namespace vmcs
 
 namespace vm_instruction_error
 {
-    constexpr const auto addr = 0x0000000000004400UL;
+    constexpr const auto addr = 0x0000000000004400ULL;
     constexpr const auto name = "vm_instruction_error";
 
     inline auto exists() noexcept
@@ -180,7 +180,7 @@ namespace vm_instruction_error
 
 namespace exit_reason
 {
-    constexpr const auto addr = 0x0000000000004402UL;
+    constexpr const auto addr = 0x0000000000004402ULL;
     constexpr const auto name = "exit_reason";
 
     inline auto exists() noexcept
@@ -194,7 +194,7 @@ namespace exit_reason
 
     namespace basic_exit_reason
     {
-        constexpr const auto mask = 0x000000000000FFFFUL;
+        constexpr const auto mask = 0x000000000000FFFFULL;
         constexpr const auto from = 0;
         constexpr const auto name = "basic_exit_reason";
 
@@ -494,7 +494,7 @@ namespace exit_reason
 
     namespace reserved
     {
-        constexpr const auto mask = 0x0000000047FF0000UL;
+        constexpr const auto mask = 0x0000000047FF0000ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -507,7 +507,7 @@ namespace exit_reason
 
     namespace vm_exit_incident_to_enclave_mode
     {
-        constexpr const auto mask = 0x0000000008000000UL;
+        constexpr const auto mask = 0x0000000008000000ULL;
         constexpr const auto from = 27;
         constexpr const auto name = "vm_exit_incident_to_enclave_mode";
 
@@ -526,7 +526,7 @@ namespace exit_reason
 
     namespace pending_mtf_vm_exit
     {
-        constexpr const auto mask = 0x0000000010000000UL;
+        constexpr const auto mask = 0x0000000010000000ULL;
         constexpr const auto from = 28;
         constexpr const auto name = "pending_mtf_vm_exit";
 
@@ -545,7 +545,7 @@ namespace exit_reason
 
     namespace vm_exit_from_vmx_root_operation
     {
-        constexpr const auto mask = 0x0000000020000000UL;
+        constexpr const auto mask = 0x0000000020000000ULL;
         constexpr const auto from = 29;
         constexpr const auto name = "vm_exit_from_vmx_root_operation";
 
@@ -564,7 +564,7 @@ namespace exit_reason
 
     namespace vm_entry_failure
     {
-        constexpr const auto mask = 0x0000000080000000UL;
+        constexpr const auto mask = 0x0000000080000000ULL;
         constexpr const auto from = 31;
         constexpr const auto name = "vm_entry_failure";
 
@@ -584,7 +584,7 @@ namespace exit_reason
 
 namespace vm_exit_interruption_information
 {
-    constexpr const auto addr = 0x0000000000004404UL;
+    constexpr const auto addr = 0x0000000000004404ULL;
     constexpr const auto name = "vm_exit_interruption_information";
 
     inline auto exists() noexcept
@@ -598,7 +598,7 @@ namespace vm_exit_interruption_information
 
     namespace vector
     {
-        constexpr const auto mask = 0x000000FFUL;
+        constexpr const auto mask = 0x000000FFULL;
         constexpr const auto from = 0;
         constexpr const auto name = "vector";
 
@@ -611,14 +611,14 @@ namespace vm_exit_interruption_information
 
     namespace interruption_type
     {
-        constexpr const auto mask = 0x00000700UL;
+        constexpr const auto mask = 0x00000700ULL;
         constexpr const auto from = 8;
         constexpr const auto name = "interruption_type";
 
-        constexpr const auto external_interrupt = 0UL;
-        constexpr const auto non_maskable_interrupt = 2UL;
-        constexpr const auto hardware_exception = 3UL;
-        constexpr const auto software_exception = 6UL;
+        constexpr const auto external_interrupt = 0ULL;
+        constexpr const auto non_maskable_interrupt = 2ULL;
+        constexpr const auto hardware_exception = 3ULL;
+        constexpr const auto software_exception = 6ULL;
 
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -629,7 +629,7 @@ namespace vm_exit_interruption_information
 
     namespace error_code_valid
     {
-        constexpr const auto mask = 0x00000800UL;
+        constexpr const auto mask = 0x00000800ULL;
         constexpr const auto from = 11;
         constexpr const auto name = "deliver_error_code_bit";
 
@@ -648,7 +648,7 @@ namespace vm_exit_interruption_information
 
     namespace nmi_unblocking_due_to_iret
     {
-        constexpr const auto mask = 0x00001000UL;
+        constexpr const auto mask = 0x00001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "nmi_unblocking_due_to_iret";
 
@@ -667,7 +667,7 @@ namespace vm_exit_interruption_information
 
     namespace reserved
     {
-        constexpr const auto mask = 0x7FFFE000UL;
+        constexpr const auto mask = 0x7FFFE000ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -680,7 +680,7 @@ namespace vm_exit_interruption_information
 
     namespace valid_bit
     {
-        constexpr const auto mask = 0x80000000UL;
+        constexpr const auto mask = 0x80000000ULL;
         constexpr const auto from = 31;
         constexpr const auto name = "valid_bit";
 
@@ -700,7 +700,7 @@ namespace vm_exit_interruption_information
 
 namespace vm_exit_interruption_error_code
 {
-    constexpr const auto addr = 0x0000000000004406UL;
+    constexpr const auto addr = 0x0000000000004406ULL;
     constexpr const auto name = "vm_exit_interruption_error_code";
 
     inline auto exists() noexcept
@@ -715,7 +715,7 @@ namespace vm_exit_interruption_error_code
 
 namespace idt_vectoring_information
 {
-    constexpr const auto addr = 0x0000000000004408UL;
+    constexpr const auto addr = 0x0000000000004408ULL;
     constexpr const auto name = "idt_vectoring_information_field";
 
     inline auto exists() noexcept
@@ -729,7 +729,7 @@ namespace idt_vectoring_information
 
     namespace vector
     {
-        constexpr const auto mask = 0x000000FFUL;
+        constexpr const auto mask = 0x000000FFULL;
         constexpr const auto from = 0;
         constexpr const auto name = "vector";
 
@@ -742,16 +742,16 @@ namespace idt_vectoring_information
 
     namespace interruption_type
     {
-        constexpr const auto mask = 0x00000700UL;
+        constexpr const auto mask = 0x00000700ULL;
         constexpr const auto from = 8;
         constexpr const auto name = "interruption_type";
 
-        constexpr const auto external_interrupt = 0UL;
-        constexpr const auto non_maskable_interrupt = 2UL;
-        constexpr const auto hardware_exception = 3UL;
-        constexpr const auto software_interrupt = 4UL;
-        constexpr const auto privileged_software_exception = 5UL;
-        constexpr const auto software_exception = 6UL;
+        constexpr const auto external_interrupt = 0ULL;
+        constexpr const auto non_maskable_interrupt = 2ULL;
+        constexpr const auto hardware_exception = 3ULL;
+        constexpr const auto software_interrupt = 4ULL;
+        constexpr const auto privileged_software_exception = 5ULL;
+        constexpr const auto software_exception = 6ULL;
 
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -762,7 +762,7 @@ namespace idt_vectoring_information
 
     namespace error_code_valid
     {
-        constexpr const auto mask = 0x00000800UL;
+        constexpr const auto mask = 0x00000800ULL;
         constexpr const auto from = 11;
         constexpr const auto name = "deliver_error_code_bit";
 
@@ -781,7 +781,7 @@ namespace idt_vectoring_information
 
     namespace reserved
     {
-        constexpr const auto mask = 0x7FFFE000UL;
+        constexpr const auto mask = 0x7FFFE000ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -794,7 +794,7 @@ namespace idt_vectoring_information
 
     namespace valid_bit
     {
-        constexpr const auto mask = 0x80000000UL;
+        constexpr const auto mask = 0x80000000ULL;
         constexpr const auto from = 31;
         constexpr const auto name = "valid_bit";
 
@@ -814,7 +814,7 @@ namespace idt_vectoring_information
 
 namespace idt_vectoring_error_code
 {
-    constexpr const auto addr = 0x000000000000440AUL;
+    constexpr const auto addr = 0x000000000000440AULL;
     constexpr const auto name = "idt_vectoring_error_code";
 
     inline auto exists() noexcept
@@ -829,7 +829,7 @@ namespace idt_vectoring_error_code
 
 namespace vm_exit_instruction_length
 {
-    constexpr const auto addr = 0x000000000000440CUL;
+    constexpr const auto addr = 0x000000000000440CULL;
     constexpr const auto name = "vm_exit_instruction_length";
 
     inline auto exists() noexcept
@@ -844,7 +844,7 @@ namespace vm_exit_instruction_length
 
 namespace vm_exit_instruction_information
 {
-    constexpr const auto addr = 0x000000000000440EUL;
+    constexpr const auto addr = 0x000000000000440EULL;
     constexpr const auto name = "vm_exit_instruction_information";
 
     inline auto exists() noexcept
@@ -871,7 +871,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -902,7 +902,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -919,7 +919,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -953,7 +953,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -971,7 +971,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -988,7 +988,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -1008,7 +1008,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -1038,7 +1038,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -1054,7 +1054,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -1084,7 +1084,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -1100,7 +1100,7 @@ namespace vm_exit_instruction_information
 
         namespace reg2
         {
-            constexpr const auto mask = 0x00000000F0000000UL;
+            constexpr const auto mask = 0x00000000F0000000ULL;
             constexpr const auto from = 28;
             constexpr const auto name = "reg2";
 
@@ -1144,7 +1144,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -1162,7 +1162,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -1179,7 +1179,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -1199,7 +1199,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -1229,7 +1229,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -1245,7 +1245,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -1275,7 +1275,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -1291,7 +1291,7 @@ namespace vm_exit_instruction_information
 
         namespace reg2
         {
-            constexpr const auto mask = 0x00000000F0000000UL;
+            constexpr const auto mask = 0x00000000F0000000ULL;
             constexpr const auto from = 28;
             constexpr const auto name = "reg2";
 
@@ -1335,7 +1335,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -1353,7 +1353,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -1370,7 +1370,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -1390,7 +1390,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -1420,7 +1420,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -1436,7 +1436,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -1466,7 +1466,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -1482,7 +1482,7 @@ namespace vm_exit_instruction_information
 
         namespace reg2
         {
-            constexpr const auto mask = 0x00000000F0000000UL;
+            constexpr const auto mask = 0x00000000F0000000ULL;
             constexpr const auto from = 28;
             constexpr const auto name = "reg2";
 
@@ -1526,7 +1526,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -1544,7 +1544,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -1561,7 +1561,7 @@ namespace vm_exit_instruction_information
 
         namespace operand_size
         {
-            constexpr const auto mask = 0x0000000000000800UL;
+            constexpr const auto mask = 0x0000000000000800ULL;
             constexpr const auto from = 11;
             constexpr const auto name = "operand_size";
 
@@ -1577,7 +1577,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -1597,7 +1597,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -1627,7 +1627,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -1643,7 +1643,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -1673,7 +1673,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -1689,7 +1689,7 @@ namespace vm_exit_instruction_information
 
         namespace instruction_identity
         {
-            constexpr const auto mask = 0x0000000030000000UL;
+            constexpr const auto mask = 0x0000000030000000ULL;
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
@@ -1721,7 +1721,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -1739,7 +1739,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -1756,7 +1756,7 @@ namespace vm_exit_instruction_information
 
         namespace operand_size
         {
-            constexpr const auto mask = 0x0000000000000800UL;
+            constexpr const auto mask = 0x0000000000000800ULL;
             constexpr const auto from = 11;
             constexpr const auto name = "operand_size";
 
@@ -1772,7 +1772,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -1792,7 +1792,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -1822,7 +1822,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -1838,7 +1838,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -1868,7 +1868,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -1884,7 +1884,7 @@ namespace vm_exit_instruction_information
 
         namespace instruction_identity
         {
-            constexpr const auto mask = 0x0000000030000000UL;
+            constexpr const auto mask = 0x0000000030000000ULL;
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
@@ -1916,7 +1916,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -1934,7 +1934,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -1951,7 +1951,7 @@ namespace vm_exit_instruction_information
 
         namespace operand_size
         {
-            constexpr const auto mask = 0x0000000000000800UL;
+            constexpr const auto mask = 0x0000000000000800ULL;
             constexpr const auto from = 11;
             constexpr const auto name = "operand_size";
 
@@ -1967,7 +1967,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -1987,7 +1987,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -2017,7 +2017,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -2033,7 +2033,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -2063,7 +2063,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -2079,7 +2079,7 @@ namespace vm_exit_instruction_information
 
         namespace instruction_identity
         {
-            constexpr const auto mask = 0x0000000030000000UL;
+            constexpr const auto mask = 0x0000000030000000ULL;
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
@@ -2111,7 +2111,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -2129,7 +2129,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -2146,7 +2146,7 @@ namespace vm_exit_instruction_information
 
         namespace operand_size
         {
-            constexpr const auto mask = 0x0000000000000800UL;
+            constexpr const auto mask = 0x0000000000000800ULL;
             constexpr const auto from = 11;
             constexpr const auto name = "operand_size";
 
@@ -2162,7 +2162,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -2182,7 +2182,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -2212,7 +2212,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -2228,7 +2228,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -2258,7 +2258,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -2274,7 +2274,7 @@ namespace vm_exit_instruction_information
 
         namespace instruction_identity
         {
-            constexpr const auto mask = 0x0000000030000000UL;
+            constexpr const auto mask = 0x0000000030000000ULL;
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
@@ -2306,7 +2306,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -2324,7 +2324,7 @@ namespace vm_exit_instruction_information
 
         namespace reg1
         {
-            constexpr const auto mask = 0x0000000000000078UL;
+            constexpr const auto mask = 0x0000000000000078ULL;
             constexpr const auto from = 3;
             constexpr const auto name = "reg1";
 
@@ -2354,7 +2354,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -2371,7 +2371,7 @@ namespace vm_exit_instruction_information
 
         namespace mem_reg
         {
-            constexpr const auto mask = 0x0000000000000400UL;
+            constexpr const auto mask = 0x0000000000000400ULL;
             constexpr const auto from = 10;
             constexpr const auto name = "mem/reg";
 
@@ -2387,7 +2387,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -2407,7 +2407,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -2437,7 +2437,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -2453,7 +2453,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -2483,7 +2483,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -2499,7 +2499,7 @@ namespace vm_exit_instruction_information
 
         namespace instruction_identity
         {
-            constexpr const auto mask = 0x0000000030000000UL;
+            constexpr const auto mask = 0x0000000030000000ULL;
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
@@ -2531,7 +2531,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -2549,7 +2549,7 @@ namespace vm_exit_instruction_information
 
         namespace reg1
         {
-            constexpr const auto mask = 0x0000000000000078UL;
+            constexpr const auto mask = 0x0000000000000078ULL;
             constexpr const auto from = 3;
             constexpr const auto name = "reg1";
 
@@ -2579,7 +2579,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -2596,7 +2596,7 @@ namespace vm_exit_instruction_information
 
         namespace mem_reg
         {
-            constexpr const auto mask = 0x0000000000000400UL;
+            constexpr const auto mask = 0x0000000000000400ULL;
             constexpr const auto from = 10;
             constexpr const auto name = "mem/reg";
 
@@ -2612,7 +2612,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -2632,7 +2632,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -2662,7 +2662,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -2678,7 +2678,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -2708,7 +2708,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -2724,7 +2724,7 @@ namespace vm_exit_instruction_information
 
         namespace instruction_identity
         {
-            constexpr const auto mask = 0x0000000030000000UL;
+            constexpr const auto mask = 0x0000000030000000ULL;
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
@@ -2756,7 +2756,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -2774,7 +2774,7 @@ namespace vm_exit_instruction_information
 
         namespace reg1
         {
-            constexpr const auto mask = 0x0000000000000078UL;
+            constexpr const auto mask = 0x0000000000000078ULL;
             constexpr const auto from = 3;
             constexpr const auto name = "reg1";
 
@@ -2804,7 +2804,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -2821,7 +2821,7 @@ namespace vm_exit_instruction_information
 
         namespace mem_reg
         {
-            constexpr const auto mask = 0x0000000000000400UL;
+            constexpr const auto mask = 0x0000000000000400ULL;
             constexpr const auto from = 10;
             constexpr const auto name = "mem/reg";
 
@@ -2837,7 +2837,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -2857,7 +2857,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -2887,7 +2887,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -2903,7 +2903,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -2933,7 +2933,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -2949,7 +2949,7 @@ namespace vm_exit_instruction_information
 
         namespace instruction_identity
         {
-            constexpr const auto mask = 0x0000000030000000UL;
+            constexpr const auto mask = 0x0000000030000000ULL;
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
@@ -2981,7 +2981,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -2999,7 +2999,7 @@ namespace vm_exit_instruction_information
 
         namespace reg1
         {
-            constexpr const auto mask = 0x0000000000000078UL;
+            constexpr const auto mask = 0x0000000000000078ULL;
             constexpr const auto from = 3;
             constexpr const auto name = "reg1";
 
@@ -3029,7 +3029,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -3046,7 +3046,7 @@ namespace vm_exit_instruction_information
 
         namespace mem_reg
         {
-            constexpr const auto mask = 0x0000000000000400UL;
+            constexpr const auto mask = 0x0000000000000400ULL;
             constexpr const auto from = 10;
             constexpr const auto name = "mem/reg";
 
@@ -3062,7 +3062,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -3082,7 +3082,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -3112,7 +3112,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -3128,7 +3128,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -3158,7 +3158,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -3174,7 +3174,7 @@ namespace vm_exit_instruction_information
 
         namespace instruction_identity
         {
-            constexpr const auto mask = 0x0000000030000000UL;
+            constexpr const auto mask = 0x0000000030000000ULL;
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
@@ -3206,7 +3206,7 @@ namespace vm_exit_instruction_information
 
         namespace destination_register
         {
-            constexpr const auto mask = 0x0000000000000078UL;
+            constexpr const auto mask = 0x0000000000000078ULL;
             constexpr const auto from = 3;
             constexpr const auto name = "destination_register";
 
@@ -3236,7 +3236,7 @@ namespace vm_exit_instruction_information
 
         namespace operand_size
         {
-            constexpr const auto mask = 0x0000000000001800UL;
+            constexpr const auto mask = 0x0000000000001800ULL;
             constexpr const auto from = 11;
             constexpr const auto name = "operand_size";
 
@@ -3267,7 +3267,7 @@ namespace vm_exit_instruction_information
 
         namespace destination_register
         {
-            constexpr const auto mask = 0x0000000000000078UL;
+            constexpr const auto mask = 0x0000000000000078ULL;
             constexpr const auto from = 3;
             constexpr const auto name = "destination_register";
 
@@ -3297,7 +3297,7 @@ namespace vm_exit_instruction_information
 
         namespace operand_size
         {
-            constexpr const auto mask = 0x0000000000001800UL;
+            constexpr const auto mask = 0x0000000000001800ULL;
             constexpr const auto from = 11;
             constexpr const auto name = "operand_size";
 
@@ -3328,7 +3328,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -3346,7 +3346,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -3363,7 +3363,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -3383,7 +3383,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -3413,7 +3413,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -3429,7 +3429,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -3459,7 +3459,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -3489,7 +3489,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -3507,7 +3507,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -3524,7 +3524,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -3544,7 +3544,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -3574,7 +3574,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -3590,7 +3590,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -3620,7 +3620,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -3650,7 +3650,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -3668,7 +3668,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -3685,7 +3685,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -3705,7 +3705,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -3735,7 +3735,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -3751,7 +3751,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -3781,7 +3781,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -3811,7 +3811,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -3829,7 +3829,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -3846,7 +3846,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -3866,7 +3866,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -3896,7 +3896,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -3912,7 +3912,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -3942,7 +3942,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -3972,7 +3972,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -3990,7 +3990,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -4007,7 +4007,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -4027,7 +4027,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -4057,7 +4057,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -4073,7 +4073,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -4103,7 +4103,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -4133,7 +4133,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -4151,7 +4151,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -4168,7 +4168,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -4188,7 +4188,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -4218,7 +4218,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -4234,7 +4234,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -4264,7 +4264,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -4294,7 +4294,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -4312,7 +4312,7 @@ namespace vm_exit_instruction_information
 
         namespace reg1
         {
-            constexpr const auto mask = 0x0000000000000078UL;
+            constexpr const auto mask = 0x0000000000000078ULL;
             constexpr const auto from = 3;
             constexpr const auto name = "reg1";
 
@@ -4342,7 +4342,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -4359,7 +4359,7 @@ namespace vm_exit_instruction_information
 
         namespace mem_reg
         {
-            constexpr const auto mask = 0x0000000000000400UL;
+            constexpr const auto mask = 0x0000000000000400ULL;
             constexpr const auto from = 10;
             constexpr const auto name = "mem/reg";
 
@@ -4375,7 +4375,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -4395,7 +4395,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -4425,7 +4425,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -4441,7 +4441,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -4471,7 +4471,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -4487,7 +4487,7 @@ namespace vm_exit_instruction_information
 
         namespace reg2
         {
-            constexpr const auto mask = 0x00000000F0000000UL;
+            constexpr const auto mask = 0x00000000F0000000ULL;
             constexpr const auto from = 28;
             constexpr const auto name = "reg2";
 
@@ -4531,7 +4531,7 @@ namespace vm_exit_instruction_information
 
         namespace scaling
         {
-            constexpr const auto mask = 0x0000000000000003UL;
+            constexpr const auto mask = 0x0000000000000003ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
@@ -4549,7 +4549,7 @@ namespace vm_exit_instruction_information
 
         namespace reg1
         {
-            constexpr const auto mask = 0x0000000000000078UL;
+            constexpr const auto mask = 0x0000000000000078ULL;
             constexpr const auto from = 3;
             constexpr const auto name = "reg1";
 
@@ -4579,7 +4579,7 @@ namespace vm_exit_instruction_information
 
         namespace address_size
         {
-            constexpr const auto mask = 0x0000000000000380UL;
+            constexpr const auto mask = 0x0000000000000380ULL;
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
@@ -4596,7 +4596,7 @@ namespace vm_exit_instruction_information
 
         namespace mem_reg
         {
-            constexpr const auto mask = 0x0000000000000400UL;
+            constexpr const auto mask = 0x0000000000000400ULL;
             constexpr const auto from = 10;
             constexpr const auto name = "mem/reg";
 
@@ -4612,7 +4612,7 @@ namespace vm_exit_instruction_information
 
         namespace segment_register
         {
-            constexpr const auto mask = 0x0000000000038000UL;
+            constexpr const auto mask = 0x0000000000038000ULL;
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
@@ -4632,7 +4632,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg
         {
-            constexpr const auto mask = 0x00000000003C0000UL;
+            constexpr const auto mask = 0x00000000003C0000ULL;
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
@@ -4662,7 +4662,7 @@ namespace vm_exit_instruction_information
 
         namespace index_reg_invalid
         {
-            constexpr const auto mask = 0x0000000000400000UL;
+            constexpr const auto mask = 0x0000000000400000ULL;
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
@@ -4678,7 +4678,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg
         {
-            constexpr const auto mask = 0x0000000007800000UL;
+            constexpr const auto mask = 0x0000000007800000ULL;
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
@@ -4708,7 +4708,7 @@ namespace vm_exit_instruction_information
 
         namespace base_reg_invalid
         {
-            constexpr const auto mask = 0x0000000008000000UL;
+            constexpr const auto mask = 0x0000000008000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
@@ -4724,7 +4724,7 @@ namespace vm_exit_instruction_information
 
         namespace reg2
         {
-            constexpr const auto mask = 0x00000000F0000000UL;
+            constexpr const auto mask = 0x00000000F0000000ULL;
             constexpr const auto from = 28;
             constexpr const auto name = "reg2";
 

@@ -25,7 +25,7 @@
 #include <intrinsics/tlb_x64.h>
 
 extern "C" void
-__invlpg(const void *virt) noexcept
+_invlpg(const void *virt) noexcept
 {
     (void) virt;
 

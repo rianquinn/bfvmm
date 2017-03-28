@@ -24,8 +24,8 @@ default rel
 
 section .text
 
-global __cpuid_eax:function
-__cpuid_eax:
+global _cpuid_eax:function
+_cpuid_eax:
     push rbx
 
     xor rax, rax
@@ -39,8 +39,8 @@ __cpuid_eax:
     pop rbx
     ret
 
-global __cpuid_ebx:function
-__cpuid_ebx:
+global _cpuid_ebx:function
+_cpuid_ebx:
     push rbx
 
     xor rax, rax
@@ -55,8 +55,8 @@ __cpuid_ebx:
     pop rbx
     ret
 
-global __cpuid_ecx:function
-__cpuid_ecx:
+global _cpuid_ecx:function
+_cpuid_ecx:
     push rbx
 
     xor rax, rax
@@ -71,8 +71,8 @@ __cpuid_ecx:
     pop rbx
     ret
 
-global __cpuid_edx:function
-__cpuid_edx:
+global _cpuid_edx:function
+_cpuid_edx:
     push rbx
 
     xor rax, rax
@@ -87,8 +87,8 @@ __cpuid_edx:
     pop rbx
     ret
 
-global __cpuid:function
-__cpuid:
+global _cpuid:function
+_cpuid:
     push rbx
 
     mov r8, rdi

@@ -64,22 +64,22 @@ default rel
 
 global vmcs_promote:function
 
-extern __write_es
-extern __write_cs
-extern __write_ss
-extern __write_ds
-extern __write_gs
-extern __write_fs
-extern __write_ldtr
-extern __write_tr
-extern __write_msr
-extern __write_msr
-extern __write_gdt
-extern __write_idt
-extern __write_cr0;
-extern __write_cr3;
-extern __write_cr4;
-extern __write_dr7;
+extern _write_es
+extern _write_cs
+extern _write_ss
+extern _write_ds
+extern _write_gs
+extern _write_fs
+extern _write_ldtr
+extern _write_tr
+extern _write_msr
+extern _write_msr
+extern _write_gdt
+extern _write_idt
+extern _write_cr0;
+extern _write_cr3;
+extern _write_cr4;
+extern _write_dr7;
 
 section .text
 
@@ -103,19 +103,19 @@ vmcs_promote:
 
     mov rsi, VMCS_GUEST_CR0
     vmread rdi, rsi
-    call __write_cr0 wrt ..plt
+    call _write_cr0 wrt ..plt
 
     mov rsi, VMCS_GUEST_CR3
     vmread rdi, rsi
-    call __write_cr3 wrt ..plt
+    call _write_cr3 wrt ..plt
 
     mov rsi, VMCS_GUEST_CR4
     vmread rdi, rsi
-    call __write_cr4 wrt ..plt
+    call _write_cr4 wrt ..plt
 
     mov rsi, VMCS_GUEST_DR7
     vmread rdi, rsi
-    call __write_dr7 wrt ..plt
+    call _write_dr7 wrt ..plt
 
     ;
     ; Restore GDT
@@ -130,7 +130,7 @@ vmcs_promote:
     push di
 
     mov rdi, rsp
-    call __write_gdt wrt ..plt
+    call _write_gdt wrt ..plt
 
     ;
     ; Restore IDT
@@ -145,7 +145,7 @@ vmcs_promote:
     push di
 
     mov rdi, rsp
-    call __write_idt wrt ..plt
+    call _write_idt wrt ..plt
 
     ;
     ; Clear TSS Busy
@@ -167,35 +167,35 @@ vmcs_promote:
 
     mov rsi, VMCS_GUEST_ES_SELECTOR
     vmread rdi, rsi
-    call __write_es wrt ..plt
+    call _write_es wrt ..plt
 
     mov rsi, VMCS_GUEST_CS_SELECTOR
     vmread rdi, rsi
-    call __write_cs wrt ..plt
+    call _write_cs wrt ..plt
 
     mov rsi, VMCS_GUEST_SS_SELECTOR
     vmread rdi, rsi
-    call __write_ss wrt ..plt
+    call _write_ss wrt ..plt
 
     mov rsi, VMCS_GUEST_DS_SELECTOR
     vmread rdi, rsi
-    call __write_ds wrt ..plt
+    call _write_ds wrt ..plt
 
     mov rsi, VMCS_GUEST_FS_SELECTOR
     vmread rdi, rsi
-    call __write_fs wrt ..plt
+    call _write_fs wrt ..plt
 
     mov rsi, VMCS_GUEST_GS_SELECTOR
     vmread rdi, rsi
-    call __write_gs wrt ..plt
+    call _write_gs wrt ..plt
 
     mov rsi, VMCS_GUEST_LDTR_SELECTOR
     vmread rdi, rsi
-    call __write_ldtr wrt ..plt
+    call _write_ldtr wrt ..plt
 
     mov rsi, VMCS_GUEST_TR_SELECTOR
     vmread rdi, rsi
-    call __write_tr wrt ..plt
+    call _write_tr wrt ..plt
 
     ;
     ; Restore MSRs
@@ -204,47 +204,47 @@ vmcs_promote:
     mov rdi, IA32_DEBUGCTL_MSR
     mov rsi, VMCS_GUEST_IA32_DEBUGCTL_FULL
     vmread rsi, rsi
-    call __write_msr wrt ..plt
+    call _write_msr wrt ..plt
 
     mov rdi, IA32_PAT_MSR
     mov rsi, VMCS_GUEST_IA32_PAT_FULL
     vmread rsi, rsi
-    call __write_msr wrt ..plt
+    call _write_msr wrt ..plt
 
     mov rdi, IA32_EFER_MSR
     mov rsi, VMCS_GUEST_IA32_EFER_FULL
     vmread rsi, rsi
-    call __write_msr wrt ..plt
+    call _write_msr wrt ..plt
 
     mov rdi, IA32_PERF_GLOBAL_CTRL_MSR
     mov rsi, VMCS_GUEST_IA32_PERF_GLOBAL_CTRL_FULL
     vmread rsi, rsi
-    call __write_msr wrt ..plt
+    call _write_msr wrt ..plt
 
     mov rdi, IA32_SYSENTER_CS_MSR
     mov rsi, VMCS_GUEST_IA32_SYSENTER_CS
     vmread rsi, rsi
-    call __write_msr wrt ..plt
+    call _write_msr wrt ..plt
 
     mov rdi, IA32_SYSENTER_ESP_MSR
     mov rsi, VMCS_GUEST_IA32_SYSENTER_ESP
     vmread rsi, rsi
-    call __write_msr wrt ..plt
+    call _write_msr wrt ..plt
 
     mov rdi, IA32_SYSENTER_EIP_MSR
     mov rsi, VMCS_GUEST_IA32_SYSENTER_EIP
     vmread rsi, rsi
-    call __write_msr wrt ..plt
+    call _write_msr wrt ..plt
 
     mov rdi, IA32_FS_BASE_MSR
     mov rsi, VMCS_GUEST_FS_BASE
     vmread rsi, rsi
-    call __write_msr wrt ..plt
+    call _write_msr wrt ..plt
 
     mov rdi, IA32_GS_BASE_MSR
     mov rsi, VMCS_GUEST_GS_BASE
     vmread rsi, rsi
-    call __write_msr wrt ..plt
+    call _write_msr wrt ..plt
 
     ;
     ; Restore Registers

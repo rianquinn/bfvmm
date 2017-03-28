@@ -42,16 +42,16 @@
 // Definitions
 // -----------------------------------------------------------------------------
 
-extern "C" EXPORT_INTRINSICS bool __vmxon(void *ptr) noexcept;
-extern "C" EXPORT_INTRINSICS bool __vmxoff(void) noexcept;
-extern "C" EXPORT_INTRINSICS bool __vmclear(void *ptr) noexcept;
-extern "C" EXPORT_INTRINSICS bool __vmptrld(void *ptr) noexcept;
-extern "C" EXPORT_INTRINSICS bool __vmptrst(void *ptr) noexcept;
-extern "C" EXPORT_INTRINSICS bool __vmread(uint64_t field, const uint64_t *val) noexcept;
-extern "C" EXPORT_INTRINSICS bool __vmwrite(uint64_t field, uint64_t val) noexcept;
-extern "C" EXPORT_INTRINSICS bool __vmlaunch_demote(void) noexcept;
-extern "C" EXPORT_INTRINSICS bool __invept(uint64_t type, void *ptr) noexcept;
-extern "C" EXPORT_INTRINSICS bool __invvpid(uint64_t type, void *ptr) noexcept;
+extern "C" EXPORT_INTRINSICS bool _vmxon(void *ptr) noexcept;
+extern "C" EXPORT_INTRINSICS bool _vmxoff(void) noexcept;
+extern "C" EXPORT_INTRINSICS bool _vmclear(void *ptr) noexcept;
+extern "C" EXPORT_INTRINSICS bool _vmptrld(void *ptr) noexcept;
+extern "C" EXPORT_INTRINSICS bool _vmptrst(void *ptr) noexcept;
+extern "C" EXPORT_INTRINSICS bool _vmread(uint64_t field, const uint64_t *val) noexcept;
+extern "C" EXPORT_INTRINSICS bool _vmwrite(uint64_t field, uint64_t val) noexcept;
+extern "C" EXPORT_INTRINSICS bool _vmlaunch_demote(void) noexcept;
+extern "C" EXPORT_INTRINSICS bool _invept(uint64_t type, void *ptr) noexcept;
+extern "C" EXPORT_INTRINSICS bool _invvpid(uint64_t type, void *ptr) noexcept;
 
 // *INDENT-OFF*
 
@@ -65,14 +65,14 @@ namespace vmx
 
     inline void on(gsl::not_null<void *> ptr)
     {
-        if (!__vmxon(ptr)) {
+        if (!_vmxon(ptr)) {
             throw std::runtime_error("vmx::on failed");
         }
     }
 
     inline void off()
     {
-        if (!__vmxoff()) {
+        if (!_vmxoff()) {
             throw std::runtime_error("vmx::off failed");
         }
     }
@@ -80,7 +80,7 @@ namespace vmx
     inline void invept_single_context(eptp_type eptp)
     {
         uint64_t descriptor[2] = { eptp, 0 };
-        if (!__invept(1, static_cast<void *>(descriptor))) {
+        if (!_invept(1, static_cast<void *>(descriptor))) {
             throw std::runtime_error("vm::invept_singal_context failed");
         }
     }
@@ -88,7 +88,7 @@ namespace vmx
     inline void invept_global()
     {
         uint64_t descriptor[2] = { 0, 0 };
-        if (!__invept(2, static_cast<void *>(descriptor))) {
+        if (!_invept(2, static_cast<void *>(descriptor))) {
             throw std::runtime_error("vm::invept_global failed");
         }
     }
@@ -96,7 +96,7 @@ namespace vmx
     inline void invvpid_individual_address(vpid_type vpid, integer_pointer addr)
     {
         uint64_t descriptor[2] = { vpid, addr };
-        if (!__invvpid(0, static_cast<void *>(descriptor))) {
+        if (!_invvpid(0, static_cast<void *>(descriptor))) {
             throw std::runtime_error("vm::invvpid_individual_address failed");
         }
     }
@@ -104,7 +104,7 @@ namespace vmx
     inline void invvpid_single_context(vpid_type vpid)
     {
         uint64_t descriptor[2] = { vpid, 0 };
-        if (!__invvpid(1, static_cast<void *>(descriptor))) {
+        if (!_invvpid(1, static_cast<void *>(descriptor))) {
             throw std::runtime_error("vm::invvpid_single_context failed");
         }
     }
@@ -112,7 +112,7 @@ namespace vmx
     inline void invvpid_all_contexts()
     {
         uint64_t descriptor[2] = { 0, 0 };
-        if (!__invvpid(2, static_cast<void *>(descriptor))) {
+        if (!_invvpid(2, static_cast<void *>(descriptor))) {
             throw std::runtime_error("vm::invvpid_all_contexts failed");
         }
     }
@@ -120,7 +120,7 @@ namespace vmx
     inline void invvpid_single_context_global(vpid_type vpid)
     {
         uint64_t descriptor[2] = { vpid, 0 };
-        if (!__invvpid(3, static_cast<void *>(descriptor))) {
+        if (!_invvpid(3, static_cast<void *>(descriptor))) {
             throw std::runtime_error("vm::invvpid_single_context_global failed");
         }
     }
@@ -135,21 +135,21 @@ namespace vm
 
     inline void clear(gsl::not_null<void *> ptr)
     {
-        if (!__vmclear(ptr)) {
+        if (!_vmclear(ptr)) {
             throw std::runtime_error("vm::clear failed");
         }
     }
 
     inline void load(gsl::not_null<void *> ptr)
     {
-        if (!__vmptrld(ptr)) {
+        if (!_vmptrld(ptr)) {
             throw std::runtime_error("vm::load failed");
         }
     }
 
     inline void reset(gsl::not_null<void *> ptr)
     {
-        if (!__vmptrst(ptr)) {
+        if (!_vmptrst(ptr)) {
             throw std::runtime_error("vm::reset failed");
         }
     }
@@ -158,7 +158,7 @@ namespace vm
     {
         value_type value;
 
-        if (!__vmread(field, &value))
+        if (!_vmread(field, &value))
         {
             bferror << "vm::read failed:" << bfendl;
             bferror << "    - field: " << name << bfendl;
@@ -171,7 +171,7 @@ namespace vm
 
     inline void write(field_type field, value_type value, name_type name = "")
     {
-        if (!__vmwrite(field, value))
+        if (!_vmwrite(field, value))
         {
             bferror << "vm::write failed:" << bfendl;
             bferror << "    - field: " << name << bfendl;
@@ -183,7 +183,7 @@ namespace vm
 
     inline void launch_demote()
     {
-        if (!__vmlaunch_demote()) {
+        if (!_vmlaunch_demote()) {
             throw std::runtime_error("vm::launch_demote failed");
         }
     }

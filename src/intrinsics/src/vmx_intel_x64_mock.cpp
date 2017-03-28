@@ -25,7 +25,7 @@
 #include <intrinsics/vmx_intel_x64.h>
 
 extern "C" bool
-__vmxon(void *ptr) noexcept
+_vmxon(void *ptr) noexcept
 {
     (void) ptr;
 
@@ -34,23 +34,14 @@ __vmxon(void *ptr) noexcept
 }
 
 extern "C" bool
-__vmxoff(void) noexcept
+_vmxoff(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" bool
-__vmclear(void *ptr) noexcept
-{
-    (void) ptr;
-
-    std::cerr << __FUNC__ << " called" << '\n';
-    abort();
-}
-
-extern "C" bool
-__vmptrld(void *ptr) noexcept
+_vmclear(void *ptr) noexcept
 {
     (void) ptr;
 
@@ -59,7 +50,7 @@ __vmptrld(void *ptr) noexcept
 }
 
 extern "C" bool
-__vmptrst(void *ptr) noexcept
+_vmptrld(void *ptr) noexcept
 {
     (void) ptr;
 
@@ -68,7 +59,16 @@ __vmptrst(void *ptr) noexcept
 }
 
 extern "C" bool
-__vmread(uint64_t field, const uint64_t *value) noexcept
+_vmptrst(void *ptr) noexcept
+{
+    (void) ptr;
+
+    std::cerr << __FUNC__ << " called" << '\n';
+    abort();
+}
+
+extern "C" bool
+_vmread(uint64_t field, const uint64_t *value) noexcept
 {
     (void) value;
 
@@ -78,7 +78,7 @@ __vmread(uint64_t field, const uint64_t *value) noexcept
 }
 
 extern "C" bool
-__vmwrite(uint64_t field, uint64_t value) noexcept
+_vmwrite(uint64_t field, uint64_t value) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << '\n';
     std::cerr << "    - field: " << view_as_pointer(field) << '\n';
@@ -87,14 +87,14 @@ __vmwrite(uint64_t field, uint64_t value) noexcept
 }
 
 extern "C" bool
-__vmlaunch_demote(void) noexcept
+_vmlaunch_demote(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" bool
-__invept(uint64_t type, void *ptr) noexcept
+_invept(uint64_t type, void *ptr) noexcept
 {
     (void) type;
     (void) ptr;
@@ -104,7 +104,7 @@ __invept(uint64_t type, void *ptr) noexcept
 }
 
 extern "C" bool
-__invvpid(uint64_t type, void *ptr) noexcept
+_invvpid(uint64_t type, void *ptr) noexcept
 {
     (void) type;
     (void) ptr;

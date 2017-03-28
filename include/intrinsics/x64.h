@@ -32,19 +32,19 @@
 
 namespace x64
 {
-    constexpr const auto page_size                                   = 0x1000UL;
-    constexpr const auto page_shift                                  = 12UL;
-    constexpr const auto cache_line_size                             = 64UL;
-    constexpr const auto cache_line_shift                            = 6UL;
+    constexpr const auto page_size                                   = 0x1000ULL;
+    constexpr const auto page_shift                                  = 12ULL;
+    constexpr const auto cache_line_size                             = 64ULL;
+    constexpr const auto cache_line_shift                            = 6ULL;
 
     namespace memory_type
     {
-        constexpr const auto uncacheable                             = 0x00000000UL;
-        constexpr const auto write_combining                         = 0x00000001UL;
-        constexpr const auto write_through                           = 0x00000004UL;
-        constexpr const auto write_protected                         = 0x00000005UL;
-        constexpr const auto write_back                              = 0x00000006UL;
-        constexpr const auto uncacheable_minus                       = 0x00000007UL;
+        constexpr const auto uncacheable                             = 0x00000000ULL;
+        constexpr const auto write_combining                         = 0x00000001ULL;
+        constexpr const auto write_through                           = 0x00000004ULL;
+        constexpr const auto write_protected                         = 0x00000005ULL;
+        constexpr const auto write_back                              = 0x00000006ULL;
+        constexpr const auto uncacheable_minus                       = 0x00000007ULL;
     }
 
     namespace access_rights
@@ -116,7 +116,7 @@ namespace x64
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
     auto is_address_canonical(T addr)
-    { return ((addr <= 0x00007FFFFFFFFFFFUL) || (addr >= 0xFFFF800000000000UL)); }
+    { return ((addr <= 0x00007FFFFFFFFFFFULL) || (addr >= 0xFFFF800000000000ULL)); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
     auto is_linear_address_valid(T addr)
@@ -126,7 +126,7 @@ namespace x64
     auto is_physical_address_valid(T addr)
     {
         auto bits = cpuid::addr_size::phys::get();
-        auto mask = (0xFFFFFFFFFFFFFFFFUL >> bits) << bits;
+        auto mask = (0xFFFFFFFFFFFFFFFFULL >> bits) << bits;
 
         return ((addr & mask) == 0);
     }

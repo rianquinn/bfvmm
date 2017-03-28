@@ -41,7 +41,7 @@ namespace vmcs
 
 namespace host_es_selector
 {
-    constexpr const auto addr = 0x0000000000000C00UL;
+    constexpr const auto addr = 0x0000000000000C00ULL;
     constexpr const auto name = "host_es_selector";
 
     inline bool exists() noexcept
@@ -142,7 +142,7 @@ namespace host_es_selector
 
 namespace host_cs_selector
 {
-    constexpr const auto addr = 0x0000000000000C02UL;
+    constexpr const auto addr = 0x0000000000000C02ULL;
     constexpr const auto name = "host_cs_selector";
 
     inline bool exists() noexcept
@@ -243,7 +243,7 @@ namespace host_cs_selector
 
 namespace host_ss_selector
 {
-    constexpr const auto addr = 0x0000000000000C04UL;
+    constexpr const auto addr = 0x0000000000000C04ULL;
     constexpr const auto name = "host_ss_selector";
 
     inline bool exists() noexcept
@@ -344,7 +344,7 @@ namespace host_ss_selector
 
 namespace host_ds_selector
 {
-    constexpr const auto addr = 0x0000000000000C06UL;
+    constexpr const auto addr = 0x0000000000000C06ULL;
     constexpr const auto name = "host_ds_selector";
 
     inline bool exists() noexcept
@@ -445,7 +445,7 @@ namespace host_ds_selector
 
 namespace host_fs_selector
 {
-    constexpr const auto addr = 0x0000000000000C08UL;
+    constexpr const auto addr = 0x0000000000000C08ULL;
     constexpr const auto name = "host_fs_selector";
 
     inline bool exists() noexcept
@@ -546,7 +546,7 @@ namespace host_fs_selector
 
 namespace host_gs_selector
 {
-    constexpr const auto addr = 0x0000000000000C0AUL;
+    constexpr const auto addr = 0x0000000000000C0AULL;
     constexpr const auto name = "host_gs_selector";
 
     inline bool exists() noexcept
@@ -647,7 +647,7 @@ namespace host_gs_selector
 
 namespace host_tr_selector
 {
-    constexpr const auto addr = 0x0000000000000C0CUL;
+    constexpr const auto addr = 0x0000000000000C0CULL;
     constexpr const auto name = "host_tr_selector";
 
     inline bool exists() noexcept

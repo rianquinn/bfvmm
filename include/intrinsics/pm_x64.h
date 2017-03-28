@@ -38,8 +38,8 @@
 // Definitions
 // -----------------------------------------------------------------------------
 
-extern "C" EXPORT_INTRINSICS void __halt(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __stop(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _halt(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _stop(void) noexcept;
 
 // *INDENT-OFF*
 
@@ -48,10 +48,10 @@ namespace x64
 namespace pm
 {
     inline void halt() noexcept
-    { __halt(); }
+    { _halt(); }
 
     inline void stop() noexcept
-    { __stop(); }
+    { _stop(); }
 }
 }
 

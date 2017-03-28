@@ -41,11 +41,11 @@
 // Definitions
 // -----------------------------------------------------------------------------
 
-extern "C" EXPORT_INTRINSICS uint32_t __cpuid_eax(uint32_t val) noexcept;
-extern "C" EXPORT_INTRINSICS uint32_t __cpuid_ebx(uint32_t val) noexcept;
-extern "C" EXPORT_INTRINSICS uint32_t __cpuid_ecx(uint32_t val) noexcept;
-extern "C" EXPORT_INTRINSICS uint32_t __cpuid_edx(uint32_t val) noexcept;
-extern "C" EXPORT_INTRINSICS void __cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept;
+extern "C" EXPORT_INTRINSICS uint32_t _cpuid_eax(uint32_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint32_t _cpuid_ebx(uint32_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint32_t _cpuid_ecx(uint32_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint32_t _cpuid_edx(uint32_t val) noexcept;
+extern "C" EXPORT_INTRINSICS void _cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept;
 
 // *INDENT-OFF*
 
@@ -63,32 +63,32 @@ namespace cpuid
              class = typename std::enable_if<std::is_integral<T4>::value>::type>
     auto get(T1 eax, T2 ebx, T3 ecx, T4 edx) noexcept
     {
-        __cpuid(&eax, &ebx, &ecx, &edx);
+        _cpuid(&eax, &ebx, &ecx, &edx);
         return std::make_tuple(eax, ebx, ecx, edx);
     }
 
     namespace eax
     {
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto get(T eax) noexcept { return __cpuid_eax(gsl::narrow_cast<uint32_t>(eax)); }
+        auto get(T eax) noexcept { return _cpuid_eax(gsl::narrow_cast<uint32_t>(eax)); }
     }
 
     namespace ebx
     {
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto get(T ebx) noexcept { return __cpuid_ebx(gsl::narrow_cast<uint32_t>(ebx)); }
+        auto get(T ebx) noexcept { return _cpuid_ebx(gsl::narrow_cast<uint32_t>(ebx)); }
     }
 
     namespace ecx
     {
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto get(T ecx) noexcept { return __cpuid_ecx(gsl::narrow_cast<uint32_t>(ecx)); }
+        auto get(T ecx) noexcept { return _cpuid_ecx(gsl::narrow_cast<uint32_t>(ecx)); }
     }
 
     namespace edx
     {
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto get(T edx) noexcept { return __cpuid_edx(gsl::narrow_cast<uint32_t>(edx)); }
+        auto get(T edx) noexcept { return _cpuid_edx(gsl::narrow_cast<uint32_t>(edx)); }
     }
 
     namespace addr_size
@@ -103,7 +103,7 @@ namespace cpuid
             constexpr const auto name = "phys";
 
             inline auto get() noexcept
-            { return get_bits(__cpuid_eax(addr), mask) >> from; }
+            { return get_bits(_cpuid_eax(addr), mask) >> from; }
         }
 
         namespace linear
@@ -113,7 +113,7 @@ namespace cpuid
             constexpr const auto name = "linear";
 
             inline auto get() noexcept
-            { return get_bits(__cpuid_eax(addr), mask) >> from; }
+            { return get_bits(_cpuid_eax(addr), mask) >> from; }
         }
     }
 
@@ -131,7 +131,7 @@ namespace cpuid
                 constexpr const auto name = "sse3";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace pclmulqdq
@@ -141,7 +141,7 @@ namespace cpuid
                 constexpr const auto name = "pclmulqdq";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace dtes64
@@ -151,7 +151,7 @@ namespace cpuid
                 constexpr const auto name = "dtes64";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace monitor
@@ -161,7 +161,7 @@ namespace cpuid
                 constexpr const auto name = "monitor";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace ds_cpl
@@ -171,7 +171,7 @@ namespace cpuid
                 constexpr const auto name = "ds_cpl";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace vmx
@@ -181,7 +181,7 @@ namespace cpuid
                 constexpr const auto name = "vmx";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace smx
@@ -191,7 +191,7 @@ namespace cpuid
                 constexpr const auto name = "smx";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace eist
@@ -201,7 +201,7 @@ namespace cpuid
                 constexpr const auto name = "eist";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace tm2
@@ -211,7 +211,7 @@ namespace cpuid
                 constexpr const auto name = "tm2";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace ssse3
@@ -221,7 +221,7 @@ namespace cpuid
                 constexpr const auto name = "ssse3";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace cnxt_id
@@ -231,7 +231,7 @@ namespace cpuid
                 constexpr const auto name = "cnxt_id";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace sdbg
@@ -241,7 +241,7 @@ namespace cpuid
                 constexpr const auto name = "sdbg";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace fma
@@ -251,7 +251,7 @@ namespace cpuid
                 constexpr const auto name = "fma";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace cmpxchg16b
@@ -261,7 +261,7 @@ namespace cpuid
                 constexpr const auto name = "cmpxchg16b";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace xtpr_update_control
@@ -271,7 +271,7 @@ namespace cpuid
                 constexpr const auto name = "xtpr_update_control";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace pdcm
@@ -281,7 +281,7 @@ namespace cpuid
                 constexpr const auto name = "pdcm";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace pcid
@@ -291,7 +291,7 @@ namespace cpuid
                 constexpr const auto name = "pcid";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace dca
@@ -301,7 +301,7 @@ namespace cpuid
                 constexpr const auto name = "dca";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace sse41
@@ -311,7 +311,7 @@ namespace cpuid
                 constexpr const auto name = "sse41";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace sse42
@@ -321,7 +321,7 @@ namespace cpuid
                 constexpr const auto name = "sse42";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace x2apic
@@ -331,7 +331,7 @@ namespace cpuid
                 constexpr const auto name = "x2apic";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace movbe
@@ -341,7 +341,7 @@ namespace cpuid
                 constexpr const auto name = "movbe";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace popcnt
@@ -351,7 +351,7 @@ namespace cpuid
                 constexpr const auto name = "popcnt";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace tsc_deadline
@@ -361,7 +361,7 @@ namespace cpuid
                 constexpr const auto name = "tsc_deadline";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace aesni
@@ -371,7 +371,7 @@ namespace cpuid
                 constexpr const auto name = "aesni";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace xsave
@@ -381,7 +381,7 @@ namespace cpuid
                 constexpr const auto name = "xsave";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace osxsave
@@ -391,7 +391,7 @@ namespace cpuid
                 constexpr const auto name = "osxsave";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace avx
@@ -401,7 +401,7 @@ namespace cpuid
                 constexpr const auto name = "avx";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace f16c
@@ -411,7 +411,7 @@ namespace cpuid
                 constexpr const auto name = "f16c";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             namespace rdrand
@@ -421,7 +421,7 @@ namespace cpuid
                 constexpr const auto name = "rdrand";
 
                 inline auto get() noexcept
-                { return get_bit(__cpuid_ecx(addr), from) != 0; }
+                { return get_bit(_cpuid_ecx(addr), from) != 0; }
             }
 
             inline void dump() noexcept
@@ -524,7 +524,7 @@ namespace cpuid
 
     namespace extended_feature_flags
     {
-        constexpr const auto addr = 0x00000007UL;
+        constexpr const auto addr = 0x00000007ULL;
         constexpr const auto name = "extended_feature_flags";
 
         namespace subleaf0
@@ -533,7 +533,7 @@ namespace cpuid
             {
                 namespace fsgsbase
                 {
-                    constexpr const auto mask = 0x00000001UL;
+                    constexpr const auto mask = 0x00000001ULL;
                     constexpr const auto from = 0;
                     constexpr const auto name = "fsgsbase";
 
@@ -544,7 +544,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -552,7 +552,7 @@ namespace cpuid
 
                 namespace ia32_tsc_adjust
                 {
-                    constexpr const auto mask = 0x00000002UL;
+                    constexpr const auto mask = 0x00000002ULL;
                     constexpr const auto from = 1;
                     constexpr const auto name = "ia32_tsc_adjust";
 
@@ -563,7 +563,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -571,7 +571,7 @@ namespace cpuid
 
                 namespace sgx
                 {
-                    constexpr const auto mask = 0x00000004UL;
+                    constexpr const auto mask = 0x00000004ULL;
                     constexpr const auto from = 2;
                     constexpr const auto name = "sgx";
 
@@ -582,7 +582,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -590,7 +590,7 @@ namespace cpuid
 
                 namespace bmi1
                 {
-                    constexpr const auto mask = 0x00000008UL;
+                    constexpr const auto mask = 0x00000008ULL;
                     constexpr const auto from = 3;
                     constexpr const auto name = "bmi1";
 
@@ -601,7 +601,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -609,7 +609,7 @@ namespace cpuid
 
                 namespace hle
                 {
-                    constexpr const auto mask = 0x00000010UL;
+                    constexpr const auto mask = 0x00000010ULL;
                     constexpr const auto from = 4;
                     constexpr const auto name = "hle";
 
@@ -620,7 +620,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -628,7 +628,7 @@ namespace cpuid
 
                 namespace avx2
                 {
-                    constexpr const auto mask = 0x00000020UL;
+                    constexpr const auto mask = 0x00000020ULL;
                     constexpr const auto from = 5;
                     constexpr const auto name = "avx2";
 
@@ -639,7 +639,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -647,7 +647,7 @@ namespace cpuid
 
                 namespace fdp_excptn_only
                 {
-                    constexpr const auto mask = 0x00000040UL;
+                    constexpr const auto mask = 0x00000040ULL;
                     constexpr const auto from = 6;
                     constexpr const auto name = "fdp_excptn_only";
 
@@ -658,7 +658,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -666,7 +666,7 @@ namespace cpuid
 
                 namespace smep
                 {
-                    constexpr const auto mask = 0x00000080UL;
+                    constexpr const auto mask = 0x00000080ULL;
                     constexpr const auto from = 7;
                     constexpr const auto name = "smep";
 
@@ -677,7 +677,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -685,7 +685,7 @@ namespace cpuid
 
                 namespace bmi2
                 {
-                    constexpr const auto mask = 0x00000100UL;
+                    constexpr const auto mask = 0x00000100ULL;
                     constexpr const auto from = 8;
                     constexpr const auto name = "bmi2";
 
@@ -696,7 +696,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -704,7 +704,7 @@ namespace cpuid
 
                 namespace enhanced_rep
                 {
-                    constexpr const auto mask = 0x00000200UL;
+                    constexpr const auto mask = 0x00000200ULL;
                     constexpr const auto from = 9;
                     constexpr const auto name = "enhanced_rep";
 
@@ -715,7 +715,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -723,7 +723,7 @@ namespace cpuid
 
                 namespace invpcid
                 {
-                    constexpr const auto mask = 0x00000400UL;
+                    constexpr const auto mask = 0x00000400ULL;
                     constexpr const auto from = 10;
                     constexpr const auto name = "invpcid";
 
@@ -734,7 +734,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -742,7 +742,7 @@ namespace cpuid
 
                 namespace rtm
                 {
-                    constexpr const auto mask = 0x00000800UL;
+                    constexpr const auto mask = 0x00000800ULL;
                     constexpr const auto from = 11;
                     constexpr const auto name = "rtm";
 
@@ -753,7 +753,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -761,7 +761,7 @@ namespace cpuid
 
                 namespace rdt_m
                 {
-                    constexpr const auto mask = 0x00001000UL;
+                    constexpr const auto mask = 0x00001000ULL;
                     constexpr const auto from = 12;
                     constexpr const auto name = "rdt_m";
 
@@ -772,7 +772,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -780,7 +780,7 @@ namespace cpuid
 
                 namespace depreciated_fpu_cs_ds
                 {
-                    constexpr const auto mask = 0x00002000UL;
+                    constexpr const auto mask = 0x00002000ULL;
                     constexpr const auto from = 13;
                     constexpr const auto name = "depreciated_fpu_cs_ds";
 
@@ -791,7 +791,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -799,7 +799,7 @@ namespace cpuid
 
                 namespace mpx
                 {
-                    constexpr const auto mask = 0x00004000UL;
+                    constexpr const auto mask = 0x00004000ULL;
                     constexpr const auto from = 14;
                     constexpr const auto name = "mpx";
 
@@ -810,7 +810,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -818,7 +818,7 @@ namespace cpuid
 
                 namespace rdt_a
                 {
-                    constexpr const auto mask = 0x00008000UL;
+                    constexpr const auto mask = 0x00008000ULL;
                     constexpr const auto from = 15;
                     constexpr const auto name = "rdt_a";
 
@@ -829,7 +829,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -837,7 +837,7 @@ namespace cpuid
 
                 namespace rdseed
                 {
-                    constexpr const auto mask = 0x00040000UL;
+                    constexpr const auto mask = 0x00040000ULL;
                     constexpr const auto from = 18;
                     constexpr const auto name = "rdseed";
 
@@ -848,7 +848,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -856,7 +856,7 @@ namespace cpuid
 
                 namespace adx
                 {
-                    constexpr const auto mask = 0x00080000UL;
+                    constexpr const auto mask = 0x00080000ULL;
                     constexpr const auto from = 19;
                     constexpr const auto name = "adx";
 
@@ -867,7 +867,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -875,7 +875,7 @@ namespace cpuid
 
                 namespace smap
                 {
-                    constexpr const auto mask = 0x00100000UL;
+                    constexpr const auto mask = 0x00100000ULL;
                     constexpr const auto from = 20;
                     constexpr const auto name = "smap";
 
@@ -886,7 +886,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -894,7 +894,7 @@ namespace cpuid
 
                 namespace clflushopt
                 {
-                    constexpr const auto mask = 0x00800000UL;
+                    constexpr const auto mask = 0x00800000ULL;
                     constexpr const auto from = 23;
                     constexpr const auto name = "clflushopt";
 
@@ -905,7 +905,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -913,7 +913,7 @@ namespace cpuid
 
                 namespace clwb
                 {
-                    constexpr const auto mask = 0x01000000UL;
+                    constexpr const auto mask = 0x01000000ULL;
                     constexpr const auto from = 24;
                     constexpr const auto name = "clwb";
 
@@ -924,7 +924,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -932,7 +932,7 @@ namespace cpuid
 
                 namespace processor_trace
                 {
-                    constexpr const auto mask = 0x02000000UL;
+                    constexpr const auto mask = 0x02000000ULL;
                     constexpr const auto from = 25;
                     constexpr const auto name = "processor_trace";
 
@@ -943,7 +943,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }
@@ -951,7 +951,7 @@ namespace cpuid
 
                 namespace sha
                 {
-                    constexpr const auto mask = 0x20000000UL;
+                    constexpr const auto mask = 0x20000000ULL;
                     constexpr const auto from = 29;
                     constexpr const auto name = "sha";
 
@@ -962,7 +962,7 @@ namespace cpuid
                         value_type ecx = 0U;
                         value_type edx = 0U;
 
-                        __cpuid(&eax, &ebx, &ecx, &edx);
+                        _cpuid(&eax, &ebx, &ecx, &edx);
 
                         return (ebx & mask) != 0;
                     }

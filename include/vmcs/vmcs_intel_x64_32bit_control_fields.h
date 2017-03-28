@@ -42,7 +42,7 @@ namespace vmcs
 
 namespace pin_based_vm_execution_controls
 {
-    constexpr const auto addr = 0x0000000000004000UL;
+    constexpr const auto addr = 0x0000000000004000ULL;
     constexpr const auto name = "pin_based_vm_execution_controls";
     constexpr const auto msr_addr = msrs::ia32_vmx_true_pinbased_ctls::addr;
 
@@ -64,7 +64,7 @@ namespace pin_based_vm_execution_controls
 
     namespace external_interrupt_exiting
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "external_interrupt_exiting";
 
@@ -95,7 +95,7 @@ namespace pin_based_vm_execution_controls
 
     namespace nmi_exiting
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "nmi_exiting";
 
@@ -126,7 +126,7 @@ namespace pin_based_vm_execution_controls
 
     namespace virtual_nmis
     {
-        constexpr const auto mask = 0x0000000000000020UL;
+        constexpr const auto mask = 0x0000000000000020ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "virtual_nmis";
 
@@ -157,7 +157,7 @@ namespace pin_based_vm_execution_controls
 
     namespace activate_vmx_preemption_timer
     {
-        constexpr const auto mask = 0x0000000000000040UL;
+        constexpr const auto mask = 0x0000000000000040ULL;
         constexpr const auto from = 6;
         constexpr const auto name = "activate_vmx_preemption_timer";
 
@@ -188,7 +188,7 @@ namespace pin_based_vm_execution_controls
 
     namespace process_posted_interrupts
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "process_posted_interrupts";
 
@@ -220,7 +220,7 @@ namespace pin_based_vm_execution_controls
 
 namespace primary_processor_based_vm_execution_controls
 {
-    constexpr const auto addr = 0x0000000000004002UL;
+    constexpr const auto addr = 0x0000000000004002ULL;
     constexpr const auto name = "primary_processor_based_vm_execution_controls";
     constexpr const auto msr_addr = msrs::ia32_vmx_true_procbased_ctls::addr;
 
@@ -242,7 +242,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace interrupt_window_exiting
     {
-        constexpr const auto mask = 0x0000000000000004UL;
+        constexpr const auto mask = 0x0000000000000004ULL;
         constexpr const auto from = 2;
         constexpr const auto name = "interrupt_window_exiting";
 
@@ -273,7 +273,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace use_tsc_offsetting
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "use_tsc_offsetting";
 
@@ -304,7 +304,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace hlt_exiting
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "hlt_exiting";
 
@@ -335,7 +335,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace invlpg_exiting
     {
-        constexpr const auto mask = 0x0000000000000200UL;
+        constexpr const auto mask = 0x0000000000000200ULL;
         constexpr const auto from = 9;
         constexpr const auto name = "invlpg_exiting";
 
@@ -366,7 +366,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace mwait_exiting
     {
-        constexpr const auto mask = 0x0000000000000400UL;
+        constexpr const auto mask = 0x0000000000000400ULL;
         constexpr const auto from = 10;
         constexpr const auto name = "mwait_exiting";
 
@@ -397,7 +397,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace rdpmc_exiting
     {
-        constexpr const auto mask = 0x0000000000000800UL;
+        constexpr const auto mask = 0x0000000000000800ULL;
         constexpr const auto from = 11;
         constexpr const auto name = "rdpmc_exiting";
 
@@ -428,7 +428,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace rdtsc_exiting
     {
-        constexpr const auto mask = 0x0000000000001000UL;
+        constexpr const auto mask = 0x0000000000001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "rdtsc_exiting";
 
@@ -459,7 +459,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace cr3_load_exiting
     {
-        constexpr const auto mask = 0x0000000000008000UL;
+        constexpr const auto mask = 0x0000000000008000ULL;
         constexpr const auto from = 15;
         constexpr const auto name = "cr3_load_exiting";
 
@@ -490,7 +490,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace cr3_store_exiting
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "cr3_store_exiting";
 
@@ -521,7 +521,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace cr8_load_exiting
     {
-        constexpr const auto mask = 0x0000000000080000UL;
+        constexpr const auto mask = 0x0000000000080000ULL;
         constexpr const auto from = 19;
         constexpr const auto name = "cr8_load_exiting";
 
@@ -552,7 +552,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace cr8_store_exiting
     {
-        constexpr const auto mask = 0x0000000000100000UL;
+        constexpr const auto mask = 0x0000000000100000ULL;
         constexpr const auto from = 20;
         constexpr const auto name = "cr8_store_exiting";
 
@@ -583,7 +583,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace use_tpr_shadow
     {
-        constexpr const auto mask = 0x0000000000200000UL;
+        constexpr const auto mask = 0x0000000000200000ULL;
         constexpr const auto from = 21;
         constexpr const auto name = "use_tpr_shadow";
 
@@ -614,7 +614,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace nmi_window_exiting
     {
-        constexpr const auto mask = 0x0000000000400000UL;
+        constexpr const auto mask = 0x0000000000400000ULL;
         constexpr const auto from = 22;
         constexpr const auto name = "nmi_window_exiting";
 
@@ -645,7 +645,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace mov_dr_exiting
     {
-        constexpr const auto mask = 0x0000000000800000UL;
+        constexpr const auto mask = 0x0000000000800000ULL;
         constexpr const auto from = 23;
         constexpr const auto name = "mov_dr_exiting";
 
@@ -676,7 +676,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace unconditional_io_exiting
     {
-        constexpr const auto mask = 0x0000000001000000UL;
+        constexpr const auto mask = 0x0000000001000000ULL;
         constexpr const auto from = 24;
         constexpr const auto name = "unconditional_io_exiting";
 
@@ -707,7 +707,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace use_io_bitmaps
     {
-        constexpr const auto mask = 0x0000000002000000UL;
+        constexpr const auto mask = 0x0000000002000000ULL;
         constexpr const auto from = 25;
         constexpr const auto name = "use_io_bitmaps";
 
@@ -738,7 +738,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace monitor_trap_flag
     {
-        constexpr const auto mask = 0x0000000008000000UL;
+        constexpr const auto mask = 0x0000000008000000ULL;
         constexpr const auto from = 27;
         constexpr const auto name = "monitor_trap_flag";
 
@@ -769,7 +769,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace use_msr_bitmap
     {
-        constexpr const auto mask = 0x0000000010000000UL;
+        constexpr const auto mask = 0x0000000010000000ULL;
         constexpr const auto from = 28;
         constexpr const auto name = "use_msr_bitmap";
 
@@ -800,7 +800,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace monitor_exiting
     {
-        constexpr const auto mask = 0x0000000020000000UL;
+        constexpr const auto mask = 0x0000000020000000ULL;
         constexpr const auto from = 29;
         constexpr const auto name = "monitor_exiting";
 
@@ -831,7 +831,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace pause_exiting
     {
-        constexpr const auto mask = 0x0000000040000000UL;
+        constexpr const auto mask = 0x0000000040000000ULL;
         constexpr const auto from = 30;
         constexpr const auto name = "pause_exiting";
 
@@ -862,7 +862,7 @@ namespace primary_processor_based_vm_execution_controls
 
     namespace activate_secondary_controls
     {
-        constexpr const auto mask = 0x0000000080000000UL;
+        constexpr const auto mask = 0x0000000080000000ULL;
         constexpr const auto from = 31;
         constexpr const auto name = "activate_secondary_controls";
 
@@ -894,7 +894,7 @@ namespace primary_processor_based_vm_execution_controls
 
 namespace exception_bitmap
 {
-    constexpr const auto addr = 0x0000000000004004UL;
+    constexpr const auto addr = 0x0000000000004004ULL;
     constexpr const auto name = "execption_bitmap";
 
     inline auto exists() noexcept
@@ -916,7 +916,7 @@ namespace exception_bitmap
 
 namespace page_fault_error_code_mask
 {
-    constexpr const auto addr = 0x0000000000004006UL;
+    constexpr const auto addr = 0x0000000000004006ULL;
     constexpr const auto name = "page_fault_error_code_mask";
 
     inline auto exists() noexcept
@@ -938,7 +938,7 @@ namespace page_fault_error_code_mask
 
 namespace page_fault_error_code_match
 {
-    constexpr const auto addr = 0x0000000000004008UL;
+    constexpr const auto addr = 0x0000000000004008ULL;
     constexpr const auto name = "page_fault_error_code_match";
 
     inline auto exists() noexcept
@@ -960,7 +960,7 @@ namespace page_fault_error_code_match
 
 namespace cr3_target_count
 {
-    constexpr const auto addr = 0x000000000000400AUL;
+    constexpr const auto addr = 0x000000000000400AULL;
     constexpr const auto name = "cr3_target_count";
 
     inline auto exists() noexcept
@@ -982,7 +982,7 @@ namespace cr3_target_count
 
 namespace vm_exit_controls
 {
-    constexpr const auto addr = 0x000000000000400CUL;
+    constexpr const auto addr = 0x000000000000400CULL;
     constexpr const auto name = "vm_exit_controls";
     constexpr const auto msr_addr = msrs::ia32_vmx_true_exit_ctls::addr;
 
@@ -1004,7 +1004,7 @@ namespace vm_exit_controls
 
     namespace save_debug_controls
     {
-        constexpr const auto mask = 0x0000000000000004UL;
+        constexpr const auto mask = 0x0000000000000004ULL;
         constexpr const auto from = 2;
         constexpr const auto name = "save_debug_controls";
 
@@ -1035,7 +1035,7 @@ namespace vm_exit_controls
 
     namespace host_address_space_size
     {
-        constexpr const auto mask = 0x0000000000000200UL;
+        constexpr const auto mask = 0x0000000000000200ULL;
         constexpr const auto from = 9;
         constexpr const auto name = "host_address_space_size";
 
@@ -1066,7 +1066,7 @@ namespace vm_exit_controls
 
     namespace load_ia32_perf_global_ctrl
     {
-        constexpr const auto mask = 0x0000000000001000UL;
+        constexpr const auto mask = 0x0000000000001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "load_ia32_perf_global_ctrl";
 
@@ -1097,7 +1097,7 @@ namespace vm_exit_controls
 
     namespace acknowledge_interrupt_on_exit
     {
-        constexpr const auto mask = 0x0000000000008000UL;
+        constexpr const auto mask = 0x0000000000008000ULL;
         constexpr const auto from = 15;
         constexpr const auto name = "acknowledge_interrupt_on_exit";
 
@@ -1128,7 +1128,7 @@ namespace vm_exit_controls
 
     namespace save_ia32_pat
     {
-        constexpr const auto mask = 0x0000000000040000UL;
+        constexpr const auto mask = 0x0000000000040000ULL;
         constexpr const auto from = 18;
         constexpr const auto name = "save_ia32_pat";
 
@@ -1159,7 +1159,7 @@ namespace vm_exit_controls
 
     namespace load_ia32_pat
     {
-        constexpr const auto mask = 0x0000000000080000UL;
+        constexpr const auto mask = 0x0000000000080000ULL;
         constexpr const auto from = 19;
         constexpr const auto name = "load_ia32_pat";
 
@@ -1190,7 +1190,7 @@ namespace vm_exit_controls
 
     namespace save_ia32_efer
     {
-        constexpr const auto mask = 0x0000000000100000UL;
+        constexpr const auto mask = 0x0000000000100000ULL;
         constexpr const auto from = 20;
         constexpr const auto name = "save_ia32_efer";
 
@@ -1221,7 +1221,7 @@ namespace vm_exit_controls
 
     namespace load_ia32_efer
     {
-        constexpr const auto mask = 0x0000000000200000UL;
+        constexpr const auto mask = 0x0000000000200000ULL;
         constexpr const auto from = 21;
         constexpr const auto name = "load_ia32_efer";
 
@@ -1252,7 +1252,7 @@ namespace vm_exit_controls
 
     namespace save_vmx_preemption_timer_value
     {
-        constexpr const auto mask = 0x0000000000400000UL;
+        constexpr const auto mask = 0x0000000000400000ULL;
         constexpr const auto from = 22;
         constexpr const auto name = "save_vmx_preemption_timer_value";
 
@@ -1283,7 +1283,7 @@ namespace vm_exit_controls
 
     namespace clear_ia32_bndcfgs
     {
-        constexpr const auto mask = 0x0000000000800000UL;
+        constexpr const auto mask = 0x0000000000800000ULL;
         constexpr const auto from = 23;
         constexpr const auto name = "clear_ia32_bndcfgs";
 
@@ -1315,7 +1315,7 @@ namespace vm_exit_controls
 
 namespace vm_exit_msr_store_count
 {
-    constexpr const auto addr = 0x000000000000400EUL;
+    constexpr const auto addr = 0x000000000000400EULL;
     constexpr const auto name = "vm_exit_msr_store_count";
 
     inline auto exists() noexcept
@@ -1337,7 +1337,7 @@ namespace vm_exit_msr_store_count
 
 namespace vm_exit_msr_load_count
 {
-    constexpr const auto addr = 0x0000000000004010UL;
+    constexpr const auto addr = 0x0000000000004010ULL;
     constexpr const auto name = "vm_exit_msr_load_count";
 
     inline auto exists() noexcept
@@ -1359,7 +1359,7 @@ namespace vm_exit_msr_load_count
 
 namespace vm_entry_controls
 {
-    constexpr const auto addr = 0x0000000000004012UL;
+    constexpr const auto addr = 0x0000000000004012ULL;
     constexpr const auto name = "vm_entry_controls";
     constexpr const auto msr_addr = msrs::ia32_vmx_true_entry_ctls::addr;
 
@@ -1381,7 +1381,7 @@ namespace vm_entry_controls
 
     namespace load_debug_controls
     {
-        constexpr const auto mask = 0x0000000000000004UL;
+        constexpr const auto mask = 0x0000000000000004ULL;
         constexpr const auto from = 2;
         constexpr const auto name = "load_debug_controls";
 
@@ -1412,7 +1412,7 @@ namespace vm_entry_controls
 
     namespace ia_32e_mode_guest
     {
-        constexpr const auto mask = 0x0000000000000200UL;
+        constexpr const auto mask = 0x0000000000000200ULL;
         constexpr const auto from = 9;
         constexpr const auto name = "ia_32e_mode_guest";
 
@@ -1443,7 +1443,7 @@ namespace vm_entry_controls
 
     namespace entry_to_smm
     {
-        constexpr const auto mask = 0x0000000000000400UL;
+        constexpr const auto mask = 0x0000000000000400ULL;
         constexpr const auto from = 10;
         constexpr const auto name = "entry_to_smm";
 
@@ -1474,7 +1474,7 @@ namespace vm_entry_controls
 
     namespace deactivate_dual_monitor_treatment
     {
-        constexpr const auto mask = 0x0000000000000800UL;
+        constexpr const auto mask = 0x0000000000000800ULL;
         constexpr const auto from = 11;
         constexpr const auto name = "deactivate_dual_monitor_treatment";
 
@@ -1505,7 +1505,7 @@ namespace vm_entry_controls
 
     namespace load_ia32_perf_global_ctrl
     {
-        constexpr const auto mask = 0x0000000000002000UL;
+        constexpr const auto mask = 0x0000000000002000ULL;
         constexpr const auto from = 13;
         constexpr const auto name = "load_ia32_perf_global_ctrl";
 
@@ -1536,7 +1536,7 @@ namespace vm_entry_controls
 
     namespace load_ia32_pat
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "load_ia32_pat";
 
@@ -1567,7 +1567,7 @@ namespace vm_entry_controls
 
     namespace load_ia32_efer
     {
-        constexpr const auto mask = 0x0000000000008000UL;
+        constexpr const auto mask = 0x0000000000008000ULL;
         constexpr const auto from = 15;
         constexpr const auto name = "load_ia32_efer";
 
@@ -1598,7 +1598,7 @@ namespace vm_entry_controls
 
     namespace load_ia32_bndcfgs
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "load_ia32_bndcfgs";
 
@@ -1630,7 +1630,7 @@ namespace vm_entry_controls
 
 namespace vm_entry_msr_load_count
 {
-    constexpr const auto addr = 0x0000000000004014UL;
+    constexpr const auto addr = 0x0000000000004014ULL;
     constexpr const auto name = "vm_entry_msr_load_count";
 
     inline auto exists() noexcept
@@ -1652,7 +1652,7 @@ namespace vm_entry_msr_load_count
 
 namespace vm_entry_interruption_information_field
 {
-    constexpr const auto addr = 0x0000000000004016UL;
+    constexpr const auto addr = 0x0000000000004016ULL;
     constexpr const auto name = "vm_entry_interruption_information_field";
 
     inline auto exists() noexcept
@@ -1673,7 +1673,7 @@ namespace vm_entry_interruption_information_field
 
     namespace vector
     {
-        constexpr const auto mask = 0x000000FFUL;
+        constexpr const auto mask = 0x000000FFULL;
         constexpr const auto from = 0;
         constexpr const auto name = "vector";
 
@@ -1700,18 +1700,18 @@ namespace vm_entry_interruption_information_field
 
     namespace interruption_type
     {
-        constexpr const auto mask = 0x00000700UL;
+        constexpr const auto mask = 0x00000700ULL;
         constexpr const auto from = 8;
         constexpr const auto name = "interruption_type";
 
-        constexpr const auto external_interrupt = 0UL;
-        constexpr const auto reserved = 1UL;
-        constexpr const auto non_maskable_interrupt = 2UL;
-        constexpr const auto hardware_exception = 3UL;
-        constexpr const auto software_interrupt = 4UL;
-        constexpr const auto privileged_software_exception = 5UL;
-        constexpr const auto software_exception = 6UL;
-        constexpr const auto other_event = 7UL;
+        constexpr const auto external_interrupt = 0ULL;
+        constexpr const auto reserved = 1ULL;
+        constexpr const auto non_maskable_interrupt = 2ULL;
+        constexpr const auto hardware_exception = 3ULL;
+        constexpr const auto software_interrupt = 4ULL;
+        constexpr const auto privileged_software_exception = 5ULL;
+        constexpr const auto software_exception = 6ULL;
+        constexpr const auto other_event = 7ULL;
 
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1736,7 +1736,7 @@ namespace vm_entry_interruption_information_field
 
     namespace deliver_error_code_bit
     {
-        constexpr const auto mask = 0x00000800UL;
+        constexpr const auto mask = 0x00000800ULL;
         constexpr const auto from = 11;
         constexpr const auto name = "deliver_error_code_bit";
 
@@ -1779,7 +1779,7 @@ namespace vm_entry_interruption_information_field
 
     namespace reserved
     {
-        constexpr const auto mask = 0x7FFFF000UL;
+        constexpr const auto mask = 0x7FFFF000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "reserved";
 
@@ -1806,7 +1806,7 @@ namespace vm_entry_interruption_information_field
 
     namespace valid_bit
     {
-        constexpr const auto mask = 0x80000000UL;
+        constexpr const auto mask = 0x80000000ULL;
         constexpr const auto from = 31;
         constexpr const auto name = "valid_bit";
 
@@ -1849,7 +1849,7 @@ namespace vm_entry_interruption_information_field
 
 namespace vm_entry_exception_error_code
 {
-    constexpr const auto addr = 0x0000000000004018UL;
+    constexpr const auto addr = 0x0000000000004018ULL;
     constexpr const auto name = "vm_entry_exception_error_code";
 
     inline auto exists() noexcept
@@ -1871,7 +1871,7 @@ namespace vm_entry_exception_error_code
 
 namespace vm_entry_instruction_length
 {
-    constexpr const auto addr = 0x000000000000401AUL;
+    constexpr const auto addr = 0x000000000000401AULL;
     constexpr const auto name = "vm_entry_instruction_length";
 
     inline auto exists() noexcept
@@ -1893,7 +1893,7 @@ namespace vm_entry_instruction_length
 
 namespace tpr_threshold
 {
-    constexpr const auto addr = 0x000000000000401CUL;
+    constexpr const auto addr = 0x000000000000401CULL;
     constexpr const auto name = "tpr_threshold";
 
     inline auto exists() noexcept
@@ -1915,7 +1915,7 @@ namespace tpr_threshold
 
 namespace secondary_processor_based_vm_execution_controls
 {
-    constexpr const auto addr = 0x000000000000401EUL;
+    constexpr const auto addr = 0x000000000000401EULL;
     constexpr const auto name = "secondary_processor_based_vm_execution_controls";
     constexpr const auto msr_addr = msrs::ia32_vmx_procbased_ctls2::addr;
 
@@ -1937,7 +1937,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace virtualize_apic_accesses
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "virtualize_apic_accesses";
 
@@ -1968,7 +1968,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace enable_ept
     {
-        constexpr const auto mask = 0x0000000000000002UL;
+        constexpr const auto mask = 0x0000000000000002ULL;
         constexpr const auto from = 1;
         constexpr const auto name = "enable_ept";
 
@@ -1999,7 +1999,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace descriptor_table_exiting
     {
-        constexpr const auto mask = 0x0000000000000004UL;
+        constexpr const auto mask = 0x0000000000000004ULL;
         constexpr const auto from = 2;
         constexpr const auto name = "descriptor_table_exiting";
 
@@ -2030,7 +2030,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace enable_rdtscp
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "enable_rdtscp";
 
@@ -2061,7 +2061,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace virtualize_x2apic_mode
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "virtualize_x2apic_mode";
 
@@ -2092,7 +2092,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace enable_vpid
     {
-        constexpr const auto mask = 0x0000000000000020UL;
+        constexpr const auto mask = 0x0000000000000020ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "enable_vpid";
 
@@ -2123,7 +2123,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace wbinvd_exiting
     {
-        constexpr const auto mask = 0x0000000000000040UL;
+        constexpr const auto mask = 0x0000000000000040ULL;
         constexpr const auto from = 6;
         constexpr const auto name = "wbinvd_exiting";
 
@@ -2154,7 +2154,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace unrestricted_guest
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "unrestricted_guest";
 
@@ -2185,7 +2185,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace apic_register_virtualization
     {
-        constexpr const auto mask = 0x0000000000000100UL;
+        constexpr const auto mask = 0x0000000000000100ULL;
         constexpr const auto from = 8;
         constexpr const auto name = "apic_register_virtualization";
 
@@ -2216,7 +2216,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace virtual_interrupt_delivery
     {
-        constexpr const auto mask = 0x0000000000000200UL;
+        constexpr const auto mask = 0x0000000000000200ULL;
         constexpr const auto from = 9;
         constexpr const auto name = "virtual_interrupt_delivery";
 
@@ -2247,7 +2247,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace pause_loop_exiting
     {
-        constexpr const auto mask = 0x0000000000000400UL;
+        constexpr const auto mask = 0x0000000000000400ULL;
         constexpr const auto from = 10;
         constexpr const auto name = "pause_loop_exiting";
 
@@ -2278,7 +2278,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace rdrand_exiting
     {
-        constexpr const auto mask = 0x0000000000000800UL;
+        constexpr const auto mask = 0x0000000000000800ULL;
         constexpr const auto from = 11;
         constexpr const auto name = "rdrand_exiting";
 
@@ -2309,7 +2309,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace enable_invpcid
     {
-        constexpr const auto mask = 0x0000000000001000UL;
+        constexpr const auto mask = 0x0000000000001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "enable_invpcid";
 
@@ -2340,7 +2340,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace enable_vm_functions
     {
-        constexpr const auto mask = 0x0000000000002000UL;
+        constexpr const auto mask = 0x0000000000002000ULL;
         constexpr const auto from = 13;
         constexpr const auto name = "enable_vm_functions";
 
@@ -2371,7 +2371,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace vmcs_shadowing
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "vmcs_shadowing";
 
@@ -2402,7 +2402,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace rdseed_exiting
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "rdseed_exiting";
 
@@ -2433,7 +2433,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace enable_pml
     {
-        constexpr const auto mask = 0x0000000000020000UL;
+        constexpr const auto mask = 0x0000000000020000ULL;
         constexpr const auto from = 17;
         constexpr const auto name = "enable_pml";
 
@@ -2464,7 +2464,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace ept_violation_ve
     {
-        constexpr const auto mask = 0x0000000000040000UL;
+        constexpr const auto mask = 0x0000000000040000ULL;
         constexpr const auto from = 18;
         constexpr const auto name = "ept_violation_ve";
 
@@ -2495,7 +2495,7 @@ namespace secondary_processor_based_vm_execution_controls
 
     namespace enable_xsaves_xrstors
     {
-        constexpr const auto mask = 0x0000000000100000UL;
+        constexpr const auto mask = 0x0000000000100000ULL;
         constexpr const auto from = 20 ;
         constexpr const auto name = "enable_xsaves_xrstors";
 
@@ -2527,7 +2527,7 @@ namespace secondary_processor_based_vm_execution_controls
 
 namespace ple_gap
 {
-    constexpr const auto addr = 0x0000000000004020UL;
+    constexpr const auto addr = 0x0000000000004020ULL;
     constexpr const auto name = "ple_gap";
 
     inline auto exists() noexcept
@@ -2552,7 +2552,7 @@ namespace ple_gap
 
 namespace ple_window
 {
-    constexpr const auto addr = 0x0000000000004022UL;
+    constexpr const auto addr = 0x0000000000004022ULL;
     constexpr const auto name = "ple_window";
 
     inline auto exists() noexcept

@@ -25,14 +25,14 @@
 #include <intrinsics/pm_x64.h>
 
 extern "C" void
-__halt(void) noexcept
+_halt(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__stop(void) noexcept
+_stop(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();

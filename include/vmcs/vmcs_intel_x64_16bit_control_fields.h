@@ -42,7 +42,7 @@ namespace vmcs
 
 namespace virtual_processor_identifier
 {
-    constexpr const auto addr = 0x0000000000000000UL;
+    constexpr const auto addr = 0x0000000000000000ULL;
     constexpr const auto name = "virtual_processor_identifier";
 
     inline bool exists() noexcept
@@ -67,7 +67,7 @@ namespace virtual_processor_identifier
 
 namespace posted_interrupt_notification_vector
 {
-    constexpr const auto addr = 0x0000000000000002UL;
+    constexpr const auto addr = 0x0000000000000002ULL;
     constexpr const auto name = "posted_interrupt_notification_vector";
 
     inline bool exists() noexcept
@@ -89,7 +89,7 @@ namespace posted_interrupt_notification_vector
 
 namespace eptp_index
 {
-    constexpr const auto addr = 0x0000000000000004UL;
+    constexpr const auto addr = 0x0000000000000004ULL;
     constexpr const auto name = "eptp_index";
 
     inline bool exists() noexcept

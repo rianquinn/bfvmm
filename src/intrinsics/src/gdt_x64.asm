@@ -24,12 +24,12 @@ default rel
 
 section .text
 
-global __read_gdt:function
-__read_gdt:
+global _read_gdt:function
+_read_gdt:
     sgdt [rdi]
     ret
 
-global __write_gdt:function
-__write_gdt:
+global _write_gdt:function
+_write_gdt:
     lgdt [rdi]
     ret

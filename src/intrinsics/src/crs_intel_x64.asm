@@ -24,42 +24,42 @@ default rel
 
 section .text
 
-global __read_cr0:function
-__read_cr0:
+global _read_cr0:function
+_read_cr0:
     mov rax, cr0
     ret
 
-global __write_cr0:function
-__write_cr0:
+global _write_cr0:function
+_write_cr0:
     mov cr0, rdi
     ret
 
-global __read_cr2:function
-__read_cr2:
+global _read_cr2:function
+_read_cr2:
     mov rax, cr2
     ret
 
-global __write_cr2:function
-__write_cr2:
+global _write_cr2:function
+_write_cr2:
     mov cr2, rdi
     ret
 
-global __read_cr3:function
-__read_cr3:
+global _read_cr3:function
+_read_cr3:
     mov rax, cr3
     ret
 
-global __write_cr3:function
-__write_cr3:
+global _write_cr3:function
+_write_cr3:
     mov cr3, rdi
     ret
 
-global __read_cr4:function
-__read_cr4:
+global _read_cr4:function
+_read_cr4:
     mov rax, cr4
     ret
 
-global __write_cr4:function
-__write_cr4:
+global _write_cr4:function
+_write_cr4:
     mov cr4, rdi
     ret
