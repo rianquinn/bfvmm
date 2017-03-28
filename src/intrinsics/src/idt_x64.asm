@@ -24,12 +24,12 @@ default rel
 
 section .text
 
-global __read_idt:function
-__read_idt:
+global _read_idt:function
+_read_idt:
     sidt [rdi]
     ret
 
-global __write_idt:function
-__write_idt:
+global _write_idt:function
+_write_idt:
     lidt [rdi]
     ret

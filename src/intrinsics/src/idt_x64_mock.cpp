@@ -25,7 +25,7 @@
 #include <intrinsics/idt_x64.h>
 
 extern "C" void
-__read_idt(idt_reg_x64_t *idt_reg) noexcept
+_read_idt(idt_reg_x64_t *idt_reg) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << '\n';
     std::cerr << "    - idt_reg: " << idt_reg << '\n';
@@ -33,7 +33,7 @@ __read_idt(idt_reg_x64_t *idt_reg) noexcept
 }
 
 extern "C" void
-__write_idt(idt_reg_x64_t *idt_reg) noexcept
+_write_idt(idt_reg_x64_t *idt_reg) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << '\n';
     std::cerr << "    - idt_reg: " << idt_reg << '\n';

@@ -43,7 +43,7 @@ namespace vmcs
 
 namespace guest_physical_address
 {
-    constexpr const auto addr = 0x0000000000002400UL;
+    constexpr const auto addr = 0x0000000000002400ULL;
     constexpr const auto name = "guest_physical_address";
 
     inline auto exists() noexcept

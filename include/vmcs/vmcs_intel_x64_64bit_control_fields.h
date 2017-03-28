@@ -100,7 +100,7 @@ namespace vmcs
 
 namespace address_of_io_bitmap_a
 {
-    constexpr const auto addr = 0x0000000000002000UL;
+    constexpr const auto addr = 0x0000000000002000ULL;
     constexpr const auto name = "address_of_io_bitmap_a";
 
     inline bool exists() noexcept
@@ -122,7 +122,7 @@ namespace address_of_io_bitmap_a
 
 namespace address_of_io_bitmap_b
 {
-    constexpr const auto addr = 0x0000000000002002UL;
+    constexpr const auto addr = 0x0000000000002002ULL;
     constexpr const auto name = "address_of_io_bitmap_b";
 
     inline bool exists() noexcept
@@ -144,7 +144,7 @@ namespace address_of_io_bitmap_b
 
 namespace address_of_msr_bitmap
 {
-    constexpr const auto addr = 0x0000000000002004UL;
+    constexpr const auto addr = 0x0000000000002004ULL;
     constexpr const auto name = "address_of_msr_bitmap";
 
     inline bool exists() noexcept
@@ -166,7 +166,7 @@ namespace address_of_msr_bitmap
 
 namespace vm_exit_msr_store_address
 {
-    constexpr const auto addr = 0x0000000000002006UL;
+    constexpr const auto addr = 0x0000000000002006ULL;
     constexpr const auto name = "vm_exit_msr_store_address";
 
     inline bool exists() noexcept
@@ -188,7 +188,7 @@ namespace vm_exit_msr_store_address
 
 namespace vm_exit_msr_load_address
 {
-    constexpr const auto addr = 0x0000000000002008UL;
+    constexpr const auto addr = 0x0000000000002008ULL;
     constexpr const auto name = "vm_exit_msr_load_address";
 
     inline bool exists() noexcept
@@ -210,7 +210,7 @@ namespace vm_exit_msr_load_address
 
 namespace vm_entry_msr_load_address
 {
-    constexpr const auto addr = 0x000000000000200AUL;
+    constexpr const auto addr = 0x000000000000200AULL;
     constexpr const auto name = "vm_entry_msr_load_address";
 
     inline bool exists() noexcept
@@ -232,7 +232,7 @@ namespace vm_entry_msr_load_address
 
 namespace executive_vmcs_pointer
 {
-    constexpr const auto addr = 0x000000000000200CUL;
+    constexpr const auto addr = 0x000000000000200CULL;
     constexpr const auto name = "executive_vmcs_pointer";
 
     inline bool exists() noexcept
@@ -254,7 +254,7 @@ namespace executive_vmcs_pointer
 
 namespace pml_address
 {
-    constexpr const auto addr = 0x000000000000200EUL;
+    constexpr const auto addr = 0x000000000000200EULL;
     constexpr const auto name = "pml_address";
 
     inline bool exists() noexcept
@@ -279,7 +279,7 @@ namespace pml_address
 
 namespace tsc_offset
 {
-    constexpr const auto addr = 0x0000000000002010UL;
+    constexpr const auto addr = 0x0000000000002010ULL;
     constexpr const auto name = "tsc_offset";
 
     inline bool exists() noexcept
@@ -301,7 +301,7 @@ namespace tsc_offset
 
 namespace virtual_apic_address
 {
-    constexpr const auto addr = 0x0000000000002012UL;
+    constexpr const auto addr = 0x0000000000002012ULL;
     constexpr const auto name = "virtual_apic_address";
 
     inline bool exists() noexcept
@@ -323,7 +323,7 @@ namespace virtual_apic_address
 
 namespace apic_access_address
 {
-    constexpr const auto addr = 0x0000000000002014UL;
+    constexpr const auto addr = 0x0000000000002014ULL;
     constexpr const auto name = "apic_access_address";
 
     inline bool exists() noexcept
@@ -348,7 +348,7 @@ namespace apic_access_address
 
 namespace posted_interrupt_descriptor_address
 {
-    constexpr const auto addr = 0x0000000000002016UL;
+    constexpr const auto addr = 0x0000000000002016ULL;
     constexpr const auto name = "posted_interrupt_descriptor_address";
 
     inline bool exists() noexcept
@@ -370,7 +370,7 @@ namespace posted_interrupt_descriptor_address
 
 namespace vm_function_controls
 {
-    constexpr const auto addr = 0x0000000000002018UL;
+    constexpr const auto addr = 0x0000000000002018ULL;
     constexpr const auto name = "vm_function_controls";
     constexpr const auto msr_addr = 0x00000491U;
 
@@ -395,7 +395,7 @@ namespace vm_function_controls
 
     namespace eptp_switching
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "eptp_switching";
 
@@ -426,7 +426,7 @@ namespace vm_function_controls
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFFFFFFFFFFEUL;
+        constexpr const auto mask = 0xFFFFFFFFFFFFFFFEULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -454,7 +454,7 @@ namespace vm_function_controls
 
 namespace ept_pointer
 {
-    constexpr const auto addr = 0x000000000000201AUL;
+    constexpr const auto addr = 0x000000000000201AULL;
     constexpr const auto name = "ept_pointer";
 
     inline bool exists() noexcept
@@ -478,7 +478,7 @@ namespace ept_pointer
 
     namespace memory_type
     {
-        constexpr const auto mask = 0x0000000000000007UL;
+        constexpr const auto mask = 0x0000000000000007ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "memory_type";
 
@@ -508,7 +508,7 @@ namespace ept_pointer
 
     namespace page_walk_length_minus_one
     {
-        constexpr const auto mask = 0x0000000000000038UL;
+        constexpr const auto mask = 0x0000000000000038ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "page_walk_length_minus_one";
 
@@ -535,7 +535,7 @@ namespace ept_pointer
 
     namespace accessed_and_dirty_flags
     {
-        constexpr const auto mask = 0x0000000000000040UL;
+        constexpr const auto mask = 0x0000000000000040ULL;
         constexpr const auto from = 6;
         constexpr const auto name = "accessed_and_dirty_flags";
 
@@ -578,7 +578,7 @@ namespace ept_pointer
 
     namespace phys_addr
     {
-        constexpr const auto mask = 0x0000FFFFFFFFF000UL;
+        constexpr const auto mask = 0x0000FFFFFFFFF000ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "phys_addr";
 
@@ -605,7 +605,7 @@ namespace ept_pointer
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFF000000000F80UL;
+        constexpr const auto mask = 0xFFFF000000000F80ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -633,7 +633,7 @@ namespace ept_pointer
 
 namespace eoi_exit_bitmap_0
 {
-    constexpr const auto addr = 0x000000000000201CUL;
+    constexpr const auto addr = 0x000000000000201CULL;
     constexpr const auto name = "eoi_exit_bitmap_0";
 
     inline bool exists() noexcept
@@ -658,7 +658,7 @@ namespace eoi_exit_bitmap_0
 
 namespace eoi_exit_bitmap_1
 {
-    constexpr const auto addr = 0x000000000000201EUL;
+    constexpr const auto addr = 0x000000000000201EULL;
     constexpr const auto name = "eoi_exit_bitmap_1";
 
     inline bool exists() noexcept
@@ -683,7 +683,7 @@ namespace eoi_exit_bitmap_1
 
 namespace eoi_exit_bitmap_2
 {
-    constexpr const auto addr = 0x0000000000002020UL;
+    constexpr const auto addr = 0x0000000000002020ULL;
     constexpr const auto name = "eoi_exit_bitmap_2";
 
     inline bool exists() noexcept
@@ -708,7 +708,7 @@ namespace eoi_exit_bitmap_2
 
 namespace eoi_exit_bitmap_3
 {
-    constexpr const auto addr = 0x0000000000002022UL;
+    constexpr const auto addr = 0x0000000000002022ULL;
     constexpr const auto name = "eoi_exit_bitmap_3";
 
     inline bool exists() noexcept
@@ -733,7 +733,7 @@ namespace eoi_exit_bitmap_3
 
 namespace eptp_list_address
 {
-    constexpr const auto addr = 0x0000000000002024UL;
+    constexpr const auto addr = 0x0000000000002024ULL;
     constexpr const auto name = "eptp_list_address";
 
     inline bool exists() noexcept
@@ -759,7 +759,7 @@ namespace eptp_list_address
 
 namespace vmread_bitmap_address
 {
-    constexpr const auto addr = 0x0000000000002026UL;
+    constexpr const auto addr = 0x0000000000002026ULL;
     constexpr const auto name = "vmread_bitmap_address";
 
     inline bool exists() noexcept
@@ -784,7 +784,7 @@ namespace vmread_bitmap_address
 
 namespace vmwrite_bitmap_address
 {
-    constexpr const auto addr = 0x0000000000002028UL;
+    constexpr const auto addr = 0x0000000000002028ULL;
     constexpr const auto name = "vmwrite_bitmap_address";
 
     inline bool exists() noexcept
@@ -809,7 +809,7 @@ namespace vmwrite_bitmap_address
 
 namespace virtualization_exception_information_address
 {
-    constexpr const auto addr = 0x000000000000202AUL;
+    constexpr const auto addr = 0x000000000000202AULL;
     constexpr const auto name = "virtualization_exception_information_address";
 
     inline bool exists() noexcept
@@ -834,7 +834,7 @@ namespace virtualization_exception_information_address
 
 namespace xss_exiting_bitmap
 {
-    constexpr const auto addr = 0x000000000000202CUL;
+    constexpr const auto addr = 0x000000000000202CULL;
     constexpr const auto name = "xss_exiting_bitmap";
 
     inline bool exists() noexcept

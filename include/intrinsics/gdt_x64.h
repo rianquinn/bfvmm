@@ -67,8 +67,8 @@ struct EXPORT_INTRINSICS gdt_reg_x64_t {
 // Intrinsics
 // -----------------------------------------------------------------------------
 
-extern "C" EXPORT_INTRINSICS void __read_gdt(gdt_reg_x64_t *gdt_reg) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_gdt(gdt_reg_x64_t *gdt_reg) noexcept;
+extern "C" EXPORT_INTRINSICS void _read_gdt(gdt_reg_x64_t *gdt_reg) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_gdt(gdt_reg_x64_t *gdt_reg) noexcept;
 
 // -----------------------------------------------------------------------------
 // GDT Functions
@@ -83,7 +83,7 @@ namespace gdt
     inline auto get() noexcept
     {
         auto &&reg = gdt_reg_x64_t{};
-        __read_gdt(&reg);
+        _read_gdt(&reg);
 
         return reg;
     }
@@ -91,7 +91,7 @@ namespace gdt
     inline void set(gdt_reg_x64_t::base_type base, gdt_reg_x64_t::limit_type limit) noexcept
     {
         auto &&reg = gdt_reg_x64_t{base, limit};
-        __write_gdt(&reg);
+        _write_gdt(&reg);
     }
 
     namespace base
@@ -99,7 +99,7 @@ namespace gdt
         inline auto get() noexcept
         {
             auto &&reg = gdt_reg_x64_t{};
-            __read_gdt(&reg);
+            _read_gdt(&reg);
 
             return reg.base;
         }
@@ -107,10 +107,10 @@ namespace gdt
         inline void set(gdt_reg_x64_t::base_type base) noexcept
         {
             auto &&reg = gdt_reg_x64_t{};
-            __read_gdt(&reg);
+            _read_gdt(&reg);
 
             reg.base = base;
-            __write_gdt(&reg);
+            _write_gdt(&reg);
         }
     }
 
@@ -119,7 +119,7 @@ namespace gdt
         inline auto get() noexcept
         {
             auto &&reg = gdt_reg_x64_t{};
-            __read_gdt(&reg);
+            _read_gdt(&reg);
 
             return reg.limit;
         }
@@ -127,10 +127,10 @@ namespace gdt
         inline void set(gdt_reg_x64_t::limit_type limit) noexcept
         {
             auto &&reg = gdt_reg_x64_t{};
-            __read_gdt(&reg);
+            _read_gdt(&reg);
 
             reg.limit = limit;
-            __write_gdt(&reg);
+            _write_gdt(&reg);
         }
     }
 }

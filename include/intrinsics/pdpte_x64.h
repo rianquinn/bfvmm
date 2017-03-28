@@ -36,7 +36,7 @@ namespace pdpte
 
     namespace present
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "present";
     }
@@ -55,14 +55,14 @@ namespace pdpte
 
     namespace pwt
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "pwt";
     }
 
     namespace pcd
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "pcd";
     }

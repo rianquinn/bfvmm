@@ -24,11 +24,11 @@ default rel
 
 section .text
 
-global __halt:function
-__halt:
+global _halt:function
+_halt:
     hlt
 
-global __stop:function
-__stop:
+global _stop:function
+_stop:
     cli
     hlt

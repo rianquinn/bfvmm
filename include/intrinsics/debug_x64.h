@@ -38,8 +38,8 @@
 // Definitions
 // -----------------------------------------------------------------------------
 
-extern "C" EXPORT_INTRINSICS uint64_t __read_dr7(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_dr7(uint64_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint64_t _read_dr7(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_dr7(uint64_t val) noexcept;
 
 // *INDENT-OFF*
 
@@ -50,10 +50,10 @@ namespace dr7
     using value_type = uint64_t;
 
     inline auto get() noexcept
-    { return __read_dr7(); }
+    { return _read_dr7(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_dr7(val); }
+    void set(T val) noexcept { _write_dr7(val); }
 }
 }
 

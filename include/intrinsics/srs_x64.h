@@ -42,29 +42,29 @@
 // Definitions
 // -----------------------------------------------------------------------------
 
-extern "C" EXPORT_INTRINSICS uint16_t __read_es(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_es(uint16_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint16_t _read_es(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_es(uint16_t val) noexcept;
 
-extern "C" EXPORT_INTRINSICS uint16_t __read_cs(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_cs(uint16_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint16_t _read_cs(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_cs(uint16_t val) noexcept;
 
-extern "C" EXPORT_INTRINSICS uint16_t __read_ss(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_ss(uint16_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint16_t _read_ss(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_ss(uint16_t val) noexcept;
 
-extern "C" EXPORT_INTRINSICS uint16_t __read_ds(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_ds(uint16_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint16_t _read_ds(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_ds(uint16_t val) noexcept;
 
-extern "C" EXPORT_INTRINSICS uint16_t __read_fs(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_fs(uint16_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint16_t _read_fs(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_fs(uint16_t val) noexcept;
 
-extern "C" EXPORT_INTRINSICS uint16_t __read_gs(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_gs(uint16_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint16_t _read_gs(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_gs(uint16_t val) noexcept;
 
-extern "C" EXPORT_INTRINSICS uint16_t __read_ldtr(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_ldtr(uint16_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint16_t _read_ldtr(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_ldtr(uint16_t val) noexcept;
 
-extern "C" EXPORT_INTRINSICS uint16_t __read_tr(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_tr(uint16_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint16_t _read_tr(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_tr(uint16_t val) noexcept;
 
 // *INDENT-OFF*
 
@@ -78,10 +78,10 @@ using type = uint16_t;
 namespace es
 {
     inline auto get() noexcept
-    { return __read_es(); }
+    { return _read_es(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_es(gsl::narrow_cast<type>(val)); }
+    void set(T val) noexcept { _write_es(gsl::narrow_cast<type>(val)); }
 
     namespace rpl
     {
@@ -90,10 +90,10 @@ namespace es
         constexpr const auto name = "rpl";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_es(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_es(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_es(gsl::narrow_cast<type>(set_bits(__read_es(), mask, val << from))); }
+        void set(T val) noexcept { _write_es(gsl::narrow_cast<type>(set_bits(_read_es(), mask, val << from))); }
     }
 
     namespace ti
@@ -103,10 +103,10 @@ namespace es
         constexpr const auto name = "ti";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(__read_es(), from)); }
+        { return gsl::narrow_cast<type>(get_bit(_read_es(), from)); }
 
         inline void set(bool val) noexcept
-        { __write_es(gsl::narrow_cast<type>(val ? set_bit(__read_es(), from) : clear_bit(__read_es(), from))); }
+        { _write_es(gsl::narrow_cast<type>(val ? set_bit(_read_es(), from) : clear_bit(_read_es(), from))); }
     }
 
     namespace index
@@ -116,20 +116,20 @@ namespace es
         constexpr const auto name = "index";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_es(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_es(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_es(gsl::narrow_cast<type>(set_bits(__read_es(), mask, val << from))); }
+        void set(T val) noexcept { _write_es(gsl::narrow_cast<type>(set_bits(_read_es(), mask, val << from))); }
     }
 }
 
 namespace cs
 {
     inline auto get() noexcept
-    { return __read_cs(); }
+    { return _read_cs(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_cs(gsl::narrow_cast<type>(val)); }
+    void set(T val) noexcept { _write_cs(gsl::narrow_cast<type>(val)); }
 
     namespace rpl
     {
@@ -138,10 +138,10 @@ namespace cs
         constexpr const auto name = "rpl";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_cs(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_cs(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_cs(gsl::narrow_cast<type>(set_bits(__read_cs(), mask, val << from))); }
+        void set(T val) noexcept { _write_cs(gsl::narrow_cast<type>(set_bits(_read_cs(), mask, val << from))); }
     }
 
     namespace ti
@@ -151,10 +151,10 @@ namespace cs
         constexpr const auto name = "ti";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(__read_cs(), from)); }
+        { return gsl::narrow_cast<type>(get_bit(_read_cs(), from)); }
 
         inline void set(bool val) noexcept
-        { __write_cs(gsl::narrow_cast<type>(val ? set_bit(__read_cs(), from) : clear_bit(__read_cs(), from))); }
+        { _write_cs(gsl::narrow_cast<type>(val ? set_bit(_read_cs(), from) : clear_bit(_read_cs(), from))); }
     }
 
     namespace index
@@ -164,20 +164,20 @@ namespace cs
         constexpr const auto name = "index";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_cs(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_cs(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_cs(gsl::narrow_cast<type>(set_bits(__read_cs(), mask, val << from))); }
+        void set(T val) noexcept { _write_cs(gsl::narrow_cast<type>(set_bits(_read_cs(), mask, val << from))); }
     }
 }
 
 namespace ss
 {
     inline auto get() noexcept
-    { return __read_ss(); }
+    { return _read_ss(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_ss(gsl::narrow_cast<type>(val)); }
+    void set(T val) noexcept { _write_ss(gsl::narrow_cast<type>(val)); }
 
     namespace rpl
     {
@@ -186,10 +186,10 @@ namespace ss
         constexpr const auto name = "rpl";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_ss(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_ss(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_ss(gsl::narrow_cast<type>(set_bits(__read_ss(), mask, val << from))); }
+        void set(T val) noexcept { _write_ss(gsl::narrow_cast<type>(set_bits(_read_ss(), mask, val << from))); }
     }
 
     namespace ti
@@ -199,10 +199,10 @@ namespace ss
         constexpr const auto name = "ti";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(__read_ss(), from)); }
+        { return gsl::narrow_cast<type>(get_bit(_read_ss(), from)); }
 
         inline void set(bool val) noexcept
-        { __write_ss(gsl::narrow_cast<type>(val ? set_bit(__read_ss(), from) : clear_bit(__read_ss(), from))); }
+        { _write_ss(gsl::narrow_cast<type>(val ? set_bit(_read_ss(), from) : clear_bit(_read_ss(), from))); }
     }
 
     namespace index
@@ -212,20 +212,20 @@ namespace ss
         constexpr const auto name = "index";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_ss(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_ss(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_ss(gsl::narrow_cast<type>(set_bits(__read_ss(), mask, val << from))); }
+        void set(T val) noexcept { _write_ss(gsl::narrow_cast<type>(set_bits(_read_ss(), mask, val << from))); }
     }
 }
 
 namespace ds
 {
     inline auto get() noexcept
-    { return __read_ds(); }
+    { return _read_ds(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_ds(gsl::narrow_cast<type>(val)); }
+    void set(T val) noexcept { _write_ds(gsl::narrow_cast<type>(val)); }
 
     namespace rpl
     {
@@ -234,10 +234,10 @@ namespace ds
         constexpr const auto name = "rpl";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_ds(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_ds(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_ds(gsl::narrow_cast<type>(set_bits(__read_ds(), mask, val << from))); }
+        void set(T val) noexcept { _write_ds(gsl::narrow_cast<type>(set_bits(_read_ds(), mask, val << from))); }
     }
 
     namespace ti
@@ -247,10 +247,10 @@ namespace ds
         constexpr const auto name = "ti";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(__read_ds(), from)); }
+        { return gsl::narrow_cast<type>(get_bit(_read_ds(), from)); }
 
         inline void set(bool val) noexcept
-        { __write_ds(gsl::narrow_cast<type>(val ? set_bit(__read_ds(), from) : clear_bit(__read_ds(), from))); }
+        { _write_ds(gsl::narrow_cast<type>(val ? set_bit(_read_ds(), from) : clear_bit(_read_ds(), from))); }
     }
 
     namespace index
@@ -260,20 +260,20 @@ namespace ds
         constexpr const auto name = "index";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_ds(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_ds(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_ds(gsl::narrow_cast<type>(set_bits(__read_ds(), mask, val << from))); }
+        void set(T val) noexcept { _write_ds(gsl::narrow_cast<type>(set_bits(_read_ds(), mask, val << from))); }
     }
 }
 
 namespace fs
 {
     inline auto get() noexcept
-    { return __read_fs(); }
+    { return _read_fs(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_fs(gsl::narrow_cast<type>(val)); }
+    void set(T val) noexcept { _write_fs(gsl::narrow_cast<type>(val)); }
 
     namespace rpl
     {
@@ -282,10 +282,10 @@ namespace fs
         constexpr const auto name = "rpl";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_fs(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_fs(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_fs(gsl::narrow_cast<type>(set_bits(__read_fs(), mask, val << from))); }
+        void set(T val) noexcept { _write_fs(gsl::narrow_cast<type>(set_bits(_read_fs(), mask, val << from))); }
     }
 
     namespace ti
@@ -295,10 +295,10 @@ namespace fs
         constexpr const auto name = "ti";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(__read_fs(), from)); }
+        { return gsl::narrow_cast<type>(get_bit(_read_fs(), from)); }
 
         inline void set(bool val) noexcept
-        { __write_fs(gsl::narrow_cast<type>(val ? set_bit(__read_fs(), from) : clear_bit(__read_fs(), from))); }
+        { _write_fs(gsl::narrow_cast<type>(val ? set_bit(_read_fs(), from) : clear_bit(_read_fs(), from))); }
     }
 
     namespace index
@@ -308,20 +308,20 @@ namespace fs
         constexpr const auto name = "index";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_fs(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_fs(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_fs(gsl::narrow_cast<type>(set_bits(__read_fs(), mask, val << from))); }
+        void set(T val) noexcept { _write_fs(gsl::narrow_cast<type>(set_bits(_read_fs(), mask, val << from))); }
     }
 }
 
 namespace gs
 {
     inline auto get() noexcept
-    { return __read_gs(); }
+    { return _read_gs(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_gs(gsl::narrow_cast<type>(val)); }
+    void set(T val) noexcept { _write_gs(gsl::narrow_cast<type>(val)); }
 
     namespace rpl
     {
@@ -330,10 +330,10 @@ namespace gs
         constexpr const auto name = "rpl";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_gs(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_gs(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_gs(gsl::narrow_cast<type>(set_bits(__read_gs(), mask, val << from))); }
+        void set(T val) noexcept { _write_gs(gsl::narrow_cast<type>(set_bits(_read_gs(), mask, val << from))); }
     }
 
     namespace ti
@@ -343,10 +343,10 @@ namespace gs
         constexpr const auto name = "ti";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(__read_gs(), from)); }
+        { return gsl::narrow_cast<type>(get_bit(_read_gs(), from)); }
 
         inline void set(bool val) noexcept
-        { __write_gs(gsl::narrow_cast<type>(val ? set_bit(__read_gs(), from) : clear_bit(__read_gs(), from))); }
+        { _write_gs(gsl::narrow_cast<type>(val ? set_bit(_read_gs(), from) : clear_bit(_read_gs(), from))); }
     }
 
     namespace index
@@ -356,20 +356,20 @@ namespace gs
         constexpr const auto name = "index";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_gs(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_gs(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_gs(gsl::narrow_cast<type>(set_bits(__read_gs(), mask, val << from))); }
+        void set(T val) noexcept { _write_gs(gsl::narrow_cast<type>(set_bits(_read_gs(), mask, val << from))); }
     }
 }
 
 namespace ldtr
 {
     inline auto get() noexcept
-    { return __read_ldtr(); }
+    { return _read_ldtr(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_ldtr(gsl::narrow_cast<type>(val)); }
+    void set(T val) noexcept { _write_ldtr(gsl::narrow_cast<type>(val)); }
 
     namespace rpl
     {
@@ -378,10 +378,10 @@ namespace ldtr
         constexpr const auto name = "rpl";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_ldtr(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_ldtr(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_ldtr(gsl::narrow_cast<type>(set_bits(__read_ldtr(), mask, val << from))); }
+        void set(T val) noexcept { _write_ldtr(gsl::narrow_cast<type>(set_bits(_read_ldtr(), mask, val << from))); }
     }
 
     namespace ti
@@ -391,10 +391,10 @@ namespace ldtr
         constexpr const auto name = "ti";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(__read_ldtr(), from)); }
+        { return gsl::narrow_cast<type>(get_bit(_read_ldtr(), from)); }
 
         inline void set(bool val) noexcept
-        { __write_ldtr(gsl::narrow_cast<type>(val ? set_bit(__read_ldtr(), from) : clear_bit(__read_ldtr(), from))); }
+        { _write_ldtr(gsl::narrow_cast<type>(val ? set_bit(_read_ldtr(), from) : clear_bit(_read_ldtr(), from))); }
     }
 
     namespace index
@@ -404,20 +404,20 @@ namespace ldtr
         constexpr const auto name = "index";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_ldtr(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_ldtr(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_ldtr(gsl::narrow_cast<type>(set_bits(__read_ldtr(), mask, val << from))); }
+        void set(T val) noexcept { _write_ldtr(gsl::narrow_cast<type>(set_bits(_read_ldtr(), mask, val << from))); }
     }
 }
 
 namespace tr
 {
     inline auto get() noexcept
-    { return __read_tr(); }
+    { return _read_tr(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_tr(gsl::narrow_cast<type>(val)); }
+    void set(T val) noexcept { _write_tr(gsl::narrow_cast<type>(val)); }
 
     namespace rpl
     {
@@ -426,10 +426,10 @@ namespace tr
         constexpr const auto name = "rpl";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_tr(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_tr(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_tr(gsl::narrow_cast<type>(set_bits(__read_tr(), mask, val << from))); }
+        void set(T val) noexcept { _write_tr(gsl::narrow_cast<type>(set_bits(_read_tr(), mask, val << from))); }
     }
 
     namespace ti
@@ -439,10 +439,10 @@ namespace tr
         constexpr const auto name = "ti";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(__read_tr(), from)); }
+        { return gsl::narrow_cast<type>(get_bit(_read_tr(), from)); }
 
         inline void set(bool val) noexcept
-        { __write_tr(gsl::narrow_cast<type>(val ? set_bit(__read_tr(), from) : clear_bit(__read_tr(), from))); }
+        { _write_tr(gsl::narrow_cast<type>(val ? set_bit(_read_tr(), from) : clear_bit(_read_tr(), from))); }
     }
 
     namespace index
@@ -452,10 +452,10 @@ namespace tr
         constexpr const auto name = "index";
 
         inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(__read_tr(), mask) >> from); }
+        { return gsl::narrow_cast<type>(get_bits(_read_tr(), mask) >> from); }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val) noexcept { __write_tr(gsl::narrow_cast<type>(set_bits(__read_tr(), mask, val << from))); }
+        void set(T val) noexcept { _write_tr(gsl::narrow_cast<type>(set_bits(_read_tr(), mask, val << from))); }
     }
 }
 }

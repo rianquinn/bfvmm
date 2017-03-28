@@ -22,18 +22,13 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
-#include <intrinsics/pm_x64.h>
+#include <vmcs/vmcs_intel_x64_promote.h>
 
 extern "C" void
-_halt(void) noexcept
+vmcs_promote(uintptr_t state_save) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
-    abort();
-}
+    ignored(state_save);
 
-extern "C" void
-_stop(void) noexcept
-{
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }

@@ -25,7 +25,7 @@
 #include <intrinsics/gdt_x64.h>
 
 extern "C" void
-__read_gdt(gdt_reg_x64_t *gdt_reg) noexcept
+_read_gdt(gdt_reg_x64_t *gdt_reg) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << '\n';
     std::cerr << "    - gdt_reg: " << gdt_reg << '\n';
@@ -33,7 +33,7 @@ __read_gdt(gdt_reg_x64_t *gdt_reg) noexcept
 }
 
 extern "C" void
-__write_gdt(gdt_reg_x64_t *gdt_reg) noexcept
+_write_gdt(gdt_reg_x64_t *gdt_reg) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << '\n';
     std::cerr << "    - gdt_reg: " << gdt_reg << '\n';

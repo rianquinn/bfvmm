@@ -41,17 +41,17 @@
 // Definitions
 // -----------------------------------------------------------------------------
 
-extern "C" EXPORT_INTRINSICS uint64_t __read_cr0(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_cr0(uint64_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint64_t _read_cr0(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_cr0(uint64_t val) noexcept;
 
-extern "C" EXPORT_INTRINSICS uint64_t __read_cr2(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_cr2(uint64_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint64_t _read_cr2(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_cr2(uint64_t val) noexcept;
 
-extern "C" EXPORT_INTRINSICS uint64_t __read_cr3(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_cr3(uint64_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint64_t _read_cr3(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_cr3(uint64_t val) noexcept;
 
-extern "C" EXPORT_INTRINSICS uint64_t __read_cr4(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_cr4(uint64_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint64_t _read_cr4(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_cr4(uint64_t val) noexcept;
 
 // *INDENT-OFF*
 
@@ -62,152 +62,152 @@ namespace cr0
     using value_type = uint64_t;
 
     inline auto get() noexcept
-    { return __read_cr0(); }
+    { return _read_cr0(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_cr0(val); }
+    void set(T val) noexcept { _write_cr0(val); }
 
     namespace protection_enable
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "protection_enable";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr0(), from) != 0; }
+        { return get_bit(_read_cr0(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr0(val ? set_bit(__read_cr0(), from) : clear_bit(__read_cr0(), from)); }
+        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
     }
 
     namespace monitor_coprocessor
     {
-        constexpr const auto mask = 0x0000000000000002UL;
+        constexpr const auto mask = 0x0000000000000002ULL;
         constexpr const auto from = 1;
         constexpr const auto name = "monitor_coprocessor";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr0(), from) != 0; }
+        { return get_bit(_read_cr0(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr0(val ? set_bit(__read_cr0(), from) : clear_bit(__read_cr0(), from)); }
+        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
     }
 
     namespace emulation
     {
-        constexpr const auto mask = 0x0000000000000004UL;
+        constexpr const auto mask = 0x0000000000000004ULL;
         constexpr const auto from = 2;
         constexpr const auto name = "emulation";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr0(), from) != 0; }
+        { return get_bit(_read_cr0(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr0(val ? set_bit(__read_cr0(), from) : clear_bit(__read_cr0(), from)); }
+        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
     }
 
     namespace task_switched
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "task_switched";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr0(), from) != 0; }
+        { return get_bit(_read_cr0(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr0(val ? set_bit(__read_cr0(), from) : clear_bit(__read_cr0(), from)); }
+        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
     }
 
     namespace extension_type
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "extension_type";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr0(), from) != 0; }
+        { return get_bit(_read_cr0(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr0(val ? set_bit(__read_cr0(), from) : clear_bit(__read_cr0(), from)); }
+        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
     }
 
     namespace numeric_error
     {
-        constexpr const auto mask = 0x0000000000000020UL;
+        constexpr const auto mask = 0x0000000000000020ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "numeric_error";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr0(), from) != 0; }
+        { return get_bit(_read_cr0(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr0(val ? set_bit(__read_cr0(), from) : clear_bit(__read_cr0(), from)); }
+        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
     }
 
     namespace write_protect
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "write_protect";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr0(), from) != 0; }
+        { return get_bit(_read_cr0(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr0(val ? set_bit(__read_cr0(), from) : clear_bit(__read_cr0(), from)); }
+        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
     }
 
     namespace alignment_mask
     {
-        constexpr const auto mask = 0x0000000000040000UL;
+        constexpr const auto mask = 0x0000000000040000ULL;
         constexpr const auto from = 18;
         constexpr const auto name = "alignment_mask";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr0(), from) != 0; }
+        { return get_bit(_read_cr0(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr0(val ? set_bit(__read_cr0(), from) : clear_bit(__read_cr0(), from)); }
+        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
     }
 
     namespace not_write_through
     {
-        constexpr const auto mask = 0x0000000020000000UL;
+        constexpr const auto mask = 0x0000000020000000ULL;
         constexpr const auto from = 29;
         constexpr const auto name = "not_write_through";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr0(), from) != 0; }
+        { return get_bit(_read_cr0(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr0(val ? set_bit(__read_cr0(), from) : clear_bit(__read_cr0(), from)); }
+        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
     }
 
     namespace cache_disable
     {
-        constexpr const auto mask = 0x0000000040000000UL;
+        constexpr const auto mask = 0x0000000040000000ULL;
         constexpr const auto from = 30;
         constexpr const auto name = "cache_disable";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr0(), from) != 0; }
+        { return get_bit(_read_cr0(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr0(val ? set_bit(__read_cr0(), from) : clear_bit(__read_cr0(), from)); }
+        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
     }
 
     namespace paging
     {
-        constexpr const auto mask = 0x0000000080000000UL;
+        constexpr const auto mask = 0x0000000080000000ULL;
         constexpr const auto from = 31;
         constexpr const auto name = "paging";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr0(), from) != 0; }
+        { return get_bit(_read_cr0(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr0(val ? set_bit(__read_cr0(), from) : clear_bit(__read_cr0(), from)); }
+        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
     }
 
     inline void dump() noexcept
@@ -255,10 +255,10 @@ namespace cr2
     using value_type = uint64_t;
 
     inline auto get() noexcept
-    { return __read_cr2(); }
+    { return _read_cr2(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_cr2(val); }
+    void set(T val) noexcept { _write_cr2(val); }
 }
 
 namespace cr3
@@ -266,10 +266,10 @@ namespace cr3
     using value_type = uint64_t;
 
     inline auto get() noexcept
-    { return __read_cr3(); }
+    { return _read_cr3(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_cr3(val); }
+    void set(T val) noexcept { _write_cr3(val); }
 }
 
 namespace cr4
@@ -277,256 +277,256 @@ namespace cr4
     using value_type = uint64_t;
 
     inline auto get() noexcept
-    { return __read_cr4(); }
+    { return _read_cr4(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_cr4(val); }
+    void set(T val) noexcept { _write_cr4(val); }
 
     namespace v8086_mode_extensions
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "v8086_mode_extensions";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace protected_mode_virtual_interrupts
     {
-        constexpr const auto mask = 0x0000000000000002UL;
+        constexpr const auto mask = 0x0000000000000002ULL;
         constexpr const auto from = 1;
         constexpr const auto name = "protected_mode_virtual_interrupts";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace time_stamp_disable
     {
-        constexpr const auto mask = 0x0000000000000004UL;
+        constexpr const auto mask = 0x0000000000000004ULL;
         constexpr const auto from = 2;
         constexpr const auto name = "time_stamp_disable";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace debugging_extensions
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "debugging_extensions";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace page_size_extensions
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "page_size_extensions";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace physical_address_extensions
     {
-        constexpr const auto mask = 0x0000000000000020UL;
+        constexpr const auto mask = 0x0000000000000020ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "physical_address_extensions";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace machine_check_enable
     {
-        constexpr const auto mask = 0x0000000000000040UL;
+        constexpr const auto mask = 0x0000000000000040ULL;
         constexpr const auto from = 6;
         constexpr const auto name = "machine_check_enable";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace page_global_enable
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "page_global_enable";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace performance_monitor_counter_enable
     {
-        constexpr const auto mask = 0x0000000000000100UL;
+        constexpr const auto mask = 0x0000000000000100ULL;
         constexpr const auto from = 8;
         constexpr const auto name = "performance_monitor_counter_enable";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace osfxsr
     {
-        constexpr const auto mask = 0x0000000000000200UL;
+        constexpr const auto mask = 0x0000000000000200ULL;
         constexpr const auto from = 9;
         constexpr const auto name = "osfxsr";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace osxmmexcpt
     {
-        constexpr const auto mask = 0x0000000000000400UL;
+        constexpr const auto mask = 0x0000000000000400ULL;
         constexpr const auto from = 10;
         constexpr const auto name = "osxmmexcpt";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace vmx_enable_bit
     {
-        constexpr const auto mask = 0x0000000000002000UL;
+        constexpr const auto mask = 0x0000000000002000ULL;
         constexpr const auto from = 13;
         constexpr const auto name = "vmx_enable_bit";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace smx_enable_bit
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "smx_enable_bit";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace fsgsbase_enable_bit
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "fsgsbase_enable_bit";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace pcid_enable_bit
     {
-        constexpr const auto mask = 0x0000000000020000UL;
+        constexpr const auto mask = 0x0000000000020000ULL;
         constexpr const auto from = 17;
         constexpr const auto name = "pcid_enable_bit";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace osxsave
     {
-        constexpr const auto mask = 0x0000000000040000UL;
+        constexpr const auto mask = 0x0000000000040000ULL;
         constexpr const auto from = 18;
         constexpr const auto name = "osxsave";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace smep_enable_bit
     {
-        constexpr const auto mask = 0x0000000000100000UL;
+        constexpr const auto mask = 0x0000000000100000ULL;
         constexpr const auto from = 20;
         constexpr const auto name = "smep_enable_bit";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace smap_enable_bit
     {
-        constexpr const auto mask = 0x0000000000200000UL;
+        constexpr const auto mask = 0x0000000000200000ULL;
         constexpr const auto from = 21;
         constexpr const auto name = "smap_enable_bit";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     namespace protection_key_enable_bit
     {
-        constexpr const auto mask = 0x0000000000400000UL;
+        constexpr const auto mask = 0x0000000000400000ULL;
         constexpr const auto from = 22;
         constexpr const auto name = "protection_key_enable_bit";
 
         inline auto get() noexcept
-        { return get_bit(__read_cr4(), from) != 0; }
+        { return get_bit(_read_cr4(), from) != 0; }
 
         inline void set(bool val) noexcept
-        { __write_cr4(val ? set_bit(__read_cr4(), from) : clear_bit(__read_cr4(), from)); }
+        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
     }
 
     inline void dump() noexcept

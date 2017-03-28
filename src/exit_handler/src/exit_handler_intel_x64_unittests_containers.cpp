@@ -604,4 +604,8 @@ exit_handler_intel_x64::unittest_100A_containers_map() const
     mymap.clear();
 }
 
+#else
+
+int dummy_unittests_containers = 0;
+
 #endif

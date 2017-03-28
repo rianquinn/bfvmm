@@ -40,7 +40,7 @@ namespace vmcs
 
 namespace host_ia32_sysenter_cs
 {
-    constexpr const auto addr = 0x0000000000004C00UL;
+    constexpr const auto addr = 0x0000000000004C00ULL;
     constexpr const auto name = "host_ia32_sysenter_cs";
 
     inline bool exists() noexcept

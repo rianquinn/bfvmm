@@ -47,7 +47,7 @@ namespace vmcs
 
 namespace vmcs_link_pointer
 {
-    constexpr const auto addr = 0x0000000000002800UL;
+    constexpr const auto addr = 0x0000000000002800ULL;
     constexpr const auto name = "vmcs_link_pointer";
 
     inline auto exists()
@@ -69,7 +69,7 @@ namespace vmcs_link_pointer
 
 namespace guest_ia32_debugctl
 {
-    constexpr const auto addr = 0x0000000000002802UL;
+    constexpr const auto addr = 0x0000000000002802ULL;
     constexpr const auto name = "guest_ia32_debugctl";
 
     inline auto exists()
@@ -90,7 +90,7 @@ namespace guest_ia32_debugctl
 
     namespace lbr
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "lbr";
 
@@ -133,7 +133,7 @@ namespace guest_ia32_debugctl
 
     namespace btf
     {
-        constexpr const auto mask = 0x0000000000000002UL;
+        constexpr const auto mask = 0x0000000000000002ULL;
         constexpr const auto from = 1;
         constexpr const auto name = "btf";
 
@@ -176,7 +176,7 @@ namespace guest_ia32_debugctl
 
     namespace tr
     {
-        constexpr const auto mask = 0x0000000000000040UL;
+        constexpr const auto mask = 0x0000000000000040ULL;
         constexpr const auto from = 6;
         constexpr const auto name = "tr";
 
@@ -219,7 +219,7 @@ namespace guest_ia32_debugctl
 
     namespace bts
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "bts";
 
@@ -262,7 +262,7 @@ namespace guest_ia32_debugctl
 
     namespace btint
     {
-        constexpr const auto mask = 0x0000000000000100UL;
+        constexpr const auto mask = 0x0000000000000100ULL;
         constexpr const auto from = 8;
         constexpr const auto name = "btint";
 
@@ -305,7 +305,7 @@ namespace guest_ia32_debugctl
 
     namespace bt_off_os
     {
-        constexpr const auto mask = 0x0000000000000200UL;
+        constexpr const auto mask = 0x0000000000000200ULL;
         constexpr const auto from = 9;
         constexpr const auto name = "bt_off_os";
 
@@ -348,7 +348,7 @@ namespace guest_ia32_debugctl
 
     namespace bt_off_user
     {
-        constexpr const auto mask = 0x0000000000000400UL;
+        constexpr const auto mask = 0x0000000000000400ULL;
         constexpr const auto from = 10;
         constexpr const auto name = "bt_off_user";
 
@@ -391,7 +391,7 @@ namespace guest_ia32_debugctl
 
     namespace freeze_lbrs_on_pmi
     {
-        constexpr const auto mask = 0x0000000000000800UL;
+        constexpr const auto mask = 0x0000000000000800ULL;
         constexpr const auto from = 11;
         constexpr const auto name = "freeze_lbrs_on_pmi";
 
@@ -433,7 +433,7 @@ namespace guest_ia32_debugctl
     }
     namespace freeze_perfmon_on_pmi
     {
-        constexpr const auto mask = 0x0000000000001000UL;
+        constexpr const auto mask = 0x0000000000001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "freeze_perfmon_on_pmi";
 
@@ -476,7 +476,7 @@ namespace guest_ia32_debugctl
 
     namespace enable_uncore_pmi
     {
-        constexpr const auto mask = 0x0000000000002000UL;
+        constexpr const auto mask = 0x0000000000002000ULL;
         constexpr const auto from = 13;
         constexpr const auto name = "enable_uncore_pmi";
 
@@ -519,7 +519,7 @@ namespace guest_ia32_debugctl
 
     namespace freeze_while_smm
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "freeze_while_smm";
 
@@ -562,7 +562,7 @@ namespace guest_ia32_debugctl
 
     namespace rtm_debug
     {
-        constexpr const auto mask = 0x0000000000008000UL;
+        constexpr const auto mask = 0x0000000000008000ULL;
         constexpr const auto from = 15;
         constexpr const auto name = "rtm_debug";
 
@@ -605,7 +605,7 @@ namespace guest_ia32_debugctl
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFFFFFFF003CUL;
+        constexpr const auto mask = 0xFFFFFFFFFFFF003CULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -633,7 +633,7 @@ namespace guest_ia32_debugctl
 
 namespace guest_ia32_pat
 {
-    constexpr const auto addr = 0x0000000000002804UL;
+    constexpr const auto addr = 0x0000000000002804ULL;
     constexpr const auto name = "guest_ia32_pat";
 
     inline auto exists() noexcept
@@ -657,7 +657,7 @@ namespace guest_ia32_pat
 
     namespace pa0
     {
-        constexpr const auto mask = 0x00000000000000FFUL;
+        constexpr const auto mask = 0x00000000000000FFULL;
         constexpr const auto from = 0;
         constexpr const auto name = "pa0";
 
@@ -683,7 +683,7 @@ namespace guest_ia32_pat
 
         namespace memory_type
         {
-            constexpr const auto mask = 0x0000000000000007UL;
+            constexpr const auto mask = 0x0000000000000007ULL;
             constexpr const auto from = 0;
             constexpr const auto name = "memory_type";
 
@@ -710,7 +710,7 @@ namespace guest_ia32_pat
 
         namespace reserved
         {
-            constexpr const auto mask = 0x00000000000000F8UL;
+            constexpr const auto mask = 0x00000000000000F8ULL;
             constexpr const auto from = 3;
             constexpr const auto name = "reserved";
 
@@ -739,7 +739,7 @@ namespace guest_ia32_pat
 
     namespace pa1
     {
-        constexpr const auto mask = 0x000000000000FF00UL;
+        constexpr const auto mask = 0x000000000000FF00ULL;
         constexpr const auto from = 8;
         constexpr const auto name = "pa1";
 
@@ -765,7 +765,7 @@ namespace guest_ia32_pat
 
         namespace memory_type
         {
-            constexpr const auto mask = 0x0000000000000700UL;
+            constexpr const auto mask = 0x0000000000000700ULL;
             constexpr const auto from = 8;
             constexpr const auto name = "memory_type";
 
@@ -792,7 +792,7 @@ namespace guest_ia32_pat
 
         namespace reserved
         {
-            constexpr const auto mask = 0x000000000000F800UL;
+            constexpr const auto mask = 0x000000000000F800ULL;
             constexpr const auto from = 11;
             constexpr const auto name = "reserved";
 
@@ -820,7 +820,7 @@ namespace guest_ia32_pat
 
     namespace pa2
     {
-        constexpr const auto mask = 0x0000000000FF0000UL;
+        constexpr const auto mask = 0x0000000000FF0000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "pa2";
 
@@ -846,7 +846,7 @@ namespace guest_ia32_pat
 
         namespace memory_type
         {
-            constexpr const auto mask = 0x0000000000070000UL;
+            constexpr const auto mask = 0x0000000000070000ULL;
             constexpr const auto from = 16;
             constexpr const auto name = "memory_type";
 
@@ -873,7 +873,7 @@ namespace guest_ia32_pat
 
         namespace reserved
         {
-            constexpr const auto mask = 0x0000000000F80000UL;
+            constexpr const auto mask = 0x0000000000F80000ULL;
             constexpr const auto from = 19;
             constexpr const auto name = "reserved";
 
@@ -901,7 +901,7 @@ namespace guest_ia32_pat
 
     namespace pa3
     {
-        constexpr const auto mask = 0x00000000FF000000UL;
+        constexpr const auto mask = 0x00000000FF000000ULL;
         constexpr const auto from = 24;
         constexpr const auto name = "pa3";
 
@@ -927,7 +927,7 @@ namespace guest_ia32_pat
 
         namespace memory_type
         {
-            constexpr const auto mask = 0x0000000007000000UL;
+            constexpr const auto mask = 0x0000000007000000ULL;
             constexpr const auto from = 24;
             constexpr const auto name = "memory_type";
 
@@ -954,7 +954,7 @@ namespace guest_ia32_pat
 
         namespace reserved
         {
-            constexpr const auto mask = 0x00000000F8000000UL;
+            constexpr const auto mask = 0x00000000F8000000ULL;
             constexpr const auto from = 27;
             constexpr const auto name = "reserved";
 
@@ -982,7 +982,7 @@ namespace guest_ia32_pat
 
     namespace pa4
     {
-        constexpr const auto mask = 0x000000FF00000000UL;
+        constexpr const auto mask = 0x000000FF00000000ULL;
         constexpr const auto from = 32;
         constexpr const auto name = "pa4";
 
@@ -1008,7 +1008,7 @@ namespace guest_ia32_pat
 
         namespace memory_type
         {
-            constexpr const auto mask = 0x0000000700000000UL;
+            constexpr const auto mask = 0x0000000700000000ULL;
             constexpr const auto from = 32;
             constexpr const auto name = "memory_type";
 
@@ -1035,7 +1035,7 @@ namespace guest_ia32_pat
 
         namespace reserved
         {
-            constexpr const auto mask = 0x000000F800000000UL;
+            constexpr const auto mask = 0x000000F800000000ULL;
             constexpr const auto from = 35;
             constexpr const auto name = "reserved";
 
@@ -1063,7 +1063,7 @@ namespace guest_ia32_pat
 
     namespace pa5
     {
-        constexpr const auto mask = 0x0000FF0000000000UL;
+        constexpr const auto mask = 0x0000FF0000000000ULL;
         constexpr const auto from = 40;
         constexpr const auto name = "pa5";
 
@@ -1089,7 +1089,7 @@ namespace guest_ia32_pat
 
         namespace memory_type
         {
-            constexpr const auto mask = 0x0000070000000000UL;
+            constexpr const auto mask = 0x0000070000000000ULL;
             constexpr const auto from = 40;
             constexpr const auto name = "memory_type";
 
@@ -1116,7 +1116,7 @@ namespace guest_ia32_pat
 
         namespace reserved
         {
-            constexpr const auto mask = 0x0000F80000000000UL;
+            constexpr const auto mask = 0x0000F80000000000ULL;
             constexpr const auto from = 43;
             constexpr const auto name = "reserved";
 
@@ -1144,7 +1144,7 @@ namespace guest_ia32_pat
 
     namespace pa6
     {
-        constexpr const auto mask = 0x00FF000000000000UL;
+        constexpr const auto mask = 0x00FF000000000000ULL;
         constexpr const auto from = 48;
         constexpr const auto name = "pa6";
 
@@ -1170,7 +1170,7 @@ namespace guest_ia32_pat
 
         namespace memory_type
         {
-            constexpr const auto mask = 0x0007000000000000UL;
+            constexpr const auto mask = 0x0007000000000000ULL;
             constexpr const auto from = 48;
             constexpr const auto name = "memory_type";
 
@@ -1197,7 +1197,7 @@ namespace guest_ia32_pat
 
         namespace reserved
         {
-            constexpr const auto mask = 0x00F8000000000000UL;
+            constexpr const auto mask = 0x00F8000000000000ULL;
             constexpr const auto from = 51;
             constexpr const auto name = "reserved";
 
@@ -1225,7 +1225,7 @@ namespace guest_ia32_pat
 
     namespace pa7
     {
-        constexpr const auto mask = 0xFF00000000000000UL;
+        constexpr const auto mask = 0xFF00000000000000ULL;
         constexpr const auto from = 56;
         constexpr const auto name = "pa7";
 
@@ -1251,7 +1251,7 @@ namespace guest_ia32_pat
 
         namespace memory_type
         {
-            constexpr const auto mask = 0x0700000000000000UL;
+            constexpr const auto mask = 0x0700000000000000ULL;
             constexpr const auto from = 56;
             constexpr const auto name = "memory_type";
 
@@ -1278,7 +1278,7 @@ namespace guest_ia32_pat
 
         namespace reserved
         {
-            constexpr const auto mask = 0xF800000000000000UL;
+            constexpr const auto mask = 0xF800000000000000ULL;
             constexpr const auto from = 59;
             constexpr const auto name = "reserved";
 
@@ -1307,7 +1307,7 @@ namespace guest_ia32_pat
 
 namespace guest_ia32_efer
 {
-    constexpr const auto addr = 0x0000000000002806UL;
+    constexpr const auto addr = 0x0000000000002806ULL;
     constexpr const auto name = "guest_ia32_efer";
 
     inline auto exists() noexcept
@@ -1331,7 +1331,7 @@ namespace guest_ia32_efer
 
     namespace sce
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "sce";
 
@@ -1374,7 +1374,7 @@ namespace guest_ia32_efer
 
     namespace lme
     {
-        constexpr const auto mask = 0x0000000000000100UL;
+        constexpr const auto mask = 0x0000000000000100ULL;
         constexpr const auto from = 8;
         constexpr const auto name = "lme";
 
@@ -1417,7 +1417,7 @@ namespace guest_ia32_efer
 
     namespace lma
     {
-        constexpr const auto mask = 0x0000000000000400UL;
+        constexpr const auto mask = 0x0000000000000400ULL;
         constexpr const auto from = 10;
         constexpr const auto name = "lma";
 
@@ -1460,7 +1460,7 @@ namespace guest_ia32_efer
 
     namespace nxe
     {
-        constexpr const auto mask = 0x0000000000000800UL;
+        constexpr const auto mask = 0x0000000000000800ULL;
         constexpr const auto from = 11;
         constexpr const auto name = "nxe";
 
@@ -1503,7 +1503,7 @@ namespace guest_ia32_efer
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFFFFFFFF2FEUL;
+        constexpr const auto mask = 0xFFFFFFFFFFFFF2FEULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -1531,7 +1531,7 @@ namespace guest_ia32_efer
 
 namespace guest_ia32_perf_global_ctrl
 {
-    constexpr const auto addr = 0x0000000000002808UL;
+    constexpr const auto addr = 0x0000000000002808ULL;
     constexpr const auto name = "guest_ia32_perf_global_ctrl";
 
     inline auto exists() noexcept
@@ -1552,7 +1552,7 @@ namespace guest_ia32_perf_global_ctrl
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFF8FFFFFFFCUL;
+        constexpr const auto mask = 0xFFFFFFF8FFFFFFFCULL;
         constexpr const auto from = 0;
 
         inline auto get()
@@ -1579,7 +1579,7 @@ namespace guest_ia32_perf_global_ctrl
 
 namespace guest_pdpte0
 {
-    constexpr const auto addr = 0x000000000000280AUL;
+    constexpr const auto addr = 0x000000000000280AULL;
     constexpr const auto name = "guest_pdpte0";
 
     inline auto exists() noexcept
@@ -1603,7 +1603,7 @@ namespace guest_pdpte0
 
     namespace present
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "present";
 
@@ -1679,7 +1679,7 @@ namespace guest_pdpte0
 
     namespace pwt
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "pwt";
 
@@ -1722,7 +1722,7 @@ namespace guest_pdpte0
 
     namespace pcd
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "pcd";
 
@@ -1799,7 +1799,7 @@ namespace guest_pdpte0
 
 namespace guest_pdpte1
 {
-    constexpr const auto addr = 0x000000000000280CUL;
+    constexpr const auto addr = 0x000000000000280CULL;
     constexpr const auto name = "guest_pdpte1";
 
     inline auto exists() noexcept
@@ -1823,7 +1823,7 @@ namespace guest_pdpte1
 
     namespace present
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "present";
 
@@ -1899,7 +1899,7 @@ namespace guest_pdpte1
 
     namespace pwt
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "pwt";
 
@@ -1942,7 +1942,7 @@ namespace guest_pdpte1
 
     namespace pcd
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "pcd";
 
@@ -2019,7 +2019,7 @@ namespace guest_pdpte1
 
 namespace guest_pdpte2
 {
-    constexpr const auto addr = 0x000000000000280EUL;
+    constexpr const auto addr = 0x000000000000280EULL;
     constexpr const auto name = "guest_pdpte2";
 
     inline auto exists() noexcept
@@ -2043,7 +2043,7 @@ namespace guest_pdpte2
 
     namespace present
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "present";
 
@@ -2119,7 +2119,7 @@ namespace guest_pdpte2
 
     namespace pwt
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "pwt";
 
@@ -2162,7 +2162,7 @@ namespace guest_pdpte2
 
     namespace pcd
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "pcd";
 
@@ -2239,7 +2239,7 @@ namespace guest_pdpte2
 
 namespace guest_pdpte3
 {
-    constexpr const auto addr = 0x0000000000002810UL;
+    constexpr const auto addr = 0x0000000000002810ULL;
     constexpr const auto name = "guest_pdpte3";
 
     inline auto exists() noexcept
@@ -2263,7 +2263,7 @@ namespace guest_pdpte3
 
     namespace present
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "present";
 
@@ -2339,7 +2339,7 @@ namespace guest_pdpte3
 
     namespace pwt
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "pwt";
 
@@ -2382,7 +2382,7 @@ namespace guest_pdpte3
 
     namespace pcd
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "pcd";
 
@@ -2459,7 +2459,7 @@ namespace guest_pdpte3
 
 namespace guest_ia32_bndcfgs
 {
-    constexpr const auto addr = 0x0000000000002812UL;
+    constexpr const auto addr = 0x0000000000002812ULL;
     constexpr const auto name = "guest_ia32_bndcfgs";
 
     inline auto exists() noexcept
@@ -2483,7 +2483,7 @@ namespace guest_ia32_bndcfgs
 
     namespace en
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "en";
 
@@ -2526,7 +2526,7 @@ namespace guest_ia32_bndcfgs
 
     namespace bndpreserve
     {
-        constexpr const auto mask = 0x0000000000000002UL;
+        constexpr const auto mask = 0x0000000000000002ULL;
         constexpr const auto from = 1;
         constexpr const auto name = "bndpreserve";
 
@@ -2569,7 +2569,7 @@ namespace guest_ia32_bndcfgs
 
     namespace reserved
     {
-        constexpr const auto mask = 0x0000000000000FFCUL;
+        constexpr const auto mask = 0x0000000000000FFCULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -2596,7 +2596,7 @@ namespace guest_ia32_bndcfgs
 
     namespace base_addr_of_bnd_directory
     {
-        constexpr const auto mask = 0xFFFFFFFFFFFFF000UL;
+        constexpr const auto mask = 0xFFFFFFFFFFFFF000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "base_addr_of_bnd_directory";
 

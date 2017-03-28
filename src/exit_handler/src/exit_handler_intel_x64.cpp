@@ -533,7 +533,7 @@ exit_handler_intel_x64::handle_vmcall_data_binary_unformatted(
     const bfn::unique_map_ptr_x64<char> &omap)
 {
     bfdebug << "received binary data" << bfendl;
-    __builtin_memcpy(omap.get(), imap.get(), imap.size());
+    memcpy(omap.get(), imap.get(), imap.size());
 }
 
 void exit_handler_intel_x64::reply_with_string(
@@ -542,7 +542,7 @@ void exit_handler_intel_x64::reply_with_string(
 {
     auto &&len = str.length();
 
-    __builtin_memcpy(omap.get(), str.data(), len);
+    memcpy(omap.get(), str.data(), len);
 
     regs.r07 = VMCALL_DATA_STRING_UNFORMATTED;
     regs.r09 = len;
