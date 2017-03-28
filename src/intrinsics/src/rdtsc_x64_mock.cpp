@@ -25,14 +25,14 @@
 #include <intrinsics/rdtsc_x64.h>
 
 extern "C" uint64_t
-__read_tsc(void) noexcept
+_read_tsc(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" uint64_t
-__read_tscp(void) noexcept
+_read_tscp(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();

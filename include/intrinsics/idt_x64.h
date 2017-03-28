@@ -67,8 +67,8 @@ struct EXPORT_INTRINSICS idt_reg_x64_t {
 // Intrinsics
 // -----------------------------------------------------------------------------
 
-extern "C" EXPORT_INTRINSICS void __read_idt(idt_reg_x64_t *idt_reg) noexcept;
-extern "C" EXPORT_INTRINSICS void __write_idt(idt_reg_x64_t *idt_reg) noexcept;
+extern "C" EXPORT_INTRINSICS void _read_idt(idt_reg_x64_t *idt_reg) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_idt(idt_reg_x64_t *idt_reg) noexcept;
 
 // -----------------------------------------------------------------------------
 // IDT Functions
@@ -83,7 +83,7 @@ namespace idt
     inline auto get() noexcept
     {
         auto &&reg = idt_reg_x64_t{};
-        __read_idt(&reg);
+        _read_idt(&reg);
 
         return reg;
     }
@@ -91,7 +91,7 @@ namespace idt
     inline void set(idt_reg_x64_t::base_type base, idt_reg_x64_t::limit_type limit) noexcept
     {
         auto &&reg = idt_reg_x64_t{base, limit};
-        __write_idt(&reg);
+        _write_idt(&reg);
     }
 
     namespace base
@@ -99,7 +99,7 @@ namespace idt
         inline auto get() noexcept
         {
             auto &&reg = idt_reg_x64_t{};
-            __read_idt(&reg);
+            _read_idt(&reg);
 
             return reg.base;
         }
@@ -107,10 +107,10 @@ namespace idt
         inline void set(idt_reg_x64_t::base_type base) noexcept
         {
             auto &&reg = idt_reg_x64_t{};
-            __read_idt(&reg);
+            _read_idt(&reg);
 
             reg.base = base;
-            __write_idt(&reg);
+            _write_idt(&reg);
         }
     }
 
@@ -119,7 +119,7 @@ namespace idt
         inline auto get() noexcept
         {
             auto &&reg = idt_reg_x64_t{};
-            __read_idt(&reg);
+            _read_idt(&reg);
 
             return reg.limit;
         }
@@ -127,10 +127,10 @@ namespace idt
         inline void set(idt_reg_x64_t::limit_type limit) noexcept
         {
             auto &&reg = idt_reg_x64_t{};
-            __read_idt(&reg);
+            _read_idt(&reg);
 
             reg.limit = limit;
-            __write_idt(&reg);
+            _write_idt(&reg);
         }
     }
 }

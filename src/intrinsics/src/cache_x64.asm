@@ -24,17 +24,17 @@ default rel
 
 section .text
 
-global __invd:function
-__invd:
+global _invd:function
+_invd:
     invd
     ret
 
-global __wbinvd:function
-__wbinvd:
+global _wbinvd:function
+_wbinvd:
     wbinvd
     ret
 
-global __clflush:function
-__clflush:
+global _clflush:function
+_clflush:
     clflush [rdi]
     ret

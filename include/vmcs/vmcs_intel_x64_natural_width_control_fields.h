@@ -42,7 +42,7 @@ namespace vmcs
 
 namespace cr0_guest_host_mask
 {
-    constexpr const auto addr = 0x0000000000006000UL;
+    constexpr const auto addr = 0x0000000000006000ULL;
     constexpr const auto name = "cr0_guest_host_mask";
 
     inline auto exists() noexcept
@@ -64,7 +64,7 @@ namespace cr0_guest_host_mask
 
 namespace cr4_guest_host_mask
 {
-    constexpr const auto addr = 0x0000000000006002UL;
+    constexpr const auto addr = 0x0000000000006002ULL;
     constexpr const auto name = "cr4_guest_host_mask";
 
     inline auto exists() noexcept
@@ -86,7 +86,7 @@ namespace cr4_guest_host_mask
 
 namespace cr0_read_shadow
 {
-    constexpr const auto addr = 0x0000000000006004UL;
+    constexpr const auto addr = 0x0000000000006004ULL;
     constexpr const auto name = "cr0_read_shadow";
 
     inline auto exists() noexcept
@@ -108,7 +108,7 @@ namespace cr0_read_shadow
 
 namespace cr4_read_shadow
 {
-    constexpr const auto addr = 0x0000000000006006UL;
+    constexpr const auto addr = 0x0000000000006006ULL;
     constexpr const auto name = "cr4_read_shadow";
 
     inline auto exists() noexcept
@@ -130,7 +130,7 @@ namespace cr4_read_shadow
 
 namespace cr3_target_value_0
 {
-    constexpr const auto addr = 0x0000000000006008UL;
+    constexpr const auto addr = 0x0000000000006008ULL;
     constexpr const auto name = "cr3_target_value_0";
 
     inline auto exists() noexcept
@@ -152,7 +152,7 @@ namespace cr3_target_value_0
 
 namespace cr3_target_value_1
 {
-    constexpr const auto addr = 0x000000000000600AUL;
+    constexpr const auto addr = 0x000000000000600AULL;
     constexpr const auto name = "cr3_target_value_1";
 
     inline auto exists() noexcept
@@ -174,7 +174,7 @@ namespace cr3_target_value_1
 
 namespace cr3_target_value_2
 {
-    constexpr const auto addr = 0x000000000000600CUL;
+    constexpr const auto addr = 0x000000000000600CULL;
     constexpr const auto name = "cr3_target_value_2";
 
     inline auto exists() noexcept
@@ -196,7 +196,7 @@ namespace cr3_target_value_2
 
 namespace cr3_target_value_3
 {
-    constexpr const auto addr = 0x000000000000600EUL;
+    constexpr const auto addr = 0x000000000000600EULL;
     constexpr const auto name = "cr3_target_value_3";
 
     inline auto exists() noexcept

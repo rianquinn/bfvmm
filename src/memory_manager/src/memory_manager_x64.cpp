@@ -37,8 +37,8 @@ using namespace x64;
 
 /// \cond
 
-uint8_t g_heap_pool_owner[MAX_HEAP_POOL] __attribute__((aligned(page_size))) = {};
-uint8_t g_page_pool_owner[MAX_PAGE_POOL] __attribute__((aligned(page_size))) = {};
+alignas(page_size) uint8_t g_heap_pool_owner[MAX_HEAP_POOL] = {};
+alignas(page_size) uint8_t g_page_pool_owner[MAX_PAGE_POOL] = {};
 
 /// \endcond
 
@@ -293,9 +293,9 @@ add_md(struct memory_descriptor *md) noexcept
     return guard_exceptions(MEMORY_MANAGER_FAILURE, [&] {
         expects(md);
 
-        auto &&virt = reinterpret_cast<memory_manager_x64::integer_pointer>(md->virt);
-        auto &&phys = reinterpret_cast<memory_manager_x64::integer_pointer>(md->phys);
-        auto &&type = reinterpret_cast<memory_manager_x64::attr_type>(md->type);
+        auto &&virt = static_cast<memory_manager_x64::integer_pointer>(md->virt);
+        auto &&phys = static_cast<memory_manager_x64::integer_pointer>(md->phys);
+        auto &&type = static_cast<memory_manager_x64::attr_type>(md->type);
 
         g_mm->add_md(virt, phys, type);
     });

@@ -24,26 +24,26 @@ default rel
 
 section .text
 
-global __read_es:function
-__read_es:
+global _read_es:function
+_read_es:
     xor rax, rax
     mov ax, es
     ret
 
-global __write_es:function
-__write_es:
+global _write_es:function
+_write_es:
     xor rax, rax
     mov es, di
     ret
 
-global __read_cs:function
-__read_cs:
+global _read_cs:function
+_read_cs:
     xor rax, rax
     mov ax, cs
     ret
 
-global __write_cs:function
-__write_cs:
+global _write_cs:function
+_write_cs:
 
     ; The added 0x48 is an undocumented issue with NASM. Basically, even though
     ; BITS 64 is used, and we are compiling for 64bit, NASM does not add the
@@ -57,68 +57,68 @@ __write_cs:
     db 0x48
     retf
 
-global __read_ss:function
-__read_ss:
+global _read_ss:function
+_read_ss:
     xor rax, rax
     mov ax, ss
     ret
 
-global __write_ss:function
-__write_ss:
+global _write_ss:function
+_write_ss:
     mov ss, di
     ret
 
-global __read_ds:function
-__read_ds:
+global _read_ds:function
+_read_ds:
     xor rax, rax
     mov ax, ds
     ret
 
-global __write_ds:function
-__write_ds:
+global _write_ds:function
+_write_ds:
     mov ds, di
     ret
 
-global __read_fs:function
-__read_fs:
+global _read_fs:function
+_read_fs:
     xor rax, rax
     mov ax, fs
     ret
 
-global __write_fs:function
-__write_fs:
+global _write_fs:function
+_write_fs:
     mov fs, di
     ret
 
-global __read_gs:function
-__read_gs:
+global _read_gs:function
+_read_gs:
     xor rax, rax
     mov ax, gs
     ret
 
-global __write_gs:function
-__write_gs:
+global _write_gs:function
+_write_gs:
     mov gs, di
     ret
 
-global __read_ldtr:function
-__read_ldtr:
+global _read_ldtr:function
+_read_ldtr:
     xor rax, rax
     sldt ax
     ret
 
-global __write_ldtr:function
-__write_ldtr:
+global _write_ldtr:function
+_write_ldtr:
     lldt di
     ret
 
-global __read_tr:function
-__read_tr:
+global _read_tr:function
+_read_tr:
     xor rax, rax
     str ax
     ret
 
-global __write_tr:function
-__write_tr:
+global _write_tr:function
+_write_tr:
     ltr di
     ret

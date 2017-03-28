@@ -38,9 +38,9 @@
 // Definitions
 // -----------------------------------------------------------------------------
 
-extern "C" EXPORT_INTRINSICS void __invd(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __wbinvd(void) noexcept;
-extern "C" EXPORT_INTRINSICS void __clflush(void *addr) noexcept;
+extern "C" EXPORT_INTRINSICS void _invd(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _wbinvd(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _clflush(void *addr) noexcept;
 
 // *INDENT-OFF*
 
@@ -53,16 +53,16 @@ using pointer = void *;
 using integer_pointer = uintptr_t;
 
 inline void invd() noexcept
-{ __invd(); }
+{ _invd(); }
 
 inline void wbinvd() noexcept
-{ __wbinvd(); }
+{ _wbinvd(); }
 
 inline void clflush(integer_pointer addr) noexcept
-{ __clflush(reinterpret_cast<pointer>(addr)); }
+{ _clflush(reinterpret_cast<pointer>(addr)); }
 
 inline void clflush(pointer addr) noexcept
-{ __clflush(addr); }
+{ _clflush(addr); }
 
 }
 }

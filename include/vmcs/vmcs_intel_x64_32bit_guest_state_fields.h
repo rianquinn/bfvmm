@@ -49,7 +49,7 @@ namespace vmcs
 
 namespace guest_es_limit
 {
-    constexpr const auto addr = 0x0000000000004800UL;
+    constexpr const auto addr = 0x0000000000004800ULL;
     constexpr const auto name = "guest_es_limit";
 
     inline auto exists()
@@ -71,7 +71,7 @@ namespace guest_es_limit
 
 namespace guest_cs_limit
 {
-    constexpr const auto addr = 0x0000000000004802UL;
+    constexpr const auto addr = 0x0000000000004802ULL;
     constexpr const auto name = "guest_cs_limit";
 
     inline auto exists()
@@ -93,7 +93,7 @@ namespace guest_cs_limit
 
 namespace guest_ss_limit
 {
-    constexpr const auto addr = 0x0000000000004804UL;
+    constexpr const auto addr = 0x0000000000004804ULL;
     constexpr const auto name = "guest_ss_limit";
 
     inline auto exists()
@@ -115,7 +115,7 @@ namespace guest_ss_limit
 
 namespace guest_ds_limit
 {
-    constexpr const auto addr = 0x0000000000004806UL;
+    constexpr const auto addr = 0x0000000000004806ULL;
     constexpr const auto name = "guest_ds_limit";
 
     inline auto exists()
@@ -137,7 +137,7 @@ namespace guest_ds_limit
 
 namespace guest_fs_limit
 {
-    constexpr const auto addr = 0x0000000000004808UL;
+    constexpr const auto addr = 0x0000000000004808ULL;
     constexpr const auto name = "guest_fs_limit";
 
     inline auto exists()
@@ -159,7 +159,7 @@ namespace guest_fs_limit
 
 namespace guest_gs_limit
 {
-    constexpr const auto addr = 0x000000000000480AUL;
+    constexpr const auto addr = 0x000000000000480AULL;
     constexpr const auto name = "guest_gs_limit";
 
     inline auto exists()
@@ -182,7 +182,7 @@ namespace guest_gs_limit
 
 namespace guest_ldtr_limit
 {
-    constexpr const auto addr = 0x000000000000480CUL;
+    constexpr const auto addr = 0x000000000000480CULL;
     constexpr const auto name = "guest_ldtr_limit";
 
     inline auto exists()
@@ -204,7 +204,7 @@ namespace guest_ldtr_limit
 
 namespace guest_tr_limit
 {
-    constexpr const auto addr = 0x000000000000480EUL;
+    constexpr const auto addr = 0x000000000000480EULL;
     constexpr const auto name = "guest_tr_limit";
 
     inline auto exists()
@@ -226,7 +226,7 @@ namespace guest_tr_limit
 
 namespace guest_gdtr_limit
 {
-    constexpr const auto addr = 0x0000000000004810UL;
+    constexpr const auto addr = 0x0000000000004810ULL;
     constexpr const auto name = "guest_gdtr_limit";
 
     inline auto exists()
@@ -248,7 +248,7 @@ namespace guest_gdtr_limit
 
 namespace guest_idtr_limit
 {
-    constexpr const auto addr = 0x0000000000004812UL;
+    constexpr const auto addr = 0x0000000000004812ULL;
     constexpr const auto name = "guest_idtr_limit";
 
     inline auto exists()
@@ -270,7 +270,7 @@ namespace guest_idtr_limit
 
 namespace guest_es_access_rights
 {
-    constexpr const auto addr = 0x0000000000004814UL;
+    constexpr const auto addr = 0x0000000000004814ULL;
     constexpr const auto name = "guest_es_access_rights";
 
     inline auto exists()
@@ -291,7 +291,7 @@ namespace guest_es_access_rights
 
     namespace type
     {
-        constexpr const auto mask = 0x000000000000000FUL;
+        constexpr const auto mask = 0x000000000000000FULL;
         constexpr const auto from = 0;
         constexpr const auto name = "type";
 
@@ -318,7 +318,7 @@ namespace guest_es_access_rights
 
     namespace s
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "s";
 
@@ -345,7 +345,7 @@ namespace guest_es_access_rights
 
     namespace dpl
     {
-        constexpr const auto mask = 0x0000000000000060UL;
+        constexpr const auto mask = 0x0000000000000060ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "dpl";
 
@@ -372,7 +372,7 @@ namespace guest_es_access_rights
 
     namespace present
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "present";
 
@@ -399,7 +399,7 @@ namespace guest_es_access_rights
 
     namespace avl
     {
-        constexpr const auto mask = 0x0000000000001000UL;
+        constexpr const auto mask = 0x0000000000001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "avl";
 
@@ -426,7 +426,7 @@ namespace guest_es_access_rights
 
     namespace l
     {
-        constexpr const auto mask = 0x0000000000002000UL;
+        constexpr const auto mask = 0x0000000000002000ULL;
         constexpr const auto from = 13;
         constexpr const auto name = "l";
 
@@ -453,7 +453,7 @@ namespace guest_es_access_rights
 
     namespace db
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "db";
 
@@ -480,7 +480,7 @@ namespace guest_es_access_rights
 
     namespace granularity
     {
-        constexpr const auto mask = 0x0000000000008000UL;
+        constexpr const auto mask = 0x0000000000008000ULL;
         constexpr const auto from = 15;
         constexpr const auto name = "granularity";
 
@@ -507,7 +507,7 @@ namespace guest_es_access_rights
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFFFFFFE0F00UL;
+        constexpr const auto mask = 0xFFFFFFFFFFFE0F00ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -534,7 +534,7 @@ namespace guest_es_access_rights
 
     namespace unusable
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "unusable";
 
@@ -562,7 +562,7 @@ namespace guest_es_access_rights
 
 namespace guest_cs_access_rights
 {
-    constexpr const auto addr = 0x0000000000004816UL;
+    constexpr const auto addr = 0x0000000000004816ULL;
     constexpr const auto name = "guest_cs_access_rights";
 
     inline auto exists()
@@ -583,7 +583,7 @@ namespace guest_cs_access_rights
 
     namespace type
     {
-        constexpr const auto mask = 0x000000000000000FUL;
+        constexpr const auto mask = 0x000000000000000FULL;
         constexpr const auto from = 0;
         constexpr const auto name = "type";
 
@@ -610,7 +610,7 @@ namespace guest_cs_access_rights
 
     namespace s
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "s";
 
@@ -637,7 +637,7 @@ namespace guest_cs_access_rights
 
     namespace dpl
     {
-        constexpr const auto mask = 0x0000000000000060UL;
+        constexpr const auto mask = 0x0000000000000060ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "dpl";
 
@@ -664,7 +664,7 @@ namespace guest_cs_access_rights
 
     namespace present
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "present";
 
@@ -691,7 +691,7 @@ namespace guest_cs_access_rights
 
     namespace avl
     {
-        constexpr const auto mask = 0x0000000000001000UL;
+        constexpr const auto mask = 0x0000000000001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "avl";
 
@@ -718,7 +718,7 @@ namespace guest_cs_access_rights
 
     namespace l
     {
-        constexpr const auto mask = 0x0000000000002000UL;
+        constexpr const auto mask = 0x0000000000002000ULL;
         constexpr const auto from = 13;
         constexpr const auto name = "l";
 
@@ -745,7 +745,7 @@ namespace guest_cs_access_rights
 
     namespace db
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "db";
 
@@ -772,7 +772,7 @@ namespace guest_cs_access_rights
 
     namespace granularity
     {
-        constexpr const auto mask = 0x0000000000008000UL;
+        constexpr const auto mask = 0x0000000000008000ULL;
         constexpr const auto from = 15;
         constexpr const auto name = "granularity";
 
@@ -799,7 +799,7 @@ namespace guest_cs_access_rights
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFFFFFFE0F00UL;
+        constexpr const auto mask = 0xFFFFFFFFFFFE0F00ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -826,7 +826,7 @@ namespace guest_cs_access_rights
 
     namespace unusable
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "unusable";
 
@@ -854,7 +854,7 @@ namespace guest_cs_access_rights
 
 namespace guest_ss_access_rights
 {
-    constexpr const auto addr = 0x0000000000004818UL;
+    constexpr const auto addr = 0x0000000000004818ULL;
     constexpr const auto name = "guest_ss_access_rights";
 
     inline auto exists()
@@ -875,7 +875,7 @@ namespace guest_ss_access_rights
 
     namespace type
     {
-        constexpr const auto mask = 0x000000000000000FUL;
+        constexpr const auto mask = 0x000000000000000FULL;
         constexpr const auto from = 0;
         constexpr const auto name = "type";
 
@@ -902,7 +902,7 @@ namespace guest_ss_access_rights
 
     namespace s
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "s";
 
@@ -929,7 +929,7 @@ namespace guest_ss_access_rights
 
     namespace dpl
     {
-        constexpr const auto mask = 0x0000000000000060UL;
+        constexpr const auto mask = 0x0000000000000060ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "dpl";
 
@@ -956,7 +956,7 @@ namespace guest_ss_access_rights
 
     namespace present
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "present";
 
@@ -983,7 +983,7 @@ namespace guest_ss_access_rights
 
     namespace avl
     {
-        constexpr const auto mask = 0x0000000000001000UL;
+        constexpr const auto mask = 0x0000000000001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "avl";
 
@@ -1010,7 +1010,7 @@ namespace guest_ss_access_rights
 
     namespace l
     {
-        constexpr const auto mask = 0x0000000000002000UL;
+        constexpr const auto mask = 0x0000000000002000ULL;
         constexpr const auto from = 13;
         constexpr const auto name = "l";
 
@@ -1037,7 +1037,7 @@ namespace guest_ss_access_rights
 
     namespace db
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "db";
 
@@ -1064,7 +1064,7 @@ namespace guest_ss_access_rights
 
     namespace granularity
     {
-        constexpr const auto mask = 0x0000000000008000UL;
+        constexpr const auto mask = 0x0000000000008000ULL;
         constexpr const auto from = 15;
         constexpr const auto name = "granularity";
 
@@ -1091,7 +1091,7 @@ namespace guest_ss_access_rights
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFFFFFFE0F00UL;
+        constexpr const auto mask = 0xFFFFFFFFFFFE0F00ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -1118,7 +1118,7 @@ namespace guest_ss_access_rights
 
     namespace unusable
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "unusable";
 
@@ -1146,7 +1146,7 @@ namespace guest_ss_access_rights
 
 namespace guest_ds_access_rights
 {
-    constexpr const auto addr = 0x000000000000481AUL;
+    constexpr const auto addr = 0x000000000000481AULL;
     constexpr const auto name = "guest_ds_access_rights";
 
     inline auto exists()
@@ -1167,7 +1167,7 @@ namespace guest_ds_access_rights
 
     namespace type
     {
-        constexpr const auto mask = 0x000000000000000FUL;
+        constexpr const auto mask = 0x000000000000000FULL;
         constexpr const auto from = 0;
         constexpr const auto name = "type";
 
@@ -1194,7 +1194,7 @@ namespace guest_ds_access_rights
 
     namespace s
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "s";
 
@@ -1221,7 +1221,7 @@ namespace guest_ds_access_rights
 
     namespace dpl
     {
-        constexpr const auto mask = 0x0000000000000060UL;
+        constexpr const auto mask = 0x0000000000000060ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "dpl";
 
@@ -1248,7 +1248,7 @@ namespace guest_ds_access_rights
 
     namespace present
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "present";
 
@@ -1275,7 +1275,7 @@ namespace guest_ds_access_rights
 
     namespace avl
     {
-        constexpr const auto mask = 0x0000000000001000UL;
+        constexpr const auto mask = 0x0000000000001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "avl";
 
@@ -1302,7 +1302,7 @@ namespace guest_ds_access_rights
 
     namespace l
     {
-        constexpr const auto mask = 0x0000000000002000UL;
+        constexpr const auto mask = 0x0000000000002000ULL;
         constexpr const auto from = 13;
         constexpr const auto name = "l";
 
@@ -1329,7 +1329,7 @@ namespace guest_ds_access_rights
 
     namespace db
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "db";
 
@@ -1356,7 +1356,7 @@ namespace guest_ds_access_rights
 
     namespace granularity
     {
-        constexpr const auto mask = 0x0000000000008000UL;
+        constexpr const auto mask = 0x0000000000008000ULL;
         constexpr const auto from = 15;
         constexpr const auto name = "granularity";
 
@@ -1383,7 +1383,7 @@ namespace guest_ds_access_rights
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFFFFFFE0F00UL;
+        constexpr const auto mask = 0xFFFFFFFFFFFE0F00ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -1410,7 +1410,7 @@ namespace guest_ds_access_rights
 
     namespace unusable
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "unusable";
 
@@ -1438,7 +1438,7 @@ namespace guest_ds_access_rights
 
 namespace guest_fs_access_rights
 {
-    constexpr const auto addr = 0x000000000000481CUL;
+    constexpr const auto addr = 0x000000000000481CULL;
     constexpr const auto name = "guest_fs_access_rights";
 
     inline auto exists()
@@ -1459,7 +1459,7 @@ namespace guest_fs_access_rights
 
     namespace type
     {
-        constexpr const auto mask = 0x000000000000000FUL;
+        constexpr const auto mask = 0x000000000000000FULL;
         constexpr const auto from = 0;
         constexpr const auto name = "type";
 
@@ -1486,7 +1486,7 @@ namespace guest_fs_access_rights
 
     namespace s
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "s";
 
@@ -1513,7 +1513,7 @@ namespace guest_fs_access_rights
 
     namespace dpl
     {
-        constexpr const auto mask = 0x0000000000000060UL;
+        constexpr const auto mask = 0x0000000000000060ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "dpl";
 
@@ -1540,7 +1540,7 @@ namespace guest_fs_access_rights
 
     namespace present
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "present";
 
@@ -1567,7 +1567,7 @@ namespace guest_fs_access_rights
 
     namespace avl
     {
-        constexpr const auto mask = 0x0000000000001000UL;
+        constexpr const auto mask = 0x0000000000001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "avl";
 
@@ -1594,7 +1594,7 @@ namespace guest_fs_access_rights
 
     namespace l
     {
-        constexpr const auto mask = 0x0000000000002000UL;
+        constexpr const auto mask = 0x0000000000002000ULL;
         constexpr const auto from = 13;
         constexpr const auto name = "l";
 
@@ -1621,7 +1621,7 @@ namespace guest_fs_access_rights
 
     namespace db
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "db";
 
@@ -1648,7 +1648,7 @@ namespace guest_fs_access_rights
 
     namespace granularity
     {
-        constexpr const auto mask = 0x0000000000008000UL;
+        constexpr const auto mask = 0x0000000000008000ULL;
         constexpr const auto from = 15;
         constexpr const auto name = "granularity";
 
@@ -1675,7 +1675,7 @@ namespace guest_fs_access_rights
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFFFFFFE0F00UL;
+        constexpr const auto mask = 0xFFFFFFFFFFFE0F00ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -1702,7 +1702,7 @@ namespace guest_fs_access_rights
 
     namespace unusable
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "unusable";
 
@@ -1730,7 +1730,7 @@ namespace guest_fs_access_rights
 
 namespace guest_gs_access_rights
 {
-    constexpr const auto addr = 0x000000000000481EUL;
+    constexpr const auto addr = 0x000000000000481EULL;
     constexpr const auto name = "guest_gs_access_rights";
 
     inline auto exists()
@@ -1751,7 +1751,7 @@ namespace guest_gs_access_rights
 
     namespace type
     {
-        constexpr const auto mask = 0x000000000000000FUL;
+        constexpr const auto mask = 0x000000000000000FULL;
         constexpr const auto from = 0;
         constexpr const auto name = "type";
 
@@ -1778,7 +1778,7 @@ namespace guest_gs_access_rights
 
     namespace s
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "s";
 
@@ -1805,7 +1805,7 @@ namespace guest_gs_access_rights
 
     namespace dpl
     {
-        constexpr const auto mask = 0x0000000000000060UL;
+        constexpr const auto mask = 0x0000000000000060ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "dpl";
 
@@ -1832,7 +1832,7 @@ namespace guest_gs_access_rights
 
     namespace present
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "present";
 
@@ -1859,7 +1859,7 @@ namespace guest_gs_access_rights
 
     namespace avl
     {
-        constexpr const auto mask = 0x0000000000001000UL;
+        constexpr const auto mask = 0x0000000000001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "avl";
 
@@ -1886,7 +1886,7 @@ namespace guest_gs_access_rights
 
     namespace l
     {
-        constexpr const auto mask = 0x0000000000002000UL;
+        constexpr const auto mask = 0x0000000000002000ULL;
         constexpr const auto from = 13;
         constexpr const auto name = "l";
 
@@ -1913,7 +1913,7 @@ namespace guest_gs_access_rights
 
     namespace db
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "db";
 
@@ -1940,7 +1940,7 @@ namespace guest_gs_access_rights
 
     namespace granularity
     {
-        constexpr const auto mask = 0x0000000000008000UL;
+        constexpr const auto mask = 0x0000000000008000ULL;
         constexpr const auto from = 15;
         constexpr const auto name = "granularity";
 
@@ -1967,7 +1967,7 @@ namespace guest_gs_access_rights
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFFFFFFE0F00UL;
+        constexpr const auto mask = 0xFFFFFFFFFFFE0F00ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -1994,7 +1994,7 @@ namespace guest_gs_access_rights
 
     namespace unusable
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "unusable";
 
@@ -2022,7 +2022,7 @@ namespace guest_gs_access_rights
 
 namespace guest_ldtr_access_rights
 {
-    constexpr const auto addr = 0x0000000000004820UL;
+    constexpr const auto addr = 0x0000000000004820ULL;
     constexpr const auto name = "guest_ldtr_access_rights";
 
     inline auto exists()
@@ -2043,7 +2043,7 @@ namespace guest_ldtr_access_rights
 
     namespace type
     {
-        constexpr const auto mask = 0x000000000000000FUL;
+        constexpr const auto mask = 0x000000000000000FULL;
         constexpr const auto from = 0;
         constexpr const auto name = "type";
 
@@ -2070,7 +2070,7 @@ namespace guest_ldtr_access_rights
 
     namespace s
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "s";
 
@@ -2097,7 +2097,7 @@ namespace guest_ldtr_access_rights
 
     namespace dpl
     {
-        constexpr const auto mask = 0x0000000000000060UL;
+        constexpr const auto mask = 0x0000000000000060ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "dpl";
 
@@ -2124,7 +2124,7 @@ namespace guest_ldtr_access_rights
 
     namespace present
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "present";
 
@@ -2151,7 +2151,7 @@ namespace guest_ldtr_access_rights
 
     namespace avl
     {
-        constexpr const auto mask = 0x0000000000001000UL;
+        constexpr const auto mask = 0x0000000000001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "avl";
 
@@ -2178,7 +2178,7 @@ namespace guest_ldtr_access_rights
 
     namespace l
     {
-        constexpr const auto mask = 0x0000000000002000UL;
+        constexpr const auto mask = 0x0000000000002000ULL;
         constexpr const auto from = 13;
         constexpr const auto name = "l";
 
@@ -2205,7 +2205,7 @@ namespace guest_ldtr_access_rights
 
     namespace db
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "db";
 
@@ -2232,7 +2232,7 @@ namespace guest_ldtr_access_rights
 
     namespace granularity
     {
-        constexpr const auto mask = 0x0000000000008000UL;
+        constexpr const auto mask = 0x0000000000008000ULL;
         constexpr const auto from = 15;
         constexpr const auto name = "granularity";
 
@@ -2259,7 +2259,7 @@ namespace guest_ldtr_access_rights
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFFFFFFE0F00UL;
+        constexpr const auto mask = 0xFFFFFFFFFFFE0F00ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -2286,7 +2286,7 @@ namespace guest_ldtr_access_rights
 
     namespace unusable
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "unusable";
 
@@ -2314,7 +2314,7 @@ namespace guest_ldtr_access_rights
 
 namespace guest_tr_access_rights
 {
-    constexpr const auto addr = 0x0000000000004822UL;
+    constexpr const auto addr = 0x0000000000004822ULL;
     constexpr const auto name = "guest_tr_access_rights";
 
     inline auto exists()
@@ -2335,7 +2335,7 @@ namespace guest_tr_access_rights
 
     namespace type
     {
-        constexpr const auto mask = 0x000000000000000FUL;
+        constexpr const auto mask = 0x000000000000000FULL;
         constexpr const auto from = 0;
         constexpr const auto name = "type";
 
@@ -2362,7 +2362,7 @@ namespace guest_tr_access_rights
 
     namespace s
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "s";
 
@@ -2389,7 +2389,7 @@ namespace guest_tr_access_rights
 
     namespace dpl
     {
-        constexpr const auto mask = 0x0000000000000060UL;
+        constexpr const auto mask = 0x0000000000000060ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "dpl";
 
@@ -2416,7 +2416,7 @@ namespace guest_tr_access_rights
 
     namespace present
     {
-        constexpr const auto mask = 0x0000000000000080UL;
+        constexpr const auto mask = 0x0000000000000080ULL;
         constexpr const auto from = 7;
         constexpr const auto name = "present";
 
@@ -2443,7 +2443,7 @@ namespace guest_tr_access_rights
 
     namespace avl
     {
-        constexpr const auto mask = 0x0000000000001000UL;
+        constexpr const auto mask = 0x0000000000001000ULL;
         constexpr const auto from = 12;
         constexpr const auto name = "avl";
 
@@ -2470,7 +2470,7 @@ namespace guest_tr_access_rights
 
     namespace l
     {
-        constexpr const auto mask = 0x0000000000002000UL;
+        constexpr const auto mask = 0x0000000000002000ULL;
         constexpr const auto from = 13;
         constexpr const auto name = "l";
 
@@ -2497,7 +2497,7 @@ namespace guest_tr_access_rights
 
     namespace db
     {
-        constexpr const auto mask = 0x0000000000004000UL;
+        constexpr const auto mask = 0x0000000000004000ULL;
         constexpr const auto from = 14;
         constexpr const auto name = "db";
 
@@ -2524,7 +2524,7 @@ namespace guest_tr_access_rights
 
     namespace granularity
     {
-        constexpr const auto mask = 0x0000000000008000UL;
+        constexpr const auto mask = 0x0000000000008000ULL;
         constexpr const auto from = 15;
         constexpr const auto name = "granularity";
 
@@ -2551,7 +2551,7 @@ namespace guest_tr_access_rights
 
     namespace reserved
     {
-        constexpr const auto mask = 0xFFFFFFFFFFFE0F00UL;
+        constexpr const auto mask = 0xFFFFFFFFFFFE0F00ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "reserved";
 
@@ -2578,7 +2578,7 @@ namespace guest_tr_access_rights
 
     namespace unusable
     {
-        constexpr const auto mask = 0x0000000000010000UL;
+        constexpr const auto mask = 0x0000000000010000ULL;
         constexpr const auto from = 16;
         constexpr const auto name = "unusable";
 
@@ -2606,7 +2606,7 @@ namespace guest_tr_access_rights
 
 namespace guest_interruptibility_state
 {
-    constexpr const auto addr = 0x0000000000004824UL;
+    constexpr const auto addr = 0x0000000000004824ULL;
     constexpr const auto name = "guest_interruptibility_state";
 
     inline auto exists()
@@ -2627,7 +2627,7 @@ namespace guest_interruptibility_state
 
     namespace blocking_by_sti
     {
-        constexpr const auto mask = 0x0000000000000001UL;
+        constexpr const auto mask = 0x0000000000000001ULL;
         constexpr const auto from = 0;
         constexpr const auto name = "blocking_by_sti";
 
@@ -2654,7 +2654,7 @@ namespace guest_interruptibility_state
 
     namespace blocking_by_mov_ss
     {
-        constexpr const auto mask = 0x0000000000000002UL;
+        constexpr const auto mask = 0x0000000000000002ULL;
         constexpr const auto from = 1;
         constexpr const auto name = "blocking_by_mov_ss";
 
@@ -2681,7 +2681,7 @@ namespace guest_interruptibility_state
 
     namespace blocking_by_smi
     {
-        constexpr const auto mask = 0x0000000000000004UL;
+        constexpr const auto mask = 0x0000000000000004ULL;
         constexpr const auto from = 2;
         constexpr const auto name = "blocking_by_smi";
 
@@ -2708,7 +2708,7 @@ namespace guest_interruptibility_state
 
     namespace blocking_by_nmi
     {
-        constexpr const auto mask = 0x0000000000000008UL;
+        constexpr const auto mask = 0x0000000000000008ULL;
         constexpr const auto from = 3;
         constexpr const auto name = "blocking_by_nmi";
 
@@ -2735,7 +2735,7 @@ namespace guest_interruptibility_state
 
     namespace enclave_interruption
     {
-        constexpr const auto mask = 0x0000000000000010UL;
+        constexpr const auto mask = 0x0000000000000010ULL;
         constexpr const auto from = 4;
         constexpr const auto name = "enclave_interruption";
 
@@ -2762,7 +2762,7 @@ namespace guest_interruptibility_state
 
     namespace reserved
     {
-        constexpr const auto mask = 0x00000000FFFFFFE0UL;
+        constexpr const auto mask = 0x00000000FFFFFFE0ULL;
         constexpr const auto from = 5;
         constexpr const auto name = "reserved";
 
@@ -2790,7 +2790,7 @@ namespace guest_interruptibility_state
 
 namespace guest_activity_state
 {
-    constexpr const auto addr = 0x0000000000004826UL;
+    constexpr const auto addr = 0x0000000000004826ULL;
     constexpr const auto name = "guest_activity_state";
 
     constexpr const auto active = 0U;
@@ -2817,7 +2817,7 @@ namespace guest_activity_state
 
 namespace guest_smbase
 {
-    constexpr const auto addr = 0x0000000000004828UL;
+    constexpr const auto addr = 0x0000000000004828ULL;
     constexpr const auto name = "guest_smbase";
 
     inline auto exists()
@@ -2839,7 +2839,7 @@ namespace guest_smbase
 
 namespace guest_ia32_sysenter_cs
 {
-    constexpr const auto addr = 0x000000000000482AUL;
+    constexpr const auto addr = 0x000000000000482AULL;
     constexpr const auto name = "guest_ia32_sysenter_cs";
 
     inline auto exists()
@@ -2861,7 +2861,7 @@ namespace guest_ia32_sysenter_cs
 
 namespace vmx_preemption_timer_value
 {
-    constexpr const auto addr = 0x000000000000482EUL;
+    constexpr const auto addr = 0x000000000000482EULL;
     constexpr const auto name = "vmx_preemption_timer_value";
 
     inline auto exists()

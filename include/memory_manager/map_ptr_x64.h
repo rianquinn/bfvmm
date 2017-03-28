@@ -319,6 +319,7 @@ uintptr_t virt_to_phys_with_cr3(uintptr_t virt, uintptr_t cr3);
 /// @param size the number of bytes to map
 /// @param pat the pat msr associated with the provided cr3
 ///
+EXPORT_MEMORY_MANAGER
 void map_with_cr3(uintptr_t vmap, uintptr_t virt, uintptr_t cr3, size_t size,
                   x64::msrs::value_type pat);
 

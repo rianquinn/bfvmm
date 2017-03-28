@@ -25,21 +25,21 @@
 #include <intrinsics/cache_x64.h>
 
 extern "C" void
-__invd(void) noexcept
+_invd(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__wbinvd(void) noexcept
+_wbinvd(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__clflush(void *addr) noexcept
+_clflush(void *addr) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << addr << '\n';
     abort();

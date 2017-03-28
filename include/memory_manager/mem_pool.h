@@ -106,10 +106,12 @@ public:
             static_construction_error();
         }
 
-        integer_pointer end;
-        if (__builtin_uaddl_overflow(m_addr, total_size, &end)) {
-            static_construction_error();
-        }
+        // TODO: Convert to MSVC
+        //
+        // integer_pointer end;
+        // if (__builtin_uaddl_overflow(m_addr, total_size, &end)) {
+        //     static_construction_error();
+        // }
 
         clear();
     }
@@ -243,7 +245,7 @@ public:
         std::lock_guard<std::mutex> lock(m_mutex);
 
         m_next = 0;
-        __builtin_memset(m_allocated.data(), 0xFF, sizeof(m_allocated));
+        memset(m_allocated.data(), 0xFF, sizeof(m_allocated));
     }
 
 private:

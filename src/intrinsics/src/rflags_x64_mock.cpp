@@ -25,14 +25,14 @@
 #include <intrinsics/rflags_x64.h>
 
 extern "C" uint64_t
-__read_rflags(void) noexcept
+_read_rflags(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
-__write_rflags(uint64_t val) noexcept
+_write_rflags(uint64_t val) noexcept
 {
     std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();

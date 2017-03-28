@@ -2,10 +2,6 @@
 # CMake Includes
 # ------------------------------------------------------------------------------
 
-if(NOT CMAKE_TOOLCHAIN_FILE)
-    include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeFlags_Native_GCC.txt")
-endif()
-
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
 
 # ------------------------------------------------------------------------------
@@ -31,6 +27,18 @@ list(APPEND SOURCES
     vmcs_intel_x64_resume.asm
     vmcs_intel_x64_vmm_state.cpp
 )
+
+if(NOT CMAKE_TOOLCHAIN_FILE)
+    list(APPEND SOURCES vmcs_intel_x64_launch_mock.cpp)
+    list(APPEND SOURCES vmcs_intel_x64_promote_mock.cpp)
+    list(APPEND SOURCES vmcs_intel_x64_resume_mock.cpp)
+else()
+    list(APPEND SOURCES vmcs_intel_x64_launch.asm)
+    list(APPEND SOURCES vmcs_intel_x64_promote.asm)
+    list(APPEND SOURCES vmcs_intel_x64_resume.asm)
+endif()
+
+
 
 add_library(vmcs OBJECT ${SOURCES})
 add_library(bfvmm_vmcs SHARED $<TARGET_OBJECTS:vmcs>)

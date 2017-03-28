@@ -42,7 +42,7 @@ namespace vmcs
 
 namespace guest_es_selector
 {
-    constexpr const auto addr = 0x0000000000000800UL;
+    constexpr const auto addr = 0x0000000000000800ULL;
     constexpr const auto name = "guest_es_selector";
 
     inline bool exists() noexcept
@@ -143,7 +143,7 @@ namespace guest_es_selector
 
 namespace guest_cs_selector
 {
-    constexpr const auto addr = 0x0000000000000802UL;
+    constexpr const auto addr = 0x0000000000000802ULL;
     constexpr const auto name = "guest_cs_selector";
 
     inline bool exists() noexcept
@@ -244,7 +244,7 @@ namespace guest_cs_selector
 
 namespace guest_ss_selector
 {
-    constexpr const auto addr = 0x0000000000000804UL;
+    constexpr const auto addr = 0x0000000000000804ULL;
     constexpr const auto name = "guest_ss_selector";
 
     inline bool exists() noexcept
@@ -345,7 +345,7 @@ namespace guest_ss_selector
 
 namespace guest_ds_selector
 {
-    constexpr const auto addr = 0x0000000000000806UL;
+    constexpr const auto addr = 0x0000000000000806ULL;
     constexpr const auto name = "guest_ds_selector";
 
     inline bool exists() noexcept
@@ -446,7 +446,7 @@ namespace guest_ds_selector
 
 namespace guest_fs_selector
 {
-    constexpr const auto addr = 0x0000000000000808UL;
+    constexpr const auto addr = 0x0000000000000808ULL;
     constexpr const auto name = "guest_fs_selector";
 
     inline bool exists() noexcept
@@ -547,7 +547,7 @@ namespace guest_fs_selector
 
 namespace guest_gs_selector
 {
-    constexpr const auto addr = 0x000000000000080AUL;
+    constexpr const auto addr = 0x000000000000080AULL;
     constexpr const auto name = "guest_gs_selector";
 
     inline bool exists() noexcept
@@ -648,7 +648,7 @@ namespace guest_gs_selector
 
 namespace guest_ldtr_selector
 {
-    constexpr const auto addr = 0x000000000000080CUL;
+    constexpr const auto addr = 0x000000000000080CULL;
     constexpr const auto name = "guest_ldtr_selector";
 
     inline bool exists() noexcept
@@ -749,7 +749,7 @@ namespace guest_ldtr_selector
 
 namespace guest_tr_selector
 {
-    constexpr const auto addr = 0x000000000000080EUL;
+    constexpr const auto addr = 0x000000000000080EULL;
     constexpr const auto name = "guest_tr_selector";
 
     inline bool exists() noexcept
@@ -850,7 +850,7 @@ namespace guest_tr_selector
 
 namespace guest_interrupt_status
 {
-    constexpr const auto addr = 0x0000000000000810UL;
+    constexpr const auto addr = 0x0000000000000810ULL;
     constexpr const auto name = "guest_interrupt_status";
 
     inline bool exists() noexcept

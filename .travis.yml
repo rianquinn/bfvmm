@@ -74,22 +74,22 @@ before_script:
 matrix:
   include:
 
-  #
-  # Doxygen
-  #
-  - os: linux
-    env:
-      - TEST="Doxygen"
-    script:
-      - cd ..
-      - doxygen .doxygen.txt
-      - |
-        if [[ -s doxygen_warnings.txt ]]; then
-          echo "You must fix doxygen before submitting a pull request"
-          echo ""
-          cat doxygen_warnings.txt
-          exit -1
-        fi
+  # #
+  # # Doxygen
+  # #
+  # - os: linux
+  #   env:
+  #     - TEST="Doxygen"
+  #   script:
+  #     - cd ..
+  #     - doxygen .doxygen.txt
+  #     - |
+  #       if [[ -s doxygen_warnings.txt ]]; then
+  #         echo "You must fix doxygen before submitting a pull request"
+  #         echo ""
+  #         cat doxygen_warnings.txt
+  #         exit -1
+  #       fi
 
   #
   # Git Check

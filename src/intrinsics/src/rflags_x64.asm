@@ -24,14 +24,14 @@ default rel
 
 section .text
 
-global __read_rflags:function
-__read_rflags:
+global _read_rflags:function
+_read_rflags:
     pushfq
     pop rax
     ret
 
-global __write_rflags:function
-__write_rflags:
+global _write_rflags:function
+_write_rflags:
     push rdi
     popf
     ret

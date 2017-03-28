@@ -271,11 +271,11 @@ auto control_reserved_properly_set(MA msr_addr, C ctls, const char *ctls_name)
 {
     using namespace vmcs::primary_processor_based_vm_execution_controls;
 
-    auto allowed0 = (msrs::get(msr_addr) & 0x00000000FFFFFFFFUL);
-    auto allowed1 = ((msrs::get(msr_addr) >> 32) & 0x00000000FFFFFFFFUL);
+    auto allowed0 = (msrs::get(msr_addr) & 0x00000000FFFFFFFFULL);
+    auto allowed1 = ((msrs::get(msr_addr) >> 32) & 0x00000000FFFFFFFFULL);
     auto allowed1_failed = false;
 
-    ctls &= 0x00000000FFFFFFFFUL;
+    ctls &= 0x00000000FFFFFFFFULL;
 
     if ((allowed0 & ctls) != allowed0)
     {
@@ -286,7 +286,7 @@ auto control_reserved_properly_set(MA msr_addr, C ctls, const char *ctls_name)
         throw std::logic_error("invalid "_s + ctls_name);
     }
 
-    allowed1_failed = (ctls & ~allowed1) != 0UL;
+    allowed1_failed = (ctls & ~allowed1) != 0ULL;
 
     if (msrs::ia32_vmx_procbased_ctls2::addr == msr_addr) {
         allowed1_failed = allowed1_failed && activate_secondary_controls::is_enabled();

@@ -21,47 +21,47 @@
 
 section .text
 
-global __vmxon:function
-__vmxon:
+global _vmxon:function
+_vmxon:
     vmxon [rdi]
-    jbe __vmx_failure
-    jmp __vmx_success
+    jbe _vmx_failure
+    jmp _vmx_success
 
-global __vmxoff:function
-__vmxoff:
+global _vmxoff:function
+_vmxoff:
     vmxoff
-    jbe __vmx_failure
-    jmp __vmx_success
+    jbe _vmx_failure
+    jmp _vmx_success
 
-global __vmclear:function
-__vmclear:
+global _vmclear:function
+_vmclear:
     vmclear [rdi]
-    jbe __vmx_failure
-    jmp __vmx_success
+    jbe _vmx_failure
+    jmp _vmx_success
 
-global __vmptrld:function
-__vmptrld:
+global _vmptrld:function
+_vmptrld:
     vmptrld [rdi]
-    jbe __vmx_failure
-    jmp __vmx_success
+    jbe _vmx_failure
+    jmp _vmx_success
 
-global __vmptrst:function
-__vmptrst:
+global _vmptrst:function
+_vmptrst:
     vmptrst [rdi]
-    jbe __vmx_failure
-    jmp __vmx_success
+    jbe _vmx_failure
+    jmp _vmx_success
 
-global __vmread:function
-__vmread:
+global _vmread:function
+_vmread:
     vmread [rsi], rdi
-    jbe __vmx_failure
-    jmp __vmx_success
+    jbe _vmx_failure
+    jmp _vmx_success
 
-global __vmwrite:function
-__vmwrite:
+global _vmwrite:function
+_vmwrite:
     vmwrite rdi, rsi
-    jbe __vmx_failure
-    jmp __vmx_success
+    jbe _vmx_failure
+    jmp _vmx_success
 
 ; Since bareflank consists of nothing more than a bunch of shared libraries,
 ; all of the code is position independent, which makes getting the actual
@@ -78,17 +78,17 @@ __vmwrite:
 ; address off the stack, the "ret" instruction cannot be used as our stack is
 ; corrupt. If the vmlaunch is successful, rax will have a 1 in it because
 ; the launch will "appear" like a "ret", handing control back to the
-; original __vmlaunch call. If the launch fails, it will execute the next
+; original _vmlaunch call. If the launch fails, it will execute the next
 ; instruction which will cause rax to be false, and hand control over to
 ; continue execution.
 ;
 
-global __vmlaunch_demote:function
-__vmlaunch_demote:
-    call __vmlaunch_trampoline
+global _vmlaunch_demote:function
+_vmlaunch_demote:
+    call _vmlaunch_trampoline
     ret
 
-__vmlaunch_trampoline:
+_vmlaunch_trampoline:
 
     pop rsi
 
@@ -104,24 +104,24 @@ __vmlaunch_trampoline:
 
     jmp rsi
 
-global __invept:function
-__invept:
+global _invept:function
+_invept:
     invept rdi, [rsi]
-    jbe __vmx_failure
-    jmp __vmx_success
+    jbe _vmx_failure
+    jmp _vmx_success
 
-global __invvpid:function
-__invvpid:
+global _invvpid:function
+_invvpid:
     invvpid rdi, [rsi]
-    jbe __vmx_failure
-    jmp __vmx_success
+    jbe _vmx_failure
+    jmp _vmx_success
 
 ; Failure Routines
 
-__vmx_failure:
+_vmx_failure:
     mov rax, 0x0
     ret
 
-__vmx_success:
+_vmx_success:
     mov rax, 0x1
     ret

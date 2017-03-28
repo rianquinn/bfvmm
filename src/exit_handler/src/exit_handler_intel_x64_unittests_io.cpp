@@ -86,4 +86,8 @@ exit_handler_intel_x64::unittest_1101_io_manipulators() const
     std::cout << std::flush;
 }
 
+#else
+
+int dummy_unittests_io = 0;
+
 #endif

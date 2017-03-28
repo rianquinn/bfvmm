@@ -24,8 +24,8 @@ default rel
 
 section .text
 
-global __read_msr:function
-__read_msr:
+global _read_msr:function
+_read_msr:
     mov rcx, rdi
     rdmsr
     shl rdx, 32
@@ -33,8 +33,8 @@ __read_msr:
 
     ret
 
-global __write_msr:function
-__write_msr:
+global _write_msr:function
+_write_msr:
     mov rax, rsi
     mov rdx, rsi
     shr rdx, 32

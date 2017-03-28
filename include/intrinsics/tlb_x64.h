@@ -38,7 +38,7 @@
 // Definitions
 // -----------------------------------------------------------------------------
 
-extern "C" EXPORT_INTRINSICS void __invlpg(const void *virt) noexcept;
+extern "C" EXPORT_INTRINSICS void _invlpg(const void *virt) noexcept;
 
 // *INDENT-OFF*
 
@@ -47,7 +47,7 @@ namespace x64
 namespace tlb
 {
     template<class T, class = typename std::enable_if<std::is_pointer<T>::value>::type>
-    void invlpg(T val) noexcept { __invlpg(val); }
+    void invlpg(T val) noexcept { _invlpg(val); }
 }
 }
 

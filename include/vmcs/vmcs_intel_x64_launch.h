@@ -30,6 +30,6 @@
 /// function can be executed by the exit handler when it is done emulating
 /// and instruction, or it can be executed to schedule another guest
 ///
-extern "C" void vmcs_launch(state_save_intel_x64 *state_save);
+extern "C" void vmcs_launch(state_save_intel_x64 *state_save) noexcept;
 
 #endif
