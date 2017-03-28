@@ -114,15 +114,15 @@ namespace x64
         constexpr const auto virtualization_exception                = 20U;
     }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
     auto is_address_canonical(T addr)
     { return ((addr <= 0x00007FFFFFFFFFFFULL) || (addr >= 0xFFFF800000000000ULL)); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
     auto is_linear_address_valid(T addr)
     { return is_address_canonical(addr); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
     auto is_physical_address_valid(T addr)
     {
         auto bits = cpuid::addr_size::phys::get();

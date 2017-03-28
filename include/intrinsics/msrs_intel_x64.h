@@ -37,10 +37,10 @@ namespace msrs
     using field_type = uint32_t;
     using value_type = uint64_t;
 
-    template<class A> inline auto get(A addr) noexcept
+    template<typename A> inline auto get(A addr) noexcept
     { return _read_msr(gsl::narrow_cast<field_type>(addr)); }
 
-    template<class A, class T> void set(A addr, T val) noexcept
+    template<typename A, class T> void set(A addr, T val) noexcept
     { _write_msr(gsl::narrow_cast<field_type>(addr), val); }
 
     namespace ia32_feature_control
@@ -51,7 +51,7 @@ namespace msrs
         inline auto get() noexcept
         { return _read_msr(addr); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
         void set(T val) noexcept { _write_msr(addr, val); }
 
         namespace lock_bit
@@ -102,7 +102,7 @@ namespace msrs
             inline auto get() noexcept
             { return get_bits(_read_msr(addr), mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             void set(T val) noexcept { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
         }
 
@@ -200,7 +200,7 @@ namespace msrs
         inline auto get() noexcept
         { return _read_msr(addr); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
         void set(T val) noexcept { _write_msr(addr, val); }
     }
 
@@ -212,7 +212,7 @@ namespace msrs
         inline auto get() noexcept
         { return _read_msr(addr); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
         void set(T val) noexcept { _write_msr(addr, val); }
     }
 
@@ -224,7 +224,7 @@ namespace msrs
         inline auto get() noexcept
         { return _read_msr(addr); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
         void set(T val) noexcept { _write_msr(addr, val); }
     }
 
@@ -236,7 +236,7 @@ namespace msrs
         inline auto get() noexcept
         { return _read_msr(addr); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
         void set(T val) noexcept { _write_msr(addr, val); }
 
         namespace lbr
@@ -404,7 +404,7 @@ namespace msrs
             inline auto get() noexcept
             { return get_bits(_read_msr(addr), mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             void set(T val) noexcept { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
         }
 
@@ -459,7 +459,7 @@ namespace msrs
         inline auto get() noexcept
         { return _read_msr(addr); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
         void set(T val) noexcept { _write_msr(addr, val); }
 
         namespace pmc0
@@ -2917,7 +2917,7 @@ namespace msrs
         inline auto get() noexcept
         { return _read_msr(addr); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
         void set(T val) noexcept { _write_msr(addr, val); }
 
         namespace sce
@@ -2981,7 +2981,7 @@ namespace msrs
             inline auto get() noexcept
             { return get_bits(_read_msr(addr), mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             void set(T val) noexcept { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
         }
 
@@ -3012,7 +3012,7 @@ namespace msrs
         inline auto get() noexcept
         { return _read_msr(addr); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
         void set(T val) noexcept { _write_msr(addr, val); }
     }
 
@@ -3024,7 +3024,7 @@ namespace msrs
         inline auto get() noexcept
         { return _read_msr(addr); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
         void set(T val) noexcept { _write_msr(addr, val); }
     }
 }

@@ -22,9 +22,6 @@ list(APPEND SOURCES
     vmcs_intel_x64_check_guest.cpp
     vmcs_intel_x64_check_host.cpp
     vmcs_intel_x64_host_vm_state.cpp
-    vmcs_intel_x64_launch.asm
-    vmcs_intel_x64_promote.asm
-    vmcs_intel_x64_resume.asm
     vmcs_intel_x64_vmm_state.cpp
 )
 
@@ -37,8 +34,6 @@ else()
     list(APPEND SOURCES vmcs_intel_x64_promote.asm)
     list(APPEND SOURCES vmcs_intel_x64_resume.asm)
 endif()
-
-
 
 add_library(vmcs OBJECT ${SOURCES})
 add_library(bfvmm_vmcs SHARED $<TARGET_OBJECTS:vmcs>)
