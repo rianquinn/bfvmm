@@ -60,7 +60,7 @@ auto get_vmcs_field_if_exists(T addr, const char *name, bool verbose, bool exist
         bfwarning << "get_vmcs_field_if_exists failed: " << name << " field doesn't exist" << bfendl;
     }
 
-    return 0ULL;
+    return static_cast<intel_x64::vm::value_type>(0);
 }
 
 template <class V, class A,

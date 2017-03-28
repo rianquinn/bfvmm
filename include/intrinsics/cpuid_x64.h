@@ -56,11 +56,16 @@ namespace cpuid
     using field_type = uint32_t;
     using value_type = uint32_t;
 
-    template<class T1, class T2, class T3, class T4,
-             class = typename std::enable_if<std::is_integral<T1>::value>::type,
-             class = typename std::enable_if<std::is_integral<T2>::value>::type,
-             class = typename std::enable_if<std::is_integral<T3>::value>::type,
-             class = typename std::enable_if<std::is_integral<T4>::value>::type>
+    template<
+        typename T1,
+        typename T2,
+        typename T3,
+        typename T4,
+        typename = std::enable_if<std::is_integral<T1>::value>,
+        typename = std::enable_if<std::is_integral<T2>::value>,
+        typename = std::enable_if<std::is_integral<T3>::value>,
+        typename = std::enable_if<std::is_integral<T4>::value>
+        >
     auto get(T1 eax, T2 ebx, T3 ecx, T4 edx) noexcept
     {
         _cpuid(&eax, &ebx, &ecx, &edx);
@@ -69,25 +74,25 @@ namespace cpuid
 
     namespace eax
     {
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
         auto get(T eax) noexcept { return _cpuid_eax(gsl::narrow_cast<uint32_t>(eax)); }
     }
 
     namespace ebx
     {
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
         auto get(T ebx) noexcept { return _cpuid_ebx(gsl::narrow_cast<uint32_t>(ebx)); }
     }
 
     namespace ecx
     {
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
         auto get(T ecx) noexcept { return _cpuid_ecx(gsl::narrow_cast<uint32_t>(ecx)); }
     }
 
     namespace edx
     {
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
         auto get(T edx) noexcept { return _cpuid_edx(gsl::narrow_cast<uint32_t>(edx)); }
     }
 

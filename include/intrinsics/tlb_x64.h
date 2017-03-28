@@ -46,7 +46,7 @@ namespace x64
 {
 namespace tlb
 {
-    template<class T, class = typename std::enable_if<std::is_pointer<T>::value>::type>
+    template<typename T, typename = std::enable_if<std::is_pointer<T>::value>>
     void invlpg(T val) noexcept { _invlpg(val); }
 }
 }

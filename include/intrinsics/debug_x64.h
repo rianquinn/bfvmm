@@ -52,7 +52,7 @@ namespace dr7
     inline auto get() noexcept
     { return _read_dr7(); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
     void set(T val) noexcept { _write_dr7(val); }
 }
 }

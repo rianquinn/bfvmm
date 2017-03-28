@@ -54,10 +54,10 @@ namespace msrs
     using field_type = uint32_t;
     using value_type = uint64_t;
 
-    template<class A> inline auto get(A addr) noexcept
+    template<typename A> inline auto get(A addr) noexcept
     { return _read_msr(gsl::narrow_cast<field_type>(addr)); }
 
-    template<class A, class T> void set(A addr, T val) noexcept
+    template<typename A, class T> void set(A addr, T val) noexcept
     { _write_msr(gsl::narrow_cast<field_type>(addr), val); }
 
     namespace ia32_pat
@@ -68,7 +68,7 @@ namespace msrs
         inline auto get() noexcept
         { return _read_msr(addr); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
         void set(T val) noexcept { _write_msr(addr, val); }
 
         namespace pa0
@@ -80,11 +80,11 @@ namespace msrs
             inline auto get() noexcept
             { return get_bits(_read_msr(addr), mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             auto get(T val) noexcept
             { return get_bits(val, mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             void set(T val) noexcept { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
         }
 
@@ -97,11 +97,11 @@ namespace msrs
             inline auto get() noexcept
             { return get_bits(_read_msr(addr), mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             auto get(T val) noexcept
             { return get_bits(val, mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             void set(T val) noexcept { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
         }
 
@@ -114,11 +114,11 @@ namespace msrs
             inline auto get() noexcept
             { return get_bits(_read_msr(addr), mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             auto get(T val) noexcept
             { return get_bits(val, mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             void set(T val) noexcept { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
         }
 
@@ -131,11 +131,11 @@ namespace msrs
             inline auto get() noexcept
             { return get_bits(_read_msr(addr), mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             auto get(T val) noexcept
             { return get_bits(val, mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             void set(T val) noexcept { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
         }
 
@@ -148,11 +148,11 @@ namespace msrs
             inline auto get() noexcept
             { return get_bits(_read_msr(addr), mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             auto get(T val) noexcept
             { return get_bits(val, mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             void set(T val) noexcept { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
         }
 
@@ -165,11 +165,11 @@ namespace msrs
             inline auto get() noexcept
             { return get_bits(_read_msr(addr), mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             auto get(T val) noexcept
             { return get_bits(val, mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             void set(T val) noexcept { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
         }
 
@@ -182,11 +182,11 @@ namespace msrs
             inline auto get() noexcept
             { return get_bits(_read_msr(addr), mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             auto get(T val) noexcept
             { return get_bits(val, mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             void set(T val) noexcept { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
         }
 
@@ -199,11 +199,11 @@ namespace msrs
             inline auto get() noexcept
             { return get_bits(_read_msr(addr), mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             auto get(T val) noexcept
             { return get_bits(val, mask) >> from; }
 
-            template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+            template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
             void set(T val) noexcept { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
         }
 
@@ -229,7 +229,7 @@ namespace msrs
                     << view_as_pointer(pa7::get()) << bfendl;
         }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        template<typename T, typename =  std::enable_if<std::is_integral<T>::value>>
         auto pa(T index)
         {
             switch (index)
@@ -247,9 +247,9 @@ namespace msrs
             };
         }
 
-        template<class V, class I,
-                 class = typename std::enable_if<std::is_integral<V>::value>::type,
-                 class = typename std::enable_if<std::is_integral<I>::value>::type>
+        template<typename V, class I,
+                 typename =  std::enable_if<std::is_integral<V>::value>,
+                 typename =  std::enable_if<std::is_integral<I>::value>>
         auto pa(V value, I index)
         {
             switch (index)

@@ -64,7 +64,7 @@ namespace cr0
     inline auto get() noexcept
     { return _read_cr0(); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
     void set(T val) noexcept { _write_cr0(val); }
 
     namespace protection_enable
@@ -257,7 +257,7 @@ namespace cr2
     inline auto get() noexcept
     { return _read_cr2(); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
     void set(T val) noexcept { _write_cr2(val); }
 }
 
@@ -268,7 +268,7 @@ namespace cr3
     inline auto get() noexcept
     { return _read_cr3(); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
     void set(T val) noexcept { _write_cr3(val); }
 }
 
@@ -279,7 +279,7 @@ namespace cr4
     inline auto get() noexcept
     { return _read_cr4(); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
     void set(T val) noexcept { _write_cr4(val); }
 
     namespace v8086_mode_extensions
