@@ -56,12 +56,12 @@ _cpuid_edx(uint32_t val) noexcept
 }
 
 extern "C" void
-_cpuid(void *rax, void *rbx, void *rcx, void *rdx) noexcept
+_cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept
 {
-    ignored(rax);
-    ignored(rbx);
-    ignored(rcx);
-    ignored(rdx);
+    ignored(eax);
+    ignored(ebx);
+    ignored(ecx);
+    ignored(edx);
 
     std::cerr << __FUNC__ << " called" << '\n';
     abort();

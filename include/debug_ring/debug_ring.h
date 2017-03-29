@@ -109,6 +109,7 @@ public:
 /// @param drr the resulting debug ring
 /// @return the debug_ring_resources_t for the provided vcpuid
 ///
-extern "C" EXPORT_DEBUG_RING int64_t get_drr(uint64_t vcpuid, struct debug_ring_resources_t **drr) noexcept;
+extern "C" EXPORT_DEBUG_RING int64_t get_drr(uint64_t vcpuid,
+        struct debug_ring_resources_t **drr) noexcept;
 
 #endif

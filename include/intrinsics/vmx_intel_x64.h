@@ -47,8 +47,8 @@ extern "C" EXPORT_INTRINSICS bool _vmxoff(void) noexcept;
 extern "C" EXPORT_INTRINSICS bool _vmclear(void *ptr) noexcept;
 extern "C" EXPORT_INTRINSICS bool _vmptrld(void *ptr) noexcept;
 extern "C" EXPORT_INTRINSICS bool _vmptrst(void *ptr) noexcept;
-extern "C" EXPORT_INTRINSICS bool _vmread(uint64_t field, const uint64_t *val) noexcept;
-extern "C" EXPORT_INTRINSICS bool _vmwrite(uint64_t field, uint64_t val) noexcept;
+extern "C" EXPORT_INTRINSICS bool _vmread(uint64_t field, const uint64_t *value) noexcept;
+extern "C" EXPORT_INTRINSICS bool _vmwrite(uint64_t field, uint64_t value) noexcept;
 extern "C" EXPORT_INTRINSICS bool _vmlaunch_demote(void) noexcept;
 extern "C" EXPORT_INTRINSICS bool _invept(uint64_t type, void *ptr) noexcept;
 extern "C" EXPORT_INTRINSICS bool _invvpid(uint64_t type, void *ptr) noexcept;
@@ -156,7 +156,7 @@ namespace vm
 
     inline auto read(field_type field, name_type name = "")
     {
-        value_type value;
+        value_type value = {};
 
         if (!_vmread(field, &value))
         {
