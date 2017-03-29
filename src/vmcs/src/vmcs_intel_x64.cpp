@@ -26,20 +26,21 @@
 #include <memory_manager/memory_manager_x64.h>
 
 #include <vmcs/vmcs_intel_x64.h>
-#include <vmcs/vmcs_intel_x64_debug.h>
-#include <vmcs/vmcs_intel_x64_check.h>
 #include <vmcs/vmcs_intel_x64_launch.h>
 #include <vmcs/vmcs_intel_x64_resume.h>
 #include <vmcs/vmcs_intel_x64_promote.h>
-#include <vmcs/vmcs_intel_x64_16bit_host_state_fields.h>
-#include <vmcs/vmcs_intel_x64_16bit_guest_state_fields.h>
-#include <vmcs/vmcs_intel_x64_32bit_control_fields.h>
-#include <vmcs/vmcs_intel_x64_32bit_guest_state_fields.h>
-#include <vmcs/vmcs_intel_x64_32bit_host_state_field.h>
-#include <vmcs/vmcs_intel_x64_64bit_guest_state_fields.h>
-#include <vmcs/vmcs_intel_x64_64bit_host_state_fields.h>
-#include <vmcs/vmcs_intel_x64_natural_width_guest_state_fields.h>
-#include <vmcs/vmcs_intel_x64_natural_width_host_state_fields.h>
+
+#include <intrinsics/vmcs_intel_x64_debug.h>
+#include <intrinsics/vmcs_intel_x64_check.h>
+#include <intrinsics/vmcs_intel_x64_16bit_host_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_16bit_guest_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_32bit_control_fields.h>
+#include <intrinsics/vmcs_intel_x64_32bit_guest_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_32bit_host_state_field.h>
+#include <intrinsics/vmcs_intel_x64_64bit_guest_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_64bit_host_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_natural_width_guest_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_natural_width_host_state_fields.h>
 
 using namespace x64;
 using namespace intel_x64;

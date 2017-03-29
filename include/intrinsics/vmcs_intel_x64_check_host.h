@@ -4,7 +4,6 @@
 // Copyright (C) 2015 Assured Information Security, Inc.
 // Author: Rian Quinn        <quinnr@ainfosec.com>
 // Author: Brendan Kerrigan  <kerriganb@ainfosec.com>
-// Author: Connor Davis      <davisc@ainfosec.com>
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -20,39 +19,31 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#include <vmcs/vmcs_intel_x64.h>
-#include <vmcs/vmcs_intel_x64_check.h>
-#include <vmcs/vmcs_intel_x64_16bit_host_state_fields.h>
-#include <vmcs/vmcs_intel_x64_32bit_control_fields.h>
-#include <vmcs/vmcs_intel_x64_64bit_host_state_fields.h>
-#include <vmcs/vmcs_intel_x64_natural_width_host_state_fields.h>
+#ifndef VMCS_INTEL_X64_CHECK_HOST_H
+#define VMCS_INTEL_X64_CHECK_HOST_H
 
-using namespace intel_x64;
-using namespace vmcs;
+#include <type_traits>
+#include <intrinsics/x64.h>
+#include <intrinsics/vmcs_intel_x64_32bit_control_fields.h>
+#include <intrinsics/vmcs_intel_x64_16bit_host_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_64bit_host_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_natural_width_host_state_fields.h>
 
-void
-check::host_state_all()
+/// Intel x86_64 VMCS Check Host
+///
+/// This namespace implements the host checks found in
+/// section 26.2.2, Vol. 3 of the SDM.
+///
+
+namespace intel_x64
 {
-    check::host_control_registers_and_msrs_all();
-    check::host_segment_and_descriptor_table_registers_all();
-    check::host_address_space_size_all();
-}
-
-void
-check::host_control_registers_and_msrs_all()
+namespace vmcs
 {
-    check::host_cr0_for_unsupported_bits();
-    check::host_cr4_for_unsupported_bits();
-    check::host_cr3_for_unsupported_bits();
-    check::host_ia32_sysenter_esp_canonical_address();
-    check::host_ia32_sysenter_eip_canonical_address();
-    check::host_verify_load_ia32_perf_global_ctrl();
-    check::host_verify_load_ia32_pat();
-    check::host_verify_load_ia32_efer();
-}
+namespace check
+{
 
-void
-check::host_cr0_for_unsupported_bits()
+inline void
+host_cr0_for_unsupported_bits()
 {
     auto cr0 = vmcs::host_cr0::get();
     auto ia32_vmx_cr0_fixed0 = msrs::ia32_vmx_cr0_fixed0::get();
@@ -68,8 +59,8 @@ check::host_cr0_for_unsupported_bits()
     }
 }
 
-void
-check::host_cr4_for_unsupported_bits()
+inline void
+host_cr4_for_unsupported_bits()
 {
     auto cr4 = vmcs::host_cr4::get();
     auto ia32_vmx_cr4_fixed0 = msrs::ia32_vmx_cr4_fixed0::get();
@@ -85,32 +76,32 @@ check::host_cr4_for_unsupported_bits()
     }
 }
 
-void
-check::host_cr3_for_unsupported_bits()
+inline void
+host_cr3_for_unsupported_bits()
 {
     if (!x64::is_physical_address_valid(vmcs::host_cr3::get())) {
         throw std::logic_error("host cr3 too large");
     }
 }
 
-void
-check::host_ia32_sysenter_esp_canonical_address()
+inline void
+host_ia32_sysenter_esp_canonical_address()
 {
     if (!x64::is_address_canonical(vmcs::host_ia32_sysenter_esp::get())) {
         throw std::logic_error("host sysenter esp must be canonical");
     }
 }
 
-void
-check::host_ia32_sysenter_eip_canonical_address()
+inline void
+host_ia32_sysenter_eip_canonical_address()
 {
     if (!x64::is_address_canonical(vmcs::host_ia32_sysenter_eip::get())) {
         throw std::logic_error("host sysenter eip must be canonical");
     }
 }
 
-void
-check::host_verify_load_ia32_perf_global_ctrl()
+inline void
+host_verify_load_ia32_perf_global_ctrl()
 {
     if (vmcs::vm_exit_controls::load_ia32_perf_global_ctrl::is_disabled()) {
         return;
@@ -121,48 +112,48 @@ check::host_verify_load_ia32_perf_global_ctrl()
     }
 }
 
-void
-check::host_verify_load_ia32_pat()
+inline void
+host_verify_load_ia32_pat()
 {
     if (vmcs::vm_exit_controls::load_ia32_pat::is_disabled()) {
         return;
     }
 
-    if (check::memory_type_reserved(host_ia32_pat::pa0::memory_type::get())) {
+    if (memory_type_reserved(host_ia32_pat::pa0::memory_type::get())) {
         throw std::logic_error("pat0 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(host_ia32_pat::pa1::memory_type::get())) {
+    if (memory_type_reserved(host_ia32_pat::pa1::memory_type::get())) {
         throw std::logic_error("pat1 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(host_ia32_pat::pa2::memory_type::get())) {
+    if (memory_type_reserved(host_ia32_pat::pa2::memory_type::get())) {
         throw std::logic_error("pat2 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(host_ia32_pat::pa3::memory_type::get())) {
+    if (memory_type_reserved(host_ia32_pat::pa3::memory_type::get())) {
         throw std::logic_error("pat3 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(host_ia32_pat::pa4::memory_type::get())) {
+    if (memory_type_reserved(host_ia32_pat::pa4::memory_type::get())) {
         throw std::logic_error("pat4 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(host_ia32_pat::pa5::memory_type::get())) {
+    if (memory_type_reserved(host_ia32_pat::pa5::memory_type::get())) {
         throw std::logic_error("pat5 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(host_ia32_pat::pa6::memory_type::get())) {
+    if (memory_type_reserved(host_ia32_pat::pa6::memory_type::get())) {
         throw std::logic_error("pat6 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(host_ia32_pat::pa7::memory_type::get())) {
+    if (memory_type_reserved(host_ia32_pat::pa7::memory_type::get())) {
         throw std::logic_error("pat7 has a reserved memory type");
     }
 }
 
-void
-check::host_verify_load_ia32_efer()
+inline void
+host_verify_load_ia32_efer()
 {
     if (vmcs::vm_exit_controls::load_ia32_efer::is_disabled()) {
         return;
@@ -197,28 +188,8 @@ check::host_verify_load_ia32_efer()
     }
 }
 
-void
-check::host_segment_and_descriptor_table_registers_all()
-{
-    check::host_es_selector_rpl_ti_equal_zero();
-    check::host_cs_selector_rpl_ti_equal_zero();
-    check::host_ss_selector_rpl_ti_equal_zero();
-    check::host_ds_selector_rpl_ti_equal_zero();
-    check::host_fs_selector_rpl_ti_equal_zero();
-    check::host_gs_selector_rpl_ti_equal_zero();
-    check::host_tr_selector_rpl_ti_equal_zero();
-    check::host_cs_not_equal_zero();
-    check::host_tr_not_equal_zero();
-    check::host_ss_not_equal_zero();
-    check::host_fs_canonical_base_address();
-    check::host_gs_canonical_base_address();
-    check::host_gdtr_canonical_base_address();
-    check::host_idtr_canonical_base_address();
-    check::host_tr_canonical_base_address();
-}
-
-void
-check::host_es_selector_rpl_ti_equal_zero()
+inline void
+host_es_selector_rpl_ti_equal_zero()
 {
     if (vmcs::host_es_selector::ti::get()) {
         throw std::logic_error("host es ti flag must be 0");
@@ -229,8 +200,8 @@ check::host_es_selector_rpl_ti_equal_zero()
     }
 }
 
-void
-check::host_cs_selector_rpl_ti_equal_zero()
+inline void
+host_cs_selector_rpl_ti_equal_zero()
 {
     if (vmcs::host_cs_selector::ti::get()) {
         throw std::logic_error("host cs ti flag must be 0");
@@ -241,8 +212,8 @@ check::host_cs_selector_rpl_ti_equal_zero()
     }
 }
 
-void
-check::host_ss_selector_rpl_ti_equal_zero()
+inline void
+host_ss_selector_rpl_ti_equal_zero()
 {
     if (vmcs::host_ss_selector::ti::get()) {
         throw std::logic_error("host ss ti flag must be 0");
@@ -253,8 +224,8 @@ check::host_ss_selector_rpl_ti_equal_zero()
     }
 }
 
-void
-check::host_ds_selector_rpl_ti_equal_zero()
+inline void
+host_ds_selector_rpl_ti_equal_zero()
 {
     if (vmcs::host_ds_selector::ti::get()) {
         throw std::logic_error("host ds ti flag must be 0");
@@ -265,8 +236,8 @@ check::host_ds_selector_rpl_ti_equal_zero()
     }
 }
 
-void
-check::host_fs_selector_rpl_ti_equal_zero()
+inline void
+host_fs_selector_rpl_ti_equal_zero()
 {
     if (vmcs::host_fs_selector::ti::get()) {
         throw std::logic_error("host fs ti flag must be 0");
@@ -277,8 +248,8 @@ check::host_fs_selector_rpl_ti_equal_zero()
     }
 }
 
-void
-check::host_gs_selector_rpl_ti_equal_zero()
+inline void
+host_gs_selector_rpl_ti_equal_zero()
 {
     if (vmcs::host_gs_selector::ti::get()) {
         throw std::logic_error("host gs ti flag must be 0");
@@ -289,8 +260,8 @@ check::host_gs_selector_rpl_ti_equal_zero()
     }
 }
 
-void
-check::host_tr_selector_rpl_ti_equal_zero()
+inline void
+host_tr_selector_rpl_ti_equal_zero()
 {
     if (vmcs::host_tr_selector::ti::get()) {
         throw std::logic_error("host tr ti flag must be 0");
@@ -301,24 +272,24 @@ check::host_tr_selector_rpl_ti_equal_zero()
     }
 }
 
-void
-check::host_cs_not_equal_zero()
+inline void
+host_cs_not_equal_zero()
 {
     if (vmcs::host_cs_selector::get() == 0) {
         throw std::logic_error("host cs cannot equal 0");
     }
 }
 
-void
-check::host_tr_not_equal_zero()
+inline void
+host_tr_not_equal_zero()
 {
     if (vmcs::host_tr_selector::get() == 0) {
         throw std::logic_error("host tr cannot equal 0");
     }
 }
 
-void
-check::host_ss_not_equal_zero()
+inline void
+host_ss_not_equal_zero()
 {
     if (vmcs::vm_exit_controls::host_address_space_size::is_enabled()) {
         return;
@@ -329,57 +300,48 @@ check::host_ss_not_equal_zero()
     }
 }
 
-void
-check::host_fs_canonical_base_address()
+inline void
+host_fs_canonical_base_address()
 {
     if (!x64::is_address_canonical(vmcs::host_fs_base::get())) {
         throw std::logic_error("host fs base must be canonical");
     }
 }
 
-void
-check::host_gs_canonical_base_address()
+inline void
+host_gs_canonical_base_address()
 {
     if (!x64::is_address_canonical(vmcs::host_gs_base::get())) {
         throw std::logic_error("host gs base must be canonical");
     }
 }
 
-void
-check::host_gdtr_canonical_base_address()
+inline void
+host_gdtr_canonical_base_address()
 {
     if (!x64::is_address_canonical(vmcs::host_gdtr_base::get())) {
         throw std::logic_error("host gdtr base must be canonical");
     }
 }
 
-void
-check::host_idtr_canonical_base_address()
+inline void
+host_idtr_canonical_base_address()
 {
     if (!x64::is_address_canonical(vmcs::host_idtr_base::get())) {
         throw std::logic_error("host idtr base must be canonical");
     }
 }
 
-void
-check::host_tr_canonical_base_address()
+inline void
+host_tr_canonical_base_address()
 {
     if (!x64::is_address_canonical(vmcs::host_tr_base::get())) {
         throw std::logic_error("host tr base must be canonical");
     }
 }
 
-void
-check::host_address_space_size_all()
-{
-    check::host_if_outside_ia32e_mode();
-    check::host_address_space_size_exit_ctl_is_set();
-    check::host_address_space_disabled();
-    check::host_address_space_enabled();
-}
-
-void
-check::host_if_outside_ia32e_mode()
+inline void
+host_if_outside_ia32e_mode()
 {
     if (msrs::ia32_efer::lma::get()) {
         return;
@@ -394,8 +356,8 @@ check::host_if_outside_ia32e_mode()
     }
 }
 
-void
-check::host_address_space_size_exit_ctl_is_set()
+inline void
+host_address_space_size_exit_ctl_is_set()
 {
     if (!msrs::ia32_efer::lma::get()) {
         return;
@@ -406,8 +368,8 @@ check::host_address_space_size_exit_ctl_is_set()
     }
 }
 
-void
-check::host_address_space_disabled()
+inline void
+host_address_space_disabled()
 {
     if (vmcs::vm_exit_controls::host_address_space_size::is_enabled()) {
         return;
@@ -426,8 +388,8 @@ check::host_address_space_disabled()
     }
 }
 
-void
-check::host_address_space_enabled()
+inline void
+host_address_space_enabled()
 {
     if (vmcs::vm_exit_controls::host_address_space_size::is_disabled()) {
         return;
@@ -441,3 +403,59 @@ check::host_address_space_enabled()
         throw std::logic_error("host rip must be canonical");
     }
 }
+
+inline void
+host_segment_and_descriptor_table_registers_all()
+{
+    host_es_selector_rpl_ti_equal_zero();
+    host_cs_selector_rpl_ti_equal_zero();
+    host_ss_selector_rpl_ti_equal_zero();
+    host_ds_selector_rpl_ti_equal_zero();
+    host_fs_selector_rpl_ti_equal_zero();
+    host_gs_selector_rpl_ti_equal_zero();
+    host_tr_selector_rpl_ti_equal_zero();
+    host_cs_not_equal_zero();
+    host_tr_not_equal_zero();
+    host_ss_not_equal_zero();
+    host_fs_canonical_base_address();
+    host_gs_canonical_base_address();
+    host_gdtr_canonical_base_address();
+    host_idtr_canonical_base_address();
+    host_tr_canonical_base_address();
+}
+
+inline void
+host_address_space_size_all()
+{
+    host_if_outside_ia32e_mode();
+    host_address_space_size_exit_ctl_is_set();
+    host_address_space_disabled();
+    host_address_space_enabled();
+}
+
+inline void
+host_control_registers_and_msrs_all()
+{
+    host_cr0_for_unsupported_bits();
+    host_cr4_for_unsupported_bits();
+    host_cr3_for_unsupported_bits();
+    host_ia32_sysenter_esp_canonical_address();
+    host_ia32_sysenter_eip_canonical_address();
+    host_verify_load_ia32_perf_global_ctrl();
+    host_verify_load_ia32_pat();
+    host_verify_load_ia32_efer();
+}
+
+inline void
+host_state_all()
+{
+    host_control_registers_and_msrs_all();
+    host_segment_and_descriptor_table_registers_all();
+    host_address_space_size_all();
+}
+
+}
+}
+}
+
+#endif

@@ -26,6 +26,8 @@
 #include <type_traits>
 
 #include <bfstring.h>
+
+#include <intrinsics/x64.h>
 #include <intrinsics/vmx_intel_x64.h>
 #include <intrinsics/msrs_intel_x64.h>
 
@@ -107,8 +109,7 @@ auto set_vm_control(bool val, MA msr_addr, CA ctls_addr, const char *name, M mas
         }
 
         intel_x64::vm::write(ctls_addr, (intel_x64::vm::read(ctls_addr, name) & ~mask), name);
-    }
-    else {
+    } else {
         auto is_allowed1 = (intel_x64::msrs::get(msr_addr) & (mask << 32)) != 0;
 
         if (!is_allowed1) {
@@ -131,34 +132,45 @@ auto set_vm_control_if_allowed(bool val, MA msr_addr, CA ctls_addr, const char *
         return;
     }
 
-    if (!val)
-    {
+    if (!val) {
         auto is_allowed0 = (intel_x64::msrs::get(msr_addr) & mask) == 0;
 
         if (is_allowed0) {
             intel_x64::vm::write(ctls_addr, (intel_x64::vm::read(ctls_addr, name) & ~mask), name);
-        }
-        else
-        {
+        } else {
             if (verbose) {
                 bfwarning << "set_vm_control_if_allowed failed: " << name
                           << "control is not allowed to be cleared to 0" << bfendl;
             }
         }
-    }
-    else
-    {
+    } else {
         auto is_allowed1 = (intel_x64::msrs::get(msr_addr) & (mask << 32)) != 0;
 
         if (is_allowed1) {
             intel_x64::vm::write(ctls_addr, (intel_x64::vm::read(ctls_addr, name) | mask), name);
-        }
-        else {
+        } else {
             if (verbose) {
                 bfwarning << "set_vm_control_if_allowed failed: " << name
                           << "control is not allowed to be set to 1" << bfendl;
             }
         }
+    }
+}
+
+template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+auto memory_type_reserved(T memory_type)
+{
+    switch (memory_type) {
+        case x64::memory_type::uncacheable:
+        case x64::memory_type::write_combining:
+        case x64::memory_type::write_through:
+        case x64::memory_type::write_protected:
+        case x64::memory_type::write_back:
+        case x64::memory_type::uncacheable_minus:
+            return false;
+
+        default:
+            return true;
     }
 }
 

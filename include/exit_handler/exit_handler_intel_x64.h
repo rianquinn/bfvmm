@@ -26,6 +26,9 @@
 
 #include <vmcs/vmcs_intel_x64.h>
 #include <memory_manager/map_ptr_x64.h>
+#include <intrinsics/vmcs_intel_x64_16bit_control_fields.h>
+#include <intrinsics/vmcs_intel_x64_32bit_control_fields.h>
+#include <intrinsics/vmcs_intel_x64_64bit_control_fields.h>
 
 #include <bfvmcallinterface.h>
 

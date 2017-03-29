@@ -24,7 +24,7 @@
 #define VMCS_INTEL_X64_NATURAL_WIDTH_CONTROL_FIELDS_H
 
 #include <bfbitmanip.h>
-#include <vmcs/vmcs_intel_x64.h>
+#include <intrinsics/vmcs_intel_x64_helpers.h>
 
 /// Intel x86_64 VMCS Natural-Width Control Fields
 ///

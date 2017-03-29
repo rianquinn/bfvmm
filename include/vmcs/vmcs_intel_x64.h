@@ -24,7 +24,6 @@
 #define VMCS_INTEL_X64_H
 
 #include <vmcs/vmcs_intel_x64_state.h>
-#include <vmcs/vmcs_intel_x64_helpers.h>
 #include <exit_handler/state_save_intel_x64.h>
 
 // -----------------------------------------------------------------------------

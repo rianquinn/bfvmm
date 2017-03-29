@@ -23,10 +23,9 @@
 #ifndef VMCS_INTEL_X64_64BIT_GUEST_STATE_FIELDS_H
 #define VMCS_INTEL_X64_64BIT_GUEST_STATE_FIELDS_H
 
-#include <type_traits>
-
 #include <bfbitmanip.h>
-#include <vmcs/vmcs_intel_x64.h>
+#include <type_traits>
+#include <intrinsics/vmcs_intel_x64_helpers.h>
 
 #include <intrinsics/msrs_intel_x64.h>
 #include <intrinsics/cpuid_x64.h>

@@ -25,8 +25,7 @@
 
 #include <memory>
 #include <type_traits>
-
-#include <vmcs/vmcs_intel_x64.h>
+#include <intrinsics/vmcs_intel_x64_helpers.h>
 #include <vmcs/vmcs_intel_x64_state.h>
 #include <exit_handler/state_save_intel_x64.h>
 
