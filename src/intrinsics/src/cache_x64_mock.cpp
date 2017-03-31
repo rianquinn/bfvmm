@@ -22,7 +22,7 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
-#include <intrinsics/cache_x64.h>
+#include <intrinsics/x86/common_x64.h>
 
 extern "C" void
 _invd(void) noexcept

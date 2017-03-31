@@ -22,7 +22,7 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
-#include <intrinsics/pm_x64.h>
+#include <intrinsics/x86/common/pm_x64.h>
 
 extern "C" void
 _halt(void) noexcept

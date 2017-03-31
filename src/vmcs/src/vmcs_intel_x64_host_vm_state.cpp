@@ -21,9 +21,8 @@
 
 #include <vmcs/vmcs_intel_x64_host_vm_state.h>
 
-#include <intrinsics/msrs_x64.h>
-#include <intrinsics/msrs_intel_x64.h>
-#include <intrinsics/cpuid_x64.h>
+#include <intrinsics/x86/common_x64.h>
+#include <intrinsics/x86/intel_x64.h>
 
 using namespace x64;
 using namespace intel_x64;

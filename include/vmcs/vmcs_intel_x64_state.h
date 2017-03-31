@@ -22,15 +22,8 @@
 #ifndef VMCS_INTEL_X64_STATE_H
 #define VMCS_INTEL_X64_STATE_H
 
-#include <intrinsics/x64.h>
-#include <intrinsics/gdt_x64.h>
-#include <intrinsics/idt_x64.h>
-#include <intrinsics/tss_x64.h>
-#include <intrinsics/srs_x64.h>
-#include <intrinsics/debug_x64.h>
-#include <intrinsics/rflags_x64.h>
-#include <intrinsics/crs_intel_x64.h>
-#include <intrinsics/msrs_intel_x64.h>
+#include <intrinsics/x86/common_x64.h>
+#include <intrinsics/x86/intel_x64.h>
 
 // -----------------------------------------------------------------------------
 // Exports

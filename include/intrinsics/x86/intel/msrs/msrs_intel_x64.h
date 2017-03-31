@@ -26,7 +26,7 @@
 #include <bfdebug.h>
 #include <bfbitmanip.h>
 
-#include <intrinsics/msrs_x64.h>
+#include <intrinsics/x86/common/msrs/msrs_x64.h>
 
 // *INDENT-OFF*
 

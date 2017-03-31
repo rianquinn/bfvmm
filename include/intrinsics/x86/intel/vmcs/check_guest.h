@@ -24,15 +24,16 @@
 
 #include <type_traits>
 
-#include <intrinsics/x64.h>
-#include <intrinsics/cpuid_x64.h>
-#include <intrinsics/pdpte_x64.h>
-#include <intrinsics/crs_intel_x64.h>
-#include <intrinsics/vmcs_intel_x64_32bit_control_fields.h>
-#include <intrinsics/vmcs_intel_x64_16bit_guest_state_fields.h>
-#include <intrinsics/vmcs_intel_x64_32bit_guest_state_fields.h>
-#include <intrinsics/vmcs_intel_x64_64bit_guest_state_fields.h>
-#include <intrinsics/vmcs_intel_x64_natural_width_guest_state_fields.h>
+#include <intrinsics/x86/common/x64.h>
+#include <intrinsics/x86/common/cpuid/cpuid_x64.h>
+#include <intrinsics/x86/common/pdpte_x64.h>
+
+#include <intrinsics/x86/intel/crs_intel_x64.h>
+#include <intrinsics/x86/intel/vmcs/32bit_control_fields.h>
+#include <intrinsics/x86/intel/vmcs/16bit_guest_state_fields.h>
+#include <intrinsics/x86/intel/vmcs/32bit_guest_state_fields.h>
+#include <intrinsics/x86/intel/vmcs/64bit_guest_state_fields.h>
+#include <intrinsics/x86/intel/vmcs/natural_width_guest_state_fields.h>
 
 #include <memory_manager/memory_manager_x64.h>
 

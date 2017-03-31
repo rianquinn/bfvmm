@@ -19,12 +19,41 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#include <intrinsics/x86/common/thread_context_x64.h>
+#ifndef VMCS_INTEL_X64_CHECK_H
+#define VMCS_INTEL_X64_CHECK_H
 
-extern "C" uint64_t
-thread_context_cpuid(void)
-{ return 0; }
+#include <type_traits>
+#include <intrinsics/x86/common/x64.h>
+#include <intrinsics/x86/intel/vmcs/check_controls.h>
+#include <intrinsics/x86/intel/vmcs/check_guest.h>
+#include <intrinsics/x86/intel/vmcs/check_host.h>
 
-extern "C" uint64_t
-thread_context_tlsptr(void)
-{ return 0; }
+/// Intel x86_64 VMCS Check
+///
+/// This namespace implements the checks found in sections 26.1 through
+/// 26.3, Vol. 3 of the SDM.
+///
+
+// *INDENT-OFF*
+
+namespace intel_x64
+{
+namespace vmcs
+{
+namespace check
+{
+
+inline void all()
+{
+    vmx_controls_all();
+    host_state_all();
+    guest_state_all();
+}
+
+}
+}
+}
+
+// *INDENT-ON*
+
+#endif

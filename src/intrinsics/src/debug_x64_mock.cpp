@@ -22,7 +22,7 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
-#include <intrinsics/debug_x64.h>
+#include <intrinsics/x86/common/debug_x64.h>
 
 extern "C" uint64_t
 _read_dr7(void) noexcept

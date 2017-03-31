@@ -23,7 +23,7 @@
 #ifndef VMCS_INTEL_X64_64BIT_HOST_STATE_FIELDS_H
 #define VMCS_INTEL_X64_64BIT_HOST_STATE_FIELDS_H
 
-#include <intrinsics/vmcs_intel_x64_helpers.h>
+#include <intrinsics/x86/intel/vmcs/helpers.h>
 
 /// Intel x86_64 VMCS 64-bit Host-State Fields
 ///

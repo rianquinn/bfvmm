@@ -24,7 +24,7 @@
 #define VMCS_INTEL_X64_32BIT_READ_ONLY_DATA_FIELDS_H
 
 #include <bfbitmanip.h>
-#include <intrinsics/vmcs_intel_x64_helpers.h>
+#include <intrinsics/x86/intel/vmcs/helpers.h>
 
 /// Intel x86_64 VMCS 32-bit Read-Only Data Fields
 ///

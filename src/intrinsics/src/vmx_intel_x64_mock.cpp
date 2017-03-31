@@ -22,7 +22,7 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
-#include <intrinsics/vmx_intel_x64.h>
+#include <intrinsics/x86/intel_x64.h>
 
 extern "C" bool
 _vmxon(void *ptr) noexcept

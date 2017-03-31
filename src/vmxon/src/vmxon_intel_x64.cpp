@@ -25,12 +25,8 @@
 #include <vmxon/vmxon_intel_x64.h>
 #include <memory_manager/memory_manager_x64.h>
 
-#include <intrinsics/x64.h>
-#include <intrinsics/cpuid_x64.h>
-#include <intrinsics/rflags_x64.h>
-#include <intrinsics/crs_intel_x64.h>
-#include <intrinsics/vmx_intel_x64.h>
-#include <intrinsics/msrs_intel_x64.h>
+#include <intrinsics/x86/common_x64.h>
+#include <intrinsics/x86/intel_x64.h>
 
 using namespace x64;
 using namespace intel_x64;

@@ -25,21 +25,21 @@
 
 #include <bfdebug.h>
 
-#include <intrinsics/vmcs_intel_x64_16bit_control_fields.h>
-#include <intrinsics/vmcs_intel_x64_16bit_guest_state_fields.h>
-#include <intrinsics/vmcs_intel_x64_16bit_host_state_fields.h>
-#include <intrinsics/vmcs_intel_x64_64bit_control_fields.h>
-#include <intrinsics/vmcs_intel_x64_64bit_read_only_data_fields.h>
-#include <intrinsics/vmcs_intel_x64_64bit_guest_state_fields.h>
-#include <intrinsics/vmcs_intel_x64_64bit_host_state_fields.h>
-#include <intrinsics/vmcs_intel_x64_32bit_control_fields.h>
-#include <intrinsics/vmcs_intel_x64_32bit_read_only_data_fields.h>
-#include <intrinsics/vmcs_intel_x64_32bit_guest_state_fields.h>
-#include <intrinsics/vmcs_intel_x64_32bit_host_state_field.h>
-#include <intrinsics/vmcs_intel_x64_natural_width_control_fields.h>
-#include <intrinsics/vmcs_intel_x64_natural_width_read_only_data_fields.h>
-#include <intrinsics/vmcs_intel_x64_natural_width_guest_state_fields.h>
-#include <intrinsics/vmcs_intel_x64_natural_width_host_state_fields.h>
+#include <intrinsics/x86/intel/vmcs/16bit_control_fields.h>
+#include <intrinsics/x86/intel/vmcs/16bit_guest_state_fields.h>
+#include <intrinsics/x86/intel/vmcs/16bit_host_state_fields.h>
+#include <intrinsics/x86/intel/vmcs/64bit_control_fields.h>
+#include <intrinsics/x86/intel/vmcs/64bit_read_only_data_fields.h>
+#include <intrinsics/x86/intel/vmcs/64bit_guest_state_fields.h>
+#include <intrinsics/x86/intel/vmcs/64bit_host_state_fields.h>
+#include <intrinsics/x86/intel/vmcs/32bit_control_fields.h>
+#include <intrinsics/x86/intel/vmcs/32bit_read_only_data_fields.h>
+#include <intrinsics/x86/intel/vmcs/32bit_guest_state_fields.h>
+#include <intrinsics/x86/intel/vmcs/32bit_host_state_field.h>
+#include <intrinsics/x86/intel/vmcs/natural_width_control_fields.h>
+#include <intrinsics/x86/intel/vmcs/natural_width_read_only_data_fields.h>
+#include <intrinsics/x86/intel/vmcs/natural_width_guest_state_fields.h>
+#include <intrinsics/x86/intel/vmcs/natural_width_host_state_fields.h>
 
 // *INDENT-OFF*
 

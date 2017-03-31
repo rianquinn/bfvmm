@@ -25,12 +25,12 @@
 
 #include <memory>
 #include <type_traits>
-#include <intrinsics/vmcs_intel_x64_helpers.h>
+#include <intrinsics/x86/intel/vmcs/helpers.h>
 #include <vmcs/vmcs_intel_x64_state.h>
 #include <exit_handler/state_save_intel_x64.h>
 
-#include <intrinsics/vmx_intel_x64.h>
-#include <intrinsics/msrs_intel_x64.h>
+#include <intrinsics/x86/intel/vmx_intel_x64.h>
+#include <intrinsics/x86/intel/msrs/msrs_intel_x64.h>
 
 /// Intel x86_64 VMCS 32-bit Guest-State Fields
 ///

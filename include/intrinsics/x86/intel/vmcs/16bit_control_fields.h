@@ -25,8 +25,8 @@
 
 #include <vmcs/vmcs_intel_x64_state.h>
 
-#include <intrinsics/msrs_intel_x64.h>
-#include <intrinsics/vmcs_intel_x64_helpers.h>
+#include <intrinsics/x86/intel/msrs/msrs_intel_x64.h>
+#include <intrinsics/x86/intel/vmcs/helpers.h>
 
 /// Intel x86_64 VMCS 16-Bit Control Fields
 ///

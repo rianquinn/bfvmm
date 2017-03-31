@@ -22,7 +22,7 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
-#include <intrinsics/tlb_x64.h>
+#include <intrinsics/x86/common/tlb_x64.h>
 
 extern "C" void
 _invlpg(const void *virt) noexcept
