@@ -4,6 +4,7 @@
 // Copyright (C) 2015 Assured Information Security, Inc.
 // Author: Rian Quinn        <quinnr@ainfosec.com>
 // Author: Brendan Kerrigan  <kerriganb@ainfosec.com>
+// Author: Connor Davis      <davisc@ainfosec.com>
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -19,15 +20,17 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#ifndef VMCS_INTEL_X64_32BIT_HOST_STATE_FIELD_H
-#define VMCS_INTEL_X64_32BIT_HOST_STATE_FIELD_H
+#ifndef VMCS_INTEL_X64_64BIT_READ_ONLY_DATA_FIELD_H
+#define VMCS_INTEL_X64_64BIT_READ_ONLY_DATA_FIELD_H
 
-#include <vmcs/vmcs_intel_x64.h>
+#include <bfbitmanip.h>
+#include <intrinsics/vmcs_intel_x64_helpers.h>
+#include <intrinsics/msrs_intel_x64.h>
 
-/// Intel x86_64 VMCS 32-bit Host-State Data Fields
+/// Intel x86_64 VMCS 64-bit Read-Only Data Fields
 ///
-/// The following provides the interface for the 32-bit host-state VMCS
-/// fields as defined in Appendix B.3.4, Vol. 3 of the Intel Software Developer's
+/// The following provides the interface for the 64-bit read-only data VMCS
+/// fields as defined in Appendix B.2.2, Vol. 3 of the Intel Software Developer's
 /// Manual.
 ///
 
@@ -38,26 +41,22 @@ namespace intel_x64
 namespace vmcs
 {
 
-namespace host_ia32_sysenter_cs
+namespace guest_physical_address
 {
-    constexpr const auto addr = 0x0000000000004C00ULL;
-    constexpr const auto name = "host_ia32_sysenter_cs";
+    constexpr const auto addr = 0x0000000000002400ULL;
+    constexpr const auto name = "guest_physical_address";
 
-    inline bool exists() noexcept
-    { return true; }
+    inline auto exists() noexcept
+    {
+        return msrs::ia32_vmx_true_procbased_ctls::activate_secondary_controls::is_allowed1() &&
+               msrs::ia32_vmx_procbased_ctls2::enable_ept::is_allowed1();
+    }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
     inline auto get_if_exists(bool verbose = false) noexcept
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
-
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
-
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
-    { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 }
 
 }

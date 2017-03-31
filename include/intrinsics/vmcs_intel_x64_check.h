@@ -4,7 +4,6 @@
 // Copyright (C) 2015 Assured Information Security, Inc.
 // Author: Rian Quinn        <quinnr@ainfosec.com>
 // Author: Brendan Kerrigan  <kerriganb@ainfosec.com>
-// Author: Connor Davis      <davisc@ainfosec.com>
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -20,14 +19,41 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#include <vmcs/vmcs_intel_x64_check.h>
+#ifndef VMCS_INTEL_X64_CHECK_H
+#define VMCS_INTEL_X64_CHECK_H
 
-using namespace intel_x64;
+#include <type_traits>
+#include <intrinsics/x64.h>
+#include <intrinsics/vmcs_intel_x64_check_controls.h>
+#include <intrinsics/vmcs_intel_x64_check_guest.h>
+#include <intrinsics/vmcs_intel_x64_check_host.h>
 
-void
-vmcs::check::all()
+/// Intel x86_64 VMCS Check
+///
+/// This namespace implements the checks found in sections 26.1 through
+/// 26.3, Vol. 3 of the SDM.
+///
+
+// *INDENT-OFF*
+
+namespace intel_x64
 {
-    vmcs::check::control_vmx_controls_all();
-    vmcs::check::host_state_all();
-    vmcs::check::guest_state_all();
+namespace vmcs
+{
+namespace check
+{
+
+inline void all()
+{
+    vmx_controls_all();
+    host_state_all();
+    guest_state_all();
 }
+
+}
+}
+}
+
+// *INDENT-ON*
+
+#endif

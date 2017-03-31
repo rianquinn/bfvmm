@@ -20,10 +20,10 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#ifndef VMCS_INTEL_X64_16BIT_NATURAL_WIDTH_READ_ONLY_DATA_FIELDS_H
-#define VMCS_INTEL_X64_16BIT_NATURAL_WIDTH_READ_ONLY_DATA_FIELDS_H
+#ifndef VMCS_INTEL_X64_NATURAL_WIDTH_READ_ONLY_DATA_FIELDS_H
+#define VMCS_INTEL_X64_NATURAL_WIDTH_READ_ONLY_DATA_FIELDS_H
 
-#include <vmcs/vmcs_intel_x64.h>
+#include <intrinsics/vmcs_intel_x64_helpers.h>
 #include <intrinsics/portio_x64.h>
 
 /// Intel x86_64 VMCS Natural-Width Read-Only Data Fields

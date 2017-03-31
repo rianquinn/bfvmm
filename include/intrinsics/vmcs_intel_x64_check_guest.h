@@ -4,7 +4,6 @@
 // Copyright (C) 2015 Assured Information Security, Inc.
 // Author: Rian Quinn        <quinnr@ainfosec.com>
 // Author: Brendan Kerrigan  <kerriganb@ainfosec.com>
-// Author: Connor Davis      <davisc@ainfosec.com>
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -20,57 +19,38 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#include <vmcs/vmcs_intel_x64.h>
-#include <vmcs/vmcs_intel_x64_32bit_control_fields.h>
-#include <vmcs/vmcs_intel_x64_16bit_guest_state_fields.h>
-#include <vmcs/vmcs_intel_x64_32bit_guest_state_fields.h>
-#include <vmcs/vmcs_intel_x64_64bit_guest_state_fields.h>
-#include <vmcs/vmcs_intel_x64_natural_width_guest_state_fields.h>
-#include <vmcs/vmcs_intel_x64_check.h>
+#ifndef VMCS_INTEL_X64_CHECK_GUEST_H
+#define VMCS_INTEL_X64_CHECK_GUEST_H
 
+#include <type_traits>
+
+#include <intrinsics/x64.h>
 #include <intrinsics/cpuid_x64.h>
 #include <intrinsics/pdpte_x64.h>
 #include <intrinsics/crs_intel_x64.h>
+#include <intrinsics/vmcs_intel_x64_32bit_control_fields.h>
+#include <intrinsics/vmcs_intel_x64_16bit_guest_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_32bit_guest_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_64bit_guest_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_natural_width_guest_state_fields.h>
 
 #include <memory_manager/memory_manager_x64.h>
 
-using namespace x64;
-using namespace intel_x64;
-using namespace vmcs;
-using namespace check;
+/// Intel x86_64 VMCS Check Guest
+///
+/// This namespace implements the guest checks found in
+/// section 26.3, Vol. 3 of the SDM.
+///
 
-void
-check::guest_state_all()
+namespace intel_x64
 {
-    check::guest_control_registers_debug_registers_and_msrs_all();
-    check::guest_segment_registers_all();
-    check::guest_descriptor_table_registers_all();
-    check::guest_rip_and_rflags_all();
-    check::guest_non_register_state_all();
-    check::guest_pdptes_all();
-}
-
-void
-check::guest_control_registers_debug_registers_and_msrs_all()
+namespace vmcs
 {
-    check::guest_cr0_for_unsupported_bits();
-    check::guest_cr0_verify_paging_enabled();
-    check::guest_cr4_for_unsupported_bits();
-    check::guest_load_debug_controls_verify_reserved();
-    check::guest_verify_ia_32e_mode_enabled();
-    check::guest_verify_ia_32e_mode_disabled();
-    check::guest_cr3_for_unsupported_bits();
-    check::guest_load_debug_controls_verify_dr7();
-    check::guest_ia32_sysenter_esp_canonical_address();
-    check::guest_ia32_sysenter_eip_canonical_address();
-    check::guest_verify_load_ia32_perf_global_ctrl();
-    check::guest_verify_load_ia32_pat();
-    check::guest_verify_load_ia32_efer();
-    check::guest_verify_load_ia32_bndcfgs();
-}
+namespace check
+{
 
-void
-check::guest_cr0_for_unsupported_bits()
+inline void
+guest_cr0_for_unsupported_bits()
 {
     auto cr0 = guest_cr0::get();
     auto ia32_vmx_cr0_fixed0 = msrs::ia32_vmx_cr0_fixed0::get();
@@ -90,8 +70,8 @@ check::guest_cr0_for_unsupported_bits()
     }
 }
 
-void
-check::guest_cr0_verify_paging_enabled()
+inline void
+guest_cr0_verify_paging_enabled()
 {
     if (guest_cr0::paging::is_disabled()) {
         return;
@@ -102,8 +82,8 @@ check::guest_cr0_verify_paging_enabled()
     }
 }
 
-void
-check::guest_cr4_for_unsupported_bits()
+inline void
+guest_cr4_for_unsupported_bits()
 {
     auto cr4 = guest_cr4::get();
     auto ia32_vmx_cr4_fixed0 = msrs::ia32_vmx_cr4_fixed0::get();
@@ -119,8 +99,8 @@ check::guest_cr4_for_unsupported_bits()
     }
 }
 
-void
-check::guest_load_debug_controls_verify_reserved()
+inline void
+guest_load_debug_controls_verify_reserved()
 {
     if (vm_entry_controls::load_debug_controls::is_disabled()) {
         return;
@@ -131,8 +111,8 @@ check::guest_load_debug_controls_verify_reserved()
     }
 }
 
-void
-check::guest_verify_ia_32e_mode_enabled()
+inline void
+guest_verify_ia_32e_mode_enabled()
 {
     if (vm_entry_controls::ia_32e_mode_guest::is_disabled()) {
         return;
@@ -147,8 +127,8 @@ check::guest_verify_ia_32e_mode_enabled()
     }
 }
 
-void
-check::guest_verify_ia_32e_mode_disabled()
+inline void
+guest_verify_ia_32e_mode_disabled()
 {
     if (vm_entry_controls::ia_32e_mode_guest::is_enabled()) {
         return;
@@ -159,16 +139,16 @@ check::guest_verify_ia_32e_mode_disabled()
     }
 }
 
-void
-check::guest_cr3_for_unsupported_bits()
+inline void
+guest_cr3_for_unsupported_bits()
 {
     if (!x64::is_physical_address_valid(guest_cr3::get())) {
         throw std::logic_error("guest cr3 too large");
     }
 }
 
-void
-check::guest_load_debug_controls_verify_dr7()
+inline void
+guest_load_debug_controls_verify_dr7()
 {
     if (vm_entry_controls::load_debug_controls::is_disabled()) {
         return;
@@ -181,24 +161,24 @@ check::guest_load_debug_controls_verify_dr7()
     }
 }
 
-void
-check::guest_ia32_sysenter_esp_canonical_address()
+inline void
+guest_ia32_sysenter_esp_canonical_address()
 {
     if (!x64::is_address_canonical(vmcs::guest_ia32_sysenter_esp::get())) {
         throw std::logic_error("guest sysenter esp must be canonical");
     }
 }
 
-void
-check::guest_ia32_sysenter_eip_canonical_address()
+inline void
+guest_ia32_sysenter_eip_canonical_address()
 {
     if (!x64::is_address_canonical(vmcs::guest_ia32_sysenter_eip::get())) {
         throw std::logic_error("guest sysenter eip must be canonical");
     }
 }
 
-void
-check::guest_verify_load_ia32_perf_global_ctrl()
+inline void
+guest_verify_load_ia32_perf_global_ctrl()
 {
     if (vm_entry_controls::load_ia32_perf_global_ctrl::is_disabled()) {
         return;
@@ -209,48 +189,48 @@ check::guest_verify_load_ia32_perf_global_ctrl()
     }
 }
 
-void
-check::guest_verify_load_ia32_pat()
+inline void
+guest_verify_load_ia32_pat()
 {
     if (vm_entry_controls::load_ia32_pat::is_disabled()) {
         return;
     }
 
-    if (check::memory_type_reserved(guest_ia32_pat::pa0::memory_type::get())) {
+    if (memory_type_reserved(guest_ia32_pat::pa0::memory_type::get())) {
         throw std::logic_error("pat0 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(guest_ia32_pat::pa1::memory_type::get())) {
+    if (memory_type_reserved(guest_ia32_pat::pa1::memory_type::get())) {
         throw std::logic_error("pat1 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(guest_ia32_pat::pa2::memory_type::get())) {
+    if (memory_type_reserved(guest_ia32_pat::pa2::memory_type::get())) {
         throw std::logic_error("pat2 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(guest_ia32_pat::pa3::memory_type::get())) {
+    if (memory_type_reserved(guest_ia32_pat::pa3::memory_type::get())) {
         throw std::logic_error("pat3 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(guest_ia32_pat::pa4::memory_type::get())) {
+    if (memory_type_reserved(guest_ia32_pat::pa4::memory_type::get())) {
         throw std::logic_error("pat4 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(guest_ia32_pat::pa5::memory_type::get())) {
+    if (memory_type_reserved(guest_ia32_pat::pa5::memory_type::get())) {
         throw std::logic_error("pat5 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(guest_ia32_pat::pa6::memory_type::get())) {
+    if (memory_type_reserved(guest_ia32_pat::pa6::memory_type::get())) {
         throw std::logic_error("pat6 has a reserved memory type");
     }
 
-    if (check::memory_type_reserved(guest_ia32_pat::pa7::memory_type::get())) {
+    if (memory_type_reserved(guest_ia32_pat::pa7::memory_type::get())) {
         throw std::logic_error("pat7 has a reserved memory type");
     }
 }
 
-void
-check::guest_verify_load_ia32_efer()
+inline void
+guest_verify_load_ia32_efer()
 {
     if (vm_entry_controls::load_ia32_efer::is_disabled()) {
         return;
@@ -285,8 +265,8 @@ check::guest_verify_load_ia32_efer()
     }
 }
 
-void
-check::guest_verify_load_ia32_bndcfgs()
+inline void
+guest_verify_load_ia32_bndcfgs()
 {
     if (vm_entry_controls::load_ia32_bndcfgs::is_disabled()) {
         return;
@@ -307,108 +287,16 @@ check::guest_verify_load_ia32_bndcfgs()
     }
 }
 
-void
-check::guest_segment_registers_all()
-{
-    check::guest_tr_ti_bit_equals_0();
-    check::guest_ldtr_ti_bit_equals_0();
-    check::guest_ss_and_cs_rpl_are_the_same();
-    check::guest_cs_base_is_shifted();
-    check::guest_ss_base_is_shifted();
-    check::guest_ds_base_is_shifted();
-    check::guest_es_base_is_shifted();
-    check::guest_fs_base_is_shifted();
-    check::guest_gs_base_is_shifted();
-    check::guest_tr_base_is_canonical();
-    check::guest_fs_base_is_canonical();
-    check::guest_gs_base_is_canonical();
-    check::guest_ldtr_base_is_canonical();
-    check::guest_cs_base_upper_dword_0();
-    check::guest_ss_base_upper_dword_0();
-    check::guest_ds_base_upper_dword_0();
-    check::guest_es_base_upper_dword_0();
-    check::guest_cs_limit();
-    check::guest_ss_limit();
-    check::guest_ds_limit();
-    check::guest_es_limit();
-    check::guest_gs_limit();
-    check::guest_fs_limit();
-    check::guest_v8086_cs_access_rights();
-    check::guest_v8086_ss_access_rights();
-    check::guest_v8086_ds_access_rights();
-    check::guest_v8086_es_access_rights();
-    check::guest_v8086_fs_access_rights();
-    check::guest_v8086_gs_access_rights();
-    check::guest_cs_access_rights_type();
-    check::guest_ss_access_rights_type();
-    check::guest_ds_access_rights_type();
-    check::guest_es_access_rights_type();
-    check::guest_fs_access_rights_type();
-    check::guest_gs_access_rights_type();
-    check::guest_cs_is_not_a_system_descriptor();
-    check::guest_ss_is_not_a_system_descriptor();
-    check::guest_ds_is_not_a_system_descriptor();
-    check::guest_es_is_not_a_system_descriptor();
-    check::guest_fs_is_not_a_system_descriptor();
-    check::guest_gs_is_not_a_system_descriptor();
-    check::guest_cs_type_not_equal_3();
-    check::guest_cs_dpl_adheres_to_ss_dpl();
-    check::guest_ss_dpl_must_equal_rpl();
-    check::guest_ss_dpl_must_equal_zero();
-    check::guest_ds_dpl();
-    check::guest_es_dpl();
-    check::guest_fs_dpl();
-    check::guest_gs_dpl();
-    check::guest_cs_must_be_present();
-    check::guest_ss_must_be_present_if_usable();
-    check::guest_ds_must_be_present_if_usable();
-    check::guest_es_must_be_present_if_usable();
-    check::guest_fs_must_be_present_if_usable();
-    check::guest_gs_must_be_present_if_usable();
-    check::guest_cs_access_rights_reserved_must_be_0();
-    check::guest_ss_access_rights_reserved_must_be_0();
-    check::guest_ds_access_rights_reserved_must_be_0();
-    check::guest_es_access_rights_reserved_must_be_0();
-    check::guest_fs_access_rights_reserved_must_be_0();
-    check::guest_gs_access_rights_reserved_must_be_0();
-    check::guest_cs_db_must_be_0_if_l_equals_1();
-    check::guest_cs_granularity();
-    check::guest_ss_granularity();
-    check::guest_ds_granularity();
-    check::guest_es_granularity();
-    check::guest_fs_granularity();
-    check::guest_gs_granularity();
-    check::guest_cs_access_rights_remaining_reserved_bit_0();
-    check::guest_ss_access_rights_remaining_reserved_bit_0();
-    check::guest_ds_access_rights_remaining_reserved_bit_0();
-    check::guest_es_access_rights_remaining_reserved_bit_0();
-    check::guest_fs_access_rights_remaining_reserved_bit_0();
-    check::guest_gs_access_rights_remaining_reserved_bit_0();
-    check::guest_tr_type_must_be_11();
-    check::guest_tr_must_be_a_system_descriptor();
-    check::guest_tr_must_be_present();
-    check::guest_tr_access_rights_reserved_must_be_0();
-    check::guest_tr_granularity();
-    check::guest_tr_must_be_usable();
-    check::guest_tr_access_rights_remaining_reserved_bit_0();
-    check::guest_ldtr_type_must_be_2();
-    check::guest_ldtr_must_be_a_system_descriptor();
-    check::guest_ldtr_must_be_present();
-    check::guest_ldtr_access_rights_reserved_must_be_0();
-    check::guest_ldtr_granularity();
-    check::guest_ldtr_access_rights_remaining_reserved_bit_0();
-}
-
-void
-check::guest_tr_ti_bit_equals_0()
+inline void
+guest_tr_ti_bit_equals_0()
 {
     if (guest_tr_selector::ti::get()) {
         throw std::logic_error("guest tr's ti flag must be zero");
     }
 }
 
-void
-check::guest_ldtr_ti_bit_equals_0()
+inline void
+guest_ldtr_ti_bit_equals_0()
 {
     if (guest_ldtr_access_rights::unusable::get() != 0) {
         return;
@@ -419,8 +307,8 @@ check::guest_ldtr_ti_bit_equals_0()
     }
 }
 
-void
-check::guest_ss_and_cs_rpl_are_the_same()
+inline void
+guest_ss_and_cs_rpl_are_the_same()
 {
     using namespace primary_processor_based_vm_execution_controls;
     using namespace secondary_processor_based_vm_execution_controls;
@@ -438,8 +326,8 @@ check::guest_ss_and_cs_rpl_are_the_same()
     }
 }
 
-void
-check::guest_cs_base_is_shifted()
+inline void
+guest_cs_base_is_shifted()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -452,8 +340,8 @@ check::guest_cs_base_is_shifted()
     }
 }
 
-void
-check::guest_ss_base_is_shifted()
+inline void
+guest_ss_base_is_shifted()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -466,8 +354,8 @@ check::guest_ss_base_is_shifted()
     }
 }
 
-void
-check::guest_ds_base_is_shifted()
+inline void
+guest_ds_base_is_shifted()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -480,8 +368,8 @@ check::guest_ds_base_is_shifted()
     }
 }
 
-void
-check::guest_es_base_is_shifted()
+inline void
+guest_es_base_is_shifted()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -494,8 +382,8 @@ check::guest_es_base_is_shifted()
     }
 }
 
-void
-check::guest_fs_base_is_shifted()
+inline void
+guest_fs_base_is_shifted()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -508,8 +396,8 @@ check::guest_fs_base_is_shifted()
     }
 }
 
-void
-check::guest_gs_base_is_shifted()
+inline void
+guest_gs_base_is_shifted()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -522,32 +410,32 @@ check::guest_gs_base_is_shifted()
     }
 }
 
-void
-check::guest_tr_base_is_canonical()
+inline void
+guest_tr_base_is_canonical()
 {
     if (!x64::is_address_canonical(vmcs::guest_tr_base::get())) {
         throw std::logic_error("guest tr base non-canonical");
     }
 }
 
-void
-check::guest_fs_base_is_canonical()
+inline void
+guest_fs_base_is_canonical()
 {
     if (!x64::is_address_canonical(vmcs::guest_fs_base::get())) {
         throw std::logic_error("guest fs base non-canonical");
     }
 }
 
-void
-check::guest_gs_base_is_canonical()
+inline void
+guest_gs_base_is_canonical()
 {
     if (!x64::is_address_canonical(vmcs::guest_gs_base::get())) {
         throw std::logic_error("guest gs base non-canonical");
     }
 }
 
-void
-check::guest_ldtr_base_is_canonical()
+inline void
+guest_ldtr_base_is_canonical()
 {
     if (guest_ldtr_access_rights::unusable::get() != 0) {
         return;
@@ -558,16 +446,16 @@ check::guest_ldtr_base_is_canonical()
     }
 }
 
-void
-check::guest_cs_base_upper_dword_0()
+inline void
+guest_cs_base_upper_dword_0()
 {
     if ((vmcs::guest_cs_base::get() & 0xFFFFFFFF00000000) != 0) {
         throw std::logic_error("guest cs base bits 63:32 must be 0");
     }
 }
 
-void
-check::guest_ss_base_upper_dword_0()
+inline void
+guest_ss_base_upper_dword_0()
 {
     if (guest_ss_access_rights::unusable::get() != 0) {
         return;
@@ -578,8 +466,8 @@ check::guest_ss_base_upper_dword_0()
     }
 }
 
-void
-check::guest_ds_base_upper_dword_0()
+inline void
+guest_ds_base_upper_dword_0()
 {
     if (guest_ds_access_rights::unusable::get() != 0) {
         return;
@@ -590,8 +478,8 @@ check::guest_ds_base_upper_dword_0()
     }
 }
 
-void
-check::guest_es_base_upper_dword_0()
+inline void
+guest_es_base_upper_dword_0()
 {
     if (guest_es_access_rights::unusable::get() != 0) {
         return;
@@ -602,8 +490,8 @@ check::guest_es_base_upper_dword_0()
     }
 }
 
-void
-check::guest_cs_limit()
+inline void
+guest_cs_limit()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -616,8 +504,8 @@ check::guest_cs_limit()
     }
 }
 
-void
-check::guest_ss_limit()
+inline void
+guest_ss_limit()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -630,8 +518,8 @@ check::guest_ss_limit()
     }
 }
 
-void
-check::guest_ds_limit()
+inline void
+guest_ds_limit()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -644,8 +532,8 @@ check::guest_ds_limit()
     }
 }
 
-void
-check::guest_es_limit()
+inline void
+guest_es_limit()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -658,8 +546,8 @@ check::guest_es_limit()
     }
 }
 
-void
-check::guest_gs_limit()
+inline void
+guest_gs_limit()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -672,8 +560,8 @@ check::guest_gs_limit()
     }
 }
 
-void
-check::guest_fs_limit()
+inline void
+guest_fs_limit()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -686,8 +574,8 @@ check::guest_fs_limit()
     }
 }
 
-void
-check::guest_v8086_cs_access_rights()
+inline void
+guest_v8086_cs_access_rights()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -698,8 +586,8 @@ check::guest_v8086_cs_access_rights()
     }
 }
 
-void
-check::guest_v8086_ss_access_rights()
+inline void
+guest_v8086_ss_access_rights()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -710,8 +598,8 @@ check::guest_v8086_ss_access_rights()
     }
 }
 
-void
-check::guest_v8086_ds_access_rights()
+inline void
+guest_v8086_ds_access_rights()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -722,8 +610,8 @@ check::guest_v8086_ds_access_rights()
     }
 }
 
-void
-check::guest_v8086_es_access_rights()
+inline void
+guest_v8086_es_access_rights()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -734,8 +622,8 @@ check::guest_v8086_es_access_rights()
     }
 }
 
-void
-check::guest_v8086_fs_access_rights()
+inline void
+guest_v8086_fs_access_rights()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -746,8 +634,8 @@ check::guest_v8086_fs_access_rights()
     }
 }
 
-void
-check::guest_v8086_gs_access_rights()
+inline void
+guest_v8086_gs_access_rights()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_disabled()) {
         return;
@@ -758,8 +646,8 @@ check::guest_v8086_gs_access_rights()
     }
 }
 
-void
-check::guest_cs_access_rights_type()
+inline void
+guest_cs_access_rights_type()
 {
     using namespace primary_processor_based_vm_execution_controls;
     using namespace secondary_processor_based_vm_execution_controls;
@@ -769,7 +657,7 @@ check::guest_cs_access_rights_type()
     }
 
     switch (guest_cs_access_rights::type::get()) {
-        case access_rights::type::read_write_accessed:
+        case x64::access_rights::type::read_write_accessed:
             if (activate_secondary_controls::is_disabled()) {
                 break;
             }
@@ -778,10 +666,10 @@ check::guest_cs_access_rights_type()
                 break;
             }
 
-        case access_rights::type::execute_only_accessed:
-        case access_rights::type::read_execute_accessed:
-        case access_rights::type::execute_only_conforming_accessed:
-        case access_rights::type::read_execute_conforming_accessed:
+        case x64::access_rights::type::execute_only_accessed:
+        case x64::access_rights::type::read_execute_accessed:
+        case x64::access_rights::type::execute_only_conforming_accessed:
+        case x64::access_rights::type::read_execute_conforming_accessed:
             return;
 
         default:
@@ -792,8 +680,8 @@ check::guest_cs_access_rights_type()
                            "3 (if unrestricted guest support is enabled)");
 }
 
-void
-check::guest_ss_access_rights_type()
+inline void
+guest_ss_access_rights_type()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -804,8 +692,8 @@ check::guest_ss_access_rights_type()
     }
 
     switch (guest_ss_access_rights::type::get()) {
-        case access_rights::type::read_write_accessed:
-        case access_rights::type::read_write_expand_down_accessed:
+        case x64::access_rights::type::read_write_accessed:
+        case x64::access_rights::type::read_write_expand_down_accessed:
             return;
 
         default:
@@ -815,8 +703,8 @@ check::guest_ss_access_rights_type()
     throw std::logic_error("guest ss type must be 3 or 7");
 }
 
-void
-check::guest_ds_access_rights_type()
+inline void
+guest_ds_access_rights_type()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -827,12 +715,12 @@ check::guest_ds_access_rights_type()
     }
 
     switch (guest_ds_access_rights::type::get()) {
-        case access_rights::type::read_only_accessed:
-        case access_rights::type::read_write_accessed:
-        case access_rights::type::read_only_expand_down_accessed:
-        case access_rights::type::read_write_expand_down_accessed:
-        case access_rights::type::read_execute_accessed:
-        case access_rights::type::read_execute_conforming_accessed:
+        case x64::access_rights::type::read_only_accessed:
+        case x64::access_rights::type::read_write_accessed:
+        case x64::access_rights::type::read_only_expand_down_accessed:
+        case x64::access_rights::type::read_write_expand_down_accessed:
+        case x64::access_rights::type::read_execute_accessed:
+        case x64::access_rights::type::read_execute_conforming_accessed:
             return;
 
         default:
@@ -842,8 +730,8 @@ check::guest_ds_access_rights_type()
     throw std::logic_error("guest ds type must be 1, 3, 5, 7, 11, or 15");
 }
 
-void
-check::guest_es_access_rights_type()
+inline void
+guest_es_access_rights_type()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -854,12 +742,12 @@ check::guest_es_access_rights_type()
     }
 
     switch (guest_es_access_rights::type::get()) {
-        case access_rights::type::read_only_accessed:
-        case access_rights::type::read_write_accessed:
-        case access_rights::type::read_only_expand_down_accessed:
-        case access_rights::type::read_write_expand_down_accessed:
-        case access_rights::type::read_execute_accessed:
-        case access_rights::type::read_execute_conforming_accessed:
+        case x64::access_rights::type::read_only_accessed:
+        case x64::access_rights::type::read_write_accessed:
+        case x64::access_rights::type::read_only_expand_down_accessed:
+        case x64::access_rights::type::read_write_expand_down_accessed:
+        case x64::access_rights::type::read_execute_accessed:
+        case x64::access_rights::type::read_execute_conforming_accessed:
             return;
 
         default:
@@ -869,8 +757,8 @@ check::guest_es_access_rights_type()
     throw std::logic_error("guest ds type must be 1, 3, 5, 7, 11, or 15");
 }
 
-void
-check::guest_fs_access_rights_type()
+inline void
+guest_fs_access_rights_type()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -881,12 +769,12 @@ check::guest_fs_access_rights_type()
     }
 
     switch (guest_fs_access_rights::type::get()) {
-        case access_rights::type::read_only_accessed:
-        case access_rights::type::read_write_accessed:
-        case access_rights::type::read_only_expand_down_accessed:
-        case access_rights::type::read_write_expand_down_accessed:
-        case access_rights::type::read_execute_accessed:
-        case access_rights::type::read_execute_conforming_accessed:
+        case x64::access_rights::type::read_only_accessed:
+        case x64::access_rights::type::read_write_accessed:
+        case x64::access_rights::type::read_only_expand_down_accessed:
+        case x64::access_rights::type::read_write_expand_down_accessed:
+        case x64::access_rights::type::read_execute_accessed:
+        case x64::access_rights::type::read_execute_conforming_accessed:
             return;
 
         default:
@@ -896,8 +784,8 @@ check::guest_fs_access_rights_type()
     throw std::logic_error("guest fs type must be 1, 3, 5, 7, 11, or 15");
 }
 
-void
-check::guest_gs_access_rights_type()
+inline void
+guest_gs_access_rights_type()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -908,12 +796,12 @@ check::guest_gs_access_rights_type()
     }
 
     switch (guest_gs_access_rights::type::get()) {
-        case access_rights::type::read_only_accessed:
-        case access_rights::type::read_write_accessed:
-        case access_rights::type::read_only_expand_down_accessed:
-        case access_rights::type::read_write_expand_down_accessed:
-        case access_rights::type::read_execute_accessed:
-        case access_rights::type::read_execute_conforming_accessed:
+        case x64::access_rights::type::read_only_accessed:
+        case x64::access_rights::type::read_write_accessed:
+        case x64::access_rights::type::read_only_expand_down_accessed:
+        case x64::access_rights::type::read_write_expand_down_accessed:
+        case x64::access_rights::type::read_execute_accessed:
+        case x64::access_rights::type::read_execute_conforming_accessed:
             return;
 
         default:
@@ -923,8 +811,8 @@ check::guest_gs_access_rights_type()
     throw std::logic_error("guest gs type must be 1, 3, 5, 7, 11, or 15");
 }
 
-void
-check::guest_cs_is_not_a_system_descriptor()
+inline void
+guest_cs_is_not_a_system_descriptor()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -935,8 +823,8 @@ check::guest_cs_is_not_a_system_descriptor()
     }
 }
 
-void
-check::guest_ss_is_not_a_system_descriptor()
+inline void
+guest_ss_is_not_a_system_descriptor()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -951,8 +839,8 @@ check::guest_ss_is_not_a_system_descriptor()
     }
 }
 
-void
-check::guest_ds_is_not_a_system_descriptor()
+inline void
+guest_ds_is_not_a_system_descriptor()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -967,8 +855,8 @@ check::guest_ds_is_not_a_system_descriptor()
     }
 }
 
-void
-check::guest_es_is_not_a_system_descriptor()
+inline void
+guest_es_is_not_a_system_descriptor()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -983,8 +871,8 @@ check::guest_es_is_not_a_system_descriptor()
     }
 }
 
-void
-check::guest_fs_is_not_a_system_descriptor()
+inline void
+guest_fs_is_not_a_system_descriptor()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -999,8 +887,8 @@ check::guest_fs_is_not_a_system_descriptor()
     }
 }
 
-void
-check::guest_gs_is_not_a_system_descriptor()
+inline void
+guest_gs_is_not_a_system_descriptor()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1015,15 +903,15 @@ check::guest_gs_is_not_a_system_descriptor()
     }
 }
 
-void
-check::guest_cs_type_not_equal_3()
+inline void
+guest_cs_type_not_equal_3()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
     }
 
     switch (guest_cs_access_rights::type::get()) {
-        case access_rights::type::read_write_accessed:
+        case x64::access_rights::type::read_write_accessed:
             break;
 
         default:
@@ -1035,16 +923,16 @@ check::guest_cs_type_not_equal_3()
     }
 }
 
-void
-check::guest_cs_dpl_adheres_to_ss_dpl()
+inline void
+guest_cs_dpl_adheres_to_ss_dpl()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
     }
 
     switch (guest_cs_access_rights::type::get()) {
-        case access_rights::type::execute_only_accessed:
-        case access_rights::type::read_execute_accessed: {
+        case x64::access_rights::type::execute_only_accessed:
+        case x64::access_rights::type::read_execute_accessed: {
             auto cs_dpl = guest_cs_access_rights::dpl::get();
             auto ss_dpl = guest_ss_access_rights::dpl::get();
 
@@ -1055,8 +943,8 @@ check::guest_cs_dpl_adheres_to_ss_dpl()
             break;
         }
 
-        case access_rights::type::execute_only_conforming_accessed:
-        case access_rights::type::read_execute_conforming_accessed: {
+        case x64::access_rights::type::execute_only_conforming_accessed:
+        case x64::access_rights::type::read_execute_conforming_accessed: {
             auto cs_dpl = guest_cs_access_rights::dpl::get();
             auto ss_dpl = guest_ss_access_rights::dpl::get();
 
@@ -1072,8 +960,8 @@ check::guest_cs_dpl_adheres_to_ss_dpl()
     }
 }
 
-void
-check::guest_ss_dpl_must_equal_rpl()
+inline void
+guest_ss_dpl_must_equal_rpl()
 {
     using namespace primary_processor_based_vm_execution_controls;
     using namespace secondary_processor_based_vm_execution_controls;
@@ -1094,15 +982,15 @@ check::guest_ss_dpl_must_equal_rpl()
     }
 }
 
-void
-check::guest_ss_dpl_must_equal_zero()
+inline void
+guest_ss_dpl_must_equal_zero()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
     }
 
     switch (guest_cs_access_rights::type::get()) {
-        case access_rights::type::read_write_accessed:
+        case x64::access_rights::type::read_write_accessed:
             break;
 
         default:
@@ -1116,8 +1004,8 @@ check::guest_ss_dpl_must_equal_zero()
     }
 }
 
-void
-check::guest_ds_dpl()
+inline void
+guest_ds_dpl()
 {
     using namespace primary_processor_based_vm_execution_controls;
     using namespace secondary_processor_based_vm_execution_controls;
@@ -1135,10 +1023,10 @@ check::guest_ds_dpl()
     }
 
     switch (guest_ds_access_rights::type::get()) {
-        case access_rights::type::execute_only_conforming:
-        case access_rights::type::execute_only_conforming_accessed:
-        case access_rights::type::read_execute_conforming:
-        case access_rights::type::read_execute_conforming_accessed:
+        case x64::access_rights::type::execute_only_conforming:
+        case x64::access_rights::type::execute_only_conforming_accessed:
+        case x64::access_rights::type::read_execute_conforming:
+        case x64::access_rights::type::read_execute_conforming_accessed:
             return;
 
         default:
@@ -1156,8 +1044,8 @@ check::guest_ds_dpl()
     }
 }
 
-void
-check::guest_es_dpl()
+inline void
+guest_es_dpl()
 {
     using namespace primary_processor_based_vm_execution_controls;
     using namespace secondary_processor_based_vm_execution_controls;
@@ -1175,10 +1063,10 @@ check::guest_es_dpl()
     }
 
     switch (guest_es_access_rights::type::get()) {
-        case access_rights::type::execute_only_conforming:
-        case access_rights::type::execute_only_conforming_accessed:
-        case access_rights::type::read_execute_conforming:
-        case access_rights::type::read_execute_conforming_accessed:
+        case x64::access_rights::type::execute_only_conforming:
+        case x64::access_rights::type::execute_only_conforming_accessed:
+        case x64::access_rights::type::read_execute_conforming:
+        case x64::access_rights::type::read_execute_conforming_accessed:
             return;
 
         default:
@@ -1196,8 +1084,8 @@ check::guest_es_dpl()
     }
 }
 
-void
-check::guest_fs_dpl()
+inline void
+guest_fs_dpl()
 {
     using namespace primary_processor_based_vm_execution_controls;
     using namespace secondary_processor_based_vm_execution_controls;
@@ -1215,10 +1103,10 @@ check::guest_fs_dpl()
     }
 
     switch (guest_fs_access_rights::type::get()) {
-        case access_rights::type::execute_only_conforming:
-        case access_rights::type::execute_only_conforming_accessed:
-        case access_rights::type::read_execute_conforming:
-        case access_rights::type::read_execute_conforming_accessed:
+        case x64::access_rights::type::execute_only_conforming:
+        case x64::access_rights::type::execute_only_conforming_accessed:
+        case x64::access_rights::type::read_execute_conforming:
+        case x64::access_rights::type::read_execute_conforming_accessed:
             return;
 
         default:
@@ -1236,8 +1124,8 @@ check::guest_fs_dpl()
     }
 }
 
-void
-check::guest_gs_dpl()
+inline void
+guest_gs_dpl()
 {
     using namespace primary_processor_based_vm_execution_controls;
     using namespace secondary_processor_based_vm_execution_controls;
@@ -1255,10 +1143,10 @@ check::guest_gs_dpl()
     }
 
     switch (guest_gs_access_rights::type::get()) {
-        case access_rights::type::execute_only_conforming:
-        case access_rights::type::execute_only_conforming_accessed:
-        case access_rights::type::read_execute_conforming:
-        case access_rights::type::read_execute_conforming_accessed:
+        case x64::access_rights::type::execute_only_conforming:
+        case x64::access_rights::type::execute_only_conforming_accessed:
+        case x64::access_rights::type::read_execute_conforming:
+        case x64::access_rights::type::read_execute_conforming_accessed:
             return;
 
         default:
@@ -1276,8 +1164,8 @@ check::guest_gs_dpl()
     }
 }
 
-void
-check::guest_cs_must_be_present()
+inline void
+guest_cs_must_be_present()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1288,8 +1176,8 @@ check::guest_cs_must_be_present()
     }
 }
 
-void
-check::guest_ss_must_be_present_if_usable()
+inline void
+guest_ss_must_be_present_if_usable()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1304,8 +1192,8 @@ check::guest_ss_must_be_present_if_usable()
     }
 }
 
-void
-check::guest_ds_must_be_present_if_usable()
+inline void
+guest_ds_must_be_present_if_usable()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1320,8 +1208,8 @@ check::guest_ds_must_be_present_if_usable()
     }
 }
 
-void
-check::guest_es_must_be_present_if_usable()
+inline void
+guest_es_must_be_present_if_usable()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1336,8 +1224,8 @@ check::guest_es_must_be_present_if_usable()
     }
 }
 
-void
-check::guest_fs_must_be_present_if_usable()
+inline void
+guest_fs_must_be_present_if_usable()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1352,8 +1240,8 @@ check::guest_fs_must_be_present_if_usable()
     }
 }
 
-void
-check::guest_gs_must_be_present_if_usable()
+inline void
+guest_gs_must_be_present_if_usable()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1368,8 +1256,8 @@ check::guest_gs_must_be_present_if_usable()
     }
 }
 
-void
-check::guest_cs_access_rights_reserved_must_be_0()
+inline void
+guest_cs_access_rights_reserved_must_be_0()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1380,8 +1268,8 @@ check::guest_cs_access_rights_reserved_must_be_0()
     }
 }
 
-void
-check::guest_ss_access_rights_reserved_must_be_0()
+inline void
+guest_ss_access_rights_reserved_must_be_0()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1396,8 +1284,8 @@ check::guest_ss_access_rights_reserved_must_be_0()
     }
 }
 
-void
-check::guest_ds_access_rights_reserved_must_be_0()
+inline void
+guest_ds_access_rights_reserved_must_be_0()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1412,8 +1300,8 @@ check::guest_ds_access_rights_reserved_must_be_0()
     }
 }
 
-void
-check::guest_es_access_rights_reserved_must_be_0()
+inline void
+guest_es_access_rights_reserved_must_be_0()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1428,8 +1316,8 @@ check::guest_es_access_rights_reserved_must_be_0()
     }
 }
 
-void
-check::guest_fs_access_rights_reserved_must_be_0()
+inline void
+guest_fs_access_rights_reserved_must_be_0()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1444,8 +1332,8 @@ check::guest_fs_access_rights_reserved_must_be_0()
     }
 }
 
-void
-check::guest_gs_access_rights_reserved_must_be_0()
+inline void
+guest_gs_access_rights_reserved_must_be_0()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1460,8 +1348,8 @@ check::guest_gs_access_rights_reserved_must_be_0()
     }
 }
 
-void
-check::guest_cs_db_must_be_0_if_l_equals_1()
+inline void
+guest_cs_db_must_be_0_if_l_equals_1()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1480,8 +1368,8 @@ check::guest_cs_db_must_be_0_if_l_equals_1()
     }
 }
 
-void
-check::guest_cs_granularity()
+inline void
+guest_cs_granularity()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1499,8 +1387,8 @@ check::guest_cs_granularity()
     }
 }
 
-void
-check::guest_ss_granularity()
+inline void
+guest_ss_granularity()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1522,8 +1410,8 @@ check::guest_ss_granularity()
     }
 }
 
-void
-check::guest_ds_granularity()
+inline void
+guest_ds_granularity()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1545,8 +1433,8 @@ check::guest_ds_granularity()
     }
 }
 
-void
-check::guest_es_granularity()
+inline void
+guest_es_granularity()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1568,8 +1456,8 @@ check::guest_es_granularity()
     }
 }
 
-void
-check::guest_fs_granularity()
+inline void
+guest_fs_granularity()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1591,8 +1479,8 @@ check::guest_fs_granularity()
     }
 }
 
-void
-check::guest_gs_granularity()
+inline void
+guest_gs_granularity()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1614,20 +1502,20 @@ check::guest_gs_granularity()
     }
 }
 
-void
-check::guest_cs_access_rights_remaining_reserved_bit_0()
+inline void
+guest_cs_access_rights_remaining_reserved_bit_0()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
     }
 
-    if ((guest_cs_access_rights::get() & 0xFFFE0000UL) != 0UL) {
+    if ((guest_cs_access_rights::get() & 0xFFFE0000ULL) != 0ULL) {
         throw std::logic_error("guest cs access rights bits 31:17 must be 0");
     }
 }
 
-void
-check::guest_ss_access_rights_remaining_reserved_bit_0()
+inline void
+guest_ss_access_rights_remaining_reserved_bit_0()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1637,13 +1525,13 @@ check::guest_ss_access_rights_remaining_reserved_bit_0()
         return;
     }
 
-    if ((guest_ss_access_rights::get() & 0xFFFE0000UL) != 0UL) {
+    if ((guest_ss_access_rights::get() & 0xFFFE0000ULL) != 0ULL) {
         throw std::logic_error("guest ss access rights bits 31:17 must be 0");
     }
 }
 
-void
-check::guest_ds_access_rights_remaining_reserved_bit_0()
+inline void
+guest_ds_access_rights_remaining_reserved_bit_0()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1653,13 +1541,13 @@ check::guest_ds_access_rights_remaining_reserved_bit_0()
         return;
     }
 
-    if ((guest_ds_access_rights::get() & 0xFFFE0000UL) != 0UL) {
+    if ((guest_ds_access_rights::get() & 0xFFFE0000ULL) != 0ULL) {
         throw std::logic_error("guest ds access rights bits 31:17 must be 0");
     }
 }
 
-void
-check::guest_es_access_rights_remaining_reserved_bit_0()
+inline void
+guest_es_access_rights_remaining_reserved_bit_0()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1669,13 +1557,13 @@ check::guest_es_access_rights_remaining_reserved_bit_0()
         return;
     }
 
-    if ((guest_es_access_rights::get() & 0xFFFE0000UL) != 0UL) {
+    if ((guest_es_access_rights::get() & 0xFFFE0000ULL) != 0ULL) {
         throw std::logic_error("guest es access rights bits 31:17 must be 0");
     }
 }
 
-void
-check::guest_fs_access_rights_remaining_reserved_bit_0()
+inline void
+guest_fs_access_rights_remaining_reserved_bit_0()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1685,13 +1573,13 @@ check::guest_fs_access_rights_remaining_reserved_bit_0()
         return;
     }
 
-    if ((guest_fs_access_rights::get() & 0xFFFE0000UL) != 0UL) {
+    if ((guest_fs_access_rights::get() & 0xFFFE0000ULL) != 0ULL) {
         throw std::logic_error("guest fs access rights bits 31:17 must be 0");
     }
 }
 
-void
-check::guest_gs_access_rights_remaining_reserved_bit_0()
+inline void
+guest_gs_access_rights_remaining_reserved_bit_0()
 {
     if (vmcs::guest_rflags::virtual_8086_mode::is_enabled()) {
         return;
@@ -1701,23 +1589,23 @@ check::guest_gs_access_rights_remaining_reserved_bit_0()
         return;
     }
 
-    if ((guest_gs_access_rights::get() & 0xFFFE0000UL) != 0UL) {
+    if ((guest_gs_access_rights::get() & 0xFFFE0000ULL) != 0ULL) {
         throw std::logic_error("guest gs access rights bits 31:17 must be 0");
     }
 }
 
-void
-check::guest_tr_type_must_be_11()
+inline void
+guest_tr_type_must_be_11()
 {
     switch (guest_tr_access_rights::type::get()) {
-        case access_rights::type::read_write_accessed:
+        case x64::access_rights::type::read_write_accessed:
             if (vm_entry_controls::ia_32e_mode_guest::is_enabled()) {
                 throw std::logic_error("tr type cannot be 3 if ia_32e_mode_guest is enabled");
             }
 
             return;
 
-        case access_rights::type::read_execute_accessed:
+        case x64::access_rights::type::read_execute_accessed:
             return;
 
         default:
@@ -1725,32 +1613,32 @@ check::guest_tr_type_must_be_11()
     }
 }
 
-void
-check::guest_tr_must_be_a_system_descriptor()
+inline void
+guest_tr_must_be_a_system_descriptor()
 {
     if (guest_tr_access_rights::s::get() != 0) {
         throw std::logic_error("tr must be a system descriptor. S should equal 0");
     }
 }
 
-void
-check::guest_tr_must_be_present()
+inline void
+guest_tr_must_be_present()
 {
     if (guest_tr_access_rights::present::get() == 0) {
         throw std::logic_error("tr access rights present flag must be 1 ");
     }
 }
 
-void
-check::guest_tr_access_rights_reserved_must_be_0()
+inline void
+guest_tr_access_rights_reserved_must_be_0()
 {
     if (guest_tr_access_rights::reserved::get() != 0) {
         throw std::logic_error("tr access rights bits 11:8 must be 0");
     }
 }
 
-void
-check::guest_tr_granularity()
+inline void
+guest_tr_granularity()
 {
     auto tr_limit = vmcs::guest_tr_limit::get();
     auto g = guest_tr_access_rights::granularity::get();
@@ -1764,16 +1652,16 @@ check::guest_tr_granularity()
     }
 }
 
-void
-check::guest_tr_must_be_usable()
+inline void
+guest_tr_must_be_usable()
 {
     if (guest_tr_access_rights::unusable::get() != 0) {
         throw std::logic_error("tr must be usable");
     }
 }
 
-void
-check::guest_tr_access_rights_remaining_reserved_bit_0()
+inline void
+guest_tr_access_rights_remaining_reserved_bit_0()
 {
     auto tr_access = vmcs::guest_tr_access_rights::get();
 
@@ -1782,15 +1670,15 @@ check::guest_tr_access_rights_remaining_reserved_bit_0()
     }
 }
 
-void
-check::guest_ldtr_type_must_be_2()
+inline void
+guest_ldtr_type_must_be_2()
 {
     if (guest_ldtr_access_rights::unusable::get() != 0) {
         return;
     }
 
     switch (guest_ldtr_access_rights::type::get()) {
-        case access_rights::type::read_write:
+        case x64::access_rights::type::read_write:
             break;
 
         default:
@@ -1798,8 +1686,8 @@ check::guest_ldtr_type_must_be_2()
     }
 }
 
-void
-check::guest_ldtr_must_be_a_system_descriptor()
+inline void
+guest_ldtr_must_be_a_system_descriptor()
 {
     if (guest_ldtr_access_rights::unusable::get() != 0) {
         return;
@@ -1810,8 +1698,8 @@ check::guest_ldtr_must_be_a_system_descriptor()
     }
 }
 
-void
-check::guest_ldtr_must_be_present()
+inline void
+guest_ldtr_must_be_present()
 {
     if (guest_ldtr_access_rights::unusable::get() != 0) {
         return;
@@ -1822,8 +1710,8 @@ check::guest_ldtr_must_be_present()
     }
 }
 
-void
-check::guest_ldtr_access_rights_reserved_must_be_0()
+inline void
+guest_ldtr_access_rights_reserved_must_be_0()
 {
     if (guest_ldtr_access_rights::unusable::get() != 0) {
         return;
@@ -1834,8 +1722,8 @@ check::guest_ldtr_access_rights_reserved_must_be_0()
     }
 }
 
-void
-check::guest_ldtr_granularity()
+inline void
+guest_ldtr_granularity()
 {
     if (guest_ldtr_access_rights::unusable::get() != 0) {
         return;
@@ -1853,8 +1741,8 @@ check::guest_ldtr_granularity()
     }
 }
 
-void
-check::guest_ldtr_access_rights_remaining_reserved_bit_0()
+inline void
+guest_ldtr_access_rights_remaining_reserved_bit_0()
 {
     if (guest_ldtr_access_rights::unusable::get() != 0) {
         return;
@@ -1867,33 +1755,24 @@ check::guest_ldtr_access_rights_remaining_reserved_bit_0()
     }
 }
 
-void
-check::guest_descriptor_table_registers_all()
-{
-    check::guest_gdtr_base_must_be_canonical();
-    check::guest_idtr_base_must_be_canonical();
-    check::guest_gdtr_limit_reserved_bits();
-    check::guest_idtr_limit_reserved_bits();
-}
-
-void
-check::guest_gdtr_base_must_be_canonical()
+inline void
+guest_gdtr_base_must_be_canonical()
 {
     if (!x64::is_address_canonical(vmcs::guest_gdtr_base::get())) {
         throw std::logic_error("gdtr base is non-canonical");
     }
 }
 
-void
-check::guest_idtr_base_must_be_canonical()
+inline void
+guest_idtr_base_must_be_canonical()
 {
     if (!x64::is_address_canonical(vmcs::guest_idtr_base::get())) {
         throw std::logic_error("idtr base is non-canonical");
     }
 }
 
-void
-check::guest_gdtr_limit_reserved_bits()
+inline void
+guest_gdtr_limit_reserved_bits()
 {
     auto gdtr_limit = vmcs::guest_gdtr_limit::get();
 
@@ -1902,8 +1781,8 @@ check::guest_gdtr_limit_reserved_bits()
     }
 }
 
-void
-check::guest_idtr_limit_reserved_bits()
+inline void
+guest_idtr_limit_reserved_bits()
 {
     auto idtr_limit = vmcs::guest_idtr_limit::get();
 
@@ -1912,18 +1791,8 @@ check::guest_idtr_limit_reserved_bits()
     }
 }
 
-void
-check::guest_rip_and_rflags_all()
-{
-    check::guest_rip_upper_bits();
-    check::guest_rip_valid_addr();
-    check::guest_rflags_reserved_bits();
-    check::guest_rflags_vm_bit();
-    check::guest_rflag_interrupt_enable();
-}
-
-void
-check::guest_rip_upper_bits()
+inline void
+guest_rip_upper_bits()
 {
     auto cs_l = guest_cs_access_rights::l::get();
 
@@ -1936,8 +1805,8 @@ check::guest_rip_upper_bits()
     }
 }
 
-void
-check::guest_rip_valid_addr()
+inline void
+guest_rip_valid_addr()
 {
     auto cs_l = guest_cs_access_rights::l::get();
 
@@ -1949,13 +1818,13 @@ check::guest_rip_valid_addr()
         return;
     }
 
-    if (!is_linear_address_valid(vmcs::guest_rip::get())) {
+    if (!x64::is_linear_address_valid(vmcs::guest_rip::get())) {
         throw std::logic_error("rip bits must be canonical");
     }
 }
 
-void
-check::guest_rflags_reserved_bits()
+inline void
+guest_rflags_reserved_bits()
 {
     if (guest_rflags::reserved::get() != 0) {
         throw std::logic_error("reserved bits in rflags must be 0");
@@ -1966,8 +1835,8 @@ check::guest_rflags_reserved_bits()
     }
 }
 
-void
-check::guest_rflags_vm_bit()
+inline void
+guest_rflags_vm_bit()
 {
     if (vm_entry_controls::ia_32e_mode_guest::is_disabled() &&
         guest_cr0::protection_enable::is_enabled()) {
@@ -1979,8 +1848,8 @@ check::guest_rflags_vm_bit()
     }
 }
 
-void
-check::guest_rflag_interrupt_enable()
+inline void
+guest_rflag_interrupt_enable()
 {
     using namespace vm_entry_interruption_information_field;
 
@@ -1997,46 +1866,16 @@ check::guest_rflag_interrupt_enable()
     }
 }
 
-void
-check::guest_non_register_state_all()
-{
-    check::guest_valid_activity_state();
-    check::guest_activity_state_not_hlt_when_dpl_not_0();
-    check::guest_must_be_active_if_injecting_blocking_state();
-    check::guest_hlt_valid_interrupts();
-    check::guest_shutdown_valid_interrupts();
-    check::guest_sipi_valid_interrupts();
-    check::guest_valid_activity_state_and_smm();
-    check::guest_interruptibility_state_reserved();
-    check::guest_interruptibility_state_sti_mov_ss();
-    check::guest_interruptibility_state_sti();
-    check::guest_interruptibility_state_external_interrupt();
-    check::guest_interruptibility_state_nmi();
-    check::guest_interruptibility_not_in_smm();
-    check::guest_interruptibility_entry_to_smm();
-    check::guest_interruptibility_state_sti_and_nmi();
-    check::guest_interruptibility_state_virtual_nmi();
-    check::guest_interruptibility_state_enclave_interrupt();
-    check::guest_pending_debug_exceptions_reserved();
-    check::guest_pending_debug_exceptions_dbg_ctl();
-    check::guest_pending_debug_exceptions_rtm();
-    check::guest_vmcs_link_pointer_bits_11_0();
-    check::guest_vmcs_link_pointer_valid_addr();
-    check::guest_vmcs_link_pointer_first_word();
-    check::guest_vmcs_link_pointer_not_in_smm();
-    check::guest_vmcs_link_pointer_in_smm();
-}
-
-void
-check::guest_valid_activity_state()
+inline void
+guest_valid_activity_state()
 {
     if (vmcs::guest_activity_state::get() > 3) {
         throw std::logic_error("activity state must be 0 - 3");
     }
 }
 
-void
-check::guest_activity_state_not_hlt_when_dpl_not_0()
+inline void
+guest_activity_state_not_hlt_when_dpl_not_0()
 {
     if (vmcs::guest_activity_state::get() != vmcs::guest_activity_state::hlt) {
         return;
@@ -2047,8 +1886,8 @@ check::guest_activity_state_not_hlt_when_dpl_not_0()
     }
 }
 
-void
-check::guest_must_be_active_if_injecting_blocking_state()
+inline void
+guest_must_be_active_if_injecting_blocking_state()
 {
     if (vmcs::guest_activity_state::get() == vmcs::guest_activity_state::active) {
         return;
@@ -2065,8 +1904,8 @@ check::guest_must_be_active_if_injecting_blocking_state()
     }
 }
 
-void
-check::guest_hlt_valid_interrupts()
+inline void
+guest_hlt_valid_interrupts()
 {
     using namespace vm_entry_interruption_information_field;
 
@@ -2087,18 +1926,18 @@ check::guest_hlt_valid_interrupts()
             return;
 
         case interruption_type::hardware_exception:
-            if (vector == interrupt::debug_exception) {
+            if (vector == x64::interrupt::debug_exception) {
                 return;
             }
 
-            if (vector == interrupt::machine_check) {
+            if (vector == x64::interrupt::machine_check) {
                 return;
             }
 
             break;
 
         case interruption_type::other_event:
-            if (vector == interrupt::divide_error) {
+            if (vector == x64::interrupt::divide_error) {
                 return;
             }
 
@@ -2111,8 +1950,8 @@ check::guest_hlt_valid_interrupts()
     throw std::logic_error("invalid interruption combination for guest hlt");
 }
 
-void
-check::guest_shutdown_valid_interrupts()
+inline void
+guest_shutdown_valid_interrupts()
 {
     using namespace vm_entry_interruption_information_field;
 
@@ -2132,7 +1971,7 @@ check::guest_shutdown_valid_interrupts()
             return;
 
         case interruption_type::hardware_exception:
-            if (vector == interrupt::machine_check) {
+            if (vector == x64::interrupt::machine_check) {
                 return;
             }
 
@@ -2145,8 +1984,8 @@ check::guest_shutdown_valid_interrupts()
     throw std::logic_error("invalid interruption combination for guest shutdown");
 }
 
-void
-check::guest_sipi_valid_interrupts()
+inline void
+guest_sipi_valid_interrupts()
 {
     if (vm_entry_interruption_information_field::valid_bit::is_disabled()) {
         return;
@@ -2159,8 +1998,8 @@ check::guest_sipi_valid_interrupts()
     throw std::logic_error("invalid interruption combination");
 }
 
-void
-check::guest_valid_activity_state_and_smm()
+inline void
+guest_valid_activity_state_and_smm()
 {
     if (vm_entry_controls::entry_to_smm::is_disabled()) {
         return;
@@ -2173,16 +2012,16 @@ check::guest_valid_activity_state_and_smm()
     throw std::logic_error("activity state must not equal wait for sipi if entry to smm is enabled");
 }
 
-void
-check::guest_interruptibility_state_reserved()
+inline void
+guest_interruptibility_state_reserved()
 {
     if (vmcs::guest_interruptibility_state::reserved::get() != 0) {
         throw std::logic_error("interruptibility state reserved bits 31:5 must be 0");
     }
 }
 
-void
-check::guest_interruptibility_state_sti_mov_ss()
+inline void
+guest_interruptibility_state_sti_mov_ss()
 {
     auto sti = vmcs::guest_interruptibility_state::blocking_by_sti::get();
     auto mov_ss = vmcs::guest_interruptibility_state::blocking_by_mov_ss::get();
@@ -2193,8 +2032,8 @@ check::guest_interruptibility_state_sti_mov_ss()
 
 }
 
-void
-check::guest_interruptibility_state_sti()
+inline void
+guest_interruptibility_state_sti()
 {
     if (guest_rflags::interrupt_enable_flag::is_enabled()) {
         return;
@@ -2205,8 +2044,8 @@ check::guest_interruptibility_state_sti()
     }
 }
 
-void
-check::guest_interruptibility_state_external_interrupt()
+inline void
+guest_interruptibility_state_external_interrupt()
 {
     using namespace vm_entry_interruption_information_field;
 
@@ -2229,8 +2068,8 @@ check::guest_interruptibility_state_external_interrupt()
     }
 }
 
-void
-check::guest_interruptibility_state_nmi()
+inline void
+guest_interruptibility_state_nmi()
 {
     using namespace vm_entry_interruption_information_field;
 
@@ -2248,13 +2087,13 @@ check::guest_interruptibility_state_nmi()
     }
 }
 
-void
-check::guest_interruptibility_not_in_smm()
+inline void
+guest_interruptibility_not_in_smm()
 {
 }
 
-void
-check::guest_interruptibility_entry_to_smm()
+inline void
+guest_interruptibility_entry_to_smm()
 {
     if (vm_entry_controls::entry_to_smm::is_disabled()) {
         return;
@@ -2266,8 +2105,8 @@ check::guest_interruptibility_entry_to_smm()
     }
 }
 
-void
-check::guest_interruptibility_state_sti_and_nmi()
+inline void
+guest_interruptibility_state_sti_and_nmi()
 {
     using namespace vm_entry_interruption_information_field;
 
@@ -2285,8 +2124,8 @@ check::guest_interruptibility_state_sti_and_nmi()
     }
 }
 
-void
-check::guest_interruptibility_state_virtual_nmi()
+inline void
+guest_interruptibility_state_virtual_nmi()
 {
     using namespace vm_entry_interruption_information_field;
 
@@ -2308,8 +2147,8 @@ check::guest_interruptibility_state_virtual_nmi()
     }
 }
 
-void
-check::guest_interruptibility_state_enclave_interrupt()
+inline void
+guest_interruptibility_state_enclave_interrupt()
 {
     if (guest_interruptibility_state::enclave_interruption::get() == 0) {
         return;
@@ -2326,16 +2165,16 @@ check::guest_interruptibility_state_enclave_interrupt()
     }
 }
 
-void
-check::guest_pending_debug_exceptions_reserved()
+inline void
+guest_pending_debug_exceptions_reserved()
 {
     if (vmcs::guest_pending_debug_exceptions::reserved::get() != 0) {
         throw std::logic_error("pending debug exception reserved bits must be 0");
     }
 }
 
-void
-check::guest_pending_debug_exceptions_dbg_ctl()
+inline void
+guest_pending_debug_exceptions_dbg_ctl()
 {
     auto sti = vmcs::guest_interruptibility_state::blocking_by_sti::get();
     auto mov_ss = vmcs::guest_interruptibility_state::blocking_by_mov_ss::get();
@@ -2360,8 +2199,8 @@ check::guest_pending_debug_exceptions_dbg_ctl()
     }
 }
 
-void
-check::guest_pending_debug_exceptions_rtm()
+inline void
+guest_pending_debug_exceptions_rtm()
 {
     if (guest_pending_debug_exceptions::rtm::is_disabled()) {
         return;
@@ -2387,8 +2226,8 @@ check::guest_pending_debug_exceptions_rtm()
     }
 }
 
-void
-check::guest_vmcs_link_pointer_bits_11_0()
+inline void
+guest_vmcs_link_pointer_bits_11_0()
 {
     auto vmcs_link_pointer = vmcs::vmcs_link_pointer::get();
 
@@ -2401,8 +2240,8 @@ check::guest_vmcs_link_pointer_bits_11_0()
     }
 }
 
-void
-check::guest_vmcs_link_pointer_valid_addr()
+inline void
+guest_vmcs_link_pointer_valid_addr()
 {
     auto vmcs_link_pointer = vmcs::vmcs_link_pointer::get();
 
@@ -2415,8 +2254,8 @@ check::guest_vmcs_link_pointer_valid_addr()
     }
 }
 
-void
-check::guest_vmcs_link_pointer_first_word()
+inline void
+guest_vmcs_link_pointer_first_word()
 {
     auto vmcs_link_pointer = vmcs::vmcs_link_pointer::get();
 
@@ -2450,25 +2289,18 @@ check::guest_vmcs_link_pointer_first_word()
     }
 }
 
-void
-check::guest_vmcs_link_pointer_not_in_smm()
+inline void
+guest_vmcs_link_pointer_not_in_smm()
 {
 }
 
-void
-check::guest_vmcs_link_pointer_in_smm()
+inline void
+guest_vmcs_link_pointer_in_smm()
 {
 }
 
-void
-check::guest_pdptes_all()
-{
-    check::guest_valid_pdpte_with_ept_disabled();
-    check::guest_valid_pdpte_with_ept_enabled();
-}
-
-void
-check::guest_valid_pdpte_with_ept_disabled()
+inline void
+guest_valid_pdpte_with_ept_disabled()
 {
     if (guest_cr0::paging::is_disabled()) {
         return;
@@ -2487,7 +2319,7 @@ check::guest_valid_pdpte_with_ept_disabled()
     }
 
     auto cr3 = vmcs::guest_cr3::get();
-    auto virt_pdpt = static_cast<uint64_t *>(g_mm->physint_to_virtptr(cr3 & 0xFFFFFFE0UL));
+    auto virt_pdpt = static_cast<uint64_t *>(g_mm->physint_to_virtptr(cr3 & 0xFFFFFFE0ULL));
 
     if (virt_pdpt == nullptr) {
         throw std::logic_error("pdpt address is null");
@@ -2510,8 +2342,8 @@ check::guest_valid_pdpte_with_ept_disabled()
     }
 }
 
-void
-check::guest_valid_pdpte_with_ept_enabled()
+inline void
+guest_valid_pdpte_with_ept_enabled()
 {
     if (guest_cr0::paging::is_disabled()) {
         return;
@@ -2549,3 +2381,188 @@ check::guest_valid_pdpte_with_ept_enabled()
         throw std::logic_error("ppdpte3 reserved bits set with ept and pae paging enabled");
     }
 }
+
+inline void
+guest_segment_registers_all()
+{
+    guest_tr_ti_bit_equals_0();
+    guest_ldtr_ti_bit_equals_0();
+    guest_ss_and_cs_rpl_are_the_same();
+    guest_cs_base_is_shifted();
+    guest_ss_base_is_shifted();
+    guest_ds_base_is_shifted();
+    guest_es_base_is_shifted();
+    guest_fs_base_is_shifted();
+    guest_gs_base_is_shifted();
+    guest_tr_base_is_canonical();
+    guest_fs_base_is_canonical();
+    guest_gs_base_is_canonical();
+    guest_ldtr_base_is_canonical();
+    guest_cs_base_upper_dword_0();
+    guest_ss_base_upper_dword_0();
+    guest_ds_base_upper_dword_0();
+    guest_es_base_upper_dword_0();
+    guest_cs_limit();
+    guest_ss_limit();
+    guest_ds_limit();
+    guest_es_limit();
+    guest_gs_limit();
+    guest_fs_limit();
+    guest_v8086_cs_access_rights();
+    guest_v8086_ss_access_rights();
+    guest_v8086_ds_access_rights();
+    guest_v8086_es_access_rights();
+    guest_v8086_fs_access_rights();
+    guest_v8086_gs_access_rights();
+    guest_cs_access_rights_type();
+    guest_ss_access_rights_type();
+    guest_ds_access_rights_type();
+    guest_es_access_rights_type();
+    guest_fs_access_rights_type();
+    guest_gs_access_rights_type();
+    guest_cs_is_not_a_system_descriptor();
+    guest_ss_is_not_a_system_descriptor();
+    guest_ds_is_not_a_system_descriptor();
+    guest_es_is_not_a_system_descriptor();
+    guest_fs_is_not_a_system_descriptor();
+    guest_gs_is_not_a_system_descriptor();
+    guest_cs_type_not_equal_3();
+    guest_cs_dpl_adheres_to_ss_dpl();
+    guest_ss_dpl_must_equal_rpl();
+    guest_ss_dpl_must_equal_zero();
+    guest_ds_dpl();
+    guest_es_dpl();
+    guest_fs_dpl();
+    guest_gs_dpl();
+    guest_cs_must_be_present();
+    guest_ss_must_be_present_if_usable();
+    guest_ds_must_be_present_if_usable();
+    guest_es_must_be_present_if_usable();
+    guest_fs_must_be_present_if_usable();
+    guest_gs_must_be_present_if_usable();
+    guest_cs_access_rights_reserved_must_be_0();
+    guest_ss_access_rights_reserved_must_be_0();
+    guest_ds_access_rights_reserved_must_be_0();
+    guest_es_access_rights_reserved_must_be_0();
+    guest_fs_access_rights_reserved_must_be_0();
+    guest_gs_access_rights_reserved_must_be_0();
+    guest_cs_db_must_be_0_if_l_equals_1();
+    guest_cs_granularity();
+    guest_ss_granularity();
+    guest_ds_granularity();
+    guest_es_granularity();
+    guest_fs_granularity();
+    guest_gs_granularity();
+    guest_cs_access_rights_remaining_reserved_bit_0();
+    guest_ss_access_rights_remaining_reserved_bit_0();
+    guest_ds_access_rights_remaining_reserved_bit_0();
+    guest_es_access_rights_remaining_reserved_bit_0();
+    guest_fs_access_rights_remaining_reserved_bit_0();
+    guest_gs_access_rights_remaining_reserved_bit_0();
+    guest_tr_type_must_be_11();
+    guest_tr_must_be_a_system_descriptor();
+    guest_tr_must_be_present();
+    guest_tr_access_rights_reserved_must_be_0();
+    guest_tr_granularity();
+    guest_tr_must_be_usable();
+    guest_tr_access_rights_remaining_reserved_bit_0();
+    guest_ldtr_type_must_be_2();
+    guest_ldtr_must_be_a_system_descriptor();
+    guest_ldtr_must_be_present();
+    guest_ldtr_access_rights_reserved_must_be_0();
+    guest_ldtr_granularity();
+    guest_ldtr_access_rights_remaining_reserved_bit_0();
+}
+
+inline void
+guest_descriptor_table_registers_all()
+{
+    guest_gdtr_base_must_be_canonical();
+    guest_idtr_base_must_be_canonical();
+    guest_gdtr_limit_reserved_bits();
+    guest_idtr_limit_reserved_bits();
+}
+
+inline void
+guest_rip_and_rflags_all()
+{
+    guest_rip_upper_bits();
+    guest_rip_valid_addr();
+    guest_rflags_reserved_bits();
+    guest_rflags_vm_bit();
+    guest_rflag_interrupt_enable();
+}
+
+inline void
+guest_non_register_state_all()
+{
+    guest_valid_activity_state();
+    guest_activity_state_not_hlt_when_dpl_not_0();
+    guest_must_be_active_if_injecting_blocking_state();
+    guest_hlt_valid_interrupts();
+    guest_shutdown_valid_interrupts();
+    guest_sipi_valid_interrupts();
+    guest_valid_activity_state_and_smm();
+    guest_interruptibility_state_reserved();
+    guest_interruptibility_state_sti_mov_ss();
+    guest_interruptibility_state_sti();
+    guest_interruptibility_state_external_interrupt();
+    guest_interruptibility_state_nmi();
+    guest_interruptibility_not_in_smm();
+    guest_interruptibility_entry_to_smm();
+    guest_interruptibility_state_sti_and_nmi();
+    guest_interruptibility_state_virtual_nmi();
+    guest_interruptibility_state_enclave_interrupt();
+    guest_pending_debug_exceptions_reserved();
+    guest_pending_debug_exceptions_dbg_ctl();
+    guest_pending_debug_exceptions_rtm();
+    guest_vmcs_link_pointer_bits_11_0();
+    guest_vmcs_link_pointer_valid_addr();
+    guest_vmcs_link_pointer_first_word();
+    guest_vmcs_link_pointer_not_in_smm();
+    guest_vmcs_link_pointer_in_smm();
+}
+
+inline void
+guest_pdptes_all()
+{
+    guest_valid_pdpte_with_ept_disabled();
+    guest_valid_pdpte_with_ept_enabled();
+}
+
+inline void
+guest_control_registers_debug_registers_and_msrs_all()
+{
+    guest_cr0_for_unsupported_bits();
+    guest_cr0_verify_paging_enabled();
+    guest_cr4_for_unsupported_bits();
+    guest_load_debug_controls_verify_reserved();
+    guest_verify_ia_32e_mode_enabled();
+    guest_verify_ia_32e_mode_disabled();
+    guest_cr3_for_unsupported_bits();
+    guest_load_debug_controls_verify_dr7();
+    guest_ia32_sysenter_esp_canonical_address();
+    guest_ia32_sysenter_eip_canonical_address();
+    guest_verify_load_ia32_perf_global_ctrl();
+    guest_verify_load_ia32_pat();
+    guest_verify_load_ia32_efer();
+    guest_verify_load_ia32_bndcfgs();
+}
+
+inline void
+guest_state_all()
+{
+    guest_control_registers_debug_registers_and_msrs_all();
+    guest_segment_registers_all();
+    guest_descriptor_table_registers_all();
+    guest_rip_and_rflags_all();
+    guest_non_register_state_all();
+    guest_pdptes_all();
+}
+
+}
+}
+}
+
+
+#endif

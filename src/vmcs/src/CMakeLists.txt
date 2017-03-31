@@ -17,10 +17,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMPILING_VMCS")
 
 list(APPEND SOURCES
     vmcs_intel_x64.cpp
-    vmcs_intel_x64_check_all.cpp
-    vmcs_intel_x64_check_controls.cpp
-    vmcs_intel_x64_check_guest.cpp
-    vmcs_intel_x64_check_host.cpp
     vmcs_intel_x64_host_vm_state.cpp
     vmcs_intel_x64_vmm_state.cpp
 )

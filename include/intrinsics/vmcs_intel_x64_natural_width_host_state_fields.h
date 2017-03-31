@@ -23,7 +23,7 @@
 #ifndef VMCS_INTEL_X64_NATURAL_WIDTH_HOST_STATE_FIELDS_H
 #define VMCS_INTEL_X64_NATURAL_WIDTH_HOST_STATE_FIELDS_H
 
-#include <vmcs/vmcs_intel_x64.h>
+#include <intrinsics/vmcs_intel_x64_helpers.h>
 
 /// Intel x86_64 VMCS Natural-Width Host-State Fields
 ///
@@ -537,39 +537,28 @@ namespace host_cr0
     {
         bfdebug << "host cr0 enabled flags:" << bfendl;
 
-        if (protection_enable::is_enabled()) {
+        if (protection_enable::is_enabled())
             bfdebug << "    - " << protection_enable::name << bfendl;
-}
-        if (monitor_coprocessor::is_enabled()) {
+        if (monitor_coprocessor::is_enabled())
             bfdebug << "    - " << monitor_coprocessor::name << bfendl;
-}
-        if (emulation::is_enabled()) {
+        if (emulation::is_enabled())
             bfdebug << "    - " << emulation::name << bfendl;
-}
-        if (task_switched::is_enabled()) {
+        if (task_switched::is_enabled())
             bfdebug << "    - " << task_switched::name << bfendl;
-}
-        if (extension_type::is_enabled()) {
+        if (extension_type::is_enabled())
             bfdebug << "    - " << extension_type::name << bfendl;
-}
-        if (numeric_error::is_enabled()) {
+        if (numeric_error::is_enabled())
             bfdebug << "    - " << numeric_error::name << bfendl;
-}
-        if (write_protect::is_enabled()) {
+        if (write_protect::is_enabled())
             bfdebug << "    - " << write_protect::name << bfendl;
-}
-        if (alignment_mask::is_enabled()) {
+        if (alignment_mask::is_enabled())
             bfdebug << "    - " << alignment_mask::name << bfendl;
-}
-        if (not_write_through::is_enabled()) {
+        if (not_write_through::is_enabled())
             bfdebug << "    - " << not_write_through::name << bfendl;
-}
-        if (cache_disable::is_enabled()) {
+        if (cache_disable::is_enabled())
             bfdebug << "    - " << cache_disable::name << bfendl;
-}
-        if (paging::is_enabled()) {
+        if (paging::is_enabled())
             bfdebug << "    - " << paging::name << bfendl;
-}
     }
 }
 
@@ -1437,66 +1426,46 @@ namespace host_cr4
     {
         bfdebug << "host cr4 enabled flags:" << bfendl;
 
-        if (v8086_mode_extensions::is_enabled()) {
+        if (v8086_mode_extensions::is_enabled())
             bfdebug << "    - " << v8086_mode_extensions::name << bfendl;
-}
-        if (protected_mode_virtual_interrupts::is_enabled()) {
+        if (protected_mode_virtual_interrupts::is_enabled())
             bfdebug << "    - " << protected_mode_virtual_interrupts::name << bfendl;
-}
-        if (time_stamp_disable::is_enabled()) {
+        if (time_stamp_disable::is_enabled())
             bfdebug << "    - " << time_stamp_disable::name << bfendl;
-}
-        if (debugging_extensions::is_enabled()) {
+        if (debugging_extensions::is_enabled())
             bfdebug << "    - " << debugging_extensions::name << bfendl;
-}
-        if (page_size_extensions::is_enabled()) {
+        if (page_size_extensions::is_enabled())
             bfdebug << "    - " << page_size_extensions::name << bfendl;
-}
-        if (physical_address_extensions::is_enabled()) {
+        if (physical_address_extensions::is_enabled())
             bfdebug << "    - " << physical_address_extensions::name << bfendl;
-}
-        if (machine_check_enable::is_enabled()) {
+        if (machine_check_enable::is_enabled())
             bfdebug << "    - " << machine_check_enable::name << bfendl;
-}
-        if (page_global_enable::is_enabled()) {
+        if (page_global_enable::is_enabled())
             bfdebug << "    - " << page_global_enable::name << bfendl;
-}
-        if (performance_monitor_counter_enable::is_enabled()) {
+        if (performance_monitor_counter_enable::is_enabled())
             bfdebug << "    - " << performance_monitor_counter_enable::name << bfendl;
-}
-        if (osfxsr::is_enabled()) {
+        if (osfxsr::is_enabled())
             bfdebug << "    - " << osfxsr::name << bfendl;
-}
-        if (osxmmexcpt::is_enabled()) {
+        if (osxmmexcpt::is_enabled())
             bfdebug << "    - " << osxmmexcpt::name << bfendl;
-}
-        if (vmx_enable_bit::is_enabled()) {
+        if (vmx_enable_bit::is_enabled())
             bfdebug << "    - " << vmx_enable_bit::name << bfendl;
-}
-        if (smx_enable_bit::is_enabled()) {
+        if (smx_enable_bit::is_enabled())
             bfdebug << "    - " << smx_enable_bit::name << bfendl;
-}
-        if (smx_enable_bit::is_enabled()) {
+        if (smx_enable_bit::is_enabled())
             bfdebug << "    - " << smx_enable_bit::name << bfendl;
-}
-        if (fsgsbase_enable_bit::is_enabled()) {
+        if (fsgsbase_enable_bit::is_enabled())
             bfdebug << "    - " << fsgsbase_enable_bit::name << bfendl;
-}
-        if (pcid_enable_bit::is_enabled()) {
+        if (pcid_enable_bit::is_enabled())
             bfdebug << "    - " << pcid_enable_bit::name << bfendl;
-}
-        if (osxsave::is_enabled()) {
+        if (osxsave::is_enabled())
             bfdebug << "    - " << osxsave::name << bfendl;
-}
-        if (smep_enable_bit::is_enabled()) {
+        if (smep_enable_bit::is_enabled())
             bfdebug << "    - " << smep_enable_bit::name << bfendl;
-}
-        if (smap_enable_bit::is_enabled()) {
+        if (smap_enable_bit::is_enabled())
             bfdebug << "    - " << smap_enable_bit::name << bfendl;
-}
-        if (protection_key_enable_bit::is_enabled()) {
+        if (protection_key_enable_bit::is_enabled())
             bfdebug << "    - " << protection_key_enable_bit::name << bfendl;
-}
     }
 }
 

@@ -23,21 +23,23 @@
 #ifndef VMCS_INTEL_X64_DEBUG_H
 #define VMCS_INTEL_X64_DEBUG_H
 
-#include <vmcs/vmcs_intel_x64_16bit_control_fields.h>
-#include <vmcs/vmcs_intel_x64_16bit_guest_state_fields.h>
-#include <vmcs/vmcs_intel_x64_16bit_host_state_fields.h>
-#include <vmcs/vmcs_intel_x64_64bit_control_fields.h>
-#include <vmcs/vmcs_intel_x64_64bit_read_only_data_fields.h>
-#include <vmcs/vmcs_intel_x64_64bit_guest_state_fields.h>
-#include <vmcs/vmcs_intel_x64_64bit_host_state_fields.h>
-#include <vmcs/vmcs_intel_x64_32bit_control_fields.h>
-#include <vmcs/vmcs_intel_x64_32bit_read_only_data_fields.h>
-#include <vmcs/vmcs_intel_x64_32bit_guest_state_fields.h>
-#include <vmcs/vmcs_intel_x64_32bit_host_state_field.h>
-#include <vmcs/vmcs_intel_x64_natural_width_control_fields.h>
-#include <vmcs/vmcs_intel_x64_natural_width_read_only_data_fields.h>
-#include <vmcs/vmcs_intel_x64_natural_width_guest_state_fields.h>
-#include <vmcs/vmcs_intel_x64_natural_width_host_state_fields.h>
+#include <bfdebug.h>
+
+#include <intrinsics/vmcs_intel_x64_16bit_control_fields.h>
+#include <intrinsics/vmcs_intel_x64_16bit_guest_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_16bit_host_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_64bit_control_fields.h>
+#include <intrinsics/vmcs_intel_x64_64bit_read_only_data_fields.h>
+#include <intrinsics/vmcs_intel_x64_64bit_guest_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_64bit_host_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_32bit_control_fields.h>
+#include <intrinsics/vmcs_intel_x64_32bit_read_only_data_fields.h>
+#include <intrinsics/vmcs_intel_x64_32bit_guest_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_32bit_host_state_field.h>
+#include <intrinsics/vmcs_intel_x64_natural_width_control_fields.h>
+#include <intrinsics/vmcs_intel_x64_natural_width_read_only_data_fields.h>
+#include <intrinsics/vmcs_intel_x64_natural_width_guest_state_fields.h>
+#include <intrinsics/vmcs_intel_x64_natural_width_host_state_fields.h>
 
 // *INDENT-OFF*
 
@@ -886,7 +888,7 @@ namespace debug
 
         if (!vmcs::secondary_processor_based_vm_execution_controls::exists())
         {
-            std::cout << "doesn't exist" << bfendl;
+            bfdebug << "doesn't exist" << bfendl;
             return;
         }
 
@@ -1014,18 +1016,16 @@ namespace debug
     {
         bfdebug << "vmcs::" << name << ": ";
 
-        if (!exists) {
-            std::cout << "doesn't exist" << bfendl;
-        } else {
-            std::cout << view_as_pointer(vm::read(addr, name)) << bfendl;
-}
+        if (!exists)
+            bfdebug << "doesn't exist" << bfendl;
+        else
+            bfdebug << view_as_pointer(vm::read(addr, name)) << bfendl;
     }
 
     inline void dump_vm_control(const char *name, bool is_set)
     {
-        if (is_set) {
+        if (is_set)
             bfdebug << "    - " << name << bfendl;
-}
     }
 }
 }
