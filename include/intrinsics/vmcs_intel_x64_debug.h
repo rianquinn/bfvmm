@@ -886,8 +886,7 @@ namespace debug
     {
         bfdebug << "vmcs::secondary_processor_based_vm_execution_controls enabled flags:" << bfendl;
 
-        if (!vmcs::secondary_processor_based_vm_execution_controls::exists())
-        {
+        if (!vmcs::secondary_processor_based_vm_execution_controls::exists()) {
             bfdebug << "doesn't exist" << bfendl;
             return;
         }
@@ -1016,16 +1015,18 @@ namespace debug
     {
         bfdebug << "vmcs::" << name << ": ";
 
-        if (!exists)
+        if (!exists) {
             bfdebug << "doesn't exist" << bfendl;
-        else
+        } else {
             bfdebug << view_as_pointer(vm::read(addr, name)) << bfendl;
+        }
     }
 
     inline void dump_vm_control(const char *name, bool is_set)
     {
-        if (is_set)
+        if (is_set) {
             bfdebug << "    - " << name << bfendl;
+        }
     }
 }
 }

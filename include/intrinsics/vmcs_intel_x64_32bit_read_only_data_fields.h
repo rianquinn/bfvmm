@@ -57,8 +57,7 @@ namespace vm_instruction_error
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
     auto __vm_instruction_error_description(T error)
     {
-        switch (error)
-        {
+        switch (error) {
             case 1U:
                 return "VMCALL executed in VMX root operation";
 
@@ -147,8 +146,9 @@ namespace vm_instruction_error
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
     auto vm_instruction_error_description(T error, bool exists)
     {
-        if (!exists)
+        if (!exists) {
             throw std::logic_error("vm_instruction_error() failed: vm_instruction_error field doesn't exist");
+        }
 
         return __vm_instruction_error_description(error);
     }
@@ -156,11 +156,13 @@ namespace vm_instruction_error
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
     auto vm_instruction_error_description_if_exists(T error, bool verbose, bool exists)
     {
-        if (!exists && verbose)
+        if (!exists && verbose) {
             bfwarning << "vm_instruction_error() failed: vm_instruction_error field doesn't exist" << '\n';
+        }
 
-        if (exists)
+        if (exists) {
             return __vm_instruction_error_description(error);
+        }
 
         return "";
     }
@@ -265,8 +267,7 @@ namespace exit_reason
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
         auto __basic_exit_reason_description(T reason)
         {
-            switch (reason)
-            {
+            switch (reason) {
                 case exception_or_non_maskable_interrupt:
                     return "exception_or_non_maskable_interrupt";
 
@@ -449,14 +450,15 @@ namespace exit_reason
 
                 default:
                     return "unknown";
-            };
+            }
         }
 
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
         auto basic_exit_reason_description(T reason, bool exists)
         {
-            if (!exists)
+            if (!exists) {
                 throw std::logic_error("basic_exit_reason_description failed: exit_reason field doesn't exist");
+            }
 
             return __basic_exit_reason_description(reason);
         }
@@ -464,11 +466,13 @@ namespace exit_reason
         template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
         auto basic_exit_reason_description_if_exists(T reason, bool verbose, bool exists)
         {
-            if (!exists && verbose)
+            if (!exists && verbose) {
                 bfwarning << "basic_exit_reason_description_if_exists failed: exit_reason field doesn't exist" << '\n';
+            }
 
-            if (exists)
+            if (exists) {
                 return __basic_exit_reason_description(reason);
+            }
 
             return "";
         }
