@@ -37,10 +37,7 @@
 #include <memory_manager/memory_manager_x64.h>
 #include <memory_manager/root_page_table_x64.h>
 
-#include <intrinsics/x64.h>
-#include <intrinsics/tlb_x64.h>
-#include <intrinsics/msrs_x64.h>
-#include <intrinsics/cache_x64.h>
+#include <intrinsics/x86/common_x64.h>
 
 // -----------------------------------------------------------------------------
 // Exports

@@ -22,7 +22,7 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
-#include <intrinsics/rflags_x64.h>
+#include <intrinsics/x86/common/rflags_x64.h>
 
 extern "C" uint64_t
 _read_rflags(void) noexcept

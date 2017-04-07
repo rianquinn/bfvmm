@@ -32,7 +32,7 @@
 #include <memory_manager/mem_attr_x64.h>
 #include <memory_manager/page_table_x64.h>
 
-#include <intrinsics/x64.h>
+#include <intrinsics/x86/common_x64.h>
 
 // -----------------------------------------------------------------------------
 // Exports

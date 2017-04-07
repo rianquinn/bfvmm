@@ -19,50 +19,24 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#undef GSL_THROW_ON_CONTRACT_VIOLATION
-#define GSL_TERMINATE_ON_CONTRACT_VIOLATION
+#ifndef INTRINSICS_X86_COMMON_X64_H
+#define INTRINSICS_X86_COMMON_X64_H
 
-#include <bfgsl.h>
-#include <bfdebug.h>
-
+#include <intrinsics/x86/common/msrs/msrs_x64.h>
 #include <intrinsics/x86/common/cpuid/cpuid_x64.h>
+#include <intrinsics/x86/common/cache_x64.h>
+#include <intrinsics/x86/common/debug_x64.h>
+#include <intrinsics/x86/common/gdt_x64.h>
+#include <intrinsics/x86/common/idt_x64.h>
+#include <intrinsics/x86/common/pdpte_x64.h>
+#include <intrinsics/x86/common/pm_x64.h>
+#include <intrinsics/x86/common/portio_x64.h>
+#include <intrinsics/x86/common/rdtsc_x64.h>
+#include <intrinsics/x86/common/rflags_x64.h>
+#include <intrinsics/x86/common/srs_x64.h>
+#include <intrinsics/x86/common/thread_context_x64.h>
+#include <intrinsics/x86/common/tlb_x64.h>
+#include <intrinsics/x86/common/tss_x64.h>
+#include <intrinsics/x86/common/x64.h>
 
-extern "C" uint32_t
-_cpuid_eax(uint32_t val) noexcept
-{
-    std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
-    abort();
-}
-
-extern "C" uint32_t
-_cpuid_ebx(uint32_t val) noexcept
-{
-    std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
-    abort();
-}
-
-extern "C" uint32_t
-_cpuid_ecx(uint32_t val) noexcept
-{
-    std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
-    abort();
-}
-
-extern "C" uint32_t
-_cpuid_edx(uint32_t val) noexcept
-{
-    std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
-    abort();
-}
-
-extern "C" void
-_cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept
-{
-    ignored(eax);
-    ignored(ebx);
-    ignored(ecx);
-    ignored(edx);
-
-    std::cerr << __FUNC__ << " called" << '\n';
-    abort();
-}
+#endif

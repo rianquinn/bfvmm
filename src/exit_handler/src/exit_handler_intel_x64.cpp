@@ -30,17 +30,8 @@
 #include <exit_handler/exit_handler_intel_x64_entry.h>
 #include <exit_handler/exit_handler_intel_x64_support.h>
 
-#include <intrinsics/pm_x64.h>
-#include <intrinsics/cache_x64.h>
-#include <intrinsics/cpuid_x64.h>
-#include <intrinsics/vmx_intel_x64.h>
-#include <intrinsics/vmcs_intel_x64_32bit_guest_state_fields.h>
-#include <intrinsics/vmcs_intel_x64_32bit_read_only_data_fields.h>
-#include <intrinsics/vmcs_intel_x64_natural_width_guest_state_fields.h>
-#include <intrinsics/vmcs_intel_x64_natural_width_read_only_data_fields.h>
-#include <intrinsics/vmcs_intel_x64_64bit_guest_state_fields.h>
-#include <intrinsics/vmcs_intel_x64_check.h>
-#include <intrinsics/vmcs_intel_x64_debug.h>
+#include <intrinsics/x86/common_x64.h>
+#include <intrinsics/x86/intel_x64.h>
 
 using namespace x64;
 using namespace intel_x64;

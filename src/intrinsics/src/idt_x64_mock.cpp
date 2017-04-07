@@ -22,7 +22,7 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
-#include <intrinsics/idt_x64.h>
+#include <intrinsics/x86/common/idt_x64.h>
 
 extern "C" void
 _read_idt(idt_reg_x64_t *idt_reg) noexcept

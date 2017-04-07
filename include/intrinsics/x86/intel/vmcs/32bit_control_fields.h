@@ -23,8 +23,8 @@
 #define VMCS_INTEL_X64_32BIT_CONTROL_FIELDS_H
 
 #include <bfbitmanip.h>
-#include <intrinsics/vmcs_intel_x64_helpers.h>
-#include <intrinsics/msrs_intel_x64.h>
+#include <intrinsics/x86/intel/vmcs/helpers.h>
+#include <intrinsics/x86/intel/msrs/msrs_intel_x64.h>
 
 /// Intel x86_64 VMCS 32-bit Control Fields
 ///

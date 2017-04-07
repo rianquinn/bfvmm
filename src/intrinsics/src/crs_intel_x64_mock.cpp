@@ -22,7 +22,7 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
-#include <intrinsics/crs_intel_x64.h>
+#include <intrinsics/x86/intel/crs_intel_x64.h>
 
 extern "C" uint64_t
 _read_cr0(void) noexcept

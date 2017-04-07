@@ -22,7 +22,7 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
-#include <intrinsics/srs_x64.h>
+#include <intrinsics/x86/common/srs_x64.h>
 
 extern "C" uint16_t
 _read_es(void) noexcept

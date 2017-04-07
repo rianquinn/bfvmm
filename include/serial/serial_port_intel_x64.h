@@ -26,7 +26,7 @@
 #include <memory>
 
 #include <bfconstants.h>
-#include <intrinsics/portio_x64.h>
+#include <intrinsics/x86/common_x64.h>
 
 // -----------------------------------------------------------------------------
 // Exports

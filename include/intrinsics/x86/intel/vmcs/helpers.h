@@ -27,9 +27,9 @@
 
 #include <bfstring.h>
 
-#include <intrinsics/x64.h>
-#include <intrinsics/vmx_intel_x64.h>
-#include <intrinsics/msrs_intel_x64.h>
+#include <intrinsics/x86/common/x64.h>
+#include <intrinsics/x86/intel/vmx_intel_x64.h>
+#include <intrinsics/x86/intel/msrs/msrs_intel_x64.h>
 
 // *INDENT-OFF*
 

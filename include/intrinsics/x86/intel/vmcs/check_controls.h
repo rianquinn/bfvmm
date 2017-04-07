@@ -23,8 +23,11 @@
 #define VMCS_INTEL_X64_CHECK_CONTROLS_H
 
 #include <type_traits>
-#include <intrinsics/x64.h>
-#include <intrinsics/vmcs_intel_x64_32bit_control_fields.h>
+
+#include <intrinsics/x86/common/x64.h>
+#include <intrinsics/x86/intel/vmcs/32bit_control_fields.h>
+
+#include <memory_manager/memory_manager_x64.h>
 
 /// Intel x86_64 VMCS Check Controls
 ///

@@ -23,8 +23,8 @@
 #ifndef VMCS_INTEL_X64_NATURAL_WIDTH_READ_ONLY_DATA_FIELDS_H
 #define VMCS_INTEL_X64_NATURAL_WIDTH_READ_ONLY_DATA_FIELDS_H
 
-#include <intrinsics/vmcs_intel_x64_helpers.h>
-#include <intrinsics/portio_x64.h>
+#include <intrinsics/x86/intel/vmcs/helpers.h>
+#include <intrinsics/x86/common/portio_x64.h>
 
 /// Intel x86_64 VMCS Natural-Width Read-Only Data Fields
 ///
