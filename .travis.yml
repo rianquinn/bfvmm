@@ -67,6 +67,7 @@ before_script:
   - cmake ..
   - make install
   - popd
+  - rm -Rf bfsdk
 
 #
 # Build Matrix
@@ -152,7 +153,21 @@ matrix:
       - make
       - make test
       - cd ..
-      - bash <(curl -s https://codecov.io/bash) -t 6b48f961-b643-459e-ada7-16b2b0678761 -c
+      - bash <(curl -s https://codecov.io/bash)
+
+  #
+  # LLVM SanitizerCoverage
+  #
+  - os: linux
+    env:
+      - TEST="LLVM SanitizerCoverage"
+    script:
+      - |
+        cmake \
+          -DENABLE_COVERAGE_LLVM=ON \
+          ..
+      - make install
+      - bareflank_llvm_cov.sh
 
   #
   # Google Address Sanitizer

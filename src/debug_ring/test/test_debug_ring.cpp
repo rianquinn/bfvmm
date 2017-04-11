@@ -53,6 +53,11 @@ TEST_CASE("get_drr: get_drr_invalid_vcpuid")
 
 TEST_CASE("debug_ring: constructor_out_of_memory")
 {
+    auto __ = gsl::finally([&] {
+        g_new_throws_bad_alloc = 0;
+    });
+
+    g_new_throws_bad_alloc = sizeof(debug_ring_resources_t);
     debug_ring dr(0);
 }
 
