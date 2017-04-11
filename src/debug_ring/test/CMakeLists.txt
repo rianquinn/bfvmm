@@ -6,6 +6,11 @@ include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeOption_Testing.txt")
 
 # ------------------------------------------------------------------------------
+# Static Linking
+# ------------------------------------------------------------------------------
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSTATIC_DEBUG_RING")
+
+# ------------------------------------------------------------------------------
 # Targets
 # ------------------------------------------------------------------------------
 
