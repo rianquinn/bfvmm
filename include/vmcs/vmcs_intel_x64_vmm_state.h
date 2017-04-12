@@ -37,10 +37,14 @@ extern idt_x64 g_idt;
 
 #include <bfexports.h>
 
+#ifdef STATIC_VMCS
+#define EXPORT_VMCS
+#else
 #ifdef COMPILING_VMCS
 #define EXPORT_VMCS EXPORT_SYM
 #else
 #define EXPORT_VMCS IMPORT_SYM
+#endif
 #endif
 
 // -----------------------------------------------------------------------------

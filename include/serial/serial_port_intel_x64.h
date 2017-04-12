@@ -34,10 +34,14 @@
 
 #include <bfexports.h>
 
+#ifdef STATIC_SERIAL
+#define EXPORT_SERIAL
+#else
 #ifdef COMPILING_SERIAL
 #define EXPORT_SERIAL EXPORT_SYM
 #else
 #define EXPORT_SERIAL IMPORT_SYM
+#endif
 #endif
 
 // -----------------------------------------------------------------------------

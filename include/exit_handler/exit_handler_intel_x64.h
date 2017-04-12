@@ -36,10 +36,14 @@
 
 #include <bfexports.h>
 
+#ifdef STATIC_EXIT_HANDLER
+#define EXPORT_EXIT_HANDLER
+#else
 #ifdef COMPILING_EXIT_HANDLER
 #define EXPORT_EXIT_HANDLER EXPORT_SYM
 #else
 #define EXPORT_EXIT_HANDLER IMPORT_SYM
+#endif
 #endif
 
 // -----------------------------------------------------------------------------
