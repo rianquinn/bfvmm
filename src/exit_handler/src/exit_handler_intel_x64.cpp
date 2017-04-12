@@ -402,8 +402,8 @@ exit_handler_intel_x64::unimplemented_handler() noexcept
         bferror << "VM-entry failure detected!!!" << bfendl;
         bferror << bfendl;
 
-        // guard_exceptions([&]
-        // { vmcs::check::all(); });
+        guard_exceptions([&]
+        { vmcs::check::all(); });
 
         guard_exceptions([&]
         { vmcs::debug::dump(); });
@@ -482,6 +482,13 @@ exit_handler_intel_x64::handle_vmcall_data(vmcall_registers_t &regs)
             break;
         }
 
+        case VMCALL_DATA_STRING_JSON: {
+            json ojson;
+            handle_vmcall_data_string_json(json::parse(std::string(imap.get(), regs.r06)), ojson);
+            reply_with_json(regs, ojson, omap);
+            break;
+        }
+
         case VMCALL_DATA_BINARY_UNFORMATTED: {
             handle_vmcall_data_binary_unformatted(imap, omap);
             regs.r07 = VMCALL_DATA_BINARY_UNFORMATTED;
@@ -518,6 +525,14 @@ exit_handler_intel_x64::handle_vmcall_data_string_unformatted(
 }
 
 void
+exit_handler_intel_x64::handle_vmcall_data_string_json(
+    const json &ijson, json &ojson)
+{
+    bfdebug << "received in vmm: " << ijson << bfendl;
+    ojson = ijson;
+}
+
+void
 exit_handler_intel_x64::handle_vmcall_data_binary_unformatted(
     const bfn::unique_map_ptr_x64<char> &imap,
     const bfn::unique_map_ptr_x64<char> &omap)
@@ -535,5 +550,19 @@ void exit_handler_intel_x64::reply_with_string(
     memcpy(omap.get(), str.data(), len);
 
     regs.r07 = VMCALL_DATA_STRING_UNFORMATTED;
+    regs.r09 = len;
+}
+
+void
+exit_handler_intel_x64::reply_with_json(
+    vmcall_registers_t &regs, const json &str,
+    const bfn::unique_map_ptr_x64<char> &omap)
+{
+    auto &&dmp = str.dump();
+    auto &&len = dmp.length();
+
+    memcpy(omap.get(), dmp.data(), len);
+
+    regs.r07 = VMCALL_DATA_STRING_JSON;
     regs.r09 = len;
 }

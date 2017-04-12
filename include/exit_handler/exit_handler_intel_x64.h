@@ -30,6 +30,9 @@
 
 #include <bfvmcallinterface.h>
 
+#include <nlohmann/json.hpp>
+using namespace nlohmann;
+
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
@@ -47,7 +50,7 @@
 #endif
 
 // -----------------------------------------------------------------------------
-// Exit Handlers
+// Exit Handler
 // -----------------------------------------------------------------------------
 
 /// Exit Handler
@@ -146,12 +149,19 @@ protected:
     virtual void handle_vmcall_data_string_unformatted(
         const std::string &istr, std::string &ostr);
 
+    virtual void handle_vmcall_data_string_json(
+        const json &ijson, json &ojson);
+
     virtual void handle_vmcall_data_binary_unformatted(
         const bfn::unique_map_ptr_x64<char> &imap,
         const bfn::unique_map_ptr_x64<char> &omap);
 
     void reply_with_string(
         vmcall_registers_t &regs, const std::string &str,
+        const bfn::unique_map_ptr_x64<char> &omap);
+
+    void reply_with_json(
+        vmcall_registers_t &regs, const json &str,
         const bfn::unique_map_ptr_x64<char> &omap);
 
 public:
