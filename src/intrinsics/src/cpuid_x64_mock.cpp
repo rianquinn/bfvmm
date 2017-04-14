@@ -24,6 +24,7 @@
 
 #include <bfgsl.h>
 #include <bfdebug.h>
+#include <bftypes.h>
 
 #include <intrinsics/x86/common/cpuid/cpuid_x64.h>
 

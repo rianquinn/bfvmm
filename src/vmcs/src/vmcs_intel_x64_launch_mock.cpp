@@ -21,6 +21,7 @@
 
 #include <bfgsl.h>
 #include <bfdebug.h>
+#include <bftypes.h>
 
 #include <vmcs/vmcs_intel_x64_launch.h>
 

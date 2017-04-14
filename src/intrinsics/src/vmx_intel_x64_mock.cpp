@@ -68,9 +68,9 @@ _vmptrst(void *ptr) noexcept
 }
 
 extern "C" bool
-_vmread(uint64_t field, const uint64_t *value) noexcept
+_vmread(uint64_t field, uint64_t *value) noexcept
 {
-    (void) value;
+    *value = 10;
 
     std::cerr << __FUNC__ << " called with: " << '\n';
     std::cerr << "    - field: " << view_as_pointer(field) << '\n';

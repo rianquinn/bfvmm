@@ -41,13 +41,13 @@ std::mutex g_unimplemented_handler_mutex;
 
 void
 exit_handler_intel_x64::dispatch()
-{ handle_exit(vmcs::exit_reason::basic_exit_reason::get()); }
+{
+    handle_exit(vmcs::exit_reason::basic_exit_reason::get());
+}
 
 void
 exit_handler_intel_x64::halt() noexcept
 {
-    std::lock_guard<std::mutex> guard(g_unimplemented_handler_mutex);
-
     bferror << bfendl;
     bferror << bfendl;
     bferror << "Guest register state: " << bfendl;
@@ -78,8 +78,6 @@ exit_handler_intel_x64::halt() noexcept
 
     bferror << bfendl;
     bferror << bfendl;
-
-    g_unimplemented_handler_mutex.unlock();
 
     pm::stop();
 }
@@ -408,8 +406,6 @@ exit_handler_intel_x64::unimplemented_handler() noexcept
         guard_exceptions([&]
         { vmcs::debug::dump(); });
     }
-
-    g_unimplemented_handler_mutex.unlock();
 
     this->halt();
 }

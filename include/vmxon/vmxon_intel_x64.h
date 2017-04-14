@@ -30,14 +30,14 @@
 
 #include <bfexports.h>
 
-#ifdef STATIC_VMXON
-#define EXPORT_VMXON
-#else
-#ifdef COMPILING_VMXON
+#ifndef BUILD_STATIC
+#ifdef SHARED_VMXON
 #define EXPORT_VMXON EXPORT_SYM
 #else
 #define EXPORT_VMXON IMPORT_SYM
 #endif
+#else
+#define EXPORT_VMXON
 #endif
 
 // -----------------------------------------------------------------------------

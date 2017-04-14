@@ -33,6 +33,7 @@
 /// @expects none
 /// @ensures none
 ///
-extern "C" void exit_handler(exit_handler_intel_x64 *exit_handler) noexcept;
+extern "C" EXPORT_EXIT_HANDLER
+void exit_handler(exit_handler_intel_x64 *exit_handler) noexcept;
 
 #endif

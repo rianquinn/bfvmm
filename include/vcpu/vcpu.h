@@ -35,14 +35,14 @@
 
 #include <bfexports.h>
 
-#ifdef STATIC_VCPU
-#define EXPORT_VCPU
-#else
-#ifdef COMPILING_VCPU
+#ifndef BUILD_STATIC
+#ifdef SHARED_VCPU
 #define EXPORT_VCPU EXPORT_SYM
 #else
 #define EXPORT_VCPU IMPORT_SYM
 #endif
+#else
+#define EXPORT_VCPU
 #endif
 
 // -----------------------------------------------------------------------------

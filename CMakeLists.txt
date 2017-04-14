@@ -13,6 +13,8 @@ endif()
 
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Project.txt")
 
+set(BUILD_SHARED_LIBS ON)
+
 # ------------------------------------------------------------------------------
 # Subdirectories
 # ------------------------------------------------------------------------------

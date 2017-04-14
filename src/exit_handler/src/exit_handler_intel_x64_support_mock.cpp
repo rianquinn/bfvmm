@@ -24,9 +24,20 @@
 
 #include <exit_handler/exit_handler_intel_x64_support.h>
 
+#ifdef EXIT_HANDLER_TEST
+
+extern "C" void
+exit_handler_entry(void) noexcept
+{
+}
+
+#else
+
 extern "C" void
 exit_handler_entry(void) noexcept
 {
     std::cerr << __FUNC__ << " called" << '\n';
     abort();
 }
+
+#endif

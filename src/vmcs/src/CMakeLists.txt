@@ -5,13 +5,6 @@
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
 
 # ------------------------------------------------------------------------------
-# Exports
-# ------------------------------------------------------------------------------
-
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DCOMPILING_VMCS")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMPILING_VMCS")
-
-# ------------------------------------------------------------------------------
 # Targets
 # ------------------------------------------------------------------------------
 
@@ -31,12 +24,14 @@ else()
     list(APPEND SOURCES vmcs_intel_x64_resume.asm)
 endif()
 
-add_library(vmcs OBJECT ${SOURCES})
-add_library(bfvmm_vmcs SHARED $<TARGET_OBJECTS:vmcs>)
-add_library(bfvmm_vmcs_static STATIC $<TARGET_OBJECTS:vmcs>)
+add_library(bfvmm_vmcs SHARED ${SOURCES})
+add_library(bfvmm_vmcs_static STATIC ${SOURCES})
 
-target_link_libraries(bfvmm_vmcs bfvmm_intrinsics)
+set_target_properties(bfvmm_vmcs PROPERTIES DEFINE_SYMBOL SHARED_VMCS)
+set_target_properties(bfvmm_vmcs_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
+
 target_link_libraries(bfvmm_vmcs bfvmm_memory_manager)
+target_link_libraries(bfvmm_vmcs bfvmm_intrinsics)
 
 # ------------------------------------------------------------------------------
 # Install
