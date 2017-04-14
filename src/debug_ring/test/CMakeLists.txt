@@ -15,8 +15,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSTATIC_DEBUG_RING")
 # Targets
 # ------------------------------------------------------------------------------
 
+add_library(test_debug_ring_catch STATIC test.cpp)
+
 macro(do_test str source)
     add_executable(test_${str} test_${str}.cpp ${source})
+    target_link_libraries(test_${str} test_debug_ring_catch)
     add_test(test_${str} test_${str})
 endmacro(do_test)
 
