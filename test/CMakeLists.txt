@@ -1,0 +1,12 @@
+# ------------------------------------------------------------------------------
+# CMake Includes
+# ------------------------------------------------------------------------------
+
+include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
+include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeOption_Testing.txt")
+
+# ------------------------------------------------------------------------------
+# Targets
+# ------------------------------------------------------------------------------
+
+add_library(bfvmm_catch_static STATIC bfvmm_catch.cpp)

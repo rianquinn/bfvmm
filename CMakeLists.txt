@@ -17,6 +17,7 @@ include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Project.txt")
 # Subdirectories
 # ------------------------------------------------------------------------------
 
+add_subdirectory(test)
 add_subdirectory(src)
 
 # ------------------------------------------------------------------------------
