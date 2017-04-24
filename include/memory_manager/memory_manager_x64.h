@@ -37,7 +37,7 @@
 
 #include <bfexports.h>
 
-#ifndef BUILD_STATIC
+#ifndef STATIC_MEMORY_MANAGER
 #ifdef SHARED_MEMORY_MANAGER
 #define EXPORT_MEMORY_MANAGER EXPORT_SYM
 #else

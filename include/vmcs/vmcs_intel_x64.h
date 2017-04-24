@@ -32,7 +32,7 @@
 
 #include <bfexports.h>
 
-#ifndef BUILD_STATIC
+#ifndef STATIC_VMCS
 #ifdef SHARED_VMCS
 #define EXPORT_VMCS EXPORT_SYM
 #else

@@ -15,8 +15,10 @@ list(APPEND SOURCES
 add_library(bfvmm_vmxon SHARED ${SOURCES})
 add_library(bfvmm_vmxon_static STATIC ${SOURCES})
 
-set_target_properties(bfvmm_vmxon PROPERTIES DEFINE_SYMBOL SHARED_VMXON)
-set_target_properties(bfvmm_vmxon_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
+target_compile_definitions(bfvmm_vmxon PRIVATE SHARED_VMXON)
+target_compile_definitions(bfvmm_vmxon_static PUBLIC STATIC_VMXON)
+target_compile_definitions(bfvmm_vmxon_static PUBLIC STATIC_MEMORY_MANAGER)
+target_compile_definitions(bfvmm_vmxon_static PUBLIC STATIC_INTRINSICS)
 
 target_link_libraries(bfvmm_vmxon bfvmm_memory_manager)
 target_link_libraries(bfvmm_vmxon bfvmm_intrinsics)

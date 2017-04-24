@@ -15,8 +15,8 @@ list(APPEND SOURCES
 add_library(bfvmm_debug_ring SHARED ${SOURCES})
 add_library(bfvmm_debug_ring_static STATIC ${SOURCES})
 
-set_target_properties(bfvmm_debug_ring PROPERTIES DEFINE_SYMBOL SHARED_DEBUG_RING)
-set_target_properties(bfvmm_debug_ring_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
+target_compile_definitions(bfvmm_debug_ring PRIVATE SHARED_DEBUG_RING)
+target_compile_definitions(bfvmm_debug_ring_static PUBLIC STATIC_DEBUG_RING)
 
 # ------------------------------------------------------------------------------
 # Install

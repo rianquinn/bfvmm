@@ -9,7 +9,6 @@ include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeOption_Testing.txt")
 # Static Linking
 # ------------------------------------------------------------------------------
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSTATIC_INTRINSICS")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSTATIC_SERIAL")
 
 # ------------------------------------------------------------------------------

@@ -34,7 +34,7 @@
 
 #include <bfexports.h>
 
-#ifndef BUILD_STATIC
+#ifndef STATIC_DEBUG_RING
 #ifdef SHARED_DEBUG_RING
 #define EXPORT_DEBUG_RING EXPORT_SYM
 #else

@@ -25,8 +25,11 @@ endif()
 add_library(bfvmm_exit_handler SHARED ${SOURCES})
 add_library(bfvmm_exit_handler_static STATIC ${SOURCES})
 
-set_target_properties(bfvmm_exit_handler PROPERTIES DEFINE_SYMBOL SHARED_EXIT_HANDLER)
-set_target_properties(bfvmm_exit_handler_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
+target_compile_definitions(bfvmm_exit_handler PRIVATE SHARED_EXIT_HANDLER)
+target_compile_definitions(bfvmm_exit_handler_static PUBLIC STATIC_EXIT_HANDLER)
+target_compile_definitions(bfvmm_exit_handler_static PUBLIC STATIC_VMCS)
+target_compile_definitions(bfvmm_exit_handler_static PUBLIC STATIC_MEMORY_MANAGER)
+target_compile_definitions(bfvmm_exit_handler_static PUBLIC STATIC_INTRINSICS)
 
 target_link_libraries(bfvmm_exit_handler bfvmm_vmcs)
 target_link_libraries(bfvmm_exit_handler bfvmm_memory_manager)
