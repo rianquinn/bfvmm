@@ -35,7 +35,7 @@
 
 #include <bfexports.h>
 
-#ifndef BUILD_STATIC
+#ifndef STATIC_VCPU
 #ifdef SHARED_VCPU
 #define EXPORT_VCPU EXPORT_SYM
 #else

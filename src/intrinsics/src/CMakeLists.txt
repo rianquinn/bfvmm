@@ -53,11 +53,11 @@ endif()
 add_library(bfvmm_intrinsics SHARED ${SOURCES})
 add_library(bfvmm_intrinsics_static STATIC ${SOURCES})
 
-set_target_properties(bfvmm_intrinsics PROPERTIES LINKER_LANGUAGE C)
-set_target_properties(bfvmm_intrinsics PROPERTIES DEFINE_SYMBOL SHARED_INTRINSICS)
+target_compile_definitions(bfvmm_intrinsics PRIVATE SHARED_INTRINSICS)
+target_compile_definitions(bfvmm_intrinsics_static PUBLIC STATIC_INTRINSICS)
 
+set_target_properties(bfvmm_intrinsics PROPERTIES LINKER_LANGUAGE C)
 set_target_properties(bfvmm_intrinsics_static PROPERTIES LINKER_LANGUAGE C)
-set_target_properties(bfvmm_intrinsics_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
 
 # ------------------------------------------------------------------------------
 # Install

@@ -19,8 +19,9 @@ list(APPEND SOURCES
 add_library(bfvmm_memory_manager SHARED ${SOURCES})
 add_library(bfvmm_memory_manager_static STATIC ${SOURCES})
 
-set_target_properties(bfvmm_memory_manager PROPERTIES DEFINE_SYMBOL SHARED_MEMORY_MANAGER)
-set_target_properties(bfvmm_memory_manager_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
+target_compile_definitions(bfvmm_memory_manager PRIVATE SHARED_MEMORY_MANAGER)
+target_compile_definitions(bfvmm_memory_manager_static PUBLIC STATIC_MEMORY_MANAGER)
+target_compile_definitions(bfvmm_memory_manager_static PUBLIC STATIC_INTRINSICS)
 
 target_link_libraries(bfvmm_memory_manager bfvmm_intrinsics)
 

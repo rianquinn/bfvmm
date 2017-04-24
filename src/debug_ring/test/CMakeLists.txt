@@ -9,10 +9,10 @@ include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeOption_Testing.txt")
 # Targets
 # ------------------------------------------------------------------------------
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBUILD_STATIC")
 
 macro(do_test str source)
     add_executable(test_${str} test_${str}.cpp ${source})
+    target_compile_definitions(test_${str} PRIVATE STATIC_DEBUG_RING)
     target_link_libraries(test_${str} bfvmm_catch_static)
     add_test(test_${str} test_${str})
 endmacro(do_test)

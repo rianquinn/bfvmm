@@ -9,10 +9,10 @@ include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeOption_Testing.txt")
 # Targets
 # ------------------------------------------------------------------------------
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBUILD_STATIC -DEXIT_HANDLER_TEST")
-
 macro(do_test str source)
     add_executable(test_${str} test_${str}.cpp ${source})
+    target_compile_definitions(test_${str} PRIVATE STATIC_EXIT_HANDLER)
+    target_compile_definitions(test_${str} PRIVATE EXIT_HANDLER_TEST)
     target_link_libraries(test_${str} bfvmm_catch_static)
     target_link_libraries(test_${str} bfvmm_vmcs_static)
     target_link_libraries(test_${str} bfvmm_memory_manager_static)

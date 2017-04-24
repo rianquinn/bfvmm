@@ -39,7 +39,7 @@ using namespace nlohmann;
 
 #include <bfexports.h>
 
-#ifndef BUILD_STATIC
+#ifndef STATIC_EXIT_HANDLER
 #ifdef SHARED_EXIT_HANDLER
 #define EXPORT_EXIT_HANDLER EXPORT_SYM
 #else

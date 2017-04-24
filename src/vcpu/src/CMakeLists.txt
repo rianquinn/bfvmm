@@ -18,8 +18,14 @@ list(APPEND SOURCES
 add_library(bfvmm_vcpu SHARED ${SOURCES})
 add_library(bfvmm_vcpu_static STATIC ${SOURCES})
 
-set_target_properties(bfvmm_vcpu PROPERTIES DEFINE_SYMBOL SHARED_VCPU)
-set_target_properties(bfvmm_vcpu_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
+target_compile_definitions(bfvmm_vcpu PRIVATE SHARED_VCPU)
+target_compile_definitions(bfvmm_vcpu_static PUBLIC STATIC_VCPU)
+target_compile_definitions(bfvmm_vcpu_static PUBLIC STATIC_VMXON)
+target_compile_definitions(bfvmm_vcpu_static PUBLIC STATIC_EXIT_HANDLER)
+target_compile_definitions(bfvmm_vcpu_static PUBLIC STATIC_VMCS)
+target_compile_definitions(bfvmm_vcpu_static PUBLIC STATIC_MEMORY_MANAGER)
+target_compile_definitions(bfvmm_vcpu_static PUBLIC STATIC_DEBUG_RING)
+target_compile_definitions(bfvmm_vcpu_static PUBLIC STATIC_INTRINSICS)
 
 target_link_libraries(bfvmm_vcpu bfvmm_vmxon)
 target_link_libraries(bfvmm_vcpu bfvmm_exit_handler)

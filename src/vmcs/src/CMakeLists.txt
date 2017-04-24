@@ -27,8 +27,10 @@ endif()
 add_library(bfvmm_vmcs SHARED ${SOURCES})
 add_library(bfvmm_vmcs_static STATIC ${SOURCES})
 
-set_target_properties(bfvmm_vmcs PROPERTIES DEFINE_SYMBOL SHARED_VMCS)
-set_target_properties(bfvmm_vmcs_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
+target_compile_definitions(bfvmm_vmcs PRIVATE SHARED_VMCS)
+target_compile_definitions(bfvmm_vmcs_static PUBLIC STATIC_VMCS)
+target_compile_definitions(bfvmm_vmcs_static PUBLIC STATIC_MEMORY_MANAGER)
+target_compile_definitions(bfvmm_vmcs_static PUBLIC STATIC_INTRINSICS)
 
 target_link_libraries(bfvmm_vmcs bfvmm_memory_manager)
 target_link_libraries(bfvmm_vmcs bfvmm_intrinsics)

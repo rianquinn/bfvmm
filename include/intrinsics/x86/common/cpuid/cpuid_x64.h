@@ -31,7 +31,7 @@
 
 #include <bfexports.h>
 
-#ifndef BUILD_STATIC
+#ifndef STATIC_INTRINSICS
 #ifdef SHARED_INTRINSICS
 #define EXPORT_INTRINSICS EXPORT_SYM
 #else

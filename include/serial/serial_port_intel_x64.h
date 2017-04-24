@@ -34,7 +34,7 @@
 
 #include <bfexports.h>
 
-#ifndef BUILD_STATIC
+#ifndef STATIC_SERIAL
 #ifdef SHARED_SERIAL
 #define EXPORT_SERIAL EXPORT_SYM
 #else
