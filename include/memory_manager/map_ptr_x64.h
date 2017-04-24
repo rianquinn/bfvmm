@@ -45,14 +45,14 @@
 
 #include <bfexports.h>
 
-#ifdef STATIC_MEMORY_MANAGER
-#define EXPORT_MEMORY_MANAGER
-#else
-#ifdef COMPILING_MEMORY_MANAGER
+#ifndef BUILD_STATIC
+#ifdef SHARED_MEMORY_MANAGER
 #define EXPORT_MEMORY_MANAGER EXPORT_SYM
 #else
 #define EXPORT_MEMORY_MANAGER IMPORT_SYM
 #endif
+#else
+#define EXPORT_MEMORY_MANAGER
 #endif
 
 // -----------------------------------------------------------------------------

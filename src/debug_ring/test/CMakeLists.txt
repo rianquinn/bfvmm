@@ -6,14 +6,10 @@ include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeOption_Testing.txt")
 
 # ------------------------------------------------------------------------------
-# Static Linking
-# ------------------------------------------------------------------------------
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSTATIC_DEBUG_RING")
-
-# ------------------------------------------------------------------------------
 # Targets
 # ------------------------------------------------------------------------------
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBUILD_STATIC")
 
 macro(do_test str source)
     add_executable(test_${str} test_${str}.cpp ${source})

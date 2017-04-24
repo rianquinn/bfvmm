@@ -5,13 +5,6 @@
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
 
 # ------------------------------------------------------------------------------
-# Exports
-# ------------------------------------------------------------------------------
-
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DCOMPILING_VCPU")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMPILING_VCPU")
-
-# ------------------------------------------------------------------------------
 # Targets
 # ------------------------------------------------------------------------------
 
@@ -19,9 +12,11 @@ list(APPEND SOURCES
     vcpu_factory_intel_x64.cpp
 )
 
-add_library(vcpu_factory OBJECT ${SOURCES})
-add_library(bfvmm_vcpu_factory SHARED $<TARGET_OBJECTS:vcpu_factory>)
-add_library(bfvmm_vcpu_factory_static STATIC $<TARGET_OBJECTS:vcpu_factory>)
+add_library(bfvmm_vcpu_factory SHARED ${SOURCES})
+add_library(bfvmm_vcpu_factory_static STATIC ${SOURCES})
+
+set_target_properties(bfvmm_vcpu_factory PROPERTIES DEFINE_SYMBOL SHARED_VCPU)
+set_target_properties(bfvmm_vcpu_factory_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
 
 target_link_libraries(bfvmm_vcpu_factory bfvmm_debug_ring)
 target_link_libraries(bfvmm_vcpu_factory bfvmm_intrinsics)

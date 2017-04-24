@@ -5,13 +5,6 @@
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
 
 # ------------------------------------------------------------------------------
-# Exports
-# ------------------------------------------------------------------------------
-
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DCOMPILING_DEBUG_RING")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMPILING_DEBUG_RING")
-
-# ------------------------------------------------------------------------------
 # Targets
 # ------------------------------------------------------------------------------
 
@@ -19,9 +12,11 @@ list(APPEND SOURCES
     debug_ring.cpp
 )
 
-add_library(debug_ring OBJECT ${SOURCES})
-add_library(bfvmm_debug_ring SHARED $<TARGET_OBJECTS:debug_ring>)
-add_library(bfvmm_debug_ring_static STATIC $<TARGET_OBJECTS:debug_ring>)
+add_library(bfvmm_debug_ring SHARED ${SOURCES})
+add_library(bfvmm_debug_ring_static STATIC ${SOURCES})
+
+set_target_properties(bfvmm_debug_ring PROPERTIES DEFINE_SYMBOL SHARED_DEBUG_RING)
+set_target_properties(bfvmm_debug_ring_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
 
 # ------------------------------------------------------------------------------
 # Install

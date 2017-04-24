@@ -5,13 +5,6 @@
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
 
 # ------------------------------------------------------------------------------
-# Exports
-# ------------------------------------------------------------------------------
-
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DCOMPILING_VCPU")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMPILING_VCPU")
-
-# ------------------------------------------------------------------------------
 # Targets
 # ------------------------------------------------------------------------------
 
@@ -22,16 +15,18 @@ list(APPEND SOURCES
     vcpu_factory.cpp
 )
 
-add_library(vcpu OBJECT ${SOURCES})
-add_library(bfvmm_vcpu SHARED $<TARGET_OBJECTS:vcpu>)
-add_library(bfvmm_vcpu_static STATIC $<TARGET_OBJECTS:vcpu>)
+add_library(bfvmm_vcpu SHARED ${SOURCES})
+add_library(bfvmm_vcpu_static STATIC ${SOURCES})
 
+set_target_properties(bfvmm_vcpu PROPERTIES DEFINE_SYMBOL SHARED_VCPU)
+set_target_properties(bfvmm_vcpu_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
+
+target_link_libraries(bfvmm_vcpu bfvmm_vmxon)
+target_link_libraries(bfvmm_vcpu bfvmm_exit_handler)
+target_link_libraries(bfvmm_vcpu bfvmm_vmcs)
+target_link_libraries(bfvmm_vcpu bfvmm_memory_manager)
 target_link_libraries(bfvmm_vcpu bfvmm_debug_ring)
 target_link_libraries(bfvmm_vcpu bfvmm_intrinsics)
-target_link_libraries(bfvmm_vcpu bfvmm_memory_manager)
-target_link_libraries(bfvmm_vcpu bfvmm_vmxon)
-target_link_libraries(bfvmm_vcpu bfvmm_vmcs)
-target_link_libraries(bfvmm_vcpu bfvmm_exit_handler)
 
 # ------------------------------------------------------------------------------
 # Install

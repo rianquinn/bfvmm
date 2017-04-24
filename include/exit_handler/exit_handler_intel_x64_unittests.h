@@ -22,6 +22,8 @@
 #ifndef EXIT_HANDLER_INTEL_X64_UNITTESTS_H
 #define EXIT_HANDLER_INTEL_X64_UNITTESTS_H
 
+#ifdef INCLUDE_LIBCXX_UNITTESTS
+
 #include <bfdebug.h>
 #include <bfstring.h>
 
@@ -44,4 +46,5 @@ expect_false_with_args(bool cond, const char *func, int line)
 #define expect_true(a) expect_true_with_args(a, __FUNC__, __LINE__);
 #define expect_false(a) expect_false_with_args(a, __FUNC__, __LINE__);
 
+#endif
 #endif

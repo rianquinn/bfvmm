@@ -19,75 +19,58 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#define CATCH_CONFIG_MAIN
 #include <catch/catch.hpp>
+#include <hippomocks.h>
 
-TEST_CASE("test name goes here")
+#include <exit_handler/exit_handler_intel_x64.h>
+#include <exit_handler/exit_handler_intel_x64_entry.h>
+#include <exit_handler/exit_handler_intel_x64_support.h>
+
+#ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
+
+TEST_CASE("exit_handler: entry_valid")
 {
-    CHECK(true);
+    MockRepository mocks;
+    auto &&eh = mocks.Mock<exit_handler_intel_x64>();
+
+    mocks.OnCall(eh, exit_handler_intel_x64::halt);
+    mocks.OnCall(eh, exit_handler_intel_x64::dispatch);
+
+    CHECK_NOTHROW(exit_handler_entry());
+    CHECK_NOTHROW(exit_handler(eh));
 }
 
-// #include <test.h>
-// #include <exit_handler/exit_handler_intel_x64.h>
-// #include <exit_handler/exit_handler_intel_x64_entry.h>
-// #include <exit_handler/exit_handler_intel_x64_support.h>
+TEST_CASE("exit_handler: entry_throws_invalid_argument")
+{
+    MockRepository mocks;
+    auto &&eh = mocks.Mock<exit_handler_intel_x64>();
 
-// void
-// exit_handler_intel_x64_ut::test_entry_valid()
-// {
-//     MockRepository mocks;
-//     auto &&eh = mocks.Mock<exit_handler_intel_x64>();
+    mocks.ExpectCall(eh, exit_handler_intel_x64::halt);
+    mocks.OnCall(eh, exit_handler_intel_x64::dispatch).Throw(std::invalid_argument(""));
 
-//     mocks.OnCall(eh, exit_handler_intel_x64::halt);
-//     mocks.OnCall(eh, exit_handler_intel_x64::dispatch);
+    CHECK_NOTHROW(exit_handler(eh));
+}
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]{ exit_handler(eh); });
-//     });
-// }
+TEST_CASE("exit_handler: entry_throws_standard_exception")
+{
+    MockRepository mocks;
+    auto &&eh = mocks.Mock<exit_handler_intel_x64>();
 
-// void
-// exit_handler_intel_x64_ut::test_entry_throws_general_exception()
-// {
-//     MockRepository mocks;
-//     auto &&eh = mocks.Mock<exit_handler_intel_x64>();
+    mocks.ExpectCall(eh, exit_handler_intel_x64::halt);
+    mocks.OnCall(eh, exit_handler_intel_x64::dispatch).Throw(std::exception());
 
-//     mocks.ExpectCall(eh, exit_handler_intel_x64::halt);
-//     mocks.OnCall(eh, exit_handler_intel_x64::dispatch).Throw(bfn::general_exception());
+    CHECK_NOTHROW(exit_handler(eh));
+}
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]{ exit_handler(eh); });
-//     });
-// }
+TEST_CASE("exit_handler: entry_throws_any_exception")
+{
+    MockRepository mocks;
+    auto &&eh = mocks.Mock<exit_handler_intel_x64>();
 
-// void
-// exit_handler_intel_x64_ut::test_entry_throws_standard_exception()
-// {
-//     MockRepository mocks;
-//     auto &&eh = mocks.Mock<exit_handler_intel_x64>();
+    mocks.ExpectCall(eh, exit_handler_intel_x64::halt);
+    mocks.OnCall(eh, exit_handler_intel_x64::dispatch).Throw(10);
 
-//     mocks.ExpectCall(eh, exit_handler_intel_x64::halt);
-//     mocks.OnCall(eh, exit_handler_intel_x64::dispatch).Throw(std::exception());
+    CHECK_NOTHROW(exit_handler(eh));
+}
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]{ exit_handler(eh); });
-//     });
-// }
-
-// void
-// exit_handler_intel_x64_ut::test_entry_throws_any_exception()
-// {
-//     MockRepository mocks;
-//     auto &&eh = mocks.Mock<exit_handler_intel_x64>();
-
-//     mocks.ExpectCall(eh, exit_handler_intel_x64::halt);
-//     mocks.OnCall(eh, exit_handler_intel_x64::dispatch).Throw(10);
-
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]{ exit_handler(eh); });
-//     });
-// }
+#endif

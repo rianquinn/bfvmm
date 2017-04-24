@@ -5,13 +5,6 @@
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
 
 # ------------------------------------------------------------------------------
-# Exports
-# ------------------------------------------------------------------------------
-
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DCOMPILING_INTRINSICS")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMPILING_INTRINSICS")
-
-# ------------------------------------------------------------------------------
 # Targets
 # ------------------------------------------------------------------------------
 
@@ -57,12 +50,14 @@ else()
 
 endif()
 
-add_library(intrinsics OBJECT ${SOURCES})
-add_library(bfvmm_intrinsics SHARED $<TARGET_OBJECTS:intrinsics>)
-add_library(bfvmm_intrinsics_static STATIC $<TARGET_OBJECTS:intrinsics>)
+add_library(bfvmm_intrinsics SHARED ${SOURCES})
+add_library(bfvmm_intrinsics_static STATIC ${SOURCES})
 
 set_target_properties(bfvmm_intrinsics PROPERTIES LINKER_LANGUAGE C)
+set_target_properties(bfvmm_intrinsics PROPERTIES DEFINE_SYMBOL SHARED_INTRINSICS)
+
 set_target_properties(bfvmm_intrinsics_static PROPERTIES LINKER_LANGUAGE C)
+set_target_properties(bfvmm_intrinsics_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
 
 # ------------------------------------------------------------------------------
 # Install

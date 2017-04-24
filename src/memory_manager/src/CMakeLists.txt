@@ -5,13 +5,6 @@
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
 
 # ------------------------------------------------------------------------------
-# Exports
-# ------------------------------------------------------------------------------
-
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DCOMPILING_MEMORY_MANAGER")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMPILING_MEMORY_MANAGER")
-
-# ------------------------------------------------------------------------------
 # Targets
 # ------------------------------------------------------------------------------
 
@@ -23,9 +16,11 @@ list(APPEND SOURCES
     root_page_table_x64.cpp
 )
 
-add_library(memory_manager OBJECT ${SOURCES})
-add_library(bfvmm_memory_manager SHARED $<TARGET_OBJECTS:memory_manager>)
-add_library(bfvmm_memory_manager_static STATIC $<TARGET_OBJECTS:memory_manager>)
+add_library(bfvmm_memory_manager SHARED ${SOURCES})
+add_library(bfvmm_memory_manager_static STATIC ${SOURCES})
+
+set_target_properties(bfvmm_memory_manager PROPERTIES DEFINE_SYMBOL SHARED_MEMORY_MANAGER)
+set_target_properties(bfvmm_memory_manager_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
 
 target_link_libraries(bfvmm_memory_manager bfvmm_intrinsics)
 

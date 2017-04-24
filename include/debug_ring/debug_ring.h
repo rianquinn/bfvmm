@@ -34,14 +34,14 @@
 
 #include <bfexports.h>
 
-#ifdef STATIC_DEBUG_RING
-#define EXPORT_DEBUG_RING
-#else
-#ifdef COMPILING_DEBUG_RING
+#ifndef BUILD_STATIC
+#ifdef SHARED_DEBUG_RING
 #define EXPORT_DEBUG_RING EXPORT_SYM
 #else
 #define EXPORT_DEBUG_RING IMPORT_SYM
 #endif
+#else
+#define EXPORT_DEBUG_RING
 #endif
 
 // -----------------------------------------------------------------------------

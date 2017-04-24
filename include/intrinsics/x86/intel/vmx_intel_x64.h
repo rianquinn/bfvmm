@@ -32,14 +32,14 @@
 
 #include <bfexports.h>
 
-#ifdef STATIC_INTRINSICS
-#define EXPORT_INTRINSICS
-#else
-#ifdef COMPILING_INTRINSICS
+#ifndef BUILD_STATIC
+#ifdef SHARED_INTRINSICS
 #define EXPORT_INTRINSICS EXPORT_SYM
 #else
 #define EXPORT_INTRINSICS IMPORT_SYM
 #endif
+#else
+#define EXPORT_INTRINSICS
 #endif
 
 // -----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ extern "C" EXPORT_INTRINSICS bool _vmxoff(void) noexcept;
 extern "C" EXPORT_INTRINSICS bool _vmclear(void *ptr) noexcept;
 extern "C" EXPORT_INTRINSICS bool _vmptrld(void *ptr) noexcept;
 extern "C" EXPORT_INTRINSICS bool _vmptrst(void *ptr) noexcept;
-extern "C" EXPORT_INTRINSICS bool _vmread(uint64_t field, const uint64_t *value) noexcept;
+extern "C" EXPORT_INTRINSICS bool _vmread(uint64_t field, uint64_t *value) noexcept;
 extern "C" EXPORT_INTRINSICS bool _vmwrite(uint64_t field, uint64_t value) noexcept;
 extern "C" EXPORT_INTRINSICS bool _vmlaunch_demote(void) noexcept;
 extern "C" EXPORT_INTRINSICS bool _invept(uint64_t type, void *ptr) noexcept;

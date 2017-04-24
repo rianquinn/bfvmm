@@ -5,13 +5,6 @@
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
 
 # ------------------------------------------------------------------------------
-# Exports
-# ------------------------------------------------------------------------------
-
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DCOMPILING_SERIAL")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMPILING_SERIAL")
-
-# ------------------------------------------------------------------------------
 # Targets
 # ------------------------------------------------------------------------------
 
@@ -19,9 +12,11 @@ list(APPEND SOURCES
     serial_port_intel_x64.cpp
 )
 
-add_library(serial OBJECT ${SOURCES})
-add_library(bfvmm_serial SHARED $<TARGET_OBJECTS:serial>)
-add_library(bfvmm_serial_static STATIC $<TARGET_OBJECTS:serial>)
+add_library(bfvmm_serial SHARED ${SOURCES})
+add_library(bfvmm_serial_static STATIC ${SOURCES})
+
+set_target_properties(bfvmm_serial PROPERTIES DEFINE_SYMBOL SHARED_SERIAL)
+set_target_properties(bfvmm_serial_static PROPERTIES COMPILE_FLAGS -DBUILD_STATIC)
 
 target_link_libraries(bfvmm_serial bfvmm_intrinsics)
 
