@@ -137,7 +137,7 @@ matrix:
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           ..
       - make install
-      - bareflank_clang_tidy.sh
+      - travis_wait 40 bareflank_clang_tidy.sh
 
   #
   # Codecov
