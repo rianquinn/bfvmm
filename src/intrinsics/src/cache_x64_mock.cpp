@@ -27,20 +27,20 @@
 extern "C" void
 _invd(void) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
 _wbinvd(void) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
 _clflush(void *addr) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << addr << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << addr << '\n';
     abort();
 }

@@ -279,7 +279,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_invalid_opcode")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_invalid_magic")
@@ -294,7 +294,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_invalid_magic")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_protocol_version")
@@ -310,7 +310,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_protocol_version")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
 
     CHECK(ehlr.m_state_save->rbx == VMCALL_VERSION);
     CHECK(ehlr.m_state_save->rsi == 0);
@@ -330,7 +330,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_bareflank_version")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
 
     CHECK(ehlr.m_state_save->rbx == BAREFLANK_VERSION_MAJOR);
     CHECK(ehlr.m_state_save->rsi == BAREFLANK_VERSION_MINOR);
@@ -350,7 +350,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_user_version")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
 
     CHECK(ehlr.m_state_save->rbx == USER_VERSION_MAJOR);
     CHECK(ehlr.m_state_save->rsi == USER_VERSION_MINOR);
@@ -370,7 +370,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_unknown_version")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_registers")
@@ -396,7 +396,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_registers")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_unittest")
@@ -412,12 +412,12 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_unittest")
 #ifdef INCLUDE_LIBCXX_UNITTESTS
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 
 #else
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
 
 #endif
 }
@@ -434,7 +434,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_event")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_start")
@@ -449,7 +449,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_start")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_stop")
@@ -464,7 +464,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_stop")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
 }
 
 
@@ -489,7 +489,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_unknown")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_input_nullptr")
@@ -511,7 +511,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_input_nul
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_output_nullptr")
@@ -533,7 +533,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_output_nu
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_input_size_0")
@@ -555,7 +555,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_input_siz
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_output_size_0")
@@ -577,7 +577,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_output_si
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_output_size_too_small")
@@ -599,7 +599,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_output_si
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_input_size_too_big")
@@ -621,7 +621,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_input_siz
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_output_size_too_big")
@@ -643,7 +643,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_output_si
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_map_fails")
@@ -665,7 +665,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_map_fails
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_success")
@@ -691,7 +691,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_success")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_input_nullptr")
@@ -713,7 +713,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_input_nullptr")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_output_nullptr")
@@ -735,7 +735,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_output_nullptr")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_input_size_0")
@@ -757,7 +757,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_input_size_0")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_output_size_0")
@@ -779,7 +779,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_output_size_0")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_output_size_too_small")
@@ -801,7 +801,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_output_size_too_
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_input_size_too_big")
@@ -823,7 +823,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_input_size_too_b
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_output_size_too_big")
@@ -845,7 +845,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_output_size_too_
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_map_fails")
@@ -867,7 +867,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_map_fails")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_invalid")
@@ -892,7 +892,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_invalid")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_success")
@@ -918,7 +918,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_success")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_input_nullptr")
@@ -940,7 +940,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_input_nullp
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_output_nullptr")
@@ -962,7 +962,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_output_null
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_input_size_0")
@@ -984,7 +984,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_input_size_
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_output_size_0")
@@ -1006,7 +1006,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_output_size
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_output_size_too_small")
@@ -1028,7 +1028,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_output_size
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_input_size_too_big")
@@ -1050,7 +1050,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_input_size_
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_output_size_too_big")
@@ -1072,7 +1072,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_output_size
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_map_fails")
@@ -1094,7 +1094,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_map_fails")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_FAILURE);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_success")
@@ -1120,7 +1120,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_success")
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
-    CHECK(ec_sign(ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
+    CHECK(bfscast(int64_t, ehlr.m_state_save->rdx) == BF_VMCALL_SUCCESS);
 }
 
 TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_unknown_type")

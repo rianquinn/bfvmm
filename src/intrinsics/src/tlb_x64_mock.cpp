@@ -29,6 +29,6 @@ _invlpg(const void *virt) noexcept
 {
     (void) virt;
 
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }

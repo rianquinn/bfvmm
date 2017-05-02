@@ -28,8 +28,8 @@
 extern "C" void
 vmcs_launch(state_save_intel_x64 *state_save) noexcept
 {
-    ignored(state_save);
+    bfignored(state_save);
 
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
