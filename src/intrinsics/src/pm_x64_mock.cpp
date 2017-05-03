@@ -27,13 +27,13 @@
 extern "C" void
 _halt(void) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
 _stop(void) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }

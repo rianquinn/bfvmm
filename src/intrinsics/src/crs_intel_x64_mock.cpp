@@ -27,55 +27,55 @@
 extern "C" uint64_t
 _read_cr0(void) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
 _write_cr0(uint64_t val) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint64_t
 _read_cr2(void) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
 _write_cr2(uint64_t val) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint64_t
 _read_cr3(void) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
 _write_cr3(uint64_t val) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }
 
 extern "C" uint64_t
 _read_cr4(void) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" void
 _write_cr4(uint64_t val) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << view_as_pointer(val) << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << view_as_pointer(val) << '\n';
     abort();
 }

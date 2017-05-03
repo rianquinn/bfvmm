@@ -28,8 +28,8 @@
 extern "C" void
 vmcs_promote(uintptr_t state_save) noexcept
 {
-    ignored(state_save);
+    bfignored(state_save);
 
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }

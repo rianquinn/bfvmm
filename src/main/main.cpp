@@ -25,8 +25,8 @@
 int
 main(int argc, char *argv[])
 {
-    ignored(argc);
-    ignored(argv);
+    bfignored(argc);
+    bfignored(argv);
 
     return 0;
 }

@@ -36,7 +36,7 @@ exit_handler_entry(void) noexcept
 extern "C" void
 exit_handler_entry(void) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 

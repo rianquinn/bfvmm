@@ -29,14 +29,14 @@ _vmxon(void *ptr) noexcept
 {
     (void) ptr;
 
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
 extern "C" bool
 _vmxoff(void) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
@@ -45,7 +45,7 @@ _vmclear(void *ptr) noexcept
 {
     (void) ptr;
 
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
@@ -54,7 +54,7 @@ _vmptrld(void *ptr) noexcept
 {
     (void) ptr;
 
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
@@ -63,7 +63,7 @@ _vmptrst(void *ptr) noexcept
 {
     (void) ptr;
 
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
@@ -72,7 +72,7 @@ _vmread(uint64_t field, uint64_t *value) noexcept
 {
     *value = 10;
 
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - field: " << view_as_pointer(field) << '\n';
     abort();
 }
@@ -80,7 +80,7 @@ _vmread(uint64_t field, uint64_t *value) noexcept
 extern "C" bool
 _vmwrite(uint64_t field, uint64_t value) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - field: " << view_as_pointer(field) << '\n';
     std::cerr << "    - value: " << view_as_pointer(value) << '\n';
     abort();
@@ -89,7 +89,7 @@ _vmwrite(uint64_t field, uint64_t value) noexcept
 extern "C" bool
 _vmlaunch_demote(void) noexcept
 {
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
@@ -99,7 +99,7 @@ _invept(uint64_t type, void *ptr) noexcept
     (void) type;
     (void) ptr;
 
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }
 
@@ -109,6 +109,6 @@ _invvpid(uint64_t type, void *ptr) noexcept
     (void) type;
     (void) ptr;
 
-    std::cerr << __FUNC__ << " called" << '\n';
+    std::cerr << __BFFUNC__ << " called" << '\n';
     abort();
 }

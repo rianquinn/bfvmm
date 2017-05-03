@@ -27,7 +27,7 @@
 extern "C" void
 _read_gdt(gdt_reg_x64_t *gdt_reg) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - gdt_reg: " << gdt_reg << '\n';
     abort();
 }
@@ -35,7 +35,7 @@ _read_gdt(gdt_reg_x64_t *gdt_reg) noexcept
 extern "C" void
 _write_gdt(gdt_reg_x64_t *gdt_reg) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - gdt_reg: " << gdt_reg << '\n';
     abort();
 }

@@ -27,7 +27,7 @@
 extern "C" uint8_t
 _inb(uint16_t port) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     abort();
 }
@@ -35,7 +35,7 @@ _inb(uint16_t port) noexcept
 extern "C" uint16_t
 _inw(uint16_t port) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     abort();
 }
@@ -43,7 +43,7 @@ _inw(uint16_t port) noexcept
 extern "C" uint32_t
 _ind(uint16_t port) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     abort();
 }
@@ -51,7 +51,7 @@ _ind(uint16_t port) noexcept
 extern "C" void
 _insb(uint16_t port, uint64_t m8) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - m8: " << view_as_pointer(m8) << '\n';
     abort();
@@ -60,7 +60,7 @@ _insb(uint16_t port, uint64_t m8) noexcept
 extern "C" void
 _insw(uint16_t port, uint64_t m16) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - m16: " << view_as_pointer(m16) << '\n';
     abort();
@@ -69,7 +69,7 @@ _insw(uint16_t port, uint64_t m16) noexcept
 extern "C" void
 _insd(uint16_t port, uint64_t m32) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - m32: " << view_as_pointer(m32) << '\n';
     abort();
@@ -78,7 +78,7 @@ _insd(uint16_t port, uint64_t m32) noexcept
 extern "C" void
 _insbrep(uint16_t port, uint64_t m8, uint32_t count) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - m8: " << view_as_pointer(m8) << '\n';
     std::cerr << "    - count: " << view_as_pointer(count) << '\n';
@@ -88,7 +88,7 @@ _insbrep(uint16_t port, uint64_t m8, uint32_t count) noexcept
 extern "C" void
 _inswrep(uint16_t port, uint64_t m16, uint32_t count) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - m16: " << view_as_pointer(m16) << '\n';
     std::cerr << "    - count: " << view_as_pointer(count) << '\n';
@@ -98,7 +98,7 @@ _inswrep(uint16_t port, uint64_t m16, uint32_t count) noexcept
 extern "C" void
 _insdrep(uint16_t port, uint64_t m32, uint32_t count) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - m32: " << view_as_pointer(m32) << '\n';
     std::cerr << "    - count: " << view_as_pointer(count) << '\n';
@@ -108,7 +108,7 @@ _insdrep(uint16_t port, uint64_t m32, uint32_t count) noexcept
 extern "C" void
 _outb(uint16_t port, uint8_t val) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - val: " << view_as_pointer(val) << '\n';
     abort();
@@ -117,7 +117,7 @@ _outb(uint16_t port, uint8_t val) noexcept
 extern "C" void
 _outw(uint16_t port, uint16_t val) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - val: " << view_as_pointer(val) << '\n';
     abort();
@@ -126,7 +126,7 @@ _outw(uint16_t port, uint16_t val) noexcept
 extern "C" void
 _outd(uint16_t port, uint32_t val) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - val: " << view_as_pointer(val) << '\n';
     abort();
@@ -135,7 +135,7 @@ _outd(uint16_t port, uint32_t val) noexcept
 extern "C" void
 _outsb(uint16_t port, uint64_t m8) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - m8: " << view_as_pointer(m8) << '\n';
     abort();
@@ -144,7 +144,7 @@ _outsb(uint16_t port, uint64_t m8) noexcept
 extern "C" void
 _outsw(uint16_t port, uint64_t m16) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - m16: " << view_as_pointer(m16) << '\n';
     abort();
@@ -153,7 +153,7 @@ _outsw(uint16_t port, uint64_t m16) noexcept
 extern "C" void
 _outsd(uint16_t port, uint64_t m32) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - m32: " << view_as_pointer(m32) << '\n';
     abort();
@@ -162,7 +162,7 @@ _outsd(uint16_t port, uint64_t m32) noexcept
 extern "C" void
 _outsbrep(uint16_t port, uint64_t m8, uint32_t count) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - m8: " << view_as_pointer(m8) << '\n';
     std::cerr << "    - count: " << view_as_pointer(count) << '\n';
@@ -172,7 +172,7 @@ _outsbrep(uint16_t port, uint64_t m8, uint32_t count) noexcept
 extern "C" void
 _outswrep(uint16_t port, uint64_t m16, uint32_t count) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - m16: " << view_as_pointer(m16) << '\n';
     std::cerr << "    - count: " << view_as_pointer(count) << '\n';
@@ -182,7 +182,7 @@ _outswrep(uint16_t port, uint64_t m16, uint32_t count) noexcept
 extern "C" void
 _outsdrep(uint16_t port, uint64_t m32, uint32_t count) noexcept
 {
-    std::cerr << __FUNC__ << " called with: " << '\n';
+    std::cerr << __BFFUNC__ << " called with: " << '\n';
     std::cerr << "    - port: " << view_as_pointer(port) << '\n';
     std::cerr << "    - m32: " << view_as_pointer(m32) << '\n';
     std::cerr << "    - count: " << view_as_pointer(count) << '\n';
