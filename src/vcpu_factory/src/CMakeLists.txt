@@ -24,13 +24,13 @@ target_compile_definitions(bfvmm_vcpu_factory_static PUBLIC STATIC_VMXON)
 target_compile_definitions(bfvmm_vcpu_factory_static PUBLIC STATIC_VMCS)
 target_compile_definitions(bfvmm_vcpu_factory_static PUBLIC STATIC_EXIT_HANDLER)
 
+target_link_libraries(bfvmm_vcpu_factory bfvmm_vcpu)
+target_link_libraries(bfvmm_vcpu_factory bfvmm_vmxon)
+target_link_libraries(bfvmm_vcpu_factory bfvmm_exit_handler)
+target_link_libraries(bfvmm_vcpu_factory bfvmm_vmcs)
+target_link_libraries(bfvmm_vcpu_factory bfvmm_memory_manager)
 target_link_libraries(bfvmm_vcpu_factory bfvmm_debug_ring)
 target_link_libraries(bfvmm_vcpu_factory bfvmm_intrinsics)
-target_link_libraries(bfvmm_vcpu_factory bfvmm_memory_manager)
-target_link_libraries(bfvmm_vcpu_factory bfvmm_vmxon)
-target_link_libraries(bfvmm_vcpu_factory bfvmm_vmcs)
-target_link_libraries(bfvmm_vcpu_factory bfvmm_exit_handler)
-target_link_libraries(bfvmm_vcpu_factory bfvmm_vcpu)
 
 # ------------------------------------------------------------------------------
 # Install

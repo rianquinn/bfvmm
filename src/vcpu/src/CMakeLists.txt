@@ -11,8 +11,6 @@ include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
 list(APPEND SOURCES
     vcpu.cpp
     vcpu_intel_x64.cpp
-    vcpu_manager.cpp
-    vcpu_factory.cpp
 )
 
 add_library(bfvmm_vcpu SHARED ${SOURCES})

@@ -17,7 +17,10 @@ include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Project.txt")
 # Subdirectories
 # ------------------------------------------------------------------------------
 
-add_subdirectory(test)
+if(NOT CMAKE_TOOLCHAIN_FILE)
+    add_subdirectory(test)
+endif()
+
 add_subdirectory(src)
 
 # ------------------------------------------------------------------------------

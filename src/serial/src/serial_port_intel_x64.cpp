@@ -19,6 +19,7 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+#include <bfgsl.h>
 #include <serial/serial_port_intel_x64.h>
 
 using namespace x64;
@@ -201,9 +202,27 @@ void
 serial_port_intel_x64::write(char c) noexcept
 {
     while (!get_line_status_empty_transmitter()) {
-        ;
     }
+
     portio::outb(m_port, c);
+}
+
+void
+serial_port_intel_x64::write(const std::string &str) noexcept
+{
+    for (auto c : str) {
+        this->write(c);
+    }
+}
+
+void
+serial_port_intel_x64::write(const char *str, size_t len) noexcept
+{
+    gsl::cstring_span<> span(str, gsl::narrow_cast<std::ptrdiff_t>(len));
+
+    for (auto c : span) {
+        this->write(c);
+    }
 }
 
 void

@@ -7,4 +7,10 @@ add_subdirectory(vmcs)
 add_subdirectory(exit_handler)
 add_subdirectory(vcpu)
 add_subdirectory(vcpu_factory)
+add_subdirectory(vcpu_manager)
+
+if(CMAKE_TOOLCHAIN_FILE)
+    add_subdirectory(support)
+endif()
+
 add_subdirectory(main)

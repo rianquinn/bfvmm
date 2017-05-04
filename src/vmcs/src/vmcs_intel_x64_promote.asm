@@ -84,7 +84,7 @@ extern _write_cr3;
 extern _write_cr4;
 extern _write_dr7;
 
-extern __cpuid_eax
+extern _cpuid_eax
 
 section .text
 
@@ -227,7 +227,7 @@ vmcs_promote:
     ;
 
     mov edi, CPUID_PERF_MONITORING
-    call __cpuid_eax wrt ..plt
+    call _cpuid_eax wrt ..plt
     cmp al, CPUID_PERF_MONITORING_VERSION_ID
     jl .perf_not_supported
 

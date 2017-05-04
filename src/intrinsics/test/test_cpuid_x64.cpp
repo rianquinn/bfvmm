@@ -37,11 +37,11 @@ TEST_CASE("test name goes here")
 // std::map<cpuid::field_type, cpuid::value_type> g_ecx_cpuid;
 // std::map<cpuid::field_type, cpuid::value_type> g_edx_cpuid;
 
-// extern "C" uint32_t __cpuid_eax(uint32_t val) noexcept;
-// extern "C" uint32_t __cpuid_ebx(uint32_t val) noexcept;
-// extern "C" uint32_t __cpuid_ecx(uint32_t val) noexcept;
-// extern "C" uint32_t __cpuid_edx(uint32_t val) noexcept;
-// extern "C" void __cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept;
+// extern "C" uint32_t _cpuid_eax(uint32_t val) noexcept;
+// extern "C" uint32_t _cpuid_ebx(uint32_t val) noexcept;
+// extern "C" uint32_t _cpuid_ecx(uint32_t val) noexcept;
+// extern "C" uint32_t _cpuid_edx(uint32_t val) noexcept;
+// extern "C" void _cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept;
 
 // struct cpuid_regs
 // {
@@ -54,23 +54,23 @@ TEST_CASE("test name goes here")
 // struct cpuid_regs g_regs;
 
 // extern "C" uint32_t
-// __cpuid_eax(uint32_t val) noexcept
+// _cpuid_eax(uint32_t val) noexcept
 // { return g_eax_cpuid[val]; }
 
 // extern "C" uint32_t
-// __cpuid_ebx(uint32_t val) noexcept
+// _cpuid_ebx(uint32_t val) noexcept
 // { return g_ebx_cpuid[val]; }
 
 // extern "C" uint32_t
-// __cpuid_ecx(uint32_t val) noexcept
+// _cpuid_ecx(uint32_t val) noexcept
 // { return g_ecx_cpuid[val]; }
 
 // extern "C" uint32_t
-// __cpuid_edx(uint32_t val) noexcept
+// _cpuid_edx(uint32_t val) noexcept
 // { return g_edx_cpuid[val]; }
 
 // extern "C" void
-// __cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept
+// _cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept
 // {
 //     *static_cast<cpuid::value_type *>(eax) = g_regs.eax;
 //     *static_cast<cpuid::value_type *>(ebx) = g_regs.ebx;
