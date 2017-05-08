@@ -1,6 +1,6 @@
 # cmake -DCMAKE_TOOLCHAIN_FILE=~/bfprefix/cmake/CMakeToolchain_VMM.txt ..
 
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.6)
 project(bfvmm C CXX)
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -17,7 +17,7 @@ include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Project.txt")
 # Subdirectories
 # ------------------------------------------------------------------------------
 
-if(NOT CMAKE_TOOLCHAIN_FILE)
+if(ENABLE_UNITTESTING AND NOT CMAKE_TOOLCHAIN_FILE)
     add_subdirectory(test)
 endif()
 
