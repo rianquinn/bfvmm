@@ -17,11 +17,11 @@ include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Project.txt")
 # Subdirectories
 # ------------------------------------------------------------------------------
 
-if(ENABLE_UNITTESTING AND NOT CMAKE_TOOLCHAIN_FILE)
-    add_subdirectory(test)
-endif()
-
 add_subdirectory(src)
+
+if(ENABLE_UNITTESTING AND NOT CMAKE_TOOLCHAIN_FILE)
+    add_subdirectory(tests)
+endif()
 
 # ------------------------------------------------------------------------------
 # Install
