@@ -290,12 +290,19 @@ public:
     ///
     /// @param str string to write
     ///
-    void write(const std::string &str) noexcept
-    {
-        for (auto c : str) {
-            write(c);
-        }
-    }
+    void write(const std::string &str) noexcept;
+
+    /// Write String
+    ///
+    /// Writes a string to the serial device.
+    ///
+    /// @expects none
+    /// @ensures none
+    ///
+    /// @param str string to write
+    /// @param len length of the string to write
+    ///
+    void write(const char *str, size_t len) noexcept;
 
 private:
 

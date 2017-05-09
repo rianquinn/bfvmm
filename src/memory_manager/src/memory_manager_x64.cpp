@@ -287,31 +287,15 @@ memory_manager_x64::integer_pointer
 memory_manager_x64::upper(integer_pointer ptr) const noexcept
 { return ptr & ~(page_size - 1); }
 
-extern "C" int64_t
-add_md(struct memory_descriptor *md) noexcept
-{
-    return guard_exceptions(MEMORY_MANAGER_FAILURE, [&] {
-        expects(md);
-
-        auto &&virt = static_cast<memory_manager_x64::integer_pointer>(md->virt);
-        auto &&phys = static_cast<memory_manager_x64::integer_pointer>(md->phys);
-        auto &&type = static_cast<memory_manager_x64::attr_type>(md->type);
-
-        g_mm->add_md(virt, phys, type);
-    });
-}
-
-#ifdef CROSS_COMPILED
-
-extern "C" void *
+extern "C" EXPORT_MEMORY_MANAGER void *
 _malloc_r(struct _reent *, size_t size)
 { return g_mm->alloc(size); }
 
-extern "C" void
+extern "C" EXPORT_MEMORY_MANAGER void
 _free_r(struct _reent *, void *ptr)
 { g_mm->free(ptr); }
 
-extern "C" void *
+extern "C" EXPORT_MEMORY_MANAGER void *
 _calloc_r(struct _reent *, size_t nmemb, size_t size)
 {
     if (auto ptr = g_mm->alloc(nmemb * size)) {
@@ -321,7 +305,7 @@ _calloc_r(struct _reent *, size_t nmemb, size_t size)
     return nullptr;
 }
 
-extern "C" void *
+extern "C" EXPORT_MEMORY_MANAGER void *
 _realloc_r(struct _reent *, void *ptr, size_t size)
 {
     auto old_sze = g_mm->size(ptr);
@@ -338,5 +322,3 @@ _realloc_r(struct _reent *, void *ptr, size_t size)
 
     return new_ptr;
 }
-
-#endif
