@@ -65,15 +65,6 @@ extern "C" uint32_t
 test_cpuid_edx(uint32_t val) noexcept
 { return g_edx_cpuid[val]; }
 
-extern "C" void
-test_cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept
-{
-    *static_cast<cpuid::value_type *>(eax) = g_regs.eax;
-    *static_cast<cpuid::value_type *>(ebx) = g_regs.ebx;
-    *static_cast<cpuid::value_type *>(ecx) = g_regs.ecx;
-    *static_cast<cpuid::value_type *>(edx) = g_regs.edx;
-}
-
 static void
 setup_intrinsics(MockRepository &mocks)
 {
@@ -81,7 +72,6 @@ setup_intrinsics(MockRepository &mocks)
     mocks.OnCallFunc(_cpuid_ebx).Do(test_cpuid_ebx);
     mocks.OnCallFunc(_cpuid_ecx).Do(test_cpuid_ecx);
     mocks.OnCallFunc(_cpuid_edx).Do(test_cpuid_edx);
-    mocks.OnCallFunc(_cpuid).Do(test_cpuid);
 }
 
 TEST_CASE("intrinsics: cpuid_addr_size_phys")
