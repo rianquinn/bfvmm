@@ -40,8 +40,7 @@ extern "C" uint32_t __cpuid_ecx(uint32_t val) noexcept;
 extern "C" uint32_t __cpuid_edx(uint32_t val) noexcept;
 extern "C" void __cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept;
 
-struct cpuid_regs
-{
+struct cpuid_regs {
     cpuid::value_type eax;
     cpuid::value_type ebx;
     cpuid::value_type ecx;
@@ -88,7 +87,7 @@ TEST_CASE("intrinsics: cpuid_addr_size_linear")
     MockRepository mocks;
     setup_intrinsics(mocks);
 
-    g_eax_cpuid[0x80000008ULL]= 0xFFFFFFFF;
+    g_eax_cpuid[0x80000008ULL] = 0xFFFFFFFF;
     CHECK(cpuid::addr_size::linear::get() == 0xFF);
 }
 
@@ -466,7 +465,7 @@ TEST_CASE("intrinsics: cpuid_extended_feature_flags_subleaf0_eax_max_input")
     MockRepository mocks;
     setup_intrinsics(mocks);
 
-    g_eax_cpuid[0x00000007ULL]= 0xFFFFFFFF;
+    g_eax_cpuid[0x00000007ULL] = 0xFFFFFFFF;
     CHECK(cpuid::extended_feature_flags::subleaf0::eax::max_input::get() == 0xFFFFFFFF);
 }
 
@@ -1141,7 +1140,7 @@ TEST_CASE("intrinsics: cpuid_intel_serial_num_edx_bits")
     MockRepository mocks;
     setup_intrinsics(mocks);
 
-    g_edx_cpuid[0x00000003ULL]= 0xFFFFFFFFULL;
+    g_edx_cpuid[0x00000003ULL] = 0xFFFFFFFFULL;
     CHECK(cpuid::intel::serial_num::edx::bits::get() == 0xFFFFFFFFULL);
 }
 
