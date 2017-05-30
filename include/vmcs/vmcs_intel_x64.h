@@ -167,6 +167,12 @@ public:
     ///
     virtual void clear();
 
+    virtual void set_state_save(gsl::not_null<state_save_intel_x64 *> state_save)
+    { m_state_save = state_save; }
+
+    virtual void set_exit_handler_entry(void *entry)
+    { m_exit_handler_entry = entry; }
+
 protected:
 
     virtual void write_fields(gsl::not_null<vmcs_intel_x64_state *> host_state,
@@ -216,12 +222,6 @@ private:
     friend class vcpu_intel_x64;
     friend class exit_handler_intel_x64;
     friend class exit_handler_intel_x64_ut;
-
-    virtual void set_state_save(gsl::not_null<state_save_intel_x64 *> state_save)
-    { m_state_save = state_save; }
-
-    virtual void set_exit_handler_entry(void *entry)
-    { m_exit_handler_entry = entry; }
 
 public:
 

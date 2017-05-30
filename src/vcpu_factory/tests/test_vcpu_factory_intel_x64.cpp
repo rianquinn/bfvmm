@@ -19,20 +19,11 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#define CATCH_CONFIG_MAIN
 #include <catch/catch.hpp>
+#include <vcpu/vcpu_factory.h>
 
-TEST_CASE("test name goes here")
+TEST_CASE("vcpu_factory: make_vcpu")
 {
-    CHECK(true);
+    vcpu_factory factory;
+    CHECK(factory.make_vcpu(0, nullptr) != nullptr);
 }
-
-// #include <test.h>
-// #include <vcpu/vcpu_factory.h>
-
-// void
-// vcpu_factory_ut::test_make_vcpu()
-// {
-//     vcpu_factory factory;
-//     this->expect_true(factory.make_vcpu(0, nullptr) != nullptr);
-// }
