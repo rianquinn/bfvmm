@@ -212,7 +212,6 @@ protected:
 private:
 
     friend class vcpu_ut;
-    friend class vmcs_ut;
     friend class vcpu_intel_x64;
     friend class exit_handler_intel_x64;
     friend class exit_handler_intel_x64_ut;

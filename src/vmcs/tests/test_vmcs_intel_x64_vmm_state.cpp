@@ -20,331 +20,258 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#define CATCH_CONFIG_MAIN
 #include <catch/catch.hpp>
+#include <hippomocks.h>
+#include <bftypes.h>
 
-TEST_CASE("test name goes here")
+#include <vmcs/vmcs_intel_x64_vmm_state.h>
+
+#include <intrinsics/x86/common_x64.h>
+#include <intrinsics/x86/intel_x64.h>
+
+#include <memory_manager/pat_x64.h>
+#include <memory_manager/root_page_table_x64.h>
+
+#include <test/vmcs_utils.h>
+
+#ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
+
+using namespace x64;
+
+static uint64_t test_cr0;
+static uint64_t test_cr3;
+static uint64_t test_cr4;
+static uint64_t test_ia32_efer_msr;
+
+static std::map<uint32_t, uint32_t> g_ecx;
+static std::map<uint32_t, uint32_t> g_ebx;
+
+static uint32_t
+test_cpuid_ecx(uint32_t addr) noexcept
 {
-    CHECK(true);
+    return g_ecx[addr];
 }
 
-// #include <test.h>
-// #include <vmcs/vmcs_intel_x64_vmm_state.h>
+static uint32_t
+test_cpuid_ebx(uint32_t addr) noexcept
+{
+    return g_ebx[addr];
+}
 
-// #include <intrinsics/srs_x64.h>
-// #include <intrinsics/gdt_x64.h>
-// #include <intrinsics/idt_x64.h>
-// #include <intrinsics/debug_x64.h>
-// #include <intrinsics/crs_intel_x64.h>
-// #include <intrinsics/msrs_intel_x64.h>
+static void
+setup_intrinsics(MockRepository &mocks)
+{
+    mocks.OnCallFunc(_cpuid_ecx).Do(test_cpuid_ecx);
+    mocks.OnCallFunc(_cpuid_ebx).Do(test_cpuid_ebx);
+}
 
-// #include <memory_manager/pat_x64.h>
-// #include <memory_manager/root_page_table_x64.h>
+static void
+setup_vmm_state(MockRepository &mocks)
+{
+    setup_intrinsics(mocks);
 
-// using namespace x64;
+    auto pt = mocks.Mock<root_page_table_x64>();
+    mocks.OnCallFunc(root_pt).Return(pt);
+    mocks.OnCall(pt, root_page_table_x64::cr3).Return(test_cr3);
 
-// extern uint64_t test_cr0;
-// extern uint64_t test_cr3;
-// extern uint64_t test_cr4;
+    test_cr0 = 0;
+    test_cr0 |= intel_x64::cr0::protection_enable::mask;
+    test_cr0 |= intel_x64::cr0::monitor_coprocessor::mask;
+    test_cr0 |= intel_x64::cr0::extension_type::mask;
+    test_cr0 |= intel_x64::cr0::numeric_error::mask;
+    test_cr0 |= intel_x64::cr0::write_protect::mask;
+    test_cr0 |= intel_x64::cr0::paging::mask;
 
-// extern void setup_gdt();
-// extern void setup_idt();
+    test_cr3 = 0x000000ABCDEF0000;
 
-// static uint64_t test_ia32_efer_msr;
+    test_cr4 = 0;
+    test_cr4 |= intel_x64::cr4::v8086_mode_extensions::mask;
+    test_cr4 |= intel_x64::cr4::protected_mode_virtual_interrupts::mask;
+    test_cr4 |= intel_x64::cr4::time_stamp_disable::mask;
+    test_cr4 |= intel_x64::cr4::debugging_extensions::mask;
+    test_cr4 |= intel_x64::cr4::page_size_extensions::mask;
+    test_cr4 |= intel_x64::cr4::physical_address_extensions::mask;
+    test_cr4 |= intel_x64::cr4::machine_check_enable::mask;
+    test_cr4 |= intel_x64::cr4::page_global_enable::mask;
+    test_cr4 |= intel_x64::cr4::performance_monitor_counter_enable::mask;
+    test_cr4 |= intel_x64::cr4::osfxsr::mask;
+    test_cr4 |= intel_x64::cr4::osxsave::mask;
+    test_cr4 |= intel_x64::cr4::osxmmexcpt::mask;
+    test_cr4 |= intel_x64::cr4::vmx_enable_bit::mask;
+    test_cr4 |= intel_x64::cr4::smep_enable_bit::mask;
+    test_cr4 |= intel_x64::cr4::smap_enable_bit::mask;
+}
 
-// static void
-// setup_vmm_state(MockRepository &mocks)
-// {
-//     auto pt = mocks.Mock<root_page_table_x64>();
-//     mocks.OnCallFunc(root_pt).Return(pt);
-//     mocks.OnCall(pt, root_page_table_x64::cr3).Return(test_cr3);
+TEST_CASE("vmcs: vmm_state_gdt_not_setup")
+{
+    MockRepository mocks;
+    setup_vmm_state(mocks);
 
-//     test_cr0 = 0;
-//     test_cr0 |= cr0::protection_enable::mask;
-//     test_cr0 |= cr0::monitor_coprocessor::mask;
-//     test_cr0 |= cr0::extension_type::mask;
-//     test_cr0 |= cr0::numeric_error::mask;
-//     test_cr0 |= cr0::write_protect::mask;
-//     test_cr0 |= cr0::paging::mask;
+    auto cs_access_rights = (access_rights::ring0_cs_descriptor & 0xF0FFULL);
+    auto ss_access_rights = (access_rights::ring0_ss_descriptor & 0xF0FFULL);
+    auto fs_access_rights = (access_rights::ring0_fs_descriptor & 0xF0FFULL);
+    auto gs_access_rights = (access_rights::ring0_gs_descriptor & 0xF0FFULL);
+    auto tr_access_rights = (access_rights::ring0_tr_descriptor & 0xF0FFULL);
 
-//     test_cr3 = 0x000000ABCDEF0000;
+    vmcs_intel_x64_vmm_state state{};
 
-//     test_cr4 = 0;
-//     test_cr4 |= cr4::v8086_mode_extensions::mask;
-//     test_cr4 |= cr4::protected_mode_virtual_interrupts::mask;
-//     test_cr4 |= cr4::time_stamp_disable::mask;
-//     test_cr4 |= cr4::debugging_extensions::mask;
-//     test_cr4 |= cr4::page_size_extensions::mask;
-//     test_cr4 |= cr4::physical_address_extensions::mask;
-//     test_cr4 |= cr4::machine_check_enable::mask;
-//     test_cr4 |= cr4::page_global_enable::mask;
-//     test_cr4 |= cr4::performance_monitor_counter_enable::mask;
-//     test_cr4 |= cr4::osfxsr::mask;
-//     test_cr4 |= cr4::osxsave::mask;
-//     test_cr4 |= cr4::osxmmexcpt::mask;
-//     test_cr4 |= cr4::vmx_enable_bit::mask;
-//     test_cr4 |= cr4::smep_enable_bit::mask;
-//     test_cr4 |= cr4::smap_enable_bit::mask;
-// }
+    CHECK(g_gdt.access_rights(1) == cs_access_rights);
+    CHECK(g_gdt.access_rights(2) == ss_access_rights);
+    CHECK(g_gdt.access_rights(3) == fs_access_rights);
+    CHECK(g_gdt.access_rights(4) == gs_access_rights);
+    CHECK(g_gdt.access_rights(5) == tr_access_rights);
 
-// void
-// vmcs_ut::test_vmm_state_gdt_not_setup()
-// {
-//     MockRepository mocks;
-//     setup_vmm_state(mocks);
+    CHECK(g_gdt.base(1) == 0);
+    CHECK(g_gdt.base(2) == 0);
+    CHECK(g_gdt.base(3) == 0);
+    CHECK(g_gdt.base(4) == 0);
+    CHECK(g_gdt.base(5) == bfrcast(gdt_x64::integer_pointer, &g_tss));
 
-//     auto cs_access_rights = (access_rights::ring0_cs_descriptor & 0xF0FFULL);
-//     auto ss_access_rights = (access_rights::ring0_ss_descriptor & 0xF0FFULL);
-//     auto fs_access_rights = (access_rights::ring0_fs_descriptor & 0xF0FFULL);
-//     auto gs_access_rights = (access_rights::ring0_gs_descriptor & 0xF0FFULL);
-//     auto tr_access_rights = (access_rights::ring0_tr_descriptor & 0xF0FFULL);
+    CHECK(g_gdt.limit(1) == 0xFFFFFFFF);
+    CHECK(g_gdt.limit(2) == 0xFFFFFFFF);
+    CHECK(g_gdt.limit(3) == 0xFFFFFFFF);
+    CHECK(g_gdt.limit(4) == 0xFFFFFFFF);
+    CHECK(g_gdt.limit(5) == sizeof(g_tss));
+}
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]
-//         {
-//             vmcs_intel_x64_vmm_state state{};
+TEST_CASE("vmcs: vmm_state_segment_registers")
+{
+    MockRepository mocks;
+    setup_vmm_state(mocks);
 
-//             this->expect_true(g_gdt.access_rights(1) == cs_access_rights);
-//             this->expect_true(g_gdt.access_rights(2) == ss_access_rights);
-//             this->expect_true(g_gdt.access_rights(3) == fs_access_rights);
-//             this->expect_true(g_gdt.access_rights(4) == gs_access_rights);
-//             this->expect_true(g_gdt.access_rights(5) == tr_access_rights);
+    vmcs_intel_x64_vmm_state state{};
 
-//             this->expect_true(g_gdt.base(1) == 0);
-//             this->expect_true(g_gdt.base(2) == 0);
-//             this->expect_true(g_gdt.base(3) == 0);
-//             this->expect_true(g_gdt.base(4) == 0);
-//             this->expect_true(g_gdt.base(5) == reinterpret_cast<gdt_x64::integer_pointer>(&g_tss));
+    CHECK(state.cs() == 1U << 3);
+    CHECK(state.ss() == 2U << 3);
+    CHECK(state.fs() == 3U << 3);
+    CHECK(state.gs() == 4U << 3);
+    CHECK(state.tr() == 5U << 3);
+}
 
-//             this->expect_true(g_gdt.limit(1) == 0xFFFFFFFF);
-//             this->expect_true(g_gdt.limit(2) == 0xFFFFFFFF);
-//             this->expect_true(g_gdt.limit(3) == 0xFFFFFFFF);
-//             this->expect_true(g_gdt.limit(4) == 0xFFFFFFFF);
-//             this->expect_true(g_gdt.limit(5) == sizeof(g_tss));
-//         });
-//     });
-// }
+TEST_CASE("vmcs: vmm_state_control_registers")
+{
+    MockRepository mocks;
+    setup_vmm_state(mocks);
 
-// void
-// vmcs_ut::test_vmm_state_segment_registers()
-// {
-//     MockRepository mocks;
-//     setup_vmm_state(mocks);
+    g_ebx[x64::cpuid::extended_feature_flags::addr] = 0x00100080UL;
+    g_ecx[x64::cpuid::feature_information::addr] = 0x4000000UL;
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]
-//         {
-//             vmcs_intel_x64_vmm_state state{};
+    vmcs_intel_x64_vmm_state state{};
 
-//             this->expect_true(state.cs() == 1U << 3);
-//             this->expect_true(state.ss() == 2U << 3);
-//             this->expect_true(state.fs() == 3U << 3);
-//             this->expect_true(state.gs() == 4U << 3);
-//             this->expect_true(state.tr() == 5U << 3);
-//         });
-//     });
-// }
+    CHECK(state.cr0() == test_cr0);
+    CHECK(state.cr3() == test_cr3);
+    CHECK(state.cr4() == test_cr4);
+}
 
-// void
-// vmcs_ut::test_vmm_state_control_registers()
-// {
-//     MockRepository mocks;
-//     setup_vmm_state(mocks);
+TEST_CASE("vmcs: vmm_state_rflags")
+{
+    MockRepository mocks;
+    setup_vmm_state(mocks);
 
-//     g_cpuid_regs.ebx = 0x00100080UL;
+    vmcs_intel_x64_vmm_state state{};
+    CHECK(state.rflags() == 0U);
+}
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]
-//         {
-//             vmcs_intel_x64_vmm_state state{};
+TEST_CASE("vmcs: vmm_state_gdt_base")
+{
+    MockRepository mocks;
+    setup_vmm_state(mocks);
 
-//             this->expect_true(state.cr0() == test_cr0);
-//             this->expect_true(state.cr3() == test_cr3);
-//             this->expect_true(state.cr4() == test_cr4);
-//         });
-//     });
-// }
+    vmcs_intel_x64_vmm_state state{};
+    CHECK(state.gdt_base() == g_gdt.base());
+}
 
-// void
-// vmcs_ut::test_vmm_state_rflags()
-// {
-//     MockRepository mocks;
-//     setup_vmm_state(mocks);
+TEST_CASE("vmcs: vmm_state_idt_base")
+{
+    MockRepository mocks;
+    setup_vmm_state(mocks);
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]
-//         {
-//             vmcs_intel_x64_vmm_state state{};
-//             this->expect_true(state.rflags() == 0U);
-//         });
-//     });
-// }
+    vmcs_intel_x64_vmm_state state{};
+    CHECK(state.idt_base() == g_idt.base());
+}
 
-// void
-// vmcs_ut::test_vmm_state_gdt_base()
-// {
-//     MockRepository mocks;
-//     setup_vmm_state(mocks);
+TEST_CASE("vmcs: vmm_state_gdt_limit")
+{
+    MockRepository mocks;
+    setup_vmm_state(mocks);
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]
-//         {
-//             vmcs_intel_x64_vmm_state state{};
-//             this->expect_true(state.gdt_base() == g_gdt.base());
-//         });
-//     });
-// }
+    vmcs_intel_x64_vmm_state state{};
+    CHECK(state.gdt_limit() == g_gdt.limit());
+}
 
-// void
-// vmcs_ut::test_vmm_state_idt_base()
-// {
-//     MockRepository mocks;
-//     setup_vmm_state(mocks);
+TEST_CASE("vmcs: vmm_state_idt_limit")
+{
+    MockRepository mocks;
+    setup_vmm_state(mocks);
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]
-//         {
-//             vmcs_intel_x64_vmm_state state{};
-//             this->expect_true(state.idt_base() == g_idt.base());
-//         });
-//     });
-// }
+    vmcs_intel_x64_vmm_state state{};
+    CHECK(state.idt_limit() == g_idt.limit());
+}
 
-// void
-// vmcs_ut::test_vmm_state_gdt_limit()
-// {
-//     MockRepository mocks;
-//     setup_vmm_state(mocks);
+TEST_CASE("vmcs: vmm_state_segment_registers_limit")
+{
+    MockRepository mocks;
+    setup_vmm_state(mocks);
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]
-//         {
-//             vmcs_intel_x64_vmm_state state{};
-//             this->expect_true(state.gdt_limit() == g_gdt.limit());
-//         });
-//     });
-// }
+    vmcs_intel_x64_vmm_state state{};
 
-// void
-// vmcs_ut::test_vmm_state_idt_limit()
-// {
-//     MockRepository mocks;
-//     setup_vmm_state(mocks);
+    CHECK(state.cs_limit() == g_gdt.limit(1U));
+    CHECK(state.ss_limit() == g_gdt.limit(2U));
+    CHECK(state.fs_limit() == g_gdt.limit(3U));
+    CHECK(state.gs_limit() == g_gdt.limit(4U));
+    CHECK(state.tr_limit() == g_gdt.limit(5U));
+}
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]
-//         {
-//             vmcs_intel_x64_vmm_state state{};
-//             this->expect_true(state.idt_limit() == g_idt.limit());
-//         });
-//     });
-// }
+TEST_CASE("vmcs: vmm_state_segment_registers_access_rights")
+{
+    MockRepository mocks;
+    setup_vmm_state(mocks);
 
-// void
-// vmcs_ut::test_vmm_state_segment_registers_limit()
-// {
-//     MockRepository mocks;
-//     setup_vmm_state(mocks);
+    vmcs_intel_x64_vmm_state state{};
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]
-//         {
-//             vmcs_intel_x64_vmm_state state{};
+    CHECK(state.cs_access_rights() == g_gdt.access_rights(1U));
+    CHECK(state.ss_access_rights() == g_gdt.access_rights(2U));
+    CHECK(state.fs_access_rights() == g_gdt.access_rights(3U));
+    CHECK(state.gs_access_rights() == g_gdt.access_rights(4U));
+    CHECK(state.tr_access_rights() == g_gdt.access_rights(5U));
+}
 
-//             this->expect_true(state.cs_limit() == g_gdt.limit(1U));
-//             this->expect_true(state.ss_limit() == g_gdt.limit(2U));
-//             this->expect_true(state.fs_limit() == g_gdt.limit(3U));
-//             this->expect_true(state.gs_limit() == g_gdt.limit(4U));
-//             this->expect_true(state.tr_limit() == g_gdt.limit(5U));
-//         });
-//     });
-// }
+TEST_CASE("vmcs: vmm_state_segment_registers_base")
+{
+    MockRepository mocks;
+    setup_vmm_state(mocks);
 
-// void
-// vmcs_ut::test_vmm_state_segment_registers_access_rights()
-// {
-//     MockRepository mocks;
-//     setup_vmm_state(mocks);
+    vmcs_intel_x64_vmm_state state{};
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]
-//         {
-//             vmcs_intel_x64_vmm_state state{};
+    CHECK(state.cs_base() == g_gdt.base(1U));
+    CHECK(state.ss_base() == g_gdt.base(2U));
+    CHECK(state.fs_base() == g_gdt.base(3U));
+    CHECK(state.gs_base() == g_gdt.base(4U));
+    CHECK(state.tr_base() == g_gdt.base(5U));
+}
 
-//             this->expect_true(state.cs_access_rights() == g_gdt.access_rights(1U));
-//             this->expect_true(state.ss_access_rights() == g_gdt.access_rights(2U));
-//             this->expect_true(state.fs_access_rights() == g_gdt.access_rights(3U));
-//             this->expect_true(state.gs_access_rights() == g_gdt.access_rights(4U));
-//             this->expect_true(state.tr_access_rights() == g_gdt.access_rights(5U));
-//         });
-//     });
-// }
+TEST_CASE("vmcs: vmm_state_ia32_efer_msr")
+{
+    MockRepository mocks;
+    setup_vmm_state(mocks);
 
-// void
-// vmcs_ut::test_vmm_state_segment_registers_base()
-// {
-//     MockRepository mocks;
-//     setup_vmm_state(mocks);
+    test_ia32_efer_msr = 0;
+    test_ia32_efer_msr |= intel_x64::msrs::ia32_efer::lme::mask;
+    test_ia32_efer_msr |= intel_x64::msrs::ia32_efer::lma::mask;
+    test_ia32_efer_msr |= intel_x64::msrs::ia32_efer::nxe::mask;
 
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]
-//         {
-//             vmcs_intel_x64_vmm_state state{};
+    vmcs_intel_x64_vmm_state state{};
+    CHECK(state.ia32_pat_msr() == pat::pat_value);
+    CHECK(state.ia32_efer_msr() == test_ia32_efer_msr);
+}
 
-//             this->expect_true(state.cs_base() == g_gdt.base(1U));
-//             this->expect_true(state.ss_base() == g_gdt.base(2U));
-//             this->expect_true(state.fs_base() == g_gdt.base(3U));
-//             this->expect_true(state.gs_base() == g_gdt.base(4U));
-//             this->expect_true(state.tr_base() == g_gdt.base(5U));
-//         });
-//     });
-// }
+TEST_CASE("vmcs: vmm_state_dump")
+{
+    MockRepository mocks;
+    setup_vmm_state(mocks);
 
-// void
-// vmcs_ut::test_vmm_state_ia32_efer_msr()
-// {
-//     MockRepository mocks;
-//     setup_vmm_state(mocks);
+    vmcs_intel_x64_vmm_state state{};
+    CHECK_NOTHROW(state.dump());
+}
 
-//     test_ia32_efer_msr = 0;
-//     test_ia32_efer_msr |= msrs::ia32_efer::lme::mask;
-//     test_ia32_efer_msr |= msrs::ia32_efer::lma::mask;
-//     test_ia32_efer_msr |= msrs::ia32_efer::nxe::mask;
-
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]
-//         {
-//             vmcs_intel_x64_vmm_state state{};
-//             this->expect_true(state.ia32_pat_msr() == pat::pat_value);
-//             this->expect_true(state.ia32_efer_msr() == test_ia32_efer_msr);
-//         });
-//     });
-// }
-
-// void
-// vmcs_ut::test_vmm_state_dump()
-// {
-//     MockRepository mocks;
-//     setup_vmm_state(mocks);
-
-//     RUN_UNITTEST_WITH_MOCKS(mocks, [&]
-//     {
-//         this->expect_no_exception([&]
-//         {
-//             vmcs_intel_x64_vmm_state state{};
-//             this->expect_no_exception([&] { state.dump(); });
-//         });
-//     });
-// }
+#endif
