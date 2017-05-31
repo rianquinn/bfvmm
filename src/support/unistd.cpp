@@ -28,17 +28,17 @@
 extern "C" EXPORT_SYM int
 write(int file, const void *buffer, size_t count)
 {
-    if (buffer == nullptr || count == 0)
+    if (buffer == nullptr || count == 0) {
         return 0;
+    }
 
-    if (file != 1 && file != 2)
+    if (file != 1 && file != 2) {
         return 0;
+    }
 
-    try
-    {
+    try {
         std::string str(static_cast<const char *>(buffer), count);
-        if (str.length() >= 26 && str.compare(0, 8, "$vcpuid=") == 0)
-        {
+        if (str.length() >= 26 && str.compare(0, 8, "$vcpuid=") == 0) {
             str.erase(0, 8);
 
             auto vcpuid_str = str.substr(0, 18);
@@ -49,8 +49,7 @@ write(int file, const void *buffer, size_t count)
             g_vcm->write(vcpuid_num, str);
             return static_cast<int>(count);
         }
-        else
-        {
+        else {
             g_vcm->write(0, str);
             serial_port_intel_x64::instance()->write(str);
             return static_cast<int>(count);

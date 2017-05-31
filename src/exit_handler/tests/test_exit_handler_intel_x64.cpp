@@ -178,6 +178,7 @@ setup_vmcs_handled(MockRepository &mocks, vmcs::value_type reason)
 
     g_msrs[intel_x64::msrs::ia32_vmx_true_entry_ctls::addr] = 0xFFFFFFFFFFFFFFFFUL;
     g_exit_reason = reason;
+
     return vmcs;
 }
 
@@ -194,6 +195,7 @@ setup_vmcs_halt(MockRepository &mocks, vmcs::value_type reason)
 
     g_msrs[intel_x64::msrs::ia32_vmx_true_entry_ctls::addr] = 0xFFFFFFFFFFFFFFFFUL;
     g_exit_reason = reason;
+
     return vmcs;
 }
 
@@ -239,8 +241,8 @@ TEST_CASE("exit_handler: vm_exit_reason_unknown")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_unhandled(mocks, 0x0000BEEF);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_unhandled(mocks, 0x0000BEEF);
+    auto ehlr = setup_ehlr(vmcs);
 
     CHECK_NOTHROW(ehlr.dispatch());
 }
@@ -249,8 +251,8 @@ TEST_CASE("exit_handler: vm_exit_reason_cpuid")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::cpuid);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::cpuid);
+    auto ehlr = setup_ehlr(vmcs);
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
@@ -260,8 +262,8 @@ TEST_CASE("exit_handler: vm_exit_reason_invd")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::invd);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::invd);
+    auto ehlr = setup_ehlr(vmcs);
 
     CHECK_NOTHROW(ehlr.dispatch());
     CHECK(ehlr.m_state_save->rip == g_rip);
@@ -271,8 +273,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_invalid_opcode")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rax = 0x0000BEEF;
     ehlr.m_state_save->rdx = VMCALL_MAGIC_NUMBER;
@@ -286,8 +288,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_invalid_magic")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rax = VMCALL_VERSIONS;
     ehlr.m_state_save->rdx = 0;
@@ -301,8 +303,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_protocol_version")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rax = VMCALL_VERSIONS;
     ehlr.m_state_save->rdx = VMCALL_MAGIC_NUMBER;
@@ -321,8 +323,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_bareflank_version")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rax = VMCALL_VERSIONS;
     ehlr.m_state_save->rdx = VMCALL_MAGIC_NUMBER;
@@ -341,8 +343,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_user_version")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rax = VMCALL_VERSIONS;
     ehlr.m_state_save->rdx = VMCALL_MAGIC_NUMBER;
@@ -361,8 +363,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_unknown_version")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rax = VMCALL_VERSIONS;
     ehlr.m_state_save->rdx = VMCALL_MAGIC_NUMBER;
@@ -377,8 +379,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_registers")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rax = VMCALL_REGISTERS;
     ehlr.m_state_save->rdx = VMCALL_MAGIC_NUMBER;
@@ -403,8 +405,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_unittest")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rax = VMCALL_UNITTEST;
     ehlr.m_state_save->rdx = VMCALL_MAGIC_NUMBER;
@@ -426,8 +428,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_event")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rax = VMCALL_EVENT;
     ehlr.m_state_save->rdx = VMCALL_MAGIC_NUMBER;
@@ -441,8 +443,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_start")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rax = VMCALL_START;
     ehlr.m_state_save->rdx = VMCALL_MAGIC_NUMBER;
@@ -456,8 +458,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_stop")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rax = VMCALL_STOP;
     ehlr.m_state_save->rdx = VMCALL_MAGIC_NUMBER;
@@ -472,8 +474,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_unknown")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -496,8 +498,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_input_nul
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -518,8 +520,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_output_nu
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -540,8 +542,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_input_siz
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -562,8 +564,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_output_si
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -584,8 +586,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_output_si
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -606,8 +608,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_input_siz
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -628,8 +630,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_output_si
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -650,8 +652,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_map_fails
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -674,8 +676,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_unformatted_success")
 
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks, map_success);
     setup_pt(mocks);
 
@@ -698,8 +700,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_input_nullptr")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -720,8 +722,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_output_nullptr")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -742,8 +744,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_input_size_0")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -764,8 +766,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_output_size_0")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -786,8 +788,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_output_size_too_
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -808,8 +810,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_input_size_too_b
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -830,8 +832,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_output_size_too_
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -852,8 +854,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_map_fails")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -874,8 +876,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_invalid")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -901,8 +903,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_success")
 
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks, map_success);
     setup_pt(mocks);
 
@@ -925,8 +927,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_input_nullp
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -947,8 +949,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_output_null
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -969,8 +971,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_input_size_
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -991,8 +993,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_output_size
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -1013,8 +1015,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_output_size
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -1035,8 +1037,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_input_size_
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -1057,8 +1059,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_output_size
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -1079,8 +1081,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_map_fails")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks);
     setup_pt(mocks);
 
@@ -1103,8 +1105,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_data_unformatted_success")
 
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks, map_success);
     setup_pt(mocks);
 
@@ -1129,8 +1131,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_unknown_type")
 
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
     setup_mm(mocks, map_success);
     setup_pt(mocks);
 
@@ -1150,8 +1152,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_unittests")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmcall);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rax = VMCALL_DATA;                        // r00
     ehlr.m_state_save->rdx = VMCALL_MAGIC_NUMBER;                // r01
@@ -1163,8 +1165,8 @@ TEST_CASE("exit_handler: vm_exit_reason_vmxoff")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmxoff);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::vmxoff);
+    auto ehlr = setup_ehlr(vmcs);
 
     CHECK_NOTHROW(ehlr.dispatch());
 }
@@ -1173,8 +1175,8 @@ TEST_CASE("exit_handler: vm_exit_reason_rdmsr_debug_ctl")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     g_value = 0x0000000200000001;
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_debugctl::addr;
@@ -1191,8 +1193,8 @@ TEST_CASE("exit_handler: vm_exit_reason_rdmsr_pat")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     g_value = 0x0000000300000002;
     ehlr.m_state_save->rcx = x64::msrs::ia32_pat::addr;
@@ -1211,8 +1213,8 @@ TEST_CASE("exit_handler: vm_exit_reason_rdmsr_efer")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     g_value = 0x0000000400000003;
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_efer::addr;
@@ -1231,8 +1233,8 @@ TEST_CASE("exit_handler: vm_exit_reason_rdmsr_perf")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     g_value = 0x0000000400000003;
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_perf_global_ctrl::addr;
@@ -1251,8 +1253,8 @@ TEST_CASE("exit_handler: vm_exit_reason_rdmsr_cs")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     g_value = 0x0000000500000004;
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_sysenter_cs::addr;
@@ -1269,8 +1271,8 @@ TEST_CASE("exit_handler: vm_exit_reason_rdmsr_esp")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     g_value = 0x0000000600000005;
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_sysenter_esp::addr;
@@ -1287,8 +1289,8 @@ TEST_CASE("exit_handler: vm_exit_reason_rdmsr_eip")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     g_value = 0x0000000700000006;
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_sysenter_eip::addr;
@@ -1305,8 +1307,8 @@ TEST_CASE("exit_handler: vm_exit_reason_rdmsr_fs_base")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     g_value = 0x0000000800000007;
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_fs_base::addr;
@@ -1323,8 +1325,8 @@ TEST_CASE("exit_handler: vm_exit_reason_rdmsr_gs_base")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     g_value = 0x0000000900000008;
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_gs_base::addr;
@@ -1341,8 +1343,8 @@ TEST_CASE("exit_handler: vm_exit_reason_rdmsr_default")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     g_msrs[0x10] = 0x0000000A00000009;
     ehlr.m_state_save->rcx = 0x10;
@@ -1358,8 +1360,8 @@ TEST_CASE("exit_handler: vm_exit_reason_rdmsr_ignore")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::rdmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     g_msrs[0x31] = 0x0;
     ehlr.m_state_save->rcx = 0x31;
@@ -1375,8 +1377,8 @@ TEST_CASE("exit_handler: vm_exit_reason_wrmsr_debug_ctrl")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_debugctl::addr;
     ehlr.m_state_save->rax = 0x1;
@@ -1393,8 +1395,8 @@ TEST_CASE("exit_handler: vm_exit_reason_wrmsr_pat")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rcx = x64::msrs::ia32_pat::addr;
     ehlr.m_state_save->rax = 0x2;
@@ -1413,8 +1415,8 @@ TEST_CASE("exit_handler: vm_exit_reason_wrmsr_efer")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_efer::addr;
     ehlr.m_state_save->rax = 0x3;
@@ -1433,8 +1435,8 @@ TEST_CASE("exit_handler: vm_exit_reason_wrmsr_perf")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_perf_global_ctrl::addr;
     ehlr.m_state_save->rax = 0x3;
@@ -1453,8 +1455,8 @@ TEST_CASE("exit_handler: vm_exit_reason_wrmsr_cs")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_sysenter_cs::addr;
     ehlr.m_state_save->rax = 0x4;
@@ -1471,8 +1473,8 @@ TEST_CASE("exit_handler: vm_exit_reason_wrmsr_esp")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_sysenter_esp::addr;
     ehlr.m_state_save->rax = 0x5;
@@ -1489,8 +1491,8 @@ TEST_CASE("exit_handler: vm_exit_reason_wrmsr_eip")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_sysenter_eip::addr;
     ehlr.m_state_save->rax = 0x6;
@@ -1507,8 +1509,8 @@ TEST_CASE("exit_handler: vm_exit_reason_wrmsr_fs_base")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_fs_base::addr;
     ehlr.m_state_save->rax = 0x7;
@@ -1525,8 +1527,8 @@ TEST_CASE("exit_handler: vm_exit_reason_wrmsr_gs_base")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rcx = intel_x64::msrs::ia32_gs_base::addr;
     ehlr.m_state_save->rax = 0x8;
@@ -1543,8 +1545,8 @@ TEST_CASE("exit_handler: vm_exit_reason_wrmsr_default")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_handled(mocks, exit_reason::basic_exit_reason::wrmsr);
+    auto ehlr = setup_ehlr(vmcs);
 
     ehlr.m_state_save->rcx = 0x10;
     ehlr.m_state_save->rax = 0x9;
@@ -1559,8 +1561,8 @@ TEST_CASE("exit_handler: vm_exit_failure_check")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_unhandled(mocks, exit_reason::basic_exit_reason::xrstors | 0x80000000);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_unhandled(mocks, exit_reason::basic_exit_reason::xrstors | 0x80000000);
+    auto ehlr = setup_ehlr(vmcs);
 
     mocks.OnCallFunc(vmcs::check::all).Do(vmcs_check_all);
 
@@ -1571,8 +1573,8 @@ TEST_CASE("exit_handler: halt")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    auto &&vmcs = setup_vmcs_halt(mocks, exit_reason::basic_exit_reason::xrstors);
-    auto &&ehlr = setup_ehlr(vmcs);
+    auto vmcs = setup_vmcs_halt(mocks, exit_reason::basic_exit_reason::xrstors);
+    auto ehlr = setup_ehlr(vmcs);
 
     CHECK_NOTHROW(ehlr.halt());
 }
