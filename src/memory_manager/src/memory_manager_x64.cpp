@@ -287,6 +287,8 @@ memory_manager_x64::integer_pointer
 memory_manager_x64::upper(integer_pointer ptr) const noexcept
 { return ptr & ~(page_size - 1); }
 
+#ifdef VMM
+
 extern "C" EXPORT_MEMORY_MANAGER void *
 _malloc_r(struct _reent *, size_t size)
 { return g_mm->alloc(size); }
@@ -322,3 +324,5 @@ _realloc_r(struct _reent *, void *ptr, size_t size)
 
     return new_ptr;
 }
+
+#endif

@@ -31,19 +31,18 @@
 TEST_CASE("exit_handler: entry_valid")
 {
     MockRepository mocks;
-    auto &&eh = mocks.Mock<exit_handler_intel_x64>();
+    auto eh = mocks.Mock<exit_handler_intel_x64>();
 
     mocks.OnCall(eh, exit_handler_intel_x64::halt);
     mocks.OnCall(eh, exit_handler_intel_x64::dispatch);
 
-    CHECK_NOTHROW(exit_handler_entry());
     CHECK_NOTHROW(exit_handler(eh));
 }
 
 TEST_CASE("exit_handler: entry_throws_invalid_argument")
 {
     MockRepository mocks;
-    auto &&eh = mocks.Mock<exit_handler_intel_x64>();
+    auto eh = mocks.Mock<exit_handler_intel_x64>();
 
     mocks.ExpectCall(eh, exit_handler_intel_x64::halt);
     mocks.OnCall(eh, exit_handler_intel_x64::dispatch).Throw(std::invalid_argument(""));
@@ -54,7 +53,7 @@ TEST_CASE("exit_handler: entry_throws_invalid_argument")
 TEST_CASE("exit_handler: entry_throws_standard_exception")
 {
     MockRepository mocks;
-    auto &&eh = mocks.Mock<exit_handler_intel_x64>();
+    auto eh = mocks.Mock<exit_handler_intel_x64>();
 
     mocks.ExpectCall(eh, exit_handler_intel_x64::halt);
     mocks.OnCall(eh, exit_handler_intel_x64::dispatch).Throw(std::exception());
@@ -65,7 +64,7 @@ TEST_CASE("exit_handler: entry_throws_standard_exception")
 TEST_CASE("exit_handler: entry_throws_any_exception")
 {
     MockRepository mocks;
-    auto &&eh = mocks.Mock<exit_handler_intel_x64>();
+    auto eh = mocks.Mock<exit_handler_intel_x64>();
 
     mocks.ExpectCall(eh, exit_handler_intel_x64::halt);
     mocks.OnCall(eh, exit_handler_intel_x64::dispatch).Throw(10);

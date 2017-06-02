@@ -3,7 +3,6 @@
 # ------------------------------------------------------------------------------
 
 include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeGlobal_Includes.txt")
-include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeOption_Testing.txt")
 
 # ------------------------------------------------------------------------------
 # Targets

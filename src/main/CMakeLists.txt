@@ -41,4 +41,6 @@ endif()
 
 if(CMAKE_TOOLCHAIN_FILE)
     install(TARGETS bfvmm_main DESTINATION ${BAREFLANK_SYSROOT_PATH}/bin)
+else()
+    install(TARGETS bfvmm_main DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 endif()
