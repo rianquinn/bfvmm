@@ -154,10 +154,10 @@ private:
 
     std::unique_ptr<vcpu_factory> m_vcpu_factory;
 
+public:
+
     void set_factory(std::unique_ptr<vcpu_factory> factory)
     { m_vcpu_factory = std::move(factory); }
-
-public:
 
     vcpu_manager(vcpu_manager &&) noexcept = delete;
     vcpu_manager &operator=(vcpu_manager &&) noexcept = delete;
