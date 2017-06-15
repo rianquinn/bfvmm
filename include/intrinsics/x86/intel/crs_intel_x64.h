@@ -608,10 +608,10 @@ namespace cr8
     using value_type = uint64_t;
 
     inline auto get() noexcept
-    { return __read_cr8(); }
+    { return _read_cr8(); }
 
     template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { __write_cr8(val); }
+    void set(T val) noexcept { _write_cr8(val); }
 }
 
 }
