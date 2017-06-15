@@ -57,6 +57,9 @@ extern "C" EXPORT_INTRINSICS void _write_cr3(uint64_t val) noexcept;
 extern "C" EXPORT_INTRINSICS uint64_t _read_cr4(void) noexcept;
 extern "C" EXPORT_INTRINSICS void _write_cr4(uint64_t val) noexcept;
 
+extern "C" uint64_t _read_cr8(void) noexcept;
+extern "C" void _write_cr8(uint64_t val) noexcept;
+
 // *INDENT-OFF*
 
 namespace intel_x64
@@ -599,6 +602,18 @@ namespace cr4
         }
     }
 }
+
+namespace cr8
+{
+    using value_type = uint64_t;
+
+    inline auto get() noexcept
+    { return _read_cr8(); }
+
+    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+    void set(T val) noexcept { _write_cr8(val); }
+}
+
 }
 
 // *INDENT-ON*

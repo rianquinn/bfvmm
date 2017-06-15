@@ -36,6 +36,7 @@ TEST_CASE("test name goes here")
 // cr2::value_type g_cr2 = 0;
 // cr3::value_type g_cr3 = 0;
 // cr4::value_type g_cr4 = 0;
+// cr8::value_type g_cr8 = 0;
 
 // extern "C" uint64_t
 // __read_cr0(void) noexcept
@@ -68,6 +69,14 @@ TEST_CASE("test name goes here")
 // extern "C" void
 // __write_cr4(uint64_t val) noexcept
 // { g_cr4 = val; }
+
+// extern "C" uint64_t
+// __read_cr8(void) noexcept
+// { return g_cr8; }
+
+// extern "C" void
+// __write_cr8(uint64_t val) noexcept
+// { g_cr8 = val; }
 
 // void
 // intrinsics_ut::test_cr0_intel_x64()
@@ -465,4 +474,11 @@ TEST_CASE("test name goes here")
 //     this->expect_false(cr4::protection_key_enable_bit::get());
 
 //     this->expect_true(cr4::get() == 0x0);
+// }
+
+// void
+// intrinsics_ut::test_cr8_intel_x64()
+// {
+//     cr8::set(0x100U);
+//     this->expect_true(cr8::get() == 0x100U);
 // }
