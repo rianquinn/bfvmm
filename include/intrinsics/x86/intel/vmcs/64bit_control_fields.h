@@ -50,7 +50,7 @@ auto set_vm_function_control(bool val, MA msr_addr, CA ctls_addr,
     }
 
     if (val) {
-        auto allowed1 = (intel_x64::msrs::get(msr_addr) & mask) != 0;
+        auto allowed1 = (intel_x64::msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) & mask) != 0;
 
         if (!allowed1) {
             throw std::logic_error("set_vm_function_control failed: "_s + name
@@ -80,7 +80,7 @@ auto set_vm_function_control_if_allowed(bool val, MA msr_addr, CA ctls_addr,
     }
 
     if (val) {
-        auto allowed1 = (intel_x64::msrs::get(msr_addr) & mask) != 0;
+        auto allowed1 = (intel_x64::msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) & mask) != 0;
 
         if (!allowed1 && verbose) {
             bfwarning << "set_vm_function_control failed: " << name
