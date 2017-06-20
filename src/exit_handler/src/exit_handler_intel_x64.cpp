@@ -284,7 +284,7 @@ exit_handler_intel_x64::handle_rdmsr()
             break;
 
         default:
-            msr = intel_x64::msrs::get(m_state_save->rcx);
+            msr = intel_x64::msrs::get(gsl::narrow_cast<uint32_t>(m_state_save->rcx));
             break;
 
         // QUIRK:

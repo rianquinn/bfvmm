@@ -49,8 +49,8 @@ auto control_reserved_properly_set(MA msr_addr, C ctls, const char *ctls_name)
 {
     using namespace vmcs::primary_processor_based_vm_execution_controls;
 
-    auto allowed0 = (msrs::get(msr_addr) & 0x00000000FFFFFFFFULL);
-    auto allowed1 = ((msrs::get(msr_addr) >> 32) & 0x00000000FFFFFFFFULL);
+    auto allowed0 = (msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) & 0x00000000FFFFFFFFULL);
+    auto allowed1 = ((msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) >> 32) & 0x00000000FFFFFFFFULL);
     auto allowed1_failed = false;
 
     ctls &= 0x00000000FFFFFFFFULL;

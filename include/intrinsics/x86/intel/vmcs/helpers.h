@@ -102,7 +102,7 @@ auto set_vm_control(bool val, MA msr_addr, CA ctls_addr, const char *name, M mas
     }
 
     if (!val) {
-        auto is_allowed0 = (intel_x64::msrs::get(msr_addr) & mask) == 0;
+        auto is_allowed0 = (intel_x64::msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) & mask) == 0;
 
         if (!is_allowed0) {
             throw std::logic_error("set_vm_control failed: "_s + name + " control is not allowed to be cleared to 0");
@@ -110,7 +110,7 @@ auto set_vm_control(bool val, MA msr_addr, CA ctls_addr, const char *name, M mas
 
         intel_x64::vm::write(ctls_addr, (intel_x64::vm::read(ctls_addr, name) & ~mask), name);
     } else {
-        auto is_allowed1 = (intel_x64::msrs::get(msr_addr) & (mask << 32)) != 0;
+        auto is_allowed1 = (intel_x64::msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) & (mask << 32)) != 0;
 
         if (!is_allowed1) {
             throw std::logic_error("set_vm_control failed: "_s + name + " control is not allowed to be set to 1");
@@ -133,7 +133,7 @@ auto set_vm_control_if_allowed(bool val, MA msr_addr, CA ctls_addr, const char *
     }
 
     if (!val) {
-        auto is_allowed0 = (intel_x64::msrs::get(msr_addr) & mask) == 0;
+        auto is_allowed0 = (intel_x64::msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) & mask) == 0;
 
         if (is_allowed0) {
             intel_x64::vm::write(ctls_addr, (intel_x64::vm::read(ctls_addr, name) & ~mask), name);
@@ -144,7 +144,7 @@ auto set_vm_control_if_allowed(bool val, MA msr_addr, CA ctls_addr, const char *
             }
         }
     } else {
-        auto is_allowed1 = (intel_x64::msrs::get(msr_addr) & (mask << 32)) != 0;
+        auto is_allowed1 = (intel_x64::msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) & (mask << 32)) != 0;
 
         if (is_allowed1) {
             intel_x64::vm::write(ctls_addr, (intel_x64::vm::read(ctls_addr, name) | mask), name);
