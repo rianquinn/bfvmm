@@ -28,10 +28,8 @@
 #include <memory_manager/map_ptr_x64.h>
 #include <intrinsics/x86/intel_x64.h>
 
+#include <bfjson.h>
 #include <bfvmcallinterface.h>
-
-#include <nlohmann/json.hpp>
-using namespace nlohmann;
 
 // -----------------------------------------------------------------------------
 // Exports
