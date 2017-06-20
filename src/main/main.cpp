@@ -21,6 +21,7 @@
 
 #include <bfgsl.h>
 #include <bfdebug.h>
+#include <bfexports.h>
 #include <bfsupport.h>
 #include <bfexception.h>
 
@@ -45,11 +46,11 @@ private_add_md(struct memory_descriptor *md) noexcept
 }
 
 user_data *
-__attribute__((weak)) pre_create_vcpu(vcpuid::type id)
+WEAK_SYM pre_create_vcpu(vcpuid::type id)
 { (void) id; return nullptr; }
 
 user_data *
-__attribute__((weak)) pre_run_vcpu(vcpuid::type id)
+WEAK_SYM pre_run_vcpu(vcpuid::type id)
 { (void) id; return nullptr; }
 
 extern "C" int64_t
@@ -72,11 +73,11 @@ private_init_vmm(uint64_t arg) noexcept
 }
 
 user_data *
-__attribute__((weak)) pre_hlt_vcpu(vcpuid::type id)
+WEAK_SYM pre_hlt_vcpu(vcpuid::type id)
 { (void) id; return nullptr; }
 
 user_data *
-__attribute__((weak)) pre_delete_vcpu(vcpuid::type id)
+WEAK_SYM pre_delete_vcpu(vcpuid::type id)
 { (void) id; return nullptr; }
 
 extern "C" int64_t
