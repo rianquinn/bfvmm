@@ -57,8 +57,8 @@ extern "C" EXPORT_INTRINSICS void _write_cr3(uint64_t val) noexcept;
 extern "C" EXPORT_INTRINSICS uint64_t _read_cr4(void) noexcept;
 extern "C" EXPORT_INTRINSICS void _write_cr4(uint64_t val) noexcept;
 
-extern "C" uint64_t _read_cr8(void) noexcept;
-extern "C" void _write_cr8(uint64_t val) noexcept;
+extern "C" EXPORT_INTRINSICS uint64_t _read_cr8(void) noexcept;
+extern "C" EXPORT_INTRINSICS void _write_cr8(uint64_t val) noexcept;
 
 // *INDENT-OFF*
 
