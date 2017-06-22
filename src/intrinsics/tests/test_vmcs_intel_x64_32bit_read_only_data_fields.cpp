@@ -189,11 +189,9 @@ TEST_CASE("vmcs_vm_instruction_error_description")
 
     using namespace vmcs::vm_instruction_error;
 
-    bool exists = true;
-
-    CHECK_THROWS(vm_instruction_error_description(0UL, !exists));
+    CHECK_THROWS(vm_instruction_error_description(0UL, false));
     CHECK(vm_instruction_error_description(1UL,
-                      exists) == "VMCALL executed in VMX root operation"_s);
+                      true) == "VMCALL executed in VMX root operation"_s);
 }
 
 TEST_CASE("vmcs_vm_instruction_error_description_if_exists")
@@ -203,13 +201,10 @@ TEST_CASE("vmcs_vm_instruction_error_description_if_exists")
 
     using namespace vmcs::vm_instruction_error;
 
-    bool exists = true;
-    bool verbose = true;
-
-    CHECK_NOTHROW(vm_instruction_error_description_if_exists(0UL, verbose, !exists));
-    CHECK(vm_instruction_error_description_if_exists(0UL, verbose, !exists) == ""_s);
-    CHECK(vm_instruction_error_description_if_exists(1UL, verbose,
-                      exists) == "VMCALL executed in VMX root operation"_s);
+    CHECK_NOTHROW(vm_instruction_error_description_if_exists(0UL, true, false));
+    CHECK(vm_instruction_error_description_if_exists(0UL, true, false) == ""_s);
+    CHECK(vm_instruction_error_description_if_exists(1UL, true,
+                      true) == "VMCALL executed in VMX root operation"_s);
 }
 
 TEST_CASE("vmcs_exit_reason")
@@ -249,11 +244,9 @@ TEST_CASE("vmcs_exit_reason_basic_exit_reason_description")
 
     using namespace vmcs::exit_reason;
 
-    bool exists = true;
-
-    CHECK_THROWS(basic_exit_reason::basic_exit_reason_description(0UL, !exists));
+    CHECK_THROWS(basic_exit_reason::basic_exit_reason_description(0UL, false));
     CHECK(basic_exit_reason::basic_exit_reason_description(40UL,
-                      exists) == "pause"_s);
+                      true) == "pause"_s);
 }
 
 TEST_CASE("vmcs_exit_reason_basic_exit_reason_description_if_exists")
@@ -263,14 +256,11 @@ TEST_CASE("vmcs_exit_reason_basic_exit_reason_description_if_exists")
 
     using namespace vmcs::exit_reason;
 
-    bool exists = true;
-    bool verbose = true;
-
-    CHECK_NOTHROW(basic_exit_reason::basic_exit_reason_description_if_exists(0UL, verbose, !exists));
-    CHECK(basic_exit_reason::basic_exit_reason_description_if_exists(0UL, verbose,
-                      !exists) == ""_s);
+    CHECK_NOTHROW(basic_exit_reason::basic_exit_reason_description_if_exists(0UL, true, false));
+    CHECK(basic_exit_reason::basic_exit_reason_description_if_exists(0UL, true,
+                      false) == ""_s);
     CHECK(basic_exit_reason::basic_exit_reason_description_if_exists(
-                          40UL, verbose, exists) == "pause"_s);
+                          40UL, true, true) == "pause"_s);
 }
 
 TEST_CASE("vmcs_exit_reason_reserved")

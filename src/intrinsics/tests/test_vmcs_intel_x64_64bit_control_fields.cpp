@@ -89,19 +89,18 @@ TEST_CASE("set_vm_function_control")
     setup_intrinsics(mocks);
 
     constexpr const auto name = "control";
-    auto exists = true;
     auto mask = 0x0000000000000040UL;
     auto ctls_addr = 0UL;
     auto msr_addr = 0U;
 
-    CHECK_THROWS(set_vm_function_control(true, msr_addr, ctls_addr, name, mask, !exists));
-    CHECK_NOTHROW(set_vm_function_control(false, msr_addr, ctls_addr, name, mask, exists));
+    CHECK_THROWS(set_vm_function_control(true, msr_addr, ctls_addr, name, mask, false));
+    CHECK_NOTHROW(set_vm_function_control(false, msr_addr, ctls_addr, name, mask, true));
 
     g_msrs[msr_addr] = mask;
-    CHECK_NOTHROW(set_vm_function_control(true, msr_addr, ctls_addr, name, mask, exists));
+    CHECK_NOTHROW(set_vm_function_control(true, msr_addr, ctls_addr, name, mask, true));
 
     g_msrs[msr_addr] = ~mask;
-    CHECK_THROWS(set_vm_function_control(true, msr_addr, ctls_addr, name, mask, exists));
+    CHECK_THROWS(set_vm_function_control(true, msr_addr, ctls_addr, name, mask, true));
 }
 
 TEST_CASE("set_vm_function_control_if_allowed")
@@ -110,20 +109,18 @@ TEST_CASE("set_vm_function_control_if_allowed")
     setup_intrinsics(mocks);
 
     constexpr const auto name = "control";
-    auto exists = true;
-    auto verbose = true;
     auto mask = 0x0000000000000040UL;
     auto ctls_addr = 0UL;
     auto msr_addr = 0U;
 
-    CHECK_NOTHROW(set_vm_function_control_if_allowed(true, msr_addr, ctls_addr, name, mask, verbose, !exists));
-    CHECK_NOTHROW(set_vm_function_control_if_allowed(false, msr_addr, ctls_addr, name, mask, verbose, exists));
+    CHECK_NOTHROW(set_vm_function_control_if_allowed(true, msr_addr, ctls_addr, name, mask, true, false));
+    CHECK_NOTHROW(set_vm_function_control_if_allowed(false, msr_addr, ctls_addr, name, mask, true, true));
 
     g_msrs[msr_addr] = mask;
-    CHECK_NOTHROW(set_vm_function_control_if_allowed(true, msr_addr, ctls_addr, name, mask, verbose, exists));
+    CHECK_NOTHROW(set_vm_function_control_if_allowed(true, msr_addr, ctls_addr, name, mask, true, true));
 
     g_msrs[msr_addr] = ~mask;
-    CHECK_NOTHROW(set_vm_function_control_if_allowed(true, msr_addr, ctls_addr, name, mask, verbose, exists));
+    CHECK_NOTHROW(set_vm_function_control_if_allowed(true, msr_addr, ctls_addr, name, mask, true, true));
 }
 
 TEST_CASE("vmcs_address_of_io_bitmap_a")
