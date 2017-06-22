@@ -156,7 +156,7 @@ setup_check_control_vm_execution_control_fields_all_paths(std::vector<struct con
         g_msrs[ia32_vmx_true_pinbased_ctls::addr] = 0xffffffff00000000UL;
         g_msrs[ia32_vmx_true_procbased_ctls::addr] = 0xffffffff00000000UL;
         g_msrs[ia32_vmx_procbased_ctls2::addr] = 0xffffffff00000000UL;
-        cr3_target_count::set(3U);
+        cr3_target_count::set(3UL);
         primary_processor_based_vm_execution_controls::use_io_bitmaps::disable();
         primary_processor_based_vm_execution_controls::use_msr_bitmap::disable();
         primary_processor_based_vm_execution_controls::use_tpr_shadow::disable();
@@ -188,8 +188,8 @@ setup_check_control_vm_exit_control_fields_all_paths(std::vector<struct control_
         g_msrs[ia32_vmx_true_exit_ctls::addr] = 0xffffffff00000000UL;
         pin_ctl_allow1(ia32_vmx_true_pinbased_ctls::activate_vmx_preemption_timer::mask);
         pin_based_vm_execution_controls::activate_vmx_preemption_timer::enable();
-        vm_exit_msr_store_count::set(0U);
-        vm_exit_msr_load_count::set(0U);
+        vm_exit_msr_store_count::set(0UL);
+        vm_exit_msr_load_count::set(0UL);
     };
     path.throws_exception = false;
     cfg.push_back(path);
@@ -203,7 +203,7 @@ setup_check_control_vm_entry_control_fields_all_paths(std::vector<struct control
     path.setup = [&] {
         g_msrs[ia32_vmx_true_entry_ctls::addr] = 0xffffffff00000000UL;
         vm_entry_interruption_information_field::valid_bit::disable();
-        vm_entry_msr_load_count::set(0U);
+        vm_entry_msr_load_count::set(0UL);
     };
     path.throws_exception = false;
     cfg.push_back(path);
@@ -263,21 +263,21 @@ setup_check_guest_segment_registers_all_paths(std::vector<struct control_flow_pa
 
     path.setup = [&] {
         guest_tr_selector::ti::set(false);
-        guest_ldtr_access_rights::unusable::set(1U);
+        guest_ldtr_access_rights::unusable::set(1UL);
         guest_rflags::virtual_8086_mode::enable();
-        guest_cs_selector::set(0x1U);
-        guest_cs_base::set(0x10U);
-        guest_ss_selector::set(0x1U);
-        guest_ss_base::set(0x10U);
-        guest_ds_selector::set(0x1U);
-        guest_ds_base::set(0x10U);
-        guest_es_selector::set(0x1U);
-        guest_es_base::set(0x10U);
-        guest_fs_selector::set(0x1U);
-        guest_fs_base::set(0x10U);
-        guest_gs_selector::set(0x1U);
-        guest_gs_base::set(0x10U);
-        guest_tr_base::set(0x10U);
+        guest_cs_selector::set(0x1UL);
+        guest_cs_base::set(0x10UL);
+        guest_ss_selector::set(0x1UL);
+        guest_ss_base::set(0x10UL);
+        guest_ds_selector::set(0x1UL);
+        guest_ds_base::set(0x10UL);
+        guest_es_selector::set(0x1UL);
+        guest_es_base::set(0x10UL);
+        guest_fs_selector::set(0x1UL);
+        guest_fs_base::set(0x10UL);
+        guest_gs_selector::set(0x1UL);
+        guest_gs_base::set(0x10UL);
+        guest_tr_base::set(0x10UL);
         guest_cs_limit::set(0xFFFFUL);
         guest_ss_limit::set(0xFFFFUL);
         guest_ds_limit::set(0xFFFFUL);
@@ -290,13 +290,13 @@ setup_check_guest_segment_registers_all_paths(std::vector<struct control_flow_pa
         guest_es_access_rights::set(0xF3UL);
         guest_fs_access_rights::set(0xF3UL);
         guest_gs_access_rights::set(0xF3UL);
-        guest_tr_access_rights::type::set(x64::access_rights::type::read_execute_accessed);
-        guest_tr_access_rights::s::set(0U);
-        guest_tr_access_rights::present::set(1U);
-        guest_tr_access_rights::reserved::set(0U);
+        guest_tr_access_rights::type::set(gsl::narrow_cast<uint32_t>(x64::access_rights::type::read_execute_accessed));
+        guest_tr_access_rights::s::set(0UL);
+        guest_tr_access_rights::present::set(1UL);
+        guest_tr_access_rights::reserved::set(gsl::narrow_cast<uint32_t>(0UL));
         guest_tr_limit::set(0x1UL);
-        guest_tr_access_rights::granularity::set(0U);
-        guest_tr_access_rights::unusable::set(0U);
+        guest_tr_access_rights::granularity::set(0UL);
+        guest_tr_access_rights::unusable::set(0UL);
     };
     path.throws_exception = false;
     cfg.push_back(path);
@@ -323,9 +323,9 @@ setup_check_guest_rip_and_rflags_all_paths(std::vector<struct control_flow_path>
     path.setup = [&] {
         g_msrs[msrs::ia32_vmx_true_entry_ctls::addr] = 0xFFFFFFFF00000000ULL;
         vm_entry_controls::ia_32e_mode_guest::disable();
-        guest_rip::set(0x1000U);
-        guest_rflags::reserved::set(0U);
-        guest_rflags::always_enabled::set(0x2U);
+        guest_rip::set(0x1000UL);
+        guest_rflags::reserved::set(0UL);
+        guest_rflags::always_enabled::set(0x2UL);
         guest_cr0::protection_enable::enable();
         vm_entry_interruption_information_field::valid_bit::disable();
     };
@@ -341,13 +341,13 @@ setup_check_guest_non_register_state_all_paths(std::vector<struct control_flow_p
     path.setup = [&] {
         g_msrs[msrs::ia32_vmx_true_entry_ctls::addr] = 0xFFFFFFFF00000000ULL;
         guest_activity_state::set(guest_activity_state::active);
-        guest_interruptibility_state::blocking_by_sti::set(0U);
-        guest_interruptibility_state::blocking_by_mov_ss::set(0U);
+        guest_interruptibility_state::blocking_by_sti::set(0UL);
+        guest_interruptibility_state::blocking_by_mov_ss::set(0UL);
         vm_entry_interruption_information_field::valid_bit::disable();
         vm_entry_controls::entry_to_smm::disable();
-        guest_interruptibility_state::reserved::set(0U);
-        guest_interruptibility_state::enclave_interruption::set(0U);
-        guest_pending_debug_exceptions::reserved::set(0U);
+        guest_interruptibility_state::reserved::set(0UL);
+        guest_interruptibility_state::enclave_interruption::set(0UL);
+        guest_pending_debug_exceptions::reserved::set(0UL);
         guest_pending_debug_exceptions::rtm::disable();
         vmcs_link_pointer::set(0xFFFFFFFFFFFFFFFFUL);
     };
@@ -395,7 +395,7 @@ setup_check_host_control_registers_and_msrs_all_paths(std::vector<struct control
         g_msrs[ia32_vmx_cr0_fixed1::addr] = 0xFFFFFFFFFFFFFFFFULL; // cr4 bits to be
         g_msrs[ia32_vmx_cr4_fixed0::addr] = 0ULL;                  // either 0 or 1
         g_msrs[ia32_vmx_cr4_fixed1::addr] = 0xFFFFFFFFFFFFFFFFULL; //
-        host_cr3::set(0x1000ULL); // host_cr3 is valid physical address
+        host_cr3::set(0x1000UL); // host_cr3 is valid physical address
         host_ia32_sysenter_esp::set(0x1000UL); // esp is canonical address
         host_ia32_sysenter_eip::set(0x1000UL); // eip is canonical address
         vm_exit_controls::load_ia32_perf_global_ctrl::disable();
@@ -414,13 +414,13 @@ setup_check_host_segment_and_descriptor_table_registers_all_paths(
     struct control_flow_path path;
 
     path.setup = [&] {
-        host_es_selector::ti::set(false); host_es_selector::rpl::set(0U); // es.ti == 0 && es.rpl == 0
-        host_cs_selector::ti::set(false); host_cs_selector::rpl::set(0U); // cs.ti == 0 && cs.rpl == 0
-        host_ss_selector::ti::set(false); host_ss_selector::rpl::set(0U); // ss.ti == 0 && ss.rpl == 0
-        host_ds_selector::ti::set(false); host_ds_selector::rpl::set(0U); // ds.ti == 0 && ds.rpl == 0
-        host_fs_selector::ti::set(false); host_fs_selector::rpl::set(0U); // fs.ti == 0 && fs.rpl == 0
-        host_gs_selector::ti::set(false); host_gs_selector::rpl::set(0U); // gs.ti == 0 && gs.rpl == 0
-        host_tr_selector::ti::set(false); host_tr_selector::rpl::set(0U); // tr.ti == 0 && tr.rpl == 0
+        host_es_selector::ti::set(false); host_es_selector::rpl::set(0UL); // es.ti == 0 && es.rpl == 0
+        host_cs_selector::ti::set(false); host_cs_selector::rpl::set(0UL); // cs.ti == 0 && cs.rpl == 0
+        host_ss_selector::ti::set(false); host_ss_selector::rpl::set(0UL); // ss.ti == 0 && ss.rpl == 0
+        host_ds_selector::ti::set(false); host_ds_selector::rpl::set(0UL); // ds.ti == 0 && ds.rpl == 0
+        host_fs_selector::ti::set(false); host_fs_selector::rpl::set(0UL); // fs.ti == 0 && fs.rpl == 0
+        host_gs_selector::ti::set(false); host_gs_selector::rpl::set(0UL); // gs.ti == 0 && gs.rpl == 0
+        host_tr_selector::ti::set(false); host_tr_selector::rpl::set(0UL); // tr.ti == 0 && tr.rpl == 0
 
         host_cs_selector::set(~(cs::ti::mask | cs::rpl::mask)); // cs != 0
         host_tr_selector::set(~(tr::ti::mask | tr::rpl::mask)); // tr != 0
