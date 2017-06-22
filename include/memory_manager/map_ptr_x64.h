@@ -529,7 +529,7 @@ public:
     ///
     /// @b Example: @n
     /// @code
-    /// std::cout << bfn::make_unique_map_x64<char>(virt, vmcs::guest_cr3::get(), size) << '\n';
+    /// std::cout << bfn::make_unique_map_x64<char>(virt, vmcs::guest_cr3::get(), size, vmcs::guest_pat::get()) << '\n';
     /// @endcode
     ///
     /// @expects vmap != 0
