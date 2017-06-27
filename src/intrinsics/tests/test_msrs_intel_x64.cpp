@@ -5609,6 +5609,28 @@ TEST_CASE("ia32_vmx_procbased_ctls2_vmcs_shadowing")
     CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::vmcs_shadowing::is_allowed1());
 }
 
+TEST_CASE("ia32_vmx_procbased_ctls2_enable_encls_exiting")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    auto mask = intel_x64::msrs::ia32_vmx_procbased_ctls2::enable_encls_exiting::mask;
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = mask;
+    CHECK(intel_x64::msrs::ia32_vmx_procbased_ctls2::enable_encls_exiting::get());
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = ~mask;
+    CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::enable_encls_exiting::get());
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = mask | (mask << 32);
+    CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::enable_encls_exiting::is_allowed0());
+    CHECK(intel_x64::msrs::ia32_vmx_procbased_ctls2::enable_encls_exiting::is_allowed1());
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = ~mask & ~(mask << 32);
+    CHECK(intel_x64::msrs::ia32_vmx_procbased_ctls2::enable_encls_exiting::is_allowed0());
+    CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::enable_encls_exiting::is_allowed1());
+}
+
 TEST_CASE("ia32_vmx_procbased_ctls2_rdseed_exiting")
 {
     MockRepository mocks;
@@ -5675,6 +5697,28 @@ TEST_CASE("ia32_vmx_procbased_ctls2_ept_violation_ve")
     CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::ept_violation_ve::is_allowed1());
 }
 
+TEST_CASE("ia32_vmx_procbased_ctls2_pt_conceal_nonroot_operation")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    auto mask = intel_x64::msrs::ia32_vmx_procbased_ctls2::pt_conceal_nonroot_operation::mask;
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = mask;
+    CHECK(intel_x64::msrs::ia32_vmx_procbased_ctls2::pt_conceal_nonroot_operation::get());
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = ~mask;
+    CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::pt_conceal_nonroot_operation::get());
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = mask | (mask << 32);
+    CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::pt_conceal_nonroot_operation::is_allowed0());
+    CHECK(intel_x64::msrs::ia32_vmx_procbased_ctls2::pt_conceal_nonroot_operation::is_allowed1());
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = ~mask & ~(mask << 32);
+    CHECK(intel_x64::msrs::ia32_vmx_procbased_ctls2::pt_conceal_nonroot_operation::is_allowed0());
+    CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::pt_conceal_nonroot_operation::is_allowed1());
+}
+
 TEST_CASE("ia32_vmx_procbased_ctls2_enable_xsaves_xrstors")
 {
     MockRepository mocks;
@@ -5695,6 +5739,50 @@ TEST_CASE("ia32_vmx_procbased_ctls2_enable_xsaves_xrstors")
     g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = ~mask & ~(mask << 32);
     CHECK(intel_x64::msrs::ia32_vmx_procbased_ctls2::enable_xsaves_xrstors::is_allowed0());
     CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::enable_xsaves_xrstors::is_allowed1());
+}
+
+TEST_CASE("ia32_vmx_procbased_ctls2_ept_mode_based_control")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    auto mask = intel_x64::msrs::ia32_vmx_procbased_ctls2::ept_mode_based_control::mask;
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = mask;
+    CHECK(intel_x64::msrs::ia32_vmx_procbased_ctls2::ept_mode_based_control::get());
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = ~mask;
+    CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::ept_mode_based_control::get());
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = mask | (mask << 32);
+    CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::ept_mode_based_control::is_allowed0());
+    CHECK(intel_x64::msrs::ia32_vmx_procbased_ctls2::ept_mode_based_control::is_allowed1());
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = ~mask & ~(mask << 32);
+    CHECK(intel_x64::msrs::ia32_vmx_procbased_ctls2::ept_mode_based_control::is_allowed0());
+    CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::ept_mode_based_control::is_allowed1());
+}
+
+TEST_CASE("ia32_vmx_procbased_ctls2_use_tsc_scaling")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    auto mask = intel_x64::msrs::ia32_vmx_procbased_ctls2::use_tsc_scaling::mask;
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = mask;
+    CHECK(intel_x64::msrs::ia32_vmx_procbased_ctls2::use_tsc_scaling::get());
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = ~mask;
+    CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::use_tsc_scaling::get());
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = mask | (mask << 32);
+    CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::use_tsc_scaling::is_allowed0());
+    CHECK(intel_x64::msrs::ia32_vmx_procbased_ctls2::use_tsc_scaling::is_allowed1());
+
+    g_msrs[intel_x64::msrs::ia32_vmx_procbased_ctls2::addr] = ~mask & ~(mask << 32);
+    CHECK(intel_x64::msrs::ia32_vmx_procbased_ctls2::use_tsc_scaling::is_allowed0());
+    CHECK_FALSE(intel_x64::msrs::ia32_vmx_procbased_ctls2::use_tsc_scaling::is_allowed1());
 }
 
 TEST_CASE("ia32_vmx_ept_vpid_cap")

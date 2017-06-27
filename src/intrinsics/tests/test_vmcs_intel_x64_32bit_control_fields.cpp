@@ -957,6 +957,28 @@ TEST_CASE("vmcs_vm_exit_controls_clear_ia32_bndcfgs")
     CHECK(is_disabled_if_exists());
 }
 
+TEST_CASE("vmcs_vm_exit_controls_pt_conceal_vm_exits")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    using namespace vmcs::vm_exit_controls::pt_conceal_vm_exits;
+
+    g_msrs[msrs::ia32_vmx_true_exit_ctls::addr] = 0xffffffff00000000UL;
+
+    enable();
+    CHECK(is_enabled());
+
+    disable();
+    CHECK(is_disabled());
+
+    enable_if_allowed();
+    CHECK(is_enabled_if_exists());
+
+    disable_if_allowed();
+    CHECK(is_disabled_if_exists());
+}
+
 TEST_CASE("vmcs_vm_exit_msr_store_count")
 {
     MockRepository mocks;
@@ -1159,6 +1181,28 @@ TEST_CASE("vmcs_vm_entry_controls_load_ia32_bndcfgs")
     setup_intrinsics(mocks);
 
     using namespace vmcs::vm_entry_controls::load_ia32_bndcfgs;
+
+    g_msrs[msrs::ia32_vmx_true_entry_ctls::addr] = 0xffffffff00000000UL;
+
+    enable();
+    CHECK(is_enabled());
+
+    disable();
+    CHECK(is_disabled());
+
+    enable_if_allowed();
+    CHECK(is_enabled_if_exists());
+
+    disable_if_allowed();
+    CHECK(is_disabled_if_exists());
+}
+
+TEST_CASE("vmcs_vm_entry_controls_pt_conceal_vm_entries")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    using namespace vmcs::vm_entry_controls::pt_conceal_vm_entries;
 
     g_msrs[msrs::ia32_vmx_true_entry_ctls::addr] = 0xffffffff00000000UL;
 
@@ -1731,6 +1775,30 @@ TEST_CASE("vmcs_secondary_processor_based_vm_execution_controls_vmcs_shadowing")
     CHECK(is_disabled_if_exists());
 }
 
+TEST_CASE("vmcs_secondary_processor_based_vm_execution_controls_enable_encls_exiting")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    using namespace vmcs::secondary_processor_based_vm_execution_controls::enable_encls_exiting;
+    using namespace msrs::ia32_vmx_true_procbased_ctls;
+
+    g_msrs[addr] = activate_secondary_controls::mask << 32;
+    g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] = 0xffffffff00000000UL;
+
+    enable();
+    CHECK(is_enabled());
+
+    disable();
+    CHECK(is_disabled());
+
+    enable_if_allowed();
+    CHECK(is_enabled_if_exists());
+
+    disable_if_allowed();
+    CHECK(is_disabled_if_exists());
+}
+
 TEST_CASE("vmcs_secondary_processor_based_vm_execution_controls_rdseed_exiting")
 {
     MockRepository mocks;
@@ -1803,12 +1871,84 @@ TEST_CASE("vmcs_secondary_processor_based_vm_execution_controls_ept_violation_ve
     CHECK(is_disabled_if_exists());
 }
 
+TEST_CASE("vmcs_secondary_processor_based_vm_execution_controls_pt_conceal_vmx_nonroot_operation")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    using namespace vmcs::secondary_processor_based_vm_execution_controls::pt_conceal_vmx_nonroot_operation;
+    using namespace msrs::ia32_vmx_true_procbased_ctls;
+
+    g_msrs[addr] = activate_secondary_controls::mask << 32;
+    g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] = 0xffffffff00000000UL;
+
+    enable();
+    CHECK(is_enabled());
+
+    disable();
+    CHECK(is_disabled());
+
+    enable_if_allowed();
+    CHECK(is_enabled_if_exists());
+
+    disable_if_allowed();
+    CHECK(is_disabled_if_exists());
+}
+
 TEST_CASE("vmcs_secondary_processor_based_vm_execution_controls_enable_xsaves_xrstors")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
 
     using namespace vmcs::secondary_processor_based_vm_execution_controls::enable_xsaves_xrstors;
+    using namespace msrs::ia32_vmx_true_procbased_ctls;
+
+    g_msrs[addr] = activate_secondary_controls::mask << 32;
+    g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] = 0xffffffff00000000UL;
+
+    enable();
+    CHECK(is_enabled());
+
+    disable();
+    CHECK(is_disabled());
+
+    enable_if_allowed();
+    CHECK(is_enabled_if_exists());
+
+    disable_if_allowed();
+    CHECK(is_disabled_if_exists());
+}
+
+TEST_CASE("vmcs_secondary_processor_based_vm_execution_controls_ept_mode_based_control")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    using namespace vmcs::secondary_processor_based_vm_execution_controls::ept_mode_based_control;
+    using namespace msrs::ia32_vmx_true_procbased_ctls;
+
+    g_msrs[addr] = activate_secondary_controls::mask << 32;
+    g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] = 0xffffffff00000000UL;
+
+    enable();
+    CHECK(is_enabled());
+
+    disable();
+    CHECK(is_disabled());
+
+    enable_if_allowed();
+    CHECK(is_enabled_if_exists());
+
+    disable_if_allowed();
+    CHECK(is_disabled_if_exists());
+}
+
+TEST_CASE("vmcs_secondary_processor_based_vm_execution_controls_use_tsc_scaling")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    using namespace vmcs::secondary_processor_based_vm_execution_controls::use_tsc_scaling;
     using namespace msrs::ia32_vmx_true_procbased_ctls;
 
     g_msrs[addr] = activate_secondary_controls::mask << 32;

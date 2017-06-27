@@ -417,11 +417,11 @@ TEST_CASE("vmcs_ept_pointer_memory_type")
 
     vmcs::ept_pointer::memory_type::set(0UL);
     CHECK(vmcs::ept_pointer::memory_type::get() ==
-                      vmcs::ept_pointer::memory_type::uncacheable);
+          vmcs::ept_pointer::memory_type::uncacheable);
 
     vmcs::ept_pointer::memory_type::set_if_exists(6UL);
     CHECK(vmcs::ept_pointer::memory_type::get_if_exists() ==
-                      vmcs::ept_pointer::memory_type::write_back);
+          vmcs::ept_pointer::memory_type::write_back);
 
     proc_ctl2_disallow1(msrs::ia32_vmx_procbased_ctls2::enable_ept::mask);
     CHECK_THROWS(vmcs::ept_pointer::memory_type::set(42U));
@@ -737,6 +737,58 @@ TEST_CASE("vmcs_xss_exiting_bitmap")
     CHECK_NOTHROW(vmcs::xss_exiting_bitmap::set_if_exists(42U));
     CHECK_NOTHROW(vmcs::xss_exiting_bitmap::get_if_exists());
     CHECK(g_vmcs_fields[vmcs::xss_exiting_bitmap::addr] == 0UL);
+}
+
+TEST_CASE("vmcs_encls_exiting_bitmap")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    proc_ctl_allow1(msrs::ia32_vmx_true_procbased_ctls::activate_secondary_controls::mask);
+    proc_ctl2_allow1(msrs::ia32_vmx_procbased_ctls2::enable_encls_exiting::mask);
+    CHECK(vmcs::encls_exiting_bitmap::exists());
+
+    vmcs::encls_exiting_bitmap::set(1UL);
+    CHECK(vmcs::encls_exiting_bitmap::get() == 1UL);
+
+    vmcs::encls_exiting_bitmap::set_if_exists(0UL);
+    CHECK(vmcs::encls_exiting_bitmap::get_if_exists() == 0UL);
+
+    proc_ctl2_disallow1(msrs::ia32_vmx_procbased_ctls2::enable_encls_exiting::mask);
+    CHECK_FALSE(vmcs::encls_exiting_bitmap::exists());
+
+    CHECK_THROWS(vmcs::encls_exiting_bitmap::set(42U));
+    CHECK_THROWS(vmcs::encls_exiting_bitmap::get());
+
+    CHECK_NOTHROW(vmcs::encls_exiting_bitmap::set_if_exists(42U));
+    CHECK_NOTHROW(vmcs::encls_exiting_bitmap::get_if_exists());
+    CHECK(g_vmcs_fields[vmcs::encls_exiting_bitmap::addr] == 0UL);
+}
+
+TEST_CASE("vmcs_tsc_multiplier")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    proc_ctl_allow1(msrs::ia32_vmx_true_procbased_ctls::activate_secondary_controls::mask);
+    proc_ctl2_allow1(msrs::ia32_vmx_procbased_ctls2::use_tsc_scaling::mask);
+    CHECK(vmcs::tsc_multiplier::exists());
+
+    vmcs::tsc_multiplier::set(1UL);
+    CHECK(vmcs::tsc_multiplier::get() == 1UL);
+
+    vmcs::tsc_multiplier::set_if_exists(0UL);
+    CHECK(vmcs::tsc_multiplier::get_if_exists() == 0UL);
+
+    proc_ctl2_disallow1(msrs::ia32_vmx_procbased_ctls2::use_tsc_scaling::mask);
+    CHECK_FALSE(vmcs::tsc_multiplier::exists());
+
+    CHECK_THROWS(vmcs::tsc_multiplier::set(42U));
+    CHECK_THROWS(vmcs::tsc_multiplier::get());
+
+    CHECK_NOTHROW(vmcs::tsc_multiplier::set_if_exists(42U));
+    CHECK_NOTHROW(vmcs::tsc_multiplier::get_if_exists());
+    CHECK(g_vmcs_fields[vmcs::tsc_multiplier::addr] == 0UL);
 }
 
 #endif
