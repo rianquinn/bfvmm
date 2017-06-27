@@ -23,9 +23,6 @@
 #define VCPU_FACTORY_H
 
 #include <memory>
-
-#include <vcpuid.h>
-#include <user_data.h>
 #include <vcpu/vcpu.h>
 
 // -----------------------------------------------------------------------------

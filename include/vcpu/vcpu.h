@@ -25,7 +25,8 @@
 #include <string>
 #include <memory>
 
-#include <vcpuid.h>
+#include <bfvcpuid.h>
+
 #include <user_data.h>
 #include <debug_ring/debug_ring.h>
 

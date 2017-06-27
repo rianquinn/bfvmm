@@ -20,10 +20,19 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <unistd.h>
+#include <bfvcpuid.h>
 #include <bfexports.h>
 
 #include <vcpu/vcpu_manager.h>
 #include <serial/serial_port_intel_x64.h>
+#include <debug_ring/debug_ring.h>
+
+static auto
+g_debug_ring() noexcept
+{
+    static debug_ring dr{vcpuid::invalid};
+    return &dr;
+}
 
 extern "C" EXPORT_SYM int
 write(int file, const void *buffer, size_t count)
@@ -50,7 +59,7 @@ write(int file, const void *buffer, size_t count)
             return static_cast<int>(count);
         }
         else {
-            g_vcm->write(0, str);
+            g_debug_ring()->write(str);
             serial_port_intel_x64::instance()->write(str);
             return static_cast<int>(count);
         }

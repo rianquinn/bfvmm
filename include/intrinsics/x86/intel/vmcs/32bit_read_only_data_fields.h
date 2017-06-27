@@ -603,6 +603,10 @@ namespace vm_exit_interruption_information
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto get(T t)
+        { return get_bits(t, mask) >> from; }
+
         inline auto get_if_exists(bool verbose = false) noexcept
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
     }
@@ -620,6 +624,10 @@ namespace vm_exit_interruption_information
 
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto get(T t)
+        { return get_bits(t, mask) >> from; }
 
         inline auto get_if_exists(bool verbose = false) noexcept
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
@@ -642,6 +650,14 @@ namespace vm_exit_interruption_information
 
         inline auto is_disabled_if_exists(bool verbose = false) noexcept
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto is_enabled(T t)
+        { return is_bit_set(t, from); }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto is_disabled(T t)
+        { return is_bit_cleared(t, from); }
     }
 
     namespace nmi_unblocking_due_to_iret
@@ -661,6 +677,14 @@ namespace vm_exit_interruption_information
 
         inline auto is_disabled_if_exists(bool verbose = false) noexcept
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto is_enabled(T t)
+        { return is_bit_set(t, from); }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto is_disabled(T t)
+        { return is_bit_cleared(t, from); }
     }
 
     namespace reserved
@@ -674,6 +698,10 @@ namespace vm_exit_interruption_information
 
         inline auto get_if_exists(bool verbose = false) noexcept
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto get(T t)
+        { return get_bits(t, mask) >> from; }
     }
 
     namespace valid_bit
@@ -693,6 +721,14 @@ namespace vm_exit_interruption_information
 
         inline auto is_disabled_if_exists(bool verbose = false) noexcept
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto is_enabled(T t)
+        { return is_bit_set(t, from); }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto is_disabled(T t)
+        { return is_bit_cleared(t, from); }
     }
 }
 
@@ -734,6 +770,10 @@ namespace idt_vectoring_information
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto get(T t)
+        { return get_bits(t, mask) >> from; }
+
         inline auto get_if_exists(bool verbose = false) noexcept
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
     }
@@ -753,6 +793,10 @@ namespace idt_vectoring_information
 
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto get(T t)
+        { return get_bits(t, mask) >> from; }
 
         inline auto get_if_exists(bool verbose = false) noexcept
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
@@ -775,6 +819,14 @@ namespace idt_vectoring_information
 
         inline auto is_disabled_if_exists(bool verbose = false) noexcept
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto is_enabled(T t)
+        { return is_bit_set(t, from); }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto is_disabled(T t)
+        { return is_bit_cleared(t, from); }
     }
 
     namespace reserved
@@ -785,6 +837,10 @@ namespace idt_vectoring_information
 
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto get(T t)
+        { return get_bits(t, mask) >> from; }
 
         inline auto get_if_exists(bool verbose = false) noexcept
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
@@ -807,6 +863,14 @@ namespace idt_vectoring_information
 
         inline auto is_disabled_if_exists(bool verbose = false) noexcept
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto is_enabled(T t)
+        { return is_bit_set(t, from); }
+
+        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+        auto is_disabled(T t)
+        { return is_bit_cleared(t, from); }
     }
 }
 
