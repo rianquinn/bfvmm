@@ -19,175 +19,250 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 
-#define CATCH_CONFIG_MAIN
 #include <catch/catch.hpp>
+#include <hippomocks.h>
+#include <intrinsics/x86/common_x64.h>
+#include <intrinsics/x86/intel_x64.h>
 
-TEST_CASE("test name goes here")
+#ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
+
+using namespace intel_x64;
+using namespace msrs;
+using namespace vmcs;
+using namespace debug;
+
+std::map<uint32_t, uint64_t> g_msrs;
+std::map<uint64_t, uint64_t> g_vmcs_fields;
+
+uint64_t
+test_read_msr(uint32_t addr) noexcept
+{ return g_msrs[addr]; }
+
+static bool
+test_vmread(uint64_t field, uint64_t *val) noexcept
 {
-    CHECK(true);
+    *val = g_vmcs_fields[field];
+    return true;
 }
 
-//#include <test.h>
-//#include <vmcs/vmcs_intel_x64_debug.h>
-//
-//using namespace intel_x64;
-//using namespace msrs;
-//using namespace vmcs;
-//using namespace debug;
-//
-//void
-//vmcs_ut::test_debug_dump()
-//{
-//    this->expect_no_exception([&] { dump(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_16bit_control_fields()
-//{
-//    this->expect_no_exception([&] { dump_16bit_control_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_16bit_guest_state_fields()
-//{
-//    this->expect_no_exception([&] { dump_16bit_guest_state_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_16bit_host_state_fields()
-//{
-//    this->expect_no_exception([&] { dump_16bit_host_state_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_64bit_control_fields()
-//{
-//    this->expect_no_exception([&] { dump_64bit_control_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_64bit_read_only_data_field()
-//{
-//    this->expect_no_exception([&] { dump_64bit_read_only_data_field(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_64bit_guest_state_fields()
-//{
-//    this->expect_no_exception([&] { dump_64bit_guest_state_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_64bit_host_state_fields()
-//{
-//    this->expect_no_exception([&] { dump_64bit_host_state_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_32bit_control_fields()
-//{
-//    this->expect_no_exception([&] { dump_32bit_control_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_32bit_read_only_data_fields()
-//{
-//    this->expect_no_exception([&] { dump_32bit_read_only_data_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_32bit_guest_state_fields()
-//{
-//    this->expect_no_exception([&] { dump_32bit_guest_state_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_32bit_host_state_field()
-//{
-//    this->expect_no_exception([&] { dump_32bit_host_state_field(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_natural_width_control_fields()
-//{
-//    this->expect_no_exception([&] { dump_natural_width_control_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_natural_width_read_only_data_fields()
-//{
-//    this->expect_no_exception([&] { dump_natural_width_read_only_data_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_natural_width_guest_state_fields()
-//{
-//    this->expect_no_exception([&] { dump_natural_width_guest_state_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_natural_width_host_state_fields()
-//{
-//    this->expect_no_exception([&] { dump_natural_width_host_state_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_vmx_controls()
-//{
-//    this->expect_no_exception([&] { dump_vmx_controls(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_pin_based_vm_execution_controls()
-//{
-//    this->expect_no_exception([&] { dump_pin_based_vm_execution_controls(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_primary_processor_based_vm_execution_controls()
-//{
-//    this->expect_no_exception([&] { dump_primary_processor_based_vm_execution_controls(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_secondary_processor_based_vm_execution_controls()
-//{
-//    proc_ctl_allow1(ia32_vmx_true_procbased_ctls::activate_secondary_controls::mask);
-//    this->expect_no_exception([&] { dump_secondary_processor_based_vm_execution_controls(); });
-//
-//    proc_ctl_disallow1(ia32_vmx_true_procbased_ctls::activate_secondary_controls::mask);
-//    this->expect_no_exception([&] { dump_secondary_processor_based_vm_execution_controls(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_vm_exit_control_fields()
-//{
-//    this->expect_no_exception([&] { dump_vm_exit_control_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_vm_entry_control_fields()
-//{
-//    this->expect_no_exception([&] { dump_vm_entry_control_fields(); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_vmcs_field()
-//{
-//    auto addr = 0x00UL;
-//    auto name = "test";
-//    auto exists = true;
-//
-//    this->expect_no_exception([&] { dump_vmcs_field(addr, name, exists); });
-//    this->expect_no_exception([&] { dump_vmcs_field(addr, name, !exists); });
-//}
-//
-//void
-//vmcs_ut::test_debug_dump_vm_control()
-//{
-//    auto name = "test";
-//    auto is_set = true;
-//
-//    this->expect_no_exception([&] { dump_vm_control(name, is_set); });
-//    this->expect_no_exception([&] { dump_vm_control(name, !is_set); });
-//}
+static void
+setup_intrinsics(MockRepository &mocks)
+{
+    mocks.OnCallFunc(_read_msr).Do(test_read_msr);
+    mocks.OnCallFunc(_vmread).Do(test_vmread);
+}
+
+void
+proc_ctl_allow1(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_true_procbased_ctls::addr] |= mask << 32; }
+
+void
+proc_ctl_disallow1(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_true_procbased_ctls::addr] &= ~(mask << 32); }
+
+TEST_CASE("debug_dump")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump());
+}
+
+TEST_CASE("debug_dump_16bit_control_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_16bit_control_fields());
+}
+
+TEST_CASE("debug_dump_16bit_guest_state_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_16bit_guest_state_fields());
+}
+
+TEST_CASE("debug_dump_16bit_host_state_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_16bit_host_state_fields());
+}
+
+TEST_CASE("debug_dump_64bit_control_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_64bit_control_fields());
+}
+
+TEST_CASE("debug_dump_64bit_read_only_data_field")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_64bit_read_only_data_field());
+}
+
+TEST_CASE("debug_dump_64bit_guest_state_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_64bit_guest_state_fields());
+}
+
+TEST_CASE("debug_dump_64bit_host_state_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_64bit_host_state_fields());
+}
+
+TEST_CASE("debug_dump_32bit_control_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_32bit_control_fields());
+}
+
+TEST_CASE("debug_dump_32bit_read_only_data_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_32bit_read_only_data_fields());
+}
+
+TEST_CASE("debug_dump_32bit_guest_state_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_32bit_guest_state_fields());
+}
+
+TEST_CASE("debug_dump_32bit_host_state_field")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_32bit_host_state_field());
+}
+
+TEST_CASE("debug_dump_natural_width_control_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_natural_width_control_fields());
+}
+
+TEST_CASE("debug_dump_natural_width_read_only_data_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_natural_width_read_only_data_fields());
+}
+
+TEST_CASE("debug_dump_natural_width_guest_state_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_natural_width_guest_state_fields());
+}
+
+TEST_CASE("debug_dump_natural_width_host_state_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_natural_width_host_state_fields());
+}
+
+TEST_CASE("debug_dump_vmx_controls")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_vmx_controls());
+}
+
+TEST_CASE("debug_dump_pin_based_vm_execution_controls")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_pin_based_vm_execution_controls());
+}
+
+TEST_CASE("debug_dump_primary_processor_based_vm_execution_controls")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_primary_processor_based_vm_execution_controls());
+}
+
+TEST_CASE("debug_dump_secondary_processor_based_vm_execution_controls")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    proc_ctl_allow1(ia32_vmx_true_procbased_ctls::activate_secondary_controls::mask);
+    CHECK_NOTHROW(dump_secondary_processor_based_vm_execution_controls());
+
+    proc_ctl_disallow1(ia32_vmx_true_procbased_ctls::activate_secondary_controls::mask);
+    CHECK_NOTHROW(dump_secondary_processor_based_vm_execution_controls());
+}
+
+TEST_CASE("debug_dump_vm_exit_control_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_vm_exit_control_fields());
+}
+
+TEST_CASE("debug_dump_vm_entry_control_fields")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    CHECK_NOTHROW(dump_vm_entry_control_fields());
+}
+
+TEST_CASE("debug_dump_vmcs_field")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    auto addr = 0x00UL;
+    auto name = "test";
+    auto exists = true;
+
+    CHECK_NOTHROW(dump_vmcs_field(addr, name, exists));
+    CHECK_NOTHROW(dump_vmcs_field(addr, name, !exists));
+}
+
+TEST_CASE("debug_dump_vm_control")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    auto name = "test";
+    auto is_set = true;
+
+    CHECK_NOTHROW(dump_vm_control(name, is_set));
+    CHECK_NOTHROW(dump_vm_control(name, !is_set));
+}
+
+#endif

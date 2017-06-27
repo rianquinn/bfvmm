@@ -19,41 +19,47 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#define CATCH_CONFIG_MAIN
 #include <catch/catch.hpp>
+#include <hippomocks.h>
+#include <intrinsics/x86/common_x64.h>
 
-TEST_CASE("test name goes here")
+#ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
+
+using namespace x64;
+
+dr7::value_type g_dr7 = 0;
+
+uint64_t
+test_read_dr7() noexcept
+{ return g_dr7; }
+
+void
+test_write_dr7(uint64_t val) noexcept
+{ g_dr7 = val; }
+
+static void
+setup_intrinsics(MockRepository &mocks)
 {
-    CHECK(true);
+    mocks.OnCallFunc(_read_dr7).Do(test_read_dr7);
+    mocks.OnCallFunc(_write_dr7).Do(test_write_dr7);
 }
 
-// #include <test.h>
-// #include <intrinsics/debug_x64.h>
+TEST_CASE("debug_x64_dr7")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// using namespace x64;
+    dr7::set(100U);
+    CHECK(dr7::get() == 100UL);
 
-// dr7::value_type g_dr7 = 0;
+    dr7::set(1000U);
+    CHECK(dr7::get() == 1000UL);
 
-// extern "C" uint64_t
-// __read_dr7(void) noexcept
-// { return g_dr7; }
+    dr7::set(100UL);
+    CHECK(dr7::get() == 100UL);
 
-// extern "C" void
-// __write_dr7(uint64_t val) noexcept
-// { g_dr7 = val; }
+    dr7::set(1000UL);
+    CHECK(dr7::get() == 1000UL);
+}
 
-// void
-// intrinsics_ut::test_debug_x64_dr7()
-// {
-//     dr7::set(100U);
-//     this->expect_true(dr7::get() == 100UL);
-
-//     dr7::set(1000U);
-//     this->expect_true(dr7::get() == 1000UL);
-
-//     dr7::set(100UL);
-//     this->expect_true(dr7::get() == 100UL);
-
-//     dr7::set(1000UL);
-//     this->expect_true(dr7::get() == 1000UL);
-// }
+#endif

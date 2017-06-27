@@ -19,46 +19,59 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#define CATCH_CONFIG_MAIN
 #include <catch/catch.hpp>
+#include <hippomocks.h>
+#include <intrinsics/x86/common_x64.h>
 
-TEST_CASE("test name goes here")
+#ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
+
+using namespace x64;
+
+void
+test_invd() noexcept
+{ }
+
+void
+test_wbinvd() noexcept
+{ }
+
+void
+test_clflush(void *addr) noexcept
+{ (void) addr; }
+
+static void
+setup_intrinsics(MockRepository &mocks)
 {
-    CHECK(true);
+    mocks.OnCallFunc(_invd).Do(test_invd);
+    mocks.OnCallFunc(_wbinvd).Do(test_wbinvd);
+    mocks.OnCallFunc(_clflush).Do(test_clflush);
 }
 
-// #include <test.h>
-// #include <intrinsics/cache_x64.h>
+TEST_CASE("cache_x64_invd")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// using namespace x64;
+    CHECK_NOTHROW(cache::invd());
+}
 
-// extern "C" void
-// __invd(void) noexcept
-// { }
+TEST_CASE("cache_x64_wbinvd")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// extern "C" void
-// __wbinvd(void) noexcept
-// { }
+    CHECK_NOTHROW(cache::wbinvd());
+}
 
-// extern "C" void
-// __clflush(void *addr) noexcept
-// { (void) addr; }
+TEST_CASE("cache_x64_clflush")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// void
-// intrinsics_ut::test_cache_x64_invd()
-// {
-//     this->expect_no_exception([&] { cache::invd(); });
-// }
+    CHECK_NOTHROW(cache::clflush(0x10));
 
-// void
-// intrinsics_ut::test_cache_x64_wbinvd()
-// {
-//     this->expect_no_exception([&] { cache::wbinvd(); });
-// }
+    int test = 8;
+    CHECK_NOTHROW(cache::clflush(&test));
+}
 
-// void
-// intrinsics_ut::test_cache_x64_clflush()
-// {
-//     this->expect_no_exception([&] { cache::clflush(0x10); });
-//     this->expect_no_exception([&] { cache::clflush(this); });
-// }
+#endif

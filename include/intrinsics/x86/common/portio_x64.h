@@ -50,7 +50,7 @@ extern "C" EXPORT_INTRINSICS uint32_t _ind(uint16_t port) noexcept;
 
 extern "C" EXPORT_INTRINSICS void _insb(uint16_t port, uint64_t m8) noexcept;
 extern "C" EXPORT_INTRINSICS void _insw(uint16_t port, uint64_t m16) noexcept;
-extern "C" EXPORT_INTRINSICS void __insd(uint16_t port, uint64_t m32) noexcept;
+extern "C" EXPORT_INTRINSICS void _insd(uint16_t port, uint64_t m32) noexcept;
 
 extern "C" EXPORT_INTRINSICS void _insbrep(uint16_t port, uint64_t m8, uint32_t count) noexcept;
 extern "C" EXPORT_INTRINSICS void _inswrep(uint16_t port, uint64_t m16, uint32_t count) noexcept;
@@ -97,7 +97,7 @@ namespace portio
     auto insw(P port, integer_pointer m16) noexcept { return _insw(gsl::narrow_cast<port_addr_type>(port), m16); }
 
     template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto insd(P port, integer_pointer m32) noexcept { return __insd(gsl::narrow_cast<port_addr_type>(port), m32); }
+    auto insd(P port, integer_pointer m32) noexcept { return _insd(gsl::narrow_cast<port_addr_type>(port), m32); }
 
     template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
     auto insb(P port, void *m8) noexcept { return _insb(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m8)); }
@@ -106,7 +106,7 @@ namespace portio
     auto insw(P port, void *m16) noexcept { return _insw(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m16)); }
 
     template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto insd(P port, void *m32) noexcept { return __insd(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m32)); }
+    auto insd(P port, void *m32) noexcept { return _insd(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m32)); }
 
     template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
     auto insbrep(P port, integer_pointer m8, size_type count) noexcept { return _insbrep(gsl::narrow_cast<port_addr_type>(port), m8, count); }

@@ -19,35 +19,43 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#define CATCH_CONFIG_MAIN
 #include <catch/catch.hpp>
+#include <hippomocks.h>
+#include <intrinsics/x86/common_x64.h>
 
-TEST_CASE("test name goes here")
+#ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
+
+using namespace x64;
+
+void
+test_halt() noexcept
+{ }
+
+void
+test_stop() noexcept
+{ }
+
+static void
+setup_intrinsics(MockRepository &mocks)
 {
-    CHECK(true);
+    mocks.OnCallFunc(_halt).Do(test_halt);
+    mocks.OnCallFunc(_stop).Do(test_stop);
 }
 
-// #include <test.h>
-// #include <intrinsics/pm_x64.h>
+TEST_CASE("pm_x64_halt")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// using namespace x64;
+    CHECK_NOTHROW(pm::halt());
+}
 
-// extern "C" void
-// __halt(void) noexcept
-// { }
+TEST_CASE("pm_x64_stop")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// extern "C" void
-// __stop(void) noexcept
-// { }
+    CHECK_NOTHROW(pm::stop());
+}
 
-// void
-// intrinsics_ut::test_pm_x64_halt()
-// {
-//     this->expect_no_exception([&] { pm::halt(); });
-// }
-
-// void
-// intrinsics_ut::test_pm_x64_stop()
-// {
-//     this->expect_no_exception([&] { pm::stop(); });
-// }
+#endif

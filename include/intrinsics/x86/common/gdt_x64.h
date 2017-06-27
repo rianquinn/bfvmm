@@ -27,6 +27,7 @@
 
 #include <bfgsl.h>
 #include <bfexception.h>
+#include <bftypes.h>
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -564,14 +565,12 @@ public:
         return access_rights_15_12 | access_rights_07_00;
     }
 
-private:
+    PRIVATE
 
     gdt_reg_x64_t m_gdt_reg;
     std::vector<segment_descriptor_type> m_gdt;
 
 public:
-
-    friend class intrinsics_ut;
 
     gdt_x64(gdt_x64 &&) noexcept = delete;
     gdt_x64 &operator=(gdt_x64 &&) noexcept = delete;
