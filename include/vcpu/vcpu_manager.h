@@ -25,8 +25,6 @@
 #include <map>
 #include <memory>
 
-#include <vcpuid.h>
-#include <user_data.h>
 #include <vcpu/vcpu_factory.h>
 
 // -----------------------------------------------------------------------------

@@ -35,7 +35,12 @@ std::mutex g_debug_mutex;
 // Global
 // -----------------------------------------------------------------------------
 
-std::map<vcpuid::type, debug_ring_resources_t *> g_drrs;
+static auto &
+drr_map() noexcept
+{
+    static std::map<vcpuid::type, debug_ring_resources_t *> g_drrs;
+    return g_drrs;
+}
 
 extern "C" int64_t
 get_drr(uint64_t vcpuid, struct debug_ring_resources_t **drr) noexcept
@@ -44,7 +49,7 @@ get_drr(uint64_t vcpuid, struct debug_ring_resources_t **drr) noexcept
         return GET_DRR_FAILURE;
     }
 
-    if (auto found_drr = g_drrs[vcpuid]) {
+    if (auto found_drr = drr_map()[vcpuid]) {
         *drr = found_drr;
         return GET_DRR_SUCCESS;
     }
@@ -68,16 +73,23 @@ debug_ring::debug_ring(vcpuid::type vcpuid) noexcept
         m_drr->tag2 = 0x06BD06BD06BD06BD;
 
         std::lock_guard<std::mutex> guard(g_debug_mutex);
-        g_drrs[vcpuid] = m_drr.get();
+        drr_map()[vcpuid] = m_drr.get();
     }
     catch (...)
     { }
+}
+
+debug_ring::~debug_ring() noexcept
+{
+    std::lock_guard<std::mutex> guard(g_debug_mutex);
+    drr_map().erase(m_vcpuid);
 }
 
 void
 debug_ring::write(const std::string &str) noexcept
 {
     try {
+
         // TODO: A more interesting implementation would use an optimized
         //       memcpy to implement this code. Doing so would increase it's
         //       performance, but would require some better math, and an
@@ -97,6 +109,7 @@ debug_ring::write(const std::string &str) noexcept
         auto space = DEBUG_RING_SIZE - (m_drr->epos - m_drr->spos);
 
         if (space < len) {
+
             // Make room for the write. Normally, with a circular buffer, you
             // would just move the start position when a read occurs, but in
             // this case, the vmm needs to be able to write as it wishes to the
@@ -112,6 +125,7 @@ debug_ring::write(const std::string &str) noexcept
             //       locks, we would greatly increase the complexity of this
             //       code, while serializing the code, which is not a good idea.
             //
+
             while (space <= DEBUG_RING_SIZE) {
                 if (cpos >= DEBUG_RING_SIZE) {
                     cpos = 0;

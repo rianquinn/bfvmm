@@ -22,8 +22,6 @@
 #ifndef VCPU_INTEL_X64_H
 #define VCPU_INTEL_X64_H
 
-#include <vcpuid.h>
-#include <user_data.h>
 #include <vcpu/vcpu.h>
 #include <vmxon/vmxon_intel_x64.h>
 #include <vmcs/vmcs_intel_x64.h>

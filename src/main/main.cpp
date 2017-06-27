@@ -21,11 +21,11 @@
 
 #include <bfgsl.h>
 #include <bfdebug.h>
+#include <bfvcpuid.h>
 #include <bfexports.h>
 #include <bfsupport.h>
 #include <bfexception.h>
 
-#include <vcpuid.h>
 #include <user_data.h>
 
 #include <vcpu/vcpu_manager.h>

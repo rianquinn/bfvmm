@@ -57,9 +57,11 @@ vmcs_intel_x64::launch(gsl::not_null<vmcs_intel_x64_state *> host_state,
     this->load();
     this->write_fields(host_state, guest_state);
 
-    auto ___ = gsl::on_failure([&] {
-        vmcs::debug::dump();
-    });
+    // auto ___ = gsl::on_failure([&] {
+        // vmcs::debug::dump();
+        intel_x64::msrs::ia32_vmx_true_procbased_ctls::dump();
+        intel_x64::msrs::ia32_vmx_procbased_ctls2::dump();
+    // });
 
     auto ___ = gsl::on_failure([&] {
         vmcs::check::all();

@@ -25,7 +25,8 @@
 #include <string>
 #include <memory>
 
-#include <vcpuid.h>
+#include <bftypes.h>
+#include <bfvcpuid.h>
 #include <bfdebugringinterface.h>
 
 // -----------------------------------------------------------------------------
@@ -71,7 +72,7 @@ public:
     /// @expects none
     /// @ensures none
     ///
-    virtual ~debug_ring() noexcept = default;
+    VIRTUAL ~debug_ring() noexcept;
 
     /// Write to Debug Ring
     ///
@@ -85,7 +86,7 @@ public:
     ///
     /// @param str the string to write to the debug ring
     ///
-    virtual void write(const std::string &str) noexcept;
+    VIRTUAL void write(const std::string &str) noexcept;
 
 private:
 
