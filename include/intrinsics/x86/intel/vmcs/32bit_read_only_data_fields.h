@@ -937,9 +937,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -968,9 +968,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -985,12 +985,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1019,10 +1019,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1037,9 +1037,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1054,12 +1054,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1074,22 +1074,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1104,8 +1104,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1120,22 +1120,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1150,8 +1150,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1166,22 +1166,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 28;
             constexpr const auto name = "reg2";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1210,10 +1210,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1228,9 +1228,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1245,12 +1245,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1265,22 +1265,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1295,8 +1295,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1311,22 +1311,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1341,8 +1341,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1357,22 +1357,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 28;
             constexpr const auto name = "reg2";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1401,10 +1401,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1419,9 +1419,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1436,12 +1436,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1456,22 +1456,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1486,8 +1486,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1502,22 +1502,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1532,8 +1532,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1548,22 +1548,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 28;
             constexpr const auto name = "reg2";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1592,10 +1592,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1610,9 +1610,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1627,8 +1627,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 11;
             constexpr const auto name = "operand_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1643,12 +1643,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1663,22 +1663,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1693,8 +1693,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1709,22 +1709,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1739,8 +1739,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1755,10 +1755,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
-            constexpr const auto sgdt = 0U;
-            constexpr const auto sidt = 1U;
-            constexpr const auto lgdt = 2U;
-            constexpr const auto lidt = 3U;
+            constexpr const auto sgdt = 0UL;
+            constexpr const auto sidt = 1UL;
+            constexpr const auto lgdt = 2UL;
+            constexpr const auto lidt = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1787,10 +1787,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1805,9 +1805,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1822,8 +1822,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 11;
             constexpr const auto name = "operand_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1838,12 +1838,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1858,22 +1858,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1888,8 +1888,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1904,22 +1904,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1934,8 +1934,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1950,10 +1950,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
-            constexpr const auto sgdt = 0U;
-            constexpr const auto sidt = 1U;
-            constexpr const auto lgdt = 2U;
-            constexpr const auto lidt = 3U;
+            constexpr const auto sgdt = 0UL;
+            constexpr const auto sidt = 1UL;
+            constexpr const auto lgdt = 2UL;
+            constexpr const auto lidt = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1982,10 +1982,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2000,9 +2000,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2017,8 +2017,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 11;
             constexpr const auto name = "operand_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2033,12 +2033,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2053,22 +2053,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2083,8 +2083,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2099,22 +2099,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2129,8 +2129,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2145,10 +2145,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
-            constexpr const auto sgdt = 0U;
-            constexpr const auto sidt = 1U;
-            constexpr const auto lgdt = 2U;
-            constexpr const auto lidt = 3U;
+            constexpr const auto sgdt = 0UL;
+            constexpr const auto sidt = 1UL;
+            constexpr const auto lgdt = 2UL;
+            constexpr const auto lidt = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2177,10 +2177,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2195,9 +2195,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2212,8 +2212,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 11;
             constexpr const auto name = "operand_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2228,12 +2228,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2248,22 +2248,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2278,8 +2278,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2294,22 +2294,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2324,8 +2324,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2340,10 +2340,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
-            constexpr const auto sgdt = 0U;
-            constexpr const auto sidt = 1U;
-            constexpr const auto lgdt = 2U;
-            constexpr const auto lidt = 3U;
+            constexpr const auto sgdt = 0UL;
+            constexpr const auto sidt = 1UL;
+            constexpr const auto lgdt = 2UL;
+            constexpr const auto lidt = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2372,10 +2372,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2390,22 +2390,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 3;
             constexpr const auto name = "reg1";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2420,9 +2420,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2437,8 +2437,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 10;
             constexpr const auto name = "mem/reg";
 
-            constexpr const auto mem = 0U;
-            constexpr const auto reg = 1U;
+            constexpr const auto mem = 0UL;
+            constexpr const auto reg = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2453,12 +2453,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2473,22 +2473,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2503,8 +2503,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2519,22 +2519,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2549,8 +2549,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2565,10 +2565,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
-            constexpr const auto sldt = 0U;
-            constexpr const auto str = 1U;
-            constexpr const auto lldt = 2U;
-            constexpr const auto ltr = 3U;
+            constexpr const auto sldt = 0UL;
+            constexpr const auto str = 1UL;
+            constexpr const auto lldt = 2UL;
+            constexpr const auto ltr = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2597,10 +2597,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2615,22 +2615,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 3;
             constexpr const auto name = "reg1";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2645,9 +2645,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2662,8 +2662,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 10;
             constexpr const auto name = "mem/reg";
 
-            constexpr const auto mem = 0U;
-            constexpr const auto reg = 1U;
+            constexpr const auto mem = 0UL;
+            constexpr const auto reg = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2678,12 +2678,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2698,22 +2698,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2728,8 +2728,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2744,22 +2744,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2774,8 +2774,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2790,10 +2790,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
-            constexpr const auto sldt = 0U;
-            constexpr const auto str = 1U;
-            constexpr const auto lldt = 2U;
-            constexpr const auto ltr = 3U;
+            constexpr const auto sldt = 0UL;
+            constexpr const auto str = 1UL;
+            constexpr const auto lldt = 2UL;
+            constexpr const auto ltr = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2822,10 +2822,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2840,22 +2840,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 3;
             constexpr const auto name = "reg1";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2870,9 +2870,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2887,8 +2887,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 10;
             constexpr const auto name = "mem/reg";
 
-            constexpr const auto mem = 0U;
-            constexpr const auto reg = 1U;
+            constexpr const auto mem = 0UL;
+            constexpr const auto reg = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2903,12 +2903,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2923,22 +2923,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2953,8 +2953,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2969,22 +2969,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -2999,8 +2999,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3015,10 +3015,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
-            constexpr const auto sldt = 0U;
-            constexpr const auto str = 1U;
-            constexpr const auto lldt = 2U;
-            constexpr const auto ltr = 3U;
+            constexpr const auto sldt = 0UL;
+            constexpr const auto str = 1UL;
+            constexpr const auto lldt = 2UL;
+            constexpr const auto ltr = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3047,10 +3047,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3065,22 +3065,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 3;
             constexpr const auto name = "reg1";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3095,9 +3095,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3112,8 +3112,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 10;
             constexpr const auto name = "mem/reg";
 
-            constexpr const auto mem = 0U;
-            constexpr const auto reg = 1U;
+            constexpr const auto mem = 0UL;
+            constexpr const auto reg = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3128,12 +3128,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3148,22 +3148,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3178,8 +3178,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3194,22 +3194,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3224,8 +3224,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3240,10 +3240,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 28;
             constexpr const auto name = "instruction_identity";
 
-            constexpr const auto sldt = 0U;
-            constexpr const auto str = 1U;
-            constexpr const auto lldt = 2U;
-            constexpr const auto ltr = 3U;
+            constexpr const auto sldt = 0UL;
+            constexpr const auto str = 1UL;
+            constexpr const auto lldt = 2UL;
+            constexpr const auto ltr = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3272,22 +3272,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 3;
             constexpr const auto name = "destination_register";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3302,9 +3302,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 11;
             constexpr const auto name = "operand_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3333,22 +3333,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 3;
             constexpr const auto name = "destination_register";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3363,9 +3363,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 11;
             constexpr const auto name = "operand_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3394,10 +3394,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3412,9 +3412,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3429,12 +3429,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3449,22 +3449,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3479,8 +3479,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3495,22 +3495,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3525,8 +3525,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3555,10 +3555,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3573,9 +3573,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3590,12 +3590,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3610,22 +3610,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3640,8 +3640,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3656,22 +3656,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3686,8 +3686,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3716,10 +3716,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3734,9 +3734,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3751,12 +3751,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3771,22 +3771,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3801,8 +3801,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3817,22 +3817,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3847,8 +3847,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3877,10 +3877,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3895,9 +3895,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3912,12 +3912,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3932,22 +3932,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3962,8 +3962,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -3978,22 +3978,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4008,8 +4008,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4038,10 +4038,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4056,9 +4056,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4073,12 +4073,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4093,22 +4093,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4123,8 +4123,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4139,22 +4139,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4169,8 +4169,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4199,10 +4199,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4217,9 +4217,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4234,12 +4234,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4254,22 +4254,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4284,8 +4284,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4300,22 +4300,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4330,8 +4330,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4360,10 +4360,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4378,22 +4378,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 3;
             constexpr const auto name = "reg1";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4408,9 +4408,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4425,8 +4425,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 10;
             constexpr const auto name = "mem/reg";
 
-            constexpr const auto mem = 0U;
-            constexpr const auto reg = 1U;
+            constexpr const auto mem = 0UL;
+            constexpr const auto reg = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4441,12 +4441,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4461,22 +4461,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4491,8 +4491,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4507,22 +4507,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4537,8 +4537,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4553,22 +4553,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 28;
             constexpr const auto name = "reg2";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4597,10 +4597,10 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 0;
             constexpr const auto name = "scaling";
 
-            constexpr const auto no_scaling = 0U;
-            constexpr const auto scale_by_2 = 1U;
-            constexpr const auto scale_by_4 = 2U;
-            constexpr const auto scale_by_8 = 3U;
+            constexpr const auto no_scaling = 0UL;
+            constexpr const auto scale_by_2 = 1UL;
+            constexpr const auto scale_by_4 = 2UL;
+            constexpr const auto scale_by_8 = 3UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4615,22 +4615,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 3;
             constexpr const auto name = "reg1";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4645,9 +4645,9 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 7;
             constexpr const auto name = "address_size";
 
-            constexpr const auto _16bit = 0U;
-            constexpr const auto _32bit = 1U;
-            constexpr const auto _64bit = 2U;
+            constexpr const auto _16bit = 0UL;
+            constexpr const auto _32bit = 1UL;
+            constexpr const auto _64bit = 2UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4662,8 +4662,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 10;
             constexpr const auto name = "mem/reg";
 
-            constexpr const auto mem = 0U;
-            constexpr const auto reg = 1U;
+            constexpr const auto mem = 0UL;
+            constexpr const auto reg = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4678,12 +4678,12 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 15;
             constexpr const auto name = "segment_register";
 
-            constexpr const auto es = 0U;
-            constexpr const auto cs = 1U;
-            constexpr const auto ss = 2U;
-            constexpr const auto ds = 3U;
-            constexpr const auto fs = 4U;
-            constexpr const auto gs = 5U;
+            constexpr const auto es = 0UL;
+            constexpr const auto cs = 1UL;
+            constexpr const auto ss = 2UL;
+            constexpr const auto ds = 3UL;
+            constexpr const auto fs = 4UL;
+            constexpr const auto gs = 5UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4698,22 +4698,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 18;
             constexpr const auto name = "index_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4728,8 +4728,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4744,22 +4744,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 23;
             constexpr const auto name = "base_reg";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4774,8 +4774,8 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0U;
-            constexpr const auto invalid = 1U;
+            constexpr const auto valid = 0UL;
+            constexpr const auto invalid = 1UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -4790,22 +4790,22 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 28;
             constexpr const auto name = "reg2";
 
-            constexpr const auto rax = 0U;
-            constexpr const auto rcx = 1U;
-            constexpr const auto rdx = 2U;
-            constexpr const auto rbx = 3U;
-            constexpr const auto rsp = 4U;
-            constexpr const auto rbp = 5U;
-            constexpr const auto rsi = 6U;
-            constexpr const auto rdi = 7U;
-            constexpr const auto r8 = 8U;
-            constexpr const auto r9 = 9U;
-            constexpr const auto r10 = 10U;
-            constexpr const auto r11 = 11U;
-            constexpr const auto r12 = 12U;
-            constexpr const auto r13 = 13U;
-            constexpr const auto r14 = 14U;
-            constexpr const auto r15 = 15U;
+            constexpr const auto rax = 0UL;
+            constexpr const auto rcx = 1UL;
+            constexpr const auto rdx = 2UL;
+            constexpr const auto rbx = 3UL;
+            constexpr const auto rsp = 4UL;
+            constexpr const auto rbp = 5UL;
+            constexpr const auto rsi = 6UL;
+            constexpr const auto rdi = 7UL;
+            constexpr const auto r8 = 8UL;
+            constexpr const auto r9 = 9UL;
+            constexpr const auto r10 = 10UL;
+            constexpr const auto r11 = 11UL;
+            constexpr const auto r12 = 12UL;
+            constexpr const auto r13 = 13UL;
+            constexpr const auto r14 = 14UL;
+            constexpr const auto r15 = 15UL;
 
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
