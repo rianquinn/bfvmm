@@ -22,7 +22,7 @@
 #ifndef CPUID_INTEL_X64_H
 #define CPUID_INTEL_X64_H
 
-#include <intrinsics/x86/common/cpuid/cpuid_x64.h>
+#include <intrinsics/x86/common/cpuid_x64.h>
 
 namespace x64
 {

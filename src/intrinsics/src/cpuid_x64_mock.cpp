@@ -26,7 +26,7 @@
 #include <bfdebug.h>
 #include <bftypes.h>
 
-#include <intrinsics/x86/common/cpuid/cpuid_x64.h>
+#include <intrinsics/x86/common/cpuid_x64.h>
 
 extern "C" uint32_t
 _cpuid_eax(uint32_t val) noexcept

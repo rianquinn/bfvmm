@@ -22,7 +22,7 @@
 #include <bfgsl.h>
 #include <bfdebug.h>
 
-#include <intrinsics/x86/common/msrs/msrs_x64.h>
+#include <intrinsics/x86/common/msrs_x64.h>
 
 extern "C" uint64_t
 _read_msr(uint32_t addr) noexcept

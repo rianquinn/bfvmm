@@ -22,8 +22,8 @@
 #ifndef INTRINSICS_X86_COMMON_X64_H
 #define INTRINSICS_X86_COMMON_X64_H
 
-#include <intrinsics/x86/common/msrs/msrs_x64.h>
-#include <intrinsics/x86/common/cpuid/cpuid_x64.h>
+#include <intrinsics/x86/common/msrs_x64.h>
+#include <intrinsics/x86/common/cpuid_x64.h>
 #include <intrinsics/x86/common/cache_x64.h>
 #include <intrinsics/x86/common/debug_x64.h>
 #include <intrinsics/x86/common/gdt_x64.h>

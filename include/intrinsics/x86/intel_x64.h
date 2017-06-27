@@ -23,9 +23,9 @@
 #define INTRINSICS_X86_INTEL_X64_H
 
 #include <intrinsics/x86/intel/vmx_intel_x64.h>
-#include <intrinsics/x86/intel/msrs/msrs_intel_x64.h>
+#include <intrinsics/x86/intel/msrs_intel_x64.h>
 #include <intrinsics/x86/intel/crs_intel_x64.h>
 #include <intrinsics/x86/intel/vmcs/vmcs_intel_x64.h>
-#include <intrinsics/x86/intel/cpuid/cpuid_intel_x64.h>
+#include <intrinsics/x86/intel/cpuid_intel_x64.h>
 
 #endif
