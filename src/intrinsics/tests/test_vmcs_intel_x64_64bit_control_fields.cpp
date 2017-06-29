@@ -59,22 +59,6 @@ setup_intrinsics(MockRepository &mocks)
     mocks.OnCallFunc(_vmwrite).Do(test_vmwrite);
 }
 
-void
-proc_ctl_allow1(uint64_t mask)
-{ g_msrs[msrs::ia32_vmx_true_procbased_ctls::addr] |= mask << 32; }
-
-void
-proc_ctl2_allow1(uint64_t mask)
-{ g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] |= mask << 32; }
-
-void
-proc_ctl2_disallow1(uint64_t mask)
-{ g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] &= ~(mask << 32); }
-
-void
-vmfunc_ctl_allow1(uint64_t mask)
-{ g_msrs[msrs::ia32_vmx_vmfunc::addr] |= mask; }
-
 TEST_CASE("test name goes here")
 {
     MockRepository mocks;
