@@ -937,7 +937,7 @@ TEST_CASE("vmcs: host_vm_state_ia32_msrs_perf")
     intel_x64::msrs::ia32_sysenter_eip::set(42U);
     intel_x64::msrs::ia32_fs_base::set(42U);
     intel_x64::msrs::ia32_gs_base::set(42U);
-    g_eax_cpuid[x64::cpuid::arch_perf_monitoring::addr] = 2;
+    g_eax_cpuid[intel_x64::cpuid::arch_perf_monitoring::addr] = 2;
 
     vmcs_intel_x64_host_vm_state state{};
 

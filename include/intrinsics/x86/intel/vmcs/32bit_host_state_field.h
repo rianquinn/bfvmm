@@ -43,21 +43,23 @@ namespace host_ia32_sysenter_cs
     constexpr const auto addr = 0x0000000000004C00ULL;
     constexpr const auto name = "host_ia32_sysenter_cs";
 
-    inline bool exists() noexcept
+    inline bool exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 }

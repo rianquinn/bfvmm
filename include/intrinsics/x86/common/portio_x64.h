@@ -22,8 +22,6 @@
 #ifndef PORTIO_X64_H
 #define PORTIO_X64_H
 
-#include <bfgsl.h>
-
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
@@ -81,110 +79,95 @@ namespace portio
     using integer_pointer = uintptr_t;
     using size_type = uint32_t;
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto inb(P port) noexcept { return _inb(gsl::narrow_cast<port_addr_type>(port)); }
+    inline auto inb(port_addr_type port) noexcept
+    { return _inb(port); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto inw(P port) noexcept { return _inw(gsl::narrow_cast<port_addr_type>(port)); }
+    inline auto inw(port_addr_type port) noexcept
+    { return _inw(port); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto ind(P port) noexcept { return _ind(gsl::narrow_cast<port_addr_type>(port)); }
+    inline auto ind(port_addr_type port) noexcept
+    { return _ind(port); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto insb(P port, integer_pointer m8) noexcept { return _insb(gsl::narrow_cast<port_addr_type>(port), m8); }
+    inline auto insb(port_addr_type port, integer_pointer m8) noexcept
+    { return _insb(port, m8); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto insw(P port, integer_pointer m16) noexcept { return _insw(gsl::narrow_cast<port_addr_type>(port), m16); }
+    inline auto insw(port_addr_type port, integer_pointer m16) noexcept
+    { return _insw(port, m16); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto insd(P port, integer_pointer m32) noexcept { return _insd(gsl::narrow_cast<port_addr_type>(port), m32); }
+    inline auto insd(port_addr_type port, integer_pointer m32) noexcept
+    { return _insd(port, m32); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto insb(P port, void *m8) noexcept { return _insb(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m8)); }
+    inline auto insb(port_addr_type port, void *m8) noexcept
+    { return _insb(port, reinterpret_cast<integer_pointer>(m8)); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto insw(P port, void *m16) noexcept { return _insw(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m16)); }
+    inline auto insw(port_addr_type port, void *m16) noexcept
+    { return _insw(port, reinterpret_cast<integer_pointer>(m16)); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto insd(P port, void *m32) noexcept { return _insd(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m32)); }
+    inline auto insd(port_addr_type port, void *m32) noexcept
+    { return _insd(port, reinterpret_cast<integer_pointer>(m32)); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto insbrep(P port, integer_pointer m8, size_type count) noexcept { return _insbrep(gsl::narrow_cast<port_addr_type>(port), m8, count); }
+    inline auto insbrep(port_addr_type port, integer_pointer m8, size_type count) noexcept
+    { return _insbrep(port, m8, count); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto inswrep(P port, integer_pointer m16, size_type count) noexcept { return _inswrep(gsl::narrow_cast<port_addr_type>(port), m16, count); }
+    inline auto inswrep(port_addr_type port, integer_pointer m16, size_type count) noexcept
+    { return _inswrep(port, m16, count); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto insdrep(P port, integer_pointer m32, size_type count) noexcept { return _insdrep(gsl::narrow_cast<port_addr_type>(port), m32, count); }
+    inline auto insdrep(port_addr_type port, integer_pointer m32, size_type count) noexcept
+    { return _insdrep(port, m32, count); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto insbrep(P port, void *m8, size_type count) noexcept { return _insbrep(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m8), count); }
+    inline auto insbrep(port_addr_type port, void *m8, size_type count) noexcept
+    { return _insbrep(port, reinterpret_cast<integer_pointer>(m8), count); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto inswrep(P port, void *m16, size_type count) noexcept { return _inswrep(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m16), count); }
+    inline auto inswrep(port_addr_type port, void *m16, size_type count) noexcept
+    { return _inswrep(port, reinterpret_cast<integer_pointer>(m16), count); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    auto insdrep(P port, void *m32, size_type count) noexcept { return _insdrep(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m32), count); }
+    inline auto insdrep(port_addr_type port, void *m32, size_type count) noexcept
+    { return _insdrep(port, reinterpret_cast<integer_pointer>(m32), count); }
 
-    template<
-        typename P,
-        typename T,
-        typename = std::enable_if<std::is_integral<P>::value>,
-        typename = std::enable_if<std::is_integral<T>::value>
-        >
-    void outb(P port, T val) noexcept { _outb(gsl::narrow_cast<port_addr_type>(port), gsl::narrow_cast<port_8bit_type>(val)); }
+    inline void outb(port_addr_type port, port_8bit_type val) noexcept
+    { _outb(port, val); }
 
-    template<
-        typename P,
-        typename T,
-        typename = std::enable_if<std::is_integral<P>::value>,
-        typename = std::enable_if<std::is_integral<T>::value>
-        >
-    void outw(P port, T val) noexcept { _outw(gsl::narrow_cast<port_addr_type>(port), gsl::narrow_cast<port_16bit_type>(val)); }
+    inline void outw(port_addr_type port, port_16bit_type val) noexcept
+    { _outw(port, val); }
 
-    template<
-        typename P,
-        typename T,
-        typename = std::enable_if<std::is_integral<P>::value>,
-        typename = std::enable_if<std::is_integral<T>::value>
-        >
-    void outd(P port, T val) noexcept { _outd(gsl::narrow_cast<port_addr_type>(port), gsl::narrow_cast<port_32bit_type>(val)); }
+    inline void outd(port_addr_type port, port_32bit_type val) noexcept
+    { _outd(port, val); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    void outsb(P port, integer_pointer m8) noexcept { _outsb(gsl::narrow_cast<port_addr_type>(port), m8); }
+    inline void outsb(port_addr_type port, integer_pointer m8) noexcept
+    { _outsb(port, m8); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    void outsw(P port, integer_pointer m16) noexcept { _outsw(gsl::narrow_cast<port_addr_type>(port), m16); }
+    inline void outsw(port_addr_type port, integer_pointer m16) noexcept
+    { _outsw(port, m16); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    void outsd(P port, integer_pointer m32) noexcept { _outsd(gsl::narrow_cast<port_addr_type>(port), m32); }
+    inline void outsd(port_addr_type port, integer_pointer m32) noexcept
+    { _outsd(port, m32); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    void outsb(P port, void *m8) noexcept { _outsb(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m8)); }
+    inline void outsb(port_addr_type port, void *m8) noexcept
+    { _outsb(port, reinterpret_cast<integer_pointer>(m8)); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    void outsw(P port, void *m16) noexcept { _outsw(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m16)); }
+    inline void outsw(port_addr_type port, void *m16) noexcept
+    { _outsw(port, reinterpret_cast<integer_pointer>(m16)); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    void outsd(P port, void *m32) noexcept { _outsd(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m32)); }
+    inline void outsd(port_addr_type port, void *m32) noexcept
+    { _outsd(port, reinterpret_cast<integer_pointer>(m32)); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    void outsbrep(P port, integer_pointer m8, size_type count) noexcept { _outsbrep(gsl::narrow_cast<port_addr_type>(port), m8, count); }
+    inline void outsbrep(port_addr_type port, integer_pointer m8, size_type count) noexcept
+    { _outsbrep(port, m8, count); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    void outswrep(P port, integer_pointer m16, size_type count) noexcept { _outswrep(gsl::narrow_cast<port_addr_type>(port), m16, count); }
+    inline void outswrep(port_addr_type port, integer_pointer m16, size_type count) noexcept
+    { _outswrep(port, m16, count); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    void outsdrep(P port, integer_pointer m32, size_type count) noexcept { _outsdrep(gsl::narrow_cast<port_addr_type>(port), m32, count); }
+    inline void outsdrep(port_addr_type port, integer_pointer m32, size_type count) noexcept
+    { _outsdrep(port, m32, count); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    void outsbrep(P port, void *m8, size_type count) noexcept { _outsbrep(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m8), count); }
+    inline void outsbrep(port_addr_type port, void *m8, size_type count) noexcept
+    { _outsbrep(port, reinterpret_cast<integer_pointer>(m8), count); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    void outswrep(P port, void *m16, size_type count) noexcept { _outswrep(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m16), count); }
+    inline void outswrep(port_addr_type port, void *m16, size_type count) noexcept
+    { _outswrep(port, reinterpret_cast<integer_pointer>(m16), count); }
 
-    template<typename P, typename = std::enable_if<std::is_integral<P>::value>>
-    void outsdrep(P port, void *m32, size_type count) noexcept { _outsdrep(gsl::narrow_cast<port_addr_type>(port), reinterpret_cast<integer_pointer>(m32), count); }
+    inline void outsdrep(port_addr_type port, void *m32, size_type count) noexcept
+    { _outsdrep(port, reinterpret_cast<integer_pointer>(m32), count); }
 }
 }
 

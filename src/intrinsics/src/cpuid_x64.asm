@@ -87,6 +87,73 @@ _cpuid_edx:
     pop rbx
     ret
 
+global _cpuid_subeax:function
+_cpuid_subeax:
+    push rbx
+
+    xor rax, rax
+    xor rbx, rbx
+    xor rcx, rcx
+    xor rdx, rdx
+
+    mov eax, edi
+    mov ecx, esi
+    cpuid
+
+    pop rbx
+    ret
+
+global _cpuid_subebx:function
+_cpuid_subebx:
+    push rbx
+
+    xor rax, rax
+    xor rbx, rbx
+    xor rcx, rcx
+    xor rdx, rdx
+
+    mov eax, edi
+    mov ecx, esi
+    cpuid
+    mov eax, ebx
+
+    pop rbx
+    ret
+
+global _cpuid_subecx:function
+_cpuid_subecx:
+    push rbx
+
+    xor rax, rax
+    xor rbx, rbx
+    xor rcx, rcx
+    xor rdx, rdx
+
+    mov eax, edi
+    mov ecx, esi
+    cpuid
+    mov eax, ecx
+
+    pop rbx
+    ret
+
+global _cpuid_subedx:function
+_cpuid_subedx:
+    push rbx
+
+    xor rax, rax
+    xor rbx, rbx
+    xor rcx, rcx
+    xor rdx, rdx
+
+    mov eax, edi
+    mov ecx, esi
+    cpuid
+    mov eax, edx
+
+    pop rbx
+    ret
+
 global _cpuid:function
 _cpuid:
     push rbx

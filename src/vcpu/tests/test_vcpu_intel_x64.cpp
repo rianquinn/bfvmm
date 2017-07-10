@@ -33,81 +33,86 @@
 
 using namespace x64;
 
-extern "C" uint64_t
+static uint64_t
 test_read_msr(uint32_t addr) noexcept
-{ (void) addr; return 0; }
+{ bfignored(addr); return 0; }
 
-extern "C" uint64_t
+static uint64_t
 test_read_cr0() noexcept
 { return 0; }
 
-extern "C" uint64_t
+static uint64_t
 test_read_cr3() noexcept
 { return 0; }
 
-extern "C" uint64_t
+static uint64_t
 test_read_cr4() noexcept
 { return 0; }
 
-extern "C" uint64_t
+static uint64_t
 test_read_rflags() noexcept
 { return 0; }
 
-extern "C" uint64_t
+static uint64_t
 test_read_dr7() noexcept
 { return 0; }
 
-extern "C" void
+static void
 test_read_gdt(gdt_reg_x64_t *gdt_reg) noexcept
-{ (void) gdt_reg; }
+{ bfignored(gdt_reg); }
 
-extern "C" void
+static void
 test_read_idt(idt_reg_x64_t *idt_reg) noexcept
-{ (void) idt_reg; }
+{ bfignored(idt_reg); }
 
-extern "C" uint16_t
+static uint16_t
 test_read_es() noexcept
 { return 0; }
 
-extern "C" uint16_t
+static uint16_t
 test_read_cs() noexcept
 { return 0; }
 
-extern "C" uint16_t
+static uint16_t
 test_read_ss() noexcept
 { return 0; }
 
-extern "C" uint16_t
+static uint16_t
 test_read_ds() noexcept
 { return 0; }
 
-extern "C" uint16_t
+static uint16_t
 test_read_fs() noexcept
 { return 0; }
 
-extern "C" uint16_t
+static uint16_t
 test_read_gs() noexcept
 { return 0; }
 
-extern "C" uint16_t
+static uint16_t
 test_read_ldtr() noexcept
 { return 0; }
 
-extern "C" uint16_t
+static uint16_t
 test_read_tr() noexcept
 { return 0; }
 
-extern "C" uint32_t
+static uint32_t
 test_cpuid_ecx(uint32_t val) noexcept
-{ (void) val; return 0x04000000U; }
+{ bfignored(val); return 0x04000000U; }
 
-extern "C" uint32_t
-test_cpuid_ebx(uint32_t val) noexcept
-{ (void) val; return 0x00000000U; }
-
-extern "C" uint32_t
+static uint32_t
 test_cpuid_eax(uint32_t val) noexcept
-{ (void) val; return 0x00000000U; }
+{ bfignored(val); return 0x00000000U; }
+
+static uint32_t
+test_cpuid_subebx(uint32_t addr, uint32_t leaf)
+{
+    bfignored(addr);
+    bfignored(leaf);
+
+    return 0x00000000U;
+}
 
 static void
 setup_intrinsics(MockRepository &mocks)
@@ -129,8 +134,8 @@ setup_intrinsics(MockRepository &mocks)
     mocks.OnCallFunc(_read_ldtr).Do(test_read_ldtr);
     mocks.OnCallFunc(_read_tr).Do(test_read_tr);
     mocks.OnCallFunc(_cpuid_ecx).Do(test_cpuid_ecx);
-    mocks.OnCallFunc(_cpuid_ebx).Do(test_cpuid_ebx);
     mocks.OnCallFunc(_cpuid_eax).Do(test_cpuid_eax);
+    mocks.OnCallFunc(_cpuid_subebx).Do(test_cpuid_subebx);
 }
 
 static auto
@@ -156,7 +161,7 @@ setup_pt(MockRepository &mocks)
 template<typename T> auto
 mock_no_delete(MockRepository &mocks)
 {
-    auto &&ptr = mocks.Mock<T>();
+    auto ptr = mocks.Mock<T>();
     mocks.OnCallDestructor(ptr);
 
     return ptr;
@@ -179,12 +184,12 @@ TEST_CASE("vcpu_intel_x64: valid")
     setup_intrinsics(mocks);
 
     auto test = [&] {
-        auto &&dr = mock_unique<debug_ring>(mocks);
-        auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-        auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-        auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-        auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-        auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+        auto dr = mock_unique<debug_ring>(mocks);
+        auto on = mock_unique<vmxon_intel_x64>(mocks);
+        auto cs = mock_unique<vmcs_intel_x64>(mocks);
+        auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+        auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+        auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
         std::make_unique<vcpu_intel_x64>(0, std::move(dr), std::move(on), std::move(cs), std::move(eh), std::move(vs), std::move(gs));
     };
 
@@ -217,12 +222,12 @@ TEST_CASE("vcpu_intel_x64: init_valid_params")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -249,12 +254,12 @@ TEST_CASE("vcpu_intel_x64: init_valid")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -281,12 +286,12 @@ TEST_CASE("vcpu_intel_x64: init_vmcs_throws")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save).Throw(std::logic_error("error"));
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -332,12 +337,12 @@ TEST_CASE("vcpu_intel_x64: fini_valid_params")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -365,12 +370,12 @@ TEST_CASE("vcpu_intel_x64: fini_valid")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -398,12 +403,12 @@ TEST_CASE("vcpu_intel_x64: fini_no_init")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
@@ -424,12 +429,12 @@ TEST_CASE("vcpu_intel_x64: run_launch")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -463,12 +468,12 @@ TEST_CASE("vcpu_intel_x64: run_launch_is_host_vcpu")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -502,12 +507,12 @@ TEST_CASE("vcpu_intel_x64: run_resume")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -542,12 +547,12 @@ TEST_CASE("vcpu_intel_x64: run_no_init")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -580,12 +585,12 @@ TEST_CASE("vcpu_intel_x64: run_vmxon_throws")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -619,12 +624,12 @@ TEST_CASE("vcpu_intel_x64: run_vmcs_throws")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -658,12 +663,12 @@ TEST_CASE("vcpu_intel_x64: hlt_no_init")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -696,12 +701,12 @@ TEST_CASE("vcpu_intel_x64: hlt_no_run")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -735,12 +740,12 @@ TEST_CASE("vcpu_intel_x64: hlt_valid")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -775,12 +780,12 @@ TEST_CASE("vcpu_intel_x64: hlt_valid_is_host_vcpu")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);
@@ -815,12 +820,12 @@ TEST_CASE("vcpu_intel_x64: hlt_vmxon_throws")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto &&dr = mock_unique<debug_ring>(mocks);
-    auto &&on = mock_unique<vmxon_intel_x64>(mocks);
-    auto &&cs = mock_unique<vmcs_intel_x64>(mocks);
-    auto &&eh = mock_unique<exit_handler_intel_x64>(mocks);
-    auto &&vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
-    auto &&gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
+    auto dr = mock_unique<debug_ring>(mocks);
+    auto on = mock_unique<vmxon_intel_x64>(mocks);
+    auto cs = mock_unique<vmcs_intel_x64>(mocks);
+    auto eh = mock_unique<exit_handler_intel_x64>(mocks);
+    auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
+    auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
 
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_state_save);
     mocks.OnCall(cs.get(), vmcs_intel_x64::set_exit_handler_entry);

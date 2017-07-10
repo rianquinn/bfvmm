@@ -22,9 +22,7 @@
 #ifndef PDPTE_X64_H
 #define PDPTE_X64_H
 
-#include <bfgsl.h>
-#include <bfdebug.h>
-#include <bfbitmanip.h>
+#include <intrinsics/x86/common/cpuid_x64.h>
 
 // *INDENT-OFF*
 
@@ -47,10 +45,7 @@ namespace pdpte
         constexpr const auto name = "reserved";
 
         inline auto mask() noexcept
-        {
-            auto phys_len = cpuid::addr_size::phys::get();
-            return ((0xFFFFFFFFFFFFFFFFULL << phys_len) | 0x1E6ULL);
-        }
+        { return ((0xFFFFFFFFFFFFFFFFULL << cpuid::addr_size::phys::get()) | 0x1E6ULL); }
     }
 
     namespace pwt

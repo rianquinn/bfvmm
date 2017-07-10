@@ -191,7 +191,6 @@ setup_vmcs_x64_state_crs(MockRepository &mocks, vmcs_intel_x64_state *state_in)
     cr4 |= cr4::physical_address_extensions::mask;
 
     auto rflags = 0UL;
-    rflags |= rflags::always_enabled::mask;
     rflags |= rflags::interrupt_enable_flag::mask;
 
     mocks.OnCall(state_in, vmcs_intel_x64_state::cr0).Return(cr0);

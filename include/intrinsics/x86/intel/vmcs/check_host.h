@@ -22,7 +22,6 @@
 #ifndef VMCS_INTEL_X64_CHECK_HOST_H
 #define VMCS_INTEL_X64_CHECK_HOST_H
 
-#include <type_traits>
 #include <intrinsics/x86/common/x64.h>
 #include <intrinsics/x86/intel/vmcs/32bit_control_fields.h>
 #include <intrinsics/x86/intel/vmcs/16bit_host_state_fields.h>
@@ -191,7 +190,7 @@ host_verify_load_ia32_efer()
 inline void
 host_es_selector_rpl_ti_equal_zero()
 {
-    if (vmcs::host_es_selector::ti::get()) {
+    if (vmcs::host_es_selector::ti::is_enabled()) {
         throw std::logic_error("host es ti flag must be 0");
     }
 
@@ -203,7 +202,7 @@ host_es_selector_rpl_ti_equal_zero()
 inline void
 host_cs_selector_rpl_ti_equal_zero()
 {
-    if (vmcs::host_cs_selector::ti::get()) {
+    if (vmcs::host_cs_selector::ti::is_enabled()) {
         throw std::logic_error("host cs ti flag must be 0");
     }
 
@@ -215,7 +214,7 @@ host_cs_selector_rpl_ti_equal_zero()
 inline void
 host_ss_selector_rpl_ti_equal_zero()
 {
-    if (vmcs::host_ss_selector::ti::get()) {
+    if (vmcs::host_ss_selector::ti::is_enabled()) {
         throw std::logic_error("host ss ti flag must be 0");
     }
 
@@ -227,7 +226,7 @@ host_ss_selector_rpl_ti_equal_zero()
 inline void
 host_ds_selector_rpl_ti_equal_zero()
 {
-    if (vmcs::host_ds_selector::ti::get()) {
+    if (vmcs::host_ds_selector::ti::is_enabled()) {
         throw std::logic_error("host ds ti flag must be 0");
     }
 
@@ -239,7 +238,7 @@ host_ds_selector_rpl_ti_equal_zero()
 inline void
 host_fs_selector_rpl_ti_equal_zero()
 {
-    if (vmcs::host_fs_selector::ti::get()) {
+    if (vmcs::host_fs_selector::ti::is_enabled()) {
         throw std::logic_error("host fs ti flag must be 0");
     }
 
@@ -251,7 +250,7 @@ host_fs_selector_rpl_ti_equal_zero()
 inline void
 host_gs_selector_rpl_ti_equal_zero()
 {
-    if (vmcs::host_gs_selector::ti::get()) {
+    if (vmcs::host_gs_selector::ti::is_enabled()) {
         throw std::logic_error("host gs ti flag must be 0");
     }
 
@@ -263,7 +262,7 @@ host_gs_selector_rpl_ti_equal_zero()
 inline void
 host_tr_selector_rpl_ti_equal_zero()
 {
-    if (vmcs::host_tr_selector::ti::get()) {
+    if (vmcs::host_tr_selector::ti::is_enabled()) {
         throw std::logic_error("host tr ti flag must be 0");
     }
 
@@ -343,7 +342,7 @@ host_tr_canonical_base_address()
 inline void
 host_if_outside_ia32e_mode()
 {
-    if (msrs::ia32_efer::lma::get()) {
+    if (msrs::ia32_efer::lma::is_enabled()) {
         return;
     }
 
@@ -359,7 +358,7 @@ host_if_outside_ia32e_mode()
 inline void
 host_address_space_size_exit_ctl_is_set()
 {
-    if (!msrs::ia32_efer::lma::get()) {
+    if (!msrs::ia32_efer::lma::is_enabled()) {
         return;
     }
 

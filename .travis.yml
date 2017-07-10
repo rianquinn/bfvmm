@@ -49,6 +49,7 @@ before_script:
   - pushd bfsdk/build
   - |
     cmake \
+      -DENABLE_UNITTESTING=ON \
       -DCMAKE_C_COMPILER="gcc-6" \
       -DCMAKE_CXX_COMPILER="g++-6" \
       ..
@@ -136,6 +137,7 @@ matrix:
       - |
         cmake \
           -DENABLE_TIDY=ON \
+          -DENABLE_UNITTESTING=ON \
           -DCMAKE_C_COMPILER="gcc-6" \
           -DCMAKE_CXX_COMPILER="g++-6" \
           ..
@@ -160,6 +162,7 @@ matrix:
       - |
         cmake \
           -DENABLE_COVERAGE=ON \
+          -DENABLE_UNITTESTING=ON \
           -DCMAKE_C_COMPILER="gcc-6" \
           -DCMAKE_CXX_COMPILER="g++-6" \
           ..
@@ -185,7 +188,8 @@ matrix:
     script:
       - |
         cmake \
-          -DENABLE_DYNAMIC_ASAN=on \
+          -DENABLE_UNITTESTING=ON \
+          -DENABLE_DYNAMIC_ASAN=ON \
           -DCMAKE_C_COMPILER="gcc-6" \
           -DCMAKE_CXX_COMPILER="g++-6" \
           ..
@@ -209,7 +213,8 @@ matrix:
     script:
       - |
         cmake \
-          -DENABLE_DYNAMIC_USAN=on \
+          -DENABLE_UNITTESTING=ON \
+          -DENABLE_DYNAMIC_USAN=ON \
           -DCMAKE_C_COMPILER="gcc-6" \
           -DCMAKE_CXX_COMPILER="g++-6" \
           ..

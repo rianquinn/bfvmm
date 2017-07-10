@@ -50,8 +50,14 @@ namespace x64
 {
 namespace tlb
 {
-    template<typename T, typename = std::enable_if<std::is_pointer<T>::value>>
-    void invlpg(T val) noexcept { _invlpg(val); }
+    using pointer = void *;
+    using integer_pointer = uintptr_t;
+
+    inline void invlpg(pointer val) noexcept
+    { _invlpg(val); }
+
+    inline void invlpg(integer_pointer val) noexcept
+    { _invlpg(reinterpret_cast<pointer>(val)); }
 }
 }
 

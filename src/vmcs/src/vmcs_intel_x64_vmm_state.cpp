@@ -63,11 +63,11 @@ vmcs_intel_x64_vmm_state::vmcs_intel_x64_vmm_state()
     m_gs_index = 4;
     m_tr_index = 5;
 
-    m_cs = gsl::narrow_cast<segment_register::type>(m_cs_index << 3);
-    m_ss = gsl::narrow_cast<segment_register::type>(m_ss_index << 3);
-    m_fs = gsl::narrow_cast<segment_register::type>(m_fs_index << 3);
-    m_gs = gsl::narrow_cast<segment_register::type>(m_gs_index << 3);
-    m_tr = gsl::narrow_cast<segment_register::type>(m_tr_index << 3);
+    m_cs = gsl::narrow_cast<segment_register::value_type>(m_cs_index << 3);
+    m_ss = gsl::narrow_cast<segment_register::value_type>(m_ss_index << 3);
+    m_fs = gsl::narrow_cast<segment_register::value_type>(m_fs_index << 3);
+    m_gs = gsl::narrow_cast<segment_register::value_type>(m_gs_index << 3);
+    m_tr = gsl::narrow_cast<segment_register::value_type>(m_tr_index << 3);
 
     m_cr0 = 0;
     m_cr0 |= cr0::protection_enable::mask;
@@ -93,15 +93,15 @@ vmcs_intel_x64_vmm_state::vmcs_intel_x64_vmm_state()
     m_cr4 |= cr4::osxmmexcpt::mask;
     m_cr4 |= cr4::vmx_enable_bit::mask;
 
-    if (cpuid::feature_information::ecx::xsave::get()) {
+    if (intel_x64::cpuid::feature_information::ecx::xsave::is_enabled()) {
         m_cr4 |= cr4::osxsave::mask;
     }
 
-    if (cpuid::extended_feature_flags::subleaf0::ebx::smep::get()) {
+    if (intel_x64::cpuid::extended_feature_flags::subleaf0::ebx::smep::is_enabled()) {
         m_cr4 |= cr4::smep_enable_bit::mask;
     }
 
-    if (cpuid::extended_feature_flags::subleaf0::ebx::smap::get()) {
+    if (intel_x64::cpuid::extended_feature_flags::subleaf0::ebx::smap::is_enabled()) {
         m_cr4 |= cr4::smap_enable_bit::mask;
     }
 

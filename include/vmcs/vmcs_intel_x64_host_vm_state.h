@@ -61,21 +61,21 @@ public:
     vmcs_intel_x64_host_vm_state();
     ~vmcs_intel_x64_host_vm_state() override = default;
 
-    x64::segment_register::type es() const override
+    x64::segment_register::value_type es() const override
     { return m_es; }
-    x64::segment_register::type cs() const override
+    x64::segment_register::value_type cs() const override
     { return m_cs; }
-    x64::segment_register::type ss() const override
+    x64::segment_register::value_type ss() const override
     { return m_ss; }
-    x64::segment_register::type ds() const override
+    x64::segment_register::value_type ds() const override
     { return m_ds; }
-    x64::segment_register::type fs() const override
+    x64::segment_register::value_type fs() const override
     { return m_fs; }
-    x64::segment_register::type gs() const override
+    x64::segment_register::value_type gs() const override
     { return m_gs; }
-    x64::segment_register::type ldtr() const override
+    x64::segment_register::value_type ldtr() const override
     { return m_ldtr; }
-    x64::segment_register::type tr() const override
+    x64::segment_register::value_type tr() const override
     { return m_tr; }
 
     intel_x64::cr0::value_type cr0() const override
@@ -256,23 +256,23 @@ public:
 
 private:
 
-    x64::segment_register::type m_es{0};
-    x64::segment_register::type m_cs{0};
-    x64::segment_register::type m_ss{0};
-    x64::segment_register::type m_ds{0};
-    x64::segment_register::type m_fs{0};
-    x64::segment_register::type m_gs{0};
-    x64::segment_register::type m_ldtr{0};
-    x64::segment_register::type m_tr{0};
+    x64::segment_register::value_type m_es{0};
+    x64::segment_register::value_type m_cs{0};
+    x64::segment_register::value_type m_ss{0};
+    x64::segment_register::value_type m_ds{0};
+    x64::segment_register::value_type m_fs{0};
+    x64::segment_register::value_type m_gs{0};
+    x64::segment_register::value_type m_ldtr{0};
+    x64::segment_register::value_type m_tr{0};
 
-    x64::segment_register::type m_es_index{0};
-    x64::segment_register::type m_cs_index{0};
-    x64::segment_register::type m_ss_index{0};
-    x64::segment_register::type m_ds_index{0};
-    x64::segment_register::type m_fs_index{0};
-    x64::segment_register::type m_gs_index{0};
-    x64::segment_register::type m_ldtr_index{0};
-    x64::segment_register::type m_tr_index{0};
+    x64::segment_register::value_type m_es_index{0};
+    x64::segment_register::value_type m_cs_index{0};
+    x64::segment_register::value_type m_ss_index{0};
+    x64::segment_register::value_type m_ds_index{0};
+    x64::segment_register::value_type m_fs_index{0};
+    x64::segment_register::value_type m_gs_index{0};
+    x64::segment_register::value_type m_ldtr_index{0};
+    x64::segment_register::value_type m_tr_index{0};
 
     intel_x64::cr0::value_type m_cr0{0};
     intel_x64::cr3::value_type m_cr3{0};

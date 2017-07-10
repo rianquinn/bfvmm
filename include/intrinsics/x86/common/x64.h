@@ -23,9 +23,6 @@
 #ifndef X64_H
 #define X64_H
 
-#include <type_traits>
-
-#include <bfgsl.h>
 #include <intrinsics/x86/common/cpuid_x64.h>
 
 // *INDENT-OFF*
@@ -114,22 +111,28 @@ namespace x64
         constexpr const auto virtualization_exception                = 20U;
     }
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    auto is_address_canonical(T addr)
+    inline auto is_address_canonical(uintptr_t addr)
     { return ((addr <= 0x00007FFFFFFFFFFFULL) || (addr >= 0xFFFF800000000000ULL)); }
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    auto is_linear_address_valid(T addr)
+    inline auto is_address_canonical(void *addr)
+    { return is_address_canonical(reinterpret_cast<uintptr_t>(addr)); }
+
+    inline auto is_linear_address_valid(uintptr_t addr)
     { return is_address_canonical(addr); }
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    auto is_physical_address_valid(T addr)
+    inline auto is_linear_address_valid(void *addr)
+    { return is_address_canonical(addr); }
+
+    inline auto is_physical_address_valid(uintptr_t addr)
     {
         auto bits = cpuid::addr_size::phys::get();
         auto mask = (0xFFFFFFFFFFFFFFFFULL >> bits) << bits;
 
         return ((addr & mask) == 0);
     }
+
+    inline auto is_physical_address_valid(void *addr)
+    { return is_physical_address_valid(reinterpret_cast<uintptr_t>(addr)); }
 }
 
 // *INDENT-ON*

@@ -22,13 +22,11 @@
 #ifndef VMCS_INTEL_X64_CHECK_GUEST_H
 #define VMCS_INTEL_X64_CHECK_GUEST_H
 
-#include <type_traits>
-
 #include <intrinsics/x86/common/x64.h>
-#include <intrinsics/x86/common/cpuid_x64.h>
 #include <intrinsics/x86/common/pdpte_x64.h>
 
 #include <intrinsics/x86/intel/crs_intel_x64.h>
+#include <intrinsics/x86/intel/cpuid_intel_x64.h>
 #include <intrinsics/x86/intel/vmcs/32bit_control_fields.h>
 #include <intrinsics/x86/intel/vmcs/16bit_guest_state_fields.h>
 #include <intrinsics/x86/intel/vmcs/32bit_guest_state_fields.h>
@@ -291,7 +289,7 @@ guest_verify_load_ia32_bndcfgs()
 inline void
 guest_tr_ti_bit_equals_0()
 {
-    if (guest_tr_selector::ti::get()) {
+    if (guest_tr_selector::ti::is_enabled()) {
         throw std::logic_error("guest tr's ti flag must be zero");
     }
 }
@@ -299,11 +297,11 @@ guest_tr_ti_bit_equals_0()
 inline void
 guest_ldtr_ti_bit_equals_0()
 {
-    if (guest_ldtr_access_rights::unusable::get() != 0) {
+    if (guest_ldtr_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if (guest_ldtr_selector::ti::get()) {
+    if (guest_ldtr_selector::ti::is_enabled()) {
         throw std::logic_error("guest ldtr's ti flag must be zero");
     }
 }
@@ -438,7 +436,7 @@ guest_gs_base_is_canonical()
 inline void
 guest_ldtr_base_is_canonical()
 {
-    if (guest_ldtr_access_rights::unusable::get() != 0) {
+    if (guest_ldtr_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -458,7 +456,7 @@ guest_cs_base_upper_dword_0()
 inline void
 guest_ss_base_upper_dword_0()
 {
-    if (guest_ss_access_rights::unusable::get() != 0) {
+    if (guest_ss_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -470,7 +468,7 @@ guest_ss_base_upper_dword_0()
 inline void
 guest_ds_base_upper_dword_0()
 {
-    if (guest_ds_access_rights::unusable::get() != 0) {
+    if (guest_ds_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -482,7 +480,7 @@ guest_ds_base_upper_dword_0()
 inline void
 guest_es_base_upper_dword_0()
 {
-    if (guest_es_access_rights::unusable::get() != 0) {
+    if (guest_es_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -688,7 +686,7 @@ guest_ss_access_rights_type()
         return;
     }
 
-    if (guest_ss_access_rights::unusable::get() != 0) {
+    if (guest_ss_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -711,7 +709,7 @@ guest_ds_access_rights_type()
         return;
     }
 
-    if (guest_ds_access_rights::unusable::get() != 0) {
+    if (guest_ds_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -738,7 +736,7 @@ guest_es_access_rights_type()
         return;
     }
 
-    if (guest_es_access_rights::unusable::get() != 0) {
+    if (guest_es_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -765,7 +763,7 @@ guest_fs_access_rights_type()
         return;
     }
 
-    if (guest_fs_access_rights::unusable::get() != 0) {
+    if (guest_fs_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -792,7 +790,7 @@ guest_gs_access_rights_type()
         return;
     }
 
-    if (guest_gs_access_rights::unusable::get() != 0) {
+    if (guest_gs_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -819,7 +817,7 @@ guest_cs_is_not_a_system_descriptor()
         return;
     }
 
-    if (guest_cs_access_rights::s::get() == 0) {
+    if (guest_cs_access_rights::s::is_disabled()) {
         throw std::logic_error("cs must be a code/data descriptor. S should equal 1");
     }
 }
@@ -831,11 +829,11 @@ guest_ss_is_not_a_system_descriptor()
         return;
     }
 
-    if (guest_ss_access_rights::unusable::get() != 0) {
+    if (guest_ss_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if (guest_ss_access_rights::s::get() == 0) {
+    if (guest_ss_access_rights::s::is_disabled()) {
         throw std::logic_error("ss must be a code/data descriptor. S should equal 1");
     }
 }
@@ -847,11 +845,11 @@ guest_ds_is_not_a_system_descriptor()
         return;
     }
 
-    if (guest_ds_access_rights::unusable::get() != 0) {
+    if (guest_ds_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if (guest_ds_access_rights::s::get() == 0) {
+    if (guest_ds_access_rights::s::is_disabled()) {
         throw std::logic_error("ds must be a code/data descriptor. S should equal 1");
     }
 }
@@ -863,11 +861,11 @@ guest_es_is_not_a_system_descriptor()
         return;
     }
 
-    if (guest_es_access_rights::unusable::get() != 0) {
+    if (guest_es_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if (guest_es_access_rights::s::get() == 0) {
+    if (guest_es_access_rights::s::is_disabled()) {
         throw std::logic_error("es must be a code/data descriptor. S should equal 1");
     }
 }
@@ -879,11 +877,11 @@ guest_fs_is_not_a_system_descriptor()
         return;
     }
 
-    if (guest_fs_access_rights::unusable::get() != 0) {
+    if (guest_fs_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if (guest_fs_access_rights::s::get() == 0) {
+    if (guest_fs_access_rights::s::is_disabled()) {
         throw std::logic_error("fs must be a code/data descriptor. S should equal 1");
     }
 }
@@ -895,11 +893,11 @@ guest_gs_is_not_a_system_descriptor()
         return;
     }
 
-    if (guest_gs_access_rights::unusable::get() != 0) {
+    if (guest_gs_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if (guest_gs_access_rights::s::get() == 0) {
+    if (guest_gs_access_rights::s::is_disabled()) {
         throw std::logic_error("gs must be a code/data descriptor. S should equal 1");
     }
 }
@@ -1019,7 +1017,7 @@ guest_ds_dpl()
         return;
     }
 
-    if (guest_ds_access_rights::unusable::get() != 0) {
+    if (guest_ds_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1059,7 +1057,7 @@ guest_es_dpl()
         return;
     }
 
-    if (guest_es_access_rights::unusable::get() != 0) {
+    if (guest_es_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1099,7 +1097,7 @@ guest_fs_dpl()
         return;
     }
 
-    if (guest_fs_access_rights::unusable::get() != 0) {
+    if (guest_fs_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1139,7 +1137,7 @@ guest_gs_dpl()
         return;
     }
 
-    if (guest_gs_access_rights::unusable::get() != 0) {
+    if (guest_gs_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1172,7 +1170,7 @@ guest_cs_must_be_present()
         return;
     }
 
-    if (guest_cs_access_rights::present::get() == 0) {
+    if (guest_cs_access_rights::present::is_disabled()) {
         throw std::logic_error("cs access rights present flag must be 1 ");
     }
 }
@@ -1184,11 +1182,11 @@ guest_ss_must_be_present_if_usable()
         return;
     }
 
-    if (guest_ss_access_rights::unusable::get() != 0) {
+    if (guest_ss_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if (guest_ss_access_rights::present::get() == 0) {
+    if (guest_ss_access_rights::present::is_disabled()) {
         throw std::logic_error("ss access rights present flag must be 1 if ss is usable");
     }
 }
@@ -1200,11 +1198,11 @@ guest_ds_must_be_present_if_usable()
         return;
     }
 
-    if (guest_ds_access_rights::unusable::get() != 0) {
+    if (guest_ds_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if (guest_ds_access_rights::present::get() == 0) {
+    if (guest_ds_access_rights::present::is_disabled()) {
         throw std::logic_error("ds access rights present flag must be 1 if ds is usable");
     }
 }
@@ -1216,11 +1214,11 @@ guest_es_must_be_present_if_usable()
         return;
     }
 
-    if (guest_es_access_rights::unusable::get() != 0) {
+    if (guest_es_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if (guest_es_access_rights::present::get() == 0) {
+    if (guest_es_access_rights::present::is_disabled()) {
         throw std::logic_error("es access rights present flag must be 1 if es is usable");
     }
 }
@@ -1232,11 +1230,11 @@ guest_fs_must_be_present_if_usable()
         return;
     }
 
-    if (guest_fs_access_rights::unusable::get() != 0) {
+    if (guest_fs_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if (guest_fs_access_rights::present::get() == 0) {
+    if (guest_fs_access_rights::present::is_disabled()) {
         throw std::logic_error("fs access rights present flag must be 1 if fs is usable");
     }
 }
@@ -1248,11 +1246,11 @@ guest_gs_must_be_present_if_usable()
         return;
     }
 
-    if (guest_gs_access_rights::unusable::get() != 0) {
+    if (guest_gs_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if (guest_gs_access_rights::present::get() == 0) {
+    if (guest_gs_access_rights::present::is_disabled()) {
         throw std::logic_error("gs access rights present flag must be 1 if gs is usable");
     }
 }
@@ -1276,7 +1274,7 @@ guest_ss_access_rights_reserved_must_be_0()
         return;
     }
 
-    if (guest_ss_access_rights::unusable::get() != 0) {
+    if (guest_ss_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1292,7 +1290,7 @@ guest_ds_access_rights_reserved_must_be_0()
         return;
     }
 
-    if (guest_ds_access_rights::unusable::get() != 0) {
+    if (guest_ds_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1308,7 +1306,7 @@ guest_es_access_rights_reserved_must_be_0()
         return;
     }
 
-    if (guest_es_access_rights::unusable::get() != 0) {
+    if (guest_es_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1324,7 +1322,7 @@ guest_fs_access_rights_reserved_must_be_0()
         return;
     }
 
-    if (guest_fs_access_rights::unusable::get() != 0) {
+    if (guest_fs_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1340,7 +1338,7 @@ guest_gs_access_rights_reserved_must_be_0()
         return;
     }
 
-    if (guest_gs_access_rights::unusable::get() != 0) {
+    if (guest_gs_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1360,11 +1358,11 @@ guest_cs_db_must_be_0_if_l_equals_1()
         return;
     }
 
-    if (guest_cs_access_rights::l::get() == 0) {
+    if (guest_cs_access_rights::l::is_disabled()) {
         return;
     }
 
-    if (guest_cs_access_rights::db::get() != 0) {
+    if (guest_cs_access_rights::db::is_enabled()) {
         throw std::logic_error("d/b for guest cs must be 0 if in ia 32e mode and l == 1");
     }
 }
@@ -1377,13 +1375,13 @@ guest_cs_granularity()
     }
 
     auto cs_limit = vmcs::guest_cs_limit::get();
-    auto g = guest_cs_access_rights::granularity::get();
+    auto g = guest_cs_access_rights::granularity::is_enabled();
 
-    if ((cs_limit & 0x00000FFF) != 0x00000FFF && g != 0) {
+    if ((cs_limit & 0x00000FFF) != 0x00000FFF && g) {
         throw std::logic_error("guest cs granularity must be 0 if any bit 11:0 is 0");
     }
 
-    if ((cs_limit & 0xFFF00000) != 0x00000000 && g == 0) {
+    if ((cs_limit & 0xFFF00000) != 0x00000000 && !g) {
         throw std::logic_error("guest cs granularity must be 1 if any bit 31:20 is 1");
     }
 }
@@ -1396,17 +1394,17 @@ guest_ss_granularity()
     }
 
     auto ss_limit = vmcs::guest_ss_limit::get();
-    auto g = guest_ss_access_rights::granularity::get();
+    auto g = guest_ss_access_rights::granularity::is_enabled();
 
-    if (guest_ss_access_rights::unusable::get() != 0) {
+    if (guest_ss_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if ((ss_limit & 0x00000FFF) != 0x00000FFF && g != 0) {
+    if ((ss_limit & 0x00000FFF) != 0x00000FFF && g) {
         throw std::logic_error("guest ss granularity must be 0 if any bit 11:0 is 0");
     }
 
-    if ((ss_limit & 0xFFF00000) != 0x00000000 && g == 0) {
+    if ((ss_limit & 0xFFF00000) != 0x00000000 && !g) {
         throw std::logic_error("guest ss granularity must be 1 if any bit 31:20 is 1");
     }
 }
@@ -1419,17 +1417,17 @@ guest_ds_granularity()
     }
 
     auto ds_limit = vmcs::guest_ds_limit::get();
-    auto g = guest_ds_access_rights::granularity::get();
+    auto g = guest_ds_access_rights::granularity::is_enabled();
 
-    if (guest_ds_access_rights::unusable::get() != 0) {
+    if (guest_ds_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if ((ds_limit & 0x00000FFF) != 0x00000FFF && g != 0) {
+    if ((ds_limit & 0x00000FFF) != 0x00000FFF && g) {
         throw std::logic_error("guest ds granularity must be 0 if any bit 11:0 is 0");
     }
 
-    if ((ds_limit & 0xFFF00000) != 0x00000000 && g == 0) {
+    if ((ds_limit & 0xFFF00000) != 0x00000000 && !g) {
         throw std::logic_error("guest ds granularity must be 1 if any bit 31:20 is 1");
     }
 }
@@ -1442,17 +1440,17 @@ guest_es_granularity()
     }
 
     auto es_limit = vmcs::guest_es_limit::get();
-    auto g = guest_es_access_rights::granularity::get();
+    auto g = guest_es_access_rights::granularity::is_enabled();
 
-    if (guest_es_access_rights::unusable::get() != 0) {
+    if (guest_es_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if ((es_limit & 0x00000FFF) != 0x00000FFF && g != 0) {
+    if ((es_limit & 0x00000FFF) != 0x00000FFF && g) {
         throw std::logic_error("guest es granularity must be 0 if any bit 11:0 is 0");
     }
 
-    if ((es_limit & 0xFFF00000) != 0x00000000 && g == 0) {
+    if ((es_limit & 0xFFF00000) != 0x00000000 && !g) {
         throw std::logic_error("guest es granularity must be 1 if any bit 31:20 is 1");
     }
 }
@@ -1465,17 +1463,17 @@ guest_fs_granularity()
     }
 
     auto fs_limit = vmcs::guest_fs_limit::get();
-    auto g = guest_fs_access_rights::granularity::get();
+    auto g = guest_fs_access_rights::granularity::is_enabled();
 
-    if (guest_fs_access_rights::unusable::get() != 0) {
+    if (guest_fs_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if ((fs_limit & 0x00000FFF) != 0x00000FFF && g != 0) {
+    if ((fs_limit & 0x00000FFF) != 0x00000FFF && g) {
         throw std::logic_error("guest fs granularity must be 0 if any bit 11:0 is 0");
     }
 
-    if ((fs_limit & 0xFFF00000) != 0x00000000 && g == 0) {
+    if ((fs_limit & 0xFFF00000) != 0x00000000 && !g) {
         throw std::logic_error("guest fs granularity must be 1 if any bit 31:20 is 1");
     }
 }
@@ -1488,17 +1486,17 @@ guest_gs_granularity()
     }
 
     auto gs_limit = vmcs::guest_gs_limit::get();
-    auto g = guest_gs_access_rights::granularity::get();
+    auto g = guest_gs_access_rights::granularity::is_enabled();
 
-    if (guest_gs_access_rights::unusable::get() != 0) {
+    if (guest_gs_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if ((gs_limit & 0x00000FFF) != 0x00000FFF && g != 0) {
+    if ((gs_limit & 0x00000FFF) != 0x00000FFF && g) {
         throw std::logic_error("guest gs granularity must be 0 if any bit 11:0 is 0");
     }
 
-    if ((gs_limit & 0xFFF00000) != 0x00000000 && g == 0) {
+    if ((gs_limit & 0xFFF00000) != 0x00000000 && !g) {
         throw std::logic_error("guest gs granularity must be 1 if any bit 31:20 is 1");
     }
 }
@@ -1522,7 +1520,7 @@ guest_ss_access_rights_remaining_reserved_bit_0()
         return;
     }
 
-    if (guest_ss_access_rights::unusable::get() != 0) {
+    if (guest_ss_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1538,7 +1536,7 @@ guest_ds_access_rights_remaining_reserved_bit_0()
         return;
     }
 
-    if (guest_ds_access_rights::unusable::get() != 0) {
+    if (guest_ds_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1554,7 +1552,7 @@ guest_es_access_rights_remaining_reserved_bit_0()
         return;
     }
 
-    if (guest_es_access_rights::unusable::get() != 0) {
+    if (guest_es_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1570,7 +1568,7 @@ guest_fs_access_rights_remaining_reserved_bit_0()
         return;
     }
 
-    if (guest_fs_access_rights::unusable::get() != 0) {
+    if (guest_fs_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1586,7 +1584,7 @@ guest_gs_access_rights_remaining_reserved_bit_0()
         return;
     }
 
-    if (guest_gs_access_rights::unusable::get() != 0) {
+    if (guest_gs_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1617,7 +1615,7 @@ guest_tr_type_must_be_11()
 inline void
 guest_tr_must_be_a_system_descriptor()
 {
-    if (guest_tr_access_rights::s::get() != 0) {
+    if (guest_tr_access_rights::s::is_enabled()) {
         throw std::logic_error("tr must be a system descriptor. S should equal 0");
     }
 }
@@ -1625,7 +1623,7 @@ guest_tr_must_be_a_system_descriptor()
 inline void
 guest_tr_must_be_present()
 {
-    if (guest_tr_access_rights::present::get() == 0) {
+    if (guest_tr_access_rights::present::is_disabled()) {
         throw std::logic_error("tr access rights present flag must be 1 ");
     }
 }
@@ -1642,13 +1640,13 @@ inline void
 guest_tr_granularity()
 {
     auto tr_limit = vmcs::guest_tr_limit::get();
-    auto g = guest_tr_access_rights::granularity::get();
+    auto g = guest_tr_access_rights::granularity::is_enabled();
 
-    if ((tr_limit & 0x00000FFF) != 0x00000FFF && g != 0) {
+    if ((tr_limit & 0x00000FFF) != 0x00000FFF && g) {
         throw std::logic_error("guest tr granularity must be 0 if any bit 11:0 is 0");
     }
 
-    if ((tr_limit & 0xFFF00000) != 0x00000000 && g == 0) {
+    if ((tr_limit & 0xFFF00000) != 0x00000000 && !g) {
         throw std::logic_error("guest tr granularity must be 1 if any bit 31:20 is 1");
     }
 }
@@ -1656,7 +1654,7 @@ guest_tr_granularity()
 inline void
 guest_tr_must_be_usable()
 {
-    if (guest_tr_access_rights::unusable::get() != 0) {
+    if (guest_tr_access_rights::unusable::is_enabled()) {
         throw std::logic_error("tr must be usable");
     }
 }
@@ -1664,9 +1662,7 @@ guest_tr_must_be_usable()
 inline void
 guest_tr_access_rights_remaining_reserved_bit_0()
 {
-    auto tr_access = vmcs::guest_tr_access_rights::get();
-
-    if ((tr_access & 0xFFFE0000) != 0) {
+    if (vmcs::guest_tr_access_rights::reserved::get() != 0) {
         throw std::logic_error("guest tr access rights bits 31:17 must be 0");
     }
 }
@@ -1674,7 +1670,7 @@ guest_tr_access_rights_remaining_reserved_bit_0()
 inline void
 guest_ldtr_type_must_be_2()
 {
-    if (guest_ldtr_access_rights::unusable::get() != 0) {
+    if (guest_ldtr_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1690,11 +1686,11 @@ guest_ldtr_type_must_be_2()
 inline void
 guest_ldtr_must_be_a_system_descriptor()
 {
-    if (guest_ldtr_access_rights::unusable::get() != 0) {
+    if (guest_ldtr_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if (guest_ldtr_access_rights::s::get() != 0) {
+    if (guest_ldtr_access_rights::s::is_enabled()) {
         throw std::logic_error("ldtr must be a system descriptor. S should equal 0");
     }
 }
@@ -1702,11 +1698,11 @@ guest_ldtr_must_be_a_system_descriptor()
 inline void
 guest_ldtr_must_be_present()
 {
-    if (guest_ldtr_access_rights::unusable::get() != 0) {
+    if (guest_ldtr_access_rights::unusable::is_enabled()) {
         return;
     }
 
-    if (guest_ldtr_access_rights::present::get() == 0) {
+    if (guest_ldtr_access_rights::present::is_disabled()) {
         throw std::logic_error("ldtr access rights present flag must be 1 if ldtr is usable");
     }
 }
@@ -1714,7 +1710,7 @@ guest_ldtr_must_be_present()
 inline void
 guest_ldtr_access_rights_reserved_must_be_0()
 {
-    if (guest_ldtr_access_rights::unusable::get() != 0) {
+    if (guest_ldtr_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1726,18 +1722,18 @@ guest_ldtr_access_rights_reserved_must_be_0()
 inline void
 guest_ldtr_granularity()
 {
-    if (guest_ldtr_access_rights::unusable::get() != 0) {
+    if (guest_ldtr_access_rights::unusable::is_enabled()) {
         return;
     }
 
     auto ldtr_limit = vmcs::guest_ldtr_limit::get();
-    auto g = guest_ldtr_access_rights::granularity::get();
+    auto g = guest_ldtr_access_rights::granularity::is_enabled();
 
-    if ((ldtr_limit & 0x00000FFF) != 0x00000FFF && g != 0) {
+    if ((ldtr_limit & 0x00000FFF) != 0x00000FFF && g) {
         throw std::logic_error("guest ldtr granularity must be 0 if any bit 11:0 is 0");
     }
 
-    if ((ldtr_limit & 0xFFF00000) != 0x00000000 && g == 0) {
+    if ((ldtr_limit & 0xFFF00000) != 0x00000000 && !g) {
         throw std::logic_error("guest ldtr granularity must be 1 if any bit 31:20 is 1");
     }
 }
@@ -1745,7 +1741,7 @@ guest_ldtr_granularity()
 inline void
 guest_ldtr_access_rights_remaining_reserved_bit_0()
 {
-    if (guest_ldtr_access_rights::unusable::get() != 0) {
+    if (guest_ldtr_access_rights::unusable::is_enabled()) {
         return;
     }
 
@@ -1795,9 +1791,9 @@ guest_idtr_limit_reserved_bits()
 inline void
 guest_rip_upper_bits()
 {
-    auto cs_l = guest_cs_access_rights::l::get();
+    auto cs_l = guest_cs_access_rights::l::is_enabled();
 
-    if (vm_entry_controls::ia_32e_mode_guest::is_enabled() && cs_l != 0) {
+    if (vm_entry_controls::ia_32e_mode_guest::is_enabled() && cs_l) {
         return;
     }
 
@@ -1809,13 +1805,13 @@ guest_rip_upper_bits()
 inline void
 guest_rip_valid_addr()
 {
-    auto cs_l = guest_cs_access_rights::l::get();
+    auto cs_l = guest_cs_access_rights::l::is_enabled();
 
     if (vm_entry_controls::ia_32e_mode_guest::is_disabled()) {
         return;
     }
 
-    if (cs_l == 0) {
+    if (!cs_l) {
         return;
     }
 
@@ -1894,12 +1890,12 @@ guest_must_be_active_if_injecting_blocking_state()
         return;
     }
 
-    if (vmcs::guest_interruptibility_state::blocking_by_sti::get() != 0U) {
+    if (vmcs::guest_interruptibility_state::blocking_by_sti::is_enabled()) {
         throw std::logic_error("activity state must be active if "
                                "interruptibility state is sti");
     }
 
-    if (vmcs::guest_interruptibility_state::blocking_by_mov_ss::get() != 0U) {
+    if (vmcs::guest_interruptibility_state::blocking_by_mov_ss::is_enabled()) {
         throw std::logic_error("activity state must be active if "
                                "interruptibility state is mov-ss");
     }
@@ -2024,10 +2020,10 @@ guest_interruptibility_state_reserved()
 inline void
 guest_interruptibility_state_sti_mov_ss()
 {
-    auto sti = vmcs::guest_interruptibility_state::blocking_by_sti::get();
-    auto mov_ss = vmcs::guest_interruptibility_state::blocking_by_mov_ss::get();
+    auto sti = vmcs::guest_interruptibility_state::blocking_by_sti::is_enabled();
+    auto mov_ss = vmcs::guest_interruptibility_state::blocking_by_mov_ss::is_enabled();
 
-    if (sti != 0U && mov_ss != 0U) {
+    if (sti && mov_ss) {
         throw std::logic_error("interruptibility state sti and mov ss cannot both be 1");
     }
 
@@ -2040,7 +2036,7 @@ guest_interruptibility_state_sti()
         return;
     }
 
-    if (vmcs::guest_interruptibility_state::blocking_by_sti::get() != 0U) {
+    if (vmcs::guest_interruptibility_state::blocking_by_sti::is_enabled()) {
         throw std::logic_error("interruptibility state sti must be 0 if rflags interrupt enabled is 0");
     }
 }
@@ -2058,12 +2054,12 @@ guest_interruptibility_state_external_interrupt()
         return;
     }
 
-    if (vmcs::guest_interruptibility_state::blocking_by_sti::get() != 0U) {
+    if (vmcs::guest_interruptibility_state::blocking_by_sti::is_enabled()) {
         throw std::logic_error("interruptibility state sti must be 0 if "
                                "interrupt type is external and valid");
     }
 
-    if (vmcs::guest_interruptibility_state::blocking_by_mov_ss::get() != 0U) {
+    if (vmcs::guest_interruptibility_state::blocking_by_mov_ss::is_enabled()) {
         throw std::logic_error("activity state must be active if "
                                "interruptibility state is mov-ss");
     }
@@ -2082,7 +2078,7 @@ guest_interruptibility_state_nmi()
         return;
     }
 
-    if (vmcs::guest_interruptibility_state::blocking_by_mov_ss::get() != 0U) {
+    if (vmcs::guest_interruptibility_state::blocking_by_mov_ss::is_enabled()) {
         throw std::logic_error("vali interrupt type must not be nmi if "
                                "interruptibility state is mov-ss");
     }
@@ -2100,7 +2096,7 @@ guest_interruptibility_entry_to_smm()
         return;
     }
 
-    if (vmcs::guest_interruptibility_state::blocking_by_smi::get() == 0U) {
+    if (vmcs::guest_interruptibility_state::blocking_by_smi::is_disabled()) {
         throw std::logic_error("interruptibility state smi must be enabled "
                                "if entry to smm is enabled");
     }
@@ -2119,7 +2115,7 @@ guest_interruptibility_state_sti_and_nmi()
         return;
     }
 
-    if (vmcs::guest_interruptibility_state::blocking_by_sti::get() != 0U) {
+    if (vmcs::guest_interruptibility_state::blocking_by_sti::is_enabled()) {
         throw std::logic_error("some processors require sti to be 0 if "
                                "the interruption type is nmi");
     }
@@ -2142,7 +2138,7 @@ guest_interruptibility_state_virtual_nmi()
         return;
     }
 
-    if (vmcs::guest_interruptibility_state::blocking_by_nmi::get() != 0) {
+    if (vmcs::guest_interruptibility_state::blocking_by_nmi::is_enabled()) {
         throw std::logic_error("if virtual nmi is enabled, and the interruption "
                                "type is NMI, blocking by nmi must be disabled");
     }
@@ -2151,16 +2147,16 @@ guest_interruptibility_state_virtual_nmi()
 inline void
 guest_interruptibility_state_enclave_interrupt()
 {
-    if (guest_interruptibility_state::enclave_interruption::get() == 0) {
+    if (guest_interruptibility_state::enclave_interruption::is_disabled()) {
         return;
     }
 
-    if (guest_interruptibility_state::blocking_by_mov_ss::get() != 0) {
+    if (guest_interruptibility_state::blocking_by_mov_ss::is_enabled()) {
         throw std::logic_error("blocking by mov ss is enabled but enclave interrupt is "
                                "also enabled in interruptibility state");
     }
 
-    if (!x64::cpuid::extended_feature_flags::subleaf0::ebx::sgx::get()) {
+    if (intel_x64::cpuid::extended_feature_flags::subleaf0::ebx::sgx::is_disabled()) {
         throw std::logic_error("enclave interrupt is 1 in interruptibility state "
                                "but the processor does not support sgx");
     }
@@ -2177,11 +2173,11 @@ guest_pending_debug_exceptions_reserved()
 inline void
 guest_pending_debug_exceptions_dbg_ctl()
 {
-    auto sti = vmcs::guest_interruptibility_state::blocking_by_sti::get();
-    auto mov_ss = vmcs::guest_interruptibility_state::blocking_by_mov_ss::get();
+    auto sti = vmcs::guest_interruptibility_state::blocking_by_sti::is_enabled();
+    auto mov_ss = vmcs::guest_interruptibility_state::blocking_by_mov_ss::is_enabled();
     auto activity_state = vmcs::guest_activity_state::get();
 
-    if (sti == 0 && mov_ss == 0 && activity_state != vmcs::guest_activity_state::hlt) {
+    if (!sti && !mov_ss && activity_state != vmcs::guest_activity_state::hlt) {
         return;
     }
 
@@ -2216,12 +2212,12 @@ guest_pending_debug_exceptions_rtm()
         throw std::logic_error("pending debug exception bit 12 must be 1 if rtm is 1");
     }
 
-    if (!x64::cpuid::extended_feature_flags::subleaf0::ebx::rtm::get()) {
+    if (intel_x64::cpuid::extended_feature_flags::subleaf0::ebx::rtm::is_disabled()) {
         throw std::logic_error("rtm is set in pending debug exception but "
                                "rtm is unsupported by the processor");
     }
 
-    if (guest_interruptibility_state::blocking_by_mov_ss::get() == 1) {
+    if (guest_interruptibility_state::blocking_by_mov_ss::is_enabled()) {
         throw std::logic_error("interruptibility-state field indicates blocking by mov ss"
                                " but rtm is set in pending debug exceptions field");
     }

@@ -262,8 +262,8 @@ setup_check_guest_segment_registers_all_paths(std::vector<struct control_flow_pa
     struct control_flow_path path;
 
     path.setup = [&] {
-        guest_tr_selector::ti::set(false);
-        guest_ldtr_access_rights::unusable::set(1UL);
+        guest_tr_selector::ti::disable();
+        guest_ldtr_access_rights::unusable::enable();
         guest_rflags::virtual_8086_mode::enable();
         guest_cs_selector::set(0x1UL);
         guest_cs_base::set(0x10UL);
@@ -291,12 +291,11 @@ setup_check_guest_segment_registers_all_paths(std::vector<struct control_flow_pa
         guest_fs_access_rights::set(0xF3UL);
         guest_gs_access_rights::set(0xF3UL);
         guest_tr_access_rights::type::set(gsl::narrow_cast<uint32_t>(x64::access_rights::type::read_execute_accessed));
-        guest_tr_access_rights::s::set(0UL);
-        guest_tr_access_rights::present::set(1UL);
-        guest_tr_access_rights::reserved::set(gsl::narrow_cast<uint32_t>(0UL));
+        guest_tr_access_rights::s::enable();
+        guest_tr_access_rights::present::enable();
         guest_tr_limit::set(0x1UL);
-        guest_tr_access_rights::granularity::set(0UL);
-        guest_tr_access_rights::unusable::set(0UL);
+        guest_tr_access_rights::granularity::disable();
+        guest_tr_access_rights::unusable::disable();
     };
     path.throws_exception = false;
     cfg.push_back(path);
@@ -341,12 +340,12 @@ setup_check_guest_non_register_state_all_paths(std::vector<struct control_flow_p
     path.setup = [&] {
         g_msrs[msrs::ia32_vmx_true_entry_ctls::addr] = 0xFFFFFFFF00000000ULL;
         guest_activity_state::set(guest_activity_state::active);
-        guest_interruptibility_state::blocking_by_sti::set(0UL);
-        guest_interruptibility_state::blocking_by_mov_ss::set(0UL);
+        guest_interruptibility_state::blocking_by_sti::disable();
+        guest_interruptibility_state::blocking_by_mov_ss::disable();
         vm_entry_interruption_information_field::valid_bit::disable();
         vm_entry_controls::entry_to_smm::disable();
         guest_interruptibility_state::reserved::set(0UL);
-        guest_interruptibility_state::enclave_interruption::set(0UL);
+        guest_interruptibility_state::enclave_interruption::disable();
         guest_pending_debug_exceptions::reserved::set(0UL);
         guest_pending_debug_exceptions::rtm::disable();
         vmcs_link_pointer::set(0xFFFFFFFFFFFFFFFFUL);
@@ -415,13 +414,13 @@ setup_check_host_segment_and_descriptor_table_registers_all_paths(
     struct control_flow_path path;
 
     path.setup = [&] {
-        host_es_selector::ti::set(false); host_es_selector::rpl::set(0UL); // es.ti == 0 && es.rpl == 0
-        host_cs_selector::ti::set(false); host_cs_selector::rpl::set(0UL); // cs.ti == 0 && cs.rpl == 0
-        host_ss_selector::ti::set(false); host_ss_selector::rpl::set(0UL); // ss.ti == 0 && ss.rpl == 0
-        host_ds_selector::ti::set(false); host_ds_selector::rpl::set(0UL); // ds.ti == 0 && ds.rpl == 0
-        host_fs_selector::ti::set(false); host_fs_selector::rpl::set(0UL); // fs.ti == 0 && fs.rpl == 0
-        host_gs_selector::ti::set(false); host_gs_selector::rpl::set(0UL); // gs.ti == 0 && gs.rpl == 0
-        host_tr_selector::ti::set(false); host_tr_selector::rpl::set(0UL); // tr.ti == 0 && tr.rpl == 0
+        host_es_selector::ti::disable(); host_es_selector::rpl::set(0UL); // es.ti == 0 && es.rpl == 0
+        host_cs_selector::ti::disable(); host_cs_selector::rpl::set(0UL); // cs.ti == 0 && cs.rpl == 0
+        host_ss_selector::ti::disable(); host_ss_selector::rpl::set(0UL); // ss.ti == 0 && ss.rpl == 0
+        host_ds_selector::ti::disable(); host_ds_selector::rpl::set(0UL); // ds.ti == 0 && ds.rpl == 0
+        host_fs_selector::ti::disable(); host_fs_selector::rpl::set(0UL); // fs.ti == 0 && fs.rpl == 0
+        host_gs_selector::ti::disable(); host_gs_selector::rpl::set(0UL); // gs.ti == 0 && gs.rpl == 0
+        host_tr_selector::ti::disable(); host_tr_selector::rpl::set(0UL); // tr.ti == 0 && tr.rpl == 0
 
         host_cs_selector::set(~(cs::ti::mask | cs::rpl::mask)); // cs != 0
         host_tr_selector::set(~(tr::ti::mask | tr::rpl::mask)); // tr != 0

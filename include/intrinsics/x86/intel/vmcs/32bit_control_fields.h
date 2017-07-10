@@ -22,9 +22,7 @@
 #ifndef VMCS_INTEL_X64_32BIT_CONTROL_FIELDS_H
 #define VMCS_INTEL_X64_32BIT_CONTROL_FIELDS_H
 
-#include <bfbitmanip.h>
 #include <intrinsics/x86/intel/vmcs/helpers.h>
-#include <intrinsics/x86/intel/msrs_intel_x64.h>
 
 /// Intel x86_64 VMCS 32-bit Control Fields
 ///
@@ -44,22 +42,20 @@ namespace pin_based_vm_execution_controls
 {
     constexpr const auto addr = 0x0000000000004000ULL;
     constexpr const auto name = "pin_based_vm_execution_controls";
-    constexpr const auto msr_addr = msrs::ia32_vmx_true_pinbased_ctls::addr;
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
     namespace external_interrupt_exiting
@@ -71,26 +67,35 @@ namespace pin_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_pinbased_ctls::external_interrupt_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_pinbased_ctls::external_interrupt_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace nmi_exiting
@@ -102,26 +107,35 @@ namespace pin_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_pinbased_ctls::nmi_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_pinbased_ctls::nmi_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace virtual_nmis
@@ -133,26 +147,35 @@ namespace pin_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_pinbased_ctls::virtual_nmis::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_pinbased_ctls::virtual_nmis::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace activate_vmx_preemption_timer
@@ -164,26 +187,35 @@ namespace pin_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_pinbased_ctls::activate_vmx_preemption_timer::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_pinbased_ctls::activate_vmx_preemption_timer::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace process_posted_interrupts
@@ -195,26 +227,45 @@ namespace pin_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_pinbased_ctls::process_posted_interrupts::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_pinbased_ctls::process_posted_interrupts::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+    }
+
+    inline void dump(int level)
+    {
+        bfdebug_nhex(level, "pin_based_vm_execution_controls", get());
+        external_interrupt_exiting::dump(level);
+        nmi_exiting::dump(level);
+        virtual_nmis::dump(level);
+        activate_vmx_preemption_timer::dump(level);
+        process_posted_interrupts::dump(level);
     }
 }
 
@@ -222,22 +273,20 @@ namespace primary_processor_based_vm_execution_controls
 {
     constexpr const auto addr = 0x0000000000004002ULL;
     constexpr const auto name = "primary_processor_based_vm_execution_controls";
-    constexpr const auto msr_addr = msrs::ia32_vmx_true_procbased_ctls::addr;
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
     namespace interrupt_window_exiting
@@ -249,26 +298,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::interrupt_window_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::interrupt_window_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace use_tsc_offsetting
@@ -280,26 +338,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::use_tsc_offsetting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::use_tsc_offsetting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace hlt_exiting
@@ -311,26 +378,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::hlt_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::hlt_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace invlpg_exiting
@@ -342,26 +418,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::invlpg_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::invlpg_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace mwait_exiting
@@ -373,26 +458,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::mwait_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::mwait_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace rdpmc_exiting
@@ -404,26 +498,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::rdpmc_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::rdpmc_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace rdtsc_exiting
@@ -435,26 +538,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::rdtsc_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::rdtsc_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace cr3_load_exiting
@@ -466,26 +578,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::cr3_load_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::cr3_load_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace cr3_store_exiting
@@ -497,26 +618,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::cr3_store_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::cr3_store_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace cr8_load_exiting
@@ -528,26 +658,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::cr8_load_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::cr8_load_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace cr8_store_exiting
@@ -559,26 +698,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::cr8_store_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::cr8_store_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace use_tpr_shadow
@@ -590,26 +738,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::use_tpr_shadow::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::use_tpr_shadow::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace nmi_window_exiting
@@ -621,26 +778,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::nmi_window_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::nmi_window_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace mov_dr_exiting
@@ -652,26 +818,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::mov_dr_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::mov_dr_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace unconditional_io_exiting
@@ -683,26 +858,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::unconditional_io_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::unconditional_io_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace use_io_bitmaps
@@ -714,26 +898,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::use_io_bitmaps::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::use_io_bitmaps::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace monitor_trap_flag
@@ -745,26 +938,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::monitor_trap_flag::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::monitor_trap_flag::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace use_msr_bitmap
@@ -776,26 +978,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::use_msr_bitmap::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::use_msr_bitmap::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace monitor_exiting
@@ -807,26 +1018,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::monitor_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::monitor_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace pause_exiting
@@ -838,26 +1058,35 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::pause_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::pause_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace activate_secondary_controls
@@ -869,26 +1098,61 @@ namespace primary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_procbased_ctls::activate_secondary_controls::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_procbased_ctls::activate_secondary_controls::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+    }
+
+    inline void dump(int level)
+    {
+        bfdebug_nhex(level, "primary_processor_based_vm_execution_controls", get());
+        interrupt_window_exiting::dump(level);
+        use_tsc_offsetting::dump(level);
+        hlt_exiting::dump(level);
+        invlpg_exiting::dump(level);
+        mwait_exiting::dump(level);
+        rdpmc_exiting::dump(level);
+        rdtsc_exiting::dump(level);
+        cr3_load_exiting::dump(level);
+        cr3_store_exiting::dump(level);
+        cr8_load_exiting::dump(level);
+        cr8_store_exiting::dump(level);
+        use_tpr_shadow::dump(level);
+        nmi_window_exiting::dump(level);
+        mov_dr_exiting::dump(level);
+        unconditional_io_exiting::dump(level);
+        use_io_bitmaps::dump(level);
+        monitor_trap_flag::dump(level);
+        use_msr_bitmap::dump(level);
+        monitor_exiting::dump(level);
+        pause_exiting::dump(level);
+        activate_secondary_controls::dump(level);
     }
 }
 
@@ -897,21 +1161,23 @@ namespace exception_bitmap
     constexpr const auto addr = 0x0000000000004004ULL;
     constexpr const auto name = "execption_bitmap";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace page_fault_error_code_mask
@@ -919,21 +1185,23 @@ namespace page_fault_error_code_mask
     constexpr const auto addr = 0x0000000000004006ULL;
     constexpr const auto name = "page_fault_error_code_mask";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace page_fault_error_code_match
@@ -941,21 +1209,23 @@ namespace page_fault_error_code_match
     constexpr const auto addr = 0x0000000000004008ULL;
     constexpr const auto name = "page_fault_error_code_match";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace cr3_target_count
@@ -963,43 +1233,43 @@ namespace cr3_target_count
     constexpr const auto addr = 0x000000000000400AULL;
     constexpr const auto name = "cr3_target_count";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace vm_exit_controls
 {
     constexpr const auto addr = 0x000000000000400CULL;
     constexpr const auto name = "vm_exit_controls";
-    constexpr const auto msr_addr = msrs::ia32_vmx_true_exit_ctls::addr;
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
     namespace save_debug_controls
@@ -1011,26 +1281,35 @@ namespace vm_exit_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_exit_ctls::save_debug_controls::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_exit_ctls::save_debug_controls::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace host_address_space_size
@@ -1042,26 +1321,35 @@ namespace vm_exit_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_exit_ctls::host_address_space_size::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_exit_ctls::host_address_space_size::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace load_ia32_perf_global_ctrl
@@ -1073,26 +1361,35 @@ namespace vm_exit_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_exit_ctls::load_ia32_perf_global_ctrl::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_exit_ctls::load_ia32_perf_global_ctrl::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace acknowledge_interrupt_on_exit
@@ -1104,26 +1401,35 @@ namespace vm_exit_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_exit_ctls::acknowledge_interrupt_on_exit::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_exit_ctls::acknowledge_interrupt_on_exit::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace save_ia32_pat
@@ -1135,26 +1441,35 @@ namespace vm_exit_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_exit_ctls::save_ia32_pat::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_exit_ctls::save_ia32_pat::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace load_ia32_pat
@@ -1166,26 +1481,35 @@ namespace vm_exit_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_exit_ctls::load_ia32_pat::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_exit_ctls::load_ia32_pat::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace save_ia32_efer
@@ -1197,26 +1521,35 @@ namespace vm_exit_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_exit_ctls::save_ia32_efer::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_exit_ctls::save_ia32_efer::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace load_ia32_efer
@@ -1228,26 +1561,35 @@ namespace vm_exit_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_exit_ctls::load_ia32_efer::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_exit_ctls::load_ia32_efer::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace save_vmx_preemption_timer_value
@@ -1259,26 +1601,35 @@ namespace vm_exit_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_exit_ctls::save_vmx_preemption_timer_value::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_exit_ctls::save_vmx_preemption_timer_value::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace clear_ia32_bndcfgs
@@ -1290,57 +1641,91 @@ namespace vm_exit_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_exit_ctls::clear_ia32_bndcfgs::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_exit_ctls::clear_ia32_bndcfgs::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace pt_conceal_vm_exits
     {
-        constexpr const auto mask = 0x0000000001000000ULL;
-        constexpr const auto from = 24;
-        constexpr const auto name = "";
+        constexpr const auto mask = 0x0000000000800000ULL;
+        constexpr const auto from = 23;
+        constexpr const auto name = "pt_conceal_vm_exits";
 
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::pt_conceal_nonroot_operation::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::pt_conceal_nonroot_operation::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+    }
+
+    inline void dump(int level)
+    {
+        bfdebug_nhex(level, "vm_exit_controls", get());
+        save_debug_controls::dump(level);
+        host_address_space_size::dump(level);
+        load_ia32_perf_global_ctrl::dump(level);
+        acknowledge_interrupt_on_exit::dump(level);
+        save_ia32_pat::dump(level);
+        load_ia32_pat::dump(level);
+        save_ia32_efer::dump(level);
+        load_ia32_efer::dump(level);
+        save_vmx_preemption_timer_value::dump(level);
+        clear_ia32_bndcfgs::dump(level);
+        pt_conceal_vm_exits::dump(level);
     }
 }
 
@@ -1349,21 +1734,23 @@ namespace vm_exit_msr_store_count
     constexpr const auto addr = 0x000000000000400EULL;
     constexpr const auto name = "vm_exit_msr_store_count";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace vm_exit_msr_load_count
@@ -1371,43 +1758,43 @@ namespace vm_exit_msr_load_count
     constexpr const auto addr = 0x0000000000004010ULL;
     constexpr const auto name = "vm_exit_msr_load_count";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace vm_entry_controls
 {
     constexpr const auto addr = 0x0000000000004012ULL;
     constexpr const auto name = "vm_entry_controls";
-    constexpr const auto msr_addr = msrs::ia32_vmx_true_entry_ctls::addr;
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
     namespace load_debug_controls
@@ -1419,26 +1806,35 @@ namespace vm_entry_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_entry_ctls::load_debug_controls::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_entry_ctls::load_debug_controls::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace ia_32e_mode_guest
@@ -1450,26 +1846,35 @@ namespace vm_entry_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_entry_ctls::ia_32e_mode_guest::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_entry_ctls::ia_32e_mode_guest::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace entry_to_smm
@@ -1481,26 +1886,35 @@ namespace vm_entry_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_entry_ctls::entry_to_smm::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_entry_ctls::entry_to_smm::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace deactivate_dual_monitor_treatment
@@ -1512,26 +1926,35 @@ namespace vm_entry_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_entry_ctls::deactivate_dual_monitor_treatment::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_entry_ctls::deactivate_dual_monitor_treatment::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace load_ia32_perf_global_ctrl
@@ -1543,26 +1966,35 @@ namespace vm_entry_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_entry_ctls::load_ia32_perf_global_ctrl::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_entry_ctls::load_ia32_perf_global_ctrl::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace load_ia32_pat
@@ -1574,26 +2006,35 @@ namespace vm_entry_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_entry_ctls::load_ia32_pat::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_entry_ctls::load_ia32_pat::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace load_ia32_efer
@@ -1605,26 +2046,35 @@ namespace vm_entry_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_entry_ctls::load_ia32_efer::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_entry_ctls::load_ia32_efer::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace load_ia32_bndcfgs
@@ -1636,26 +2086,35 @@ namespace vm_entry_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_true_entry_ctls::load_ia32_bndcfgs::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_true_entry_ctls::load_ia32_bndcfgs::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace pt_conceal_vm_entries
@@ -1667,26 +2126,49 @@ namespace vm_entry_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::pt_conceal_nonroot_operation::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::pt_conceal_nonroot_operation::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+    }
+
+    inline void dump(int level)
+    {
+        bfdebug_nhex(level, "vm_entry_controls", get());
+        load_debug_controls::dump(level);
+        ia_32e_mode_guest::dump(level);
+        entry_to_smm::dump(level);
+        deactivate_dual_monitor_treatment::dump(level);
+        load_ia32_perf_global_ctrl::dump(level);
+        load_ia32_pat::dump(level);
+        load_ia32_efer::dump(level);
+        load_ia32_bndcfgs::dump(level);
+        pt_conceal_vm_entries::dump(level);
     }
 }
 
@@ -1695,21 +2177,23 @@ namespace vm_entry_msr_load_count
     constexpr const auto addr = 0x0000000000004014ULL;
     constexpr const auto name = "vm_entry_msr_load_count";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace vm_entry_interruption_information_field
@@ -1717,20 +2201,19 @@ namespace vm_entry_interruption_information_field
     constexpr const auto addr = 0x0000000000004016ULL;
     constexpr const auto name = "vm_entry_interruption_information_field";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
     namespace vector
@@ -1742,22 +2225,23 @@ namespace vm_entry_interruption_information_field
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get(value_type field)
+        { return get_bits(field, mask) >> from; }
+
+        inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-        template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val)
-        {
-            auto&& field = get_vmcs_field(addr, name, exists());
-            set_vmcs_field(set_bits(field, mask, (val << from)), addr, name, exists());
-        }
+        inline void set(value_type val)
+        { set_vmcs_field_bits(val, addr, mask, from, name, exists()); }
 
-        template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set_if_exists(T val, bool verbose = false) noexcept
-        {
-            auto&& field = get_vmcs_field_if_exists(addr, name, verbose, exists());
-            set_vmcs_field_if_exists(set_bits(field, mask, (val << from)), addr, name, verbose, exists());
-        }
+        inline auto set(value_type field, value_type val)
+        { return set_bits(field, mask, (val << from)); }
+
+        inline void set_if_exists(value_type val, bool verbose = false)
+        { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vmcs_subnhex(level); }
     }
 
     namespace interruption_type
@@ -1778,22 +2262,23 @@ namespace vm_entry_interruption_information_field
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get(value_type field)
+        { return get_bits(field, mask) >> from; }
+
+        inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-        template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val)
-        {
-            auto&& field = get_vmcs_field(addr, name, exists());
-            set_vmcs_field(set_bits(field, mask, (val << from)), addr, name, exists());
-        }
+        inline void set(value_type val)
+        { set_vmcs_field_bits(val, addr, mask, from, name, exists()); }
 
-        template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set_if_exists(T val, bool verbose = false) noexcept
-        {
-            auto&& field = get_vmcs_field_if_exists(addr, name, verbose, exists());
-            set_vmcs_field_if_exists(set_bits(field, mask, (val << from)), addr, name, verbose, exists());
-        }
+        inline auto set(value_type field, value_type val)
+        { return set_bits(field, mask, (val << from)); }
+
+        inline void set_if_exists(value_type val, bool verbose = false)
+        { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vmcs_subnhex(level); }
     }
 
     namespace deliver_error_code_bit
@@ -1805,38 +2290,41 @@ namespace vm_entry_interruption_information_field
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled(value_type field)
+        { return is_bit_set(field, from); }
+
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled(value_type field)
+        { return is_bit_cleared(field, from); }
+
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline void enable()
-        {
-            auto&& field = get_vmcs_field(addr, name, exists());
-            set_vmcs_field(set_bit(field, from), addr, name, exists());
-        }
+        { set_vmcs_field_bit(addr, from, name, exists()); }
 
-        inline void enable_if_exists(bool verbose = false) noexcept
-        {
-            auto&& field = get_vmcs_field_if_exists(addr, name, verbose, exists());
-            set_vmcs_field_if_exists(set_bit(field, from), addr, name, verbose, exists());
-        }
+        inline auto enable(value_type field)
+        { return set_bit(field, from); }
+
+        inline void enable_if_exists(bool verbose = false)
+        { set_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
         inline void disable()
-        {
-            auto&& field = get_vmcs_field(addr, name, exists());
-            set_vmcs_field(clear_bit(field, from), addr, name, exists());
-        }
+        { clear_vmcs_field_bit(addr, from, name, exists()); }
 
-        inline void disable_if_exists(bool verbose = false) noexcept
-        {
-            auto&& field = get_vmcs_field_if_exists(addr, name, verbose, exists());
-            set_vmcs_field_if_exists(clear_bit(field, from), addr, name, verbose, exists());
-        }
+        inline auto disable(value_type field)
+        { return clear_bit(field, from); }
+
+        inline void disable_if_exists(bool verbose = false)
+        { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vmcs_subbool(level); }
     }
 
     namespace reserved
@@ -1848,22 +2336,23 @@ namespace vm_entry_interruption_information_field
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get(value_type field)
+        { return get_bits(field, mask) >> from; }
+
+        inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-        template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set(T val)
-        {
-            auto&& field = get_vmcs_field(addr, name, exists());
-            set_vmcs_field(set_bits(field, mask, (val << from)), addr, name, exists());
-        }
+        inline void set(value_type val)
+        { set_vmcs_field_bits(val, addr, mask, from, name, exists()); }
 
-        template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        void set_if_exists(T val, bool verbose = false) noexcept
-        {
-            auto&& field = get_vmcs_field_if_exists(addr, name, verbose, exists());
-            set_vmcs_field_if_exists(set_bits(field, mask, (val << from)), addr, name, verbose, exists());
-        }
+        inline auto set(value_type field, value_type val)
+        { return set_bits(field, mask, (val << from)); }
+
+        inline void set_if_exists(value_type val, bool verbose = false)
+        { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vmcs_subnhex(level); }
     }
 
     namespace valid_bit
@@ -1875,37 +2364,51 @@ namespace vm_entry_interruption_information_field
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled(value_type field)
+        { return is_bit_set(field, from); }
+
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled(value_type field)
+        { return is_bit_cleared(field, from); }
+
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline void enable()
-        {
-            auto&& field = get_vmcs_field(addr, name, exists());
-            set_vmcs_field(set_bit(field, from), addr, name, exists()); }
+        { set_vmcs_field_bit(addr, from, name, exists()); }
 
-        inline void enable_if_exists(bool verbose = false) noexcept
-        {
-            auto&& field = get_vmcs_field_if_exists(addr, name, verbose, exists());
-            set_vmcs_field_if_exists(set_bit(field, from), addr, name, verbose, exists());
-        }
+        inline auto enable(value_type field)
+        { return set_bit(field, from); }
+
+        inline void enable_if_exists(bool verbose = false)
+        { set_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
         inline void disable()
-        {
-            auto&& field = get_vmcs_field(addr, name, exists());
-            set_vmcs_field(clear_bit(field, from), addr, name, exists());
-        }
+        { clear_vmcs_field_bit(addr, from, name, exists()); }
 
-        inline void disable_if_exists(bool verbose = false) noexcept
-        {
-            auto&& field = get_vmcs_field_if_exists(addr, name, verbose, exists());
-            set_vmcs_field_if_exists(clear_bit(field, from), addr, name, verbose, exists());
-        }
+        inline auto disable(value_type field)
+        { return clear_bit(field, from); }
+
+        inline void disable_if_exists(bool verbose = false)
+        { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vmcs_subbool(level); }
+    }
+
+    inline void dump(int level)
+    {
+        dump_vmcs_nhex(level);
+        vector::dump(level);
+        interruption_type::dump(level);
+        deliver_error_code_bit::dump(level);
+        reserved::dump(level);
+        valid_bit::dump(level);
     }
 }
 
@@ -1914,21 +2417,23 @@ namespace vm_entry_exception_error_code
     constexpr const auto addr = 0x0000000000004018ULL;
     constexpr const auto name = "vm_entry_exception_error_code";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace vm_entry_instruction_length
@@ -1936,21 +2441,23 @@ namespace vm_entry_instruction_length
     constexpr const auto addr = 0x000000000000401AULL;
     constexpr const auto name = "vm_entry_instruction_length";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace tpr_threshold
@@ -1958,43 +2465,43 @@ namespace tpr_threshold
     constexpr const auto addr = 0x000000000000401CULL;
     constexpr const auto name = "tpr_threshold";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return msrs::ia32_vmx_true_procbased_ctls::use_tpr_shadow::is_allowed1(); }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace secondary_processor_based_vm_execution_controls
 {
     constexpr const auto addr = 0x000000000000401EULL;
     constexpr const auto name = "secondary_processor_based_vm_execution_controls";
-    constexpr const auto msr_addr = msrs::ia32_vmx_procbased_ctls2::addr;
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return msrs::ia32_vmx_true_procbased_ctls::activate_secondary_controls::is_allowed1(); }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
     namespace virtualize_apic_accesses
@@ -2006,26 +2513,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::virtualize_apic_accesses::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::virtualize_apic_accesses::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace enable_ept
@@ -2037,26 +2553,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_ept::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_ept::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace descriptor_table_exiting
@@ -2068,26 +2593,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::descriptor_table_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::descriptor_table_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace enable_rdtscp
@@ -2099,26 +2633,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_rdtscp::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_rdtscp::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace virtualize_x2apic_mode
@@ -2130,26 +2673,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::virtualize_x2apic_mode::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::virtualize_x2apic_mode::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace enable_vpid
@@ -2161,26 +2713,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_vpid::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_vpid::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace wbinvd_exiting
@@ -2192,26 +2753,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::wbinvd_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::wbinvd_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace unrestricted_guest
@@ -2223,26 +2793,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::unrestricted_guest::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::unrestricted_guest::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace apic_register_virtualization
@@ -2254,26 +2833,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::apic_register_virtualization::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::apic_register_virtualization::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace virtual_interrupt_delivery
@@ -2285,26 +2873,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::virtual_interrupt_delivery::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::virtual_interrupt_delivery::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace pause_loop_exiting
@@ -2316,26 +2913,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::pause_loop_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::pause_loop_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace rdrand_exiting
@@ -2347,26 +2953,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::rdrand_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::rdrand_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace enable_invpcid
@@ -2378,26 +2993,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_invpcid::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_invpcid::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace enable_vm_functions
@@ -2409,26 +3033,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_vm_functions::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_vm_functions::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace vmcs_shadowing
@@ -2440,26 +3073,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::vmcs_shadowing::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::vmcs_shadowing::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace enable_encls_exiting
@@ -2471,26 +3113,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_encls_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_encls_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace rdseed_exiting
@@ -2502,26 +3153,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::rdseed_exiting::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::rdseed_exiting::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace enable_pml
@@ -2533,26 +3193,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_pml::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_pml::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace ept_violation_ve
@@ -2564,26 +3233,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::ept_violation_ve::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::ept_violation_ve::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace pt_conceal_vmx_nonroot_operation
@@ -2595,26 +3273,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::pt_conceal_nonroot_operation::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::pt_conceal_nonroot_operation::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace enable_xsaves_xrstors
@@ -2626,26 +3313,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_xsaves_xrstors::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::enable_xsaves_xrstors::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace ept_mode_based_control
@@ -2657,26 +3353,35 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::ept_mode_based_control::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::ept_mode_based_control::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
     }
 
     namespace use_tsc_scaling
@@ -2688,26 +3393,63 @@ namespace secondary_processor_based_vm_execution_controls
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void enable()
-        { set_vm_control(true, msr_addr, addr, name, mask, exists()); }
+        inline auto is_allowed0()
+        { return msrs::ia32_vmx_procbased_ctls2::use_tsc_scaling::is_allowed0(); }
 
-        inline void enable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(true, msr_addr, addr, name, mask, verbose, exists()); }
+        inline auto is_allowed1()
+        { return msrs::ia32_vmx_procbased_ctls2::use_tsc_scaling::is_allowed1(); }
+
+        inline void enable()
+        { enable_vm_control(addr, from, is_allowed1(), name, exists()); }
+
+        inline void enable_if_allowed(bool verbose = false)
+        { enable_vm_control_if_allowed(addr, from, is_allowed1(), name, verbose, exists()); }
 
         inline void disable()
-        { set_vm_control(false, msr_addr, addr, name, mask, exists()); }
+        { disable_vm_control(addr, from, is_allowed0(), name, exists()); }
 
-        inline void disable_if_allowed(bool verbose = false) noexcept
-        { set_vm_control_if_allowed(false, msr_addr, addr, name, mask, verbose, exists()); }
+        inline void disable_if_allowed(bool verbose = false)
+        { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
+
+        inline void dump(int level)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+    }
+
+    inline void dump(int level)
+    {
+        bfdebug_nhex(level, "secondary_processor_based_vm_execution_controls", get());
+        virtualize_apic_accesses::dump(level);
+        enable_ept::dump(level);
+        descriptor_table_exiting::dump(level);
+        enable_rdtscp::dump(level);
+        virtualize_x2apic_mode::dump(level);
+        enable_vpid::dump(level);
+        wbinvd_exiting::dump(level);
+        unrestricted_guest::dump(level);
+        apic_register_virtualization::dump(level);
+        virtual_interrupt_delivery::dump(level);
+        pause_loop_exiting::dump(level);
+        rdrand_exiting::dump(level);
+        enable_invpcid::dump(level);
+        enable_vm_functions::dump(level);
+        vmcs_shadowing::dump(level);
+        enable_encls_exiting::dump(level);
+        rdseed_exiting::dump(level);
+        enable_pml::dump(level);
+        ept_violation_ve::dump(level);
+        pt_conceal_vmx_nonroot_operation::dump(level);
+        enable_xsaves_xrstors::dump(level);
+        ept_mode_based_control::dump(level);
+        use_tsc_scaling::dump(level);
     }
 }
 
@@ -2716,7 +3458,7 @@ namespace ple_gap
     constexpr const auto addr = 0x0000000000004020ULL;
     constexpr const auto name = "ple_gap";
 
-    inline auto exists() noexcept
+    inline auto exists()
     {
         return vmcs::secondary_processor_based_vm_execution_controls::exists() &&
                msrs::ia32_vmx_procbased_ctls2::pause_loop_exiting::is_allowed1();
@@ -2725,15 +3467,17 @@ namespace ple_gap
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace ple_window
@@ -2741,7 +3485,7 @@ namespace ple_window
     constexpr const auto addr = 0x0000000000004022ULL;
     constexpr const auto name = "ple_window";
 
-    inline auto exists() noexcept
+    inline auto exists()
     {
         return vmcs::secondary_processor_based_vm_execution_controls::exists() &&
                msrs::ia32_vmx_procbased_ctls2::pause_loop_exiting::is_allowed1();
@@ -2750,15 +3494,17 @@ namespace ple_window
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template <class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 }

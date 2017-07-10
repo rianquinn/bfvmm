@@ -77,15 +77,17 @@ namespace x64
 namespace segment_register
 {
 
-using type = uint16_t;
+using value_type = uint16_t;
 
 namespace es
 {
-    inline auto get() noexcept
-    { return _read_es(); }
+    constexpr const auto name = "es";
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    void set(T val) noexcept { _write_es(gsl::narrow_cast<type>(val)); }
+    inline auto get() noexcept
+    { return gsl::narrow_cast<value_type>(_read_es()); }
+
+    inline void set(value_type val) noexcept
+    { _write_es(val); }
 
     namespace rpl
     {
@@ -93,11 +95,20 @@ namespace es
         constexpr const auto from = 0;
         constexpr const auto name = "rpl";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_es(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_es(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_es(gsl::narrow_cast<type>(set_bits(_read_es(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_es(gsl::narrow_cast<value_type>(set_bits(_read_es(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_es(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
     }
 
     namespace ti
@@ -106,11 +117,32 @@ namespace es
         constexpr const auto from = 2;
         constexpr const auto name = "ti";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(_read_es(), from)); }
+        inline auto is_enabled()
+        { return is_bit_set(_read_es(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_es(gsl::narrow_cast<type>(val ? set_bit(_read_es(), from) : clear_bit(_read_es(), from))); }
+        inline auto is_enabled(value_type sr)
+        { return is_bit_set(sr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_es(), from); }
+
+        inline auto is_disabled(value_type sr)
+        { return is_bit_cleared(sr, from); }
+
+        inline void enable()
+        { _write_es(gsl::narrow_cast<value_type>(set_bit(_read_es(), from))); }
+
+        inline auto enable(value_type sr)
+        { _write_es(gsl::narrow_cast<value_type>(set_bit(sr, from))); }
+
+        inline void disable()
+        { _write_es(gsl::narrow_cast<value_type>(clear_bit(_read_es(), from))); }
+
+        inline auto disable(value_type sr)
+        { _write_es(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace index
@@ -119,21 +151,40 @@ namespace es
         constexpr const auto from = 3;
         constexpr const auto name = "index";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_es(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_es(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_es(gsl::narrow_cast<type>(set_bits(_read_es(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_es(gsl::narrow_cast<value_type>(set_bits(_read_es(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_es(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
+    }
+
+    inline void dump(int level)
+    {
+        bfdebug_nhex(level, name, get());
+        rpl::dump(level);
+        ti::dump(level);
+        index::dump(level);
     }
 }
 
 namespace cs
 {
-    inline auto get() noexcept
-    { return _read_cs(); }
+    constexpr const auto name = "cs";
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    void set(T val) noexcept { _write_cs(gsl::narrow_cast<type>(val)); }
+    inline auto get() noexcept
+    { return gsl::narrow_cast<value_type>(_read_cs()); }
+
+    inline void set(value_type val) noexcept
+    { _write_cs(val); }
 
     namespace rpl
     {
@@ -141,11 +192,20 @@ namespace cs
         constexpr const auto from = 0;
         constexpr const auto name = "rpl";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_cs(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_cs(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_cs(gsl::narrow_cast<type>(set_bits(_read_cs(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_cs(gsl::narrow_cast<value_type>(set_bits(_read_cs(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_cs(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
     }
 
     namespace ti
@@ -154,11 +214,32 @@ namespace cs
         constexpr const auto from = 2;
         constexpr const auto name = "ti";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(_read_cs(), from)); }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cs(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cs(gsl::narrow_cast<type>(val ? set_bit(_read_cs(), from) : clear_bit(_read_cs(), from))); }
+        inline auto is_enabled(value_type sr)
+        { return is_bit_set(sr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cs(), from); }
+
+        inline auto is_disabled(value_type sr)
+        { return is_bit_cleared(sr, from); }
+
+        inline void enable()
+        { _write_cs(gsl::narrow_cast<value_type>(set_bit(_read_cs(), from))); }
+
+        inline auto enable(value_type sr)
+        { _write_cs(gsl::narrow_cast<value_type>(set_bit(sr, from))); }
+
+        inline void disable()
+        { _write_cs(gsl::narrow_cast<value_type>(clear_bit(_read_cs(), from))); }
+
+        inline auto disable(value_type sr)
+        { _write_cs(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace index
@@ -167,21 +248,40 @@ namespace cs
         constexpr const auto from = 3;
         constexpr const auto name = "index";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_cs(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_cs(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_cs(gsl::narrow_cast<type>(set_bits(_read_cs(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_cs(gsl::narrow_cast<value_type>(set_bits(_read_cs(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_cs(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
+    }
+
+    inline void dump(int level)
+    {
+        bfdebug_nhex(level, name, get());
+        rpl::dump(level);
+        ti::dump(level);
+        index::dump(level);
     }
 }
 
 namespace ss
 {
-    inline auto get() noexcept
-    { return _read_ss(); }
+    constexpr const auto name = "ss";
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    void set(T val) noexcept { _write_ss(gsl::narrow_cast<type>(val)); }
+    inline auto get() noexcept
+    { return gsl::narrow_cast<value_type>(_read_ss()); }
+
+    inline void set(value_type val) noexcept
+    { _write_ss(val); }
 
     namespace rpl
     {
@@ -189,11 +289,20 @@ namespace ss
         constexpr const auto from = 0;
         constexpr const auto name = "rpl";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_ss(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_ss(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_ss(gsl::narrow_cast<type>(set_bits(_read_ss(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_ss(gsl::narrow_cast<value_type>(set_bits(_read_ss(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_ss(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
     }
 
     namespace ti
@@ -202,11 +311,32 @@ namespace ss
         constexpr const auto from = 2;
         constexpr const auto name = "ti";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(_read_ss(), from)); }
+        inline auto is_enabled()
+        { return is_bit_set(_read_ss(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_ss(gsl::narrow_cast<type>(val ? set_bit(_read_ss(), from) : clear_bit(_read_ss(), from))); }
+        inline auto is_enabled(value_type sr)
+        { return is_bit_set(sr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_ss(), from); }
+
+        inline auto is_disabled(value_type sr)
+        { return is_bit_cleared(sr, from); }
+
+        inline void enable()
+        { _write_ss(gsl::narrow_cast<value_type>(set_bit(_read_ss(), from))); }
+
+        inline auto enable(value_type sr)
+        { _write_ss(gsl::narrow_cast<value_type>(set_bit(sr, from))); }
+
+        inline void disable()
+        { _write_ss(gsl::narrow_cast<value_type>(clear_bit(_read_ss(), from))); }
+
+        inline auto disable(value_type sr)
+        { _write_ss(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace index
@@ -215,21 +345,40 @@ namespace ss
         constexpr const auto from = 3;
         constexpr const auto name = "index";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_ss(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_ss(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_ss(gsl::narrow_cast<type>(set_bits(_read_ss(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_ss(gsl::narrow_cast<value_type>(set_bits(_read_ss(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_ss(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
+    }
+
+    inline void dump(int level)
+    {
+        bfdebug_nhex(level, name, get());
+        rpl::dump(level);
+        ti::dump(level);
+        index::dump(level);
     }
 }
 
 namespace ds
 {
-    inline auto get() noexcept
-    { return _read_ds(); }
+    constexpr const auto name = "ds";
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    void set(T val) noexcept { _write_ds(gsl::narrow_cast<type>(val)); }
+    inline auto get() noexcept
+    { return gsl::narrow_cast<value_type>(_read_ds()); }
+
+    inline void set(value_type val) noexcept
+    { _write_ds(val); }
 
     namespace rpl
     {
@@ -237,11 +386,20 @@ namespace ds
         constexpr const auto from = 0;
         constexpr const auto name = "rpl";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_ds(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_ds(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_ds(gsl::narrow_cast<type>(set_bits(_read_ds(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_ds(gsl::narrow_cast<value_type>(set_bits(_read_ds(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_ds(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
     }
 
     namespace ti
@@ -250,11 +408,32 @@ namespace ds
         constexpr const auto from = 2;
         constexpr const auto name = "ti";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(_read_ds(), from)); }
+        inline auto is_enabled()
+        { return is_bit_set(_read_ds(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_ds(gsl::narrow_cast<type>(val ? set_bit(_read_ds(), from) : clear_bit(_read_ds(), from))); }
+        inline auto is_enabled(value_type sr)
+        { return is_bit_set(sr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_ds(), from); }
+
+        inline auto is_disabled(value_type sr)
+        { return is_bit_cleared(sr, from); }
+
+        inline void enable()
+        { _write_ds(gsl::narrow_cast<value_type>(set_bit(_read_ds(), from))); }
+
+        inline auto enable(value_type sr)
+        { _write_ds(gsl::narrow_cast<value_type>(set_bit(sr, from))); }
+
+        inline void disable()
+        { _write_ds(gsl::narrow_cast<value_type>(clear_bit(_read_ds(), from))); }
+
+        inline auto disable(value_type sr)
+        { _write_ds(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace index
@@ -263,21 +442,40 @@ namespace ds
         constexpr const auto from = 3;
         constexpr const auto name = "index";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_ds(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_ds(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_ds(gsl::narrow_cast<type>(set_bits(_read_ds(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_ds(gsl::narrow_cast<value_type>(set_bits(_read_ds(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_ds(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
+    }
+
+    inline void dump(int level)
+    {
+        bfdebug_nhex(level, name, get());
+        rpl::dump(level);
+        ti::dump(level);
+        index::dump(level);
     }
 }
 
 namespace fs
 {
-    inline auto get() noexcept
-    { return _read_fs(); }
+    constexpr const auto name = "fs";
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    void set(T val) noexcept { _write_fs(gsl::narrow_cast<type>(val)); }
+    inline auto get() noexcept
+    { return gsl::narrow_cast<value_type>(_read_fs()); }
+
+    inline void set(value_type val) noexcept
+    { _write_fs(val); }
 
     namespace rpl
     {
@@ -285,11 +483,20 @@ namespace fs
         constexpr const auto from = 0;
         constexpr const auto name = "rpl";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_fs(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_fs(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_fs(gsl::narrow_cast<type>(set_bits(_read_fs(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_fs(gsl::narrow_cast<value_type>(set_bits(_read_fs(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_fs(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
     }
 
     namespace ti
@@ -298,11 +505,32 @@ namespace fs
         constexpr const auto from = 2;
         constexpr const auto name = "ti";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(_read_fs(), from)); }
+        inline auto is_enabled()
+        { return is_bit_set(_read_fs(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_fs(gsl::narrow_cast<type>(val ? set_bit(_read_fs(), from) : clear_bit(_read_fs(), from))); }
+        inline auto is_enabled(value_type sr)
+        { return is_bit_set(sr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_fs(), from); }
+
+        inline auto is_disabled(value_type sr)
+        { return is_bit_cleared(sr, from); }
+
+        inline void enable()
+        { _write_fs(gsl::narrow_cast<value_type>(set_bit(_read_fs(), from))); }
+
+        inline auto enable(value_type sr)
+        { _write_fs(gsl::narrow_cast<value_type>(set_bit(sr, from))); }
+
+        inline void disable()
+        { _write_fs(gsl::narrow_cast<value_type>(clear_bit(_read_fs(), from))); }
+
+        inline auto disable(value_type sr)
+        { _write_fs(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace index
@@ -311,21 +539,40 @@ namespace fs
         constexpr const auto from = 3;
         constexpr const auto name = "index";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_fs(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_fs(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_fs(gsl::narrow_cast<type>(set_bits(_read_fs(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_fs(gsl::narrow_cast<value_type>(set_bits(_read_fs(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_fs(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
+    }
+
+    inline void dump(int level)
+    {
+        bfdebug_nhex(level, name, get());
+        rpl::dump(level);
+        ti::dump(level);
+        index::dump(level);
     }
 }
 
 namespace gs
 {
-    inline auto get() noexcept
-    { return _read_gs(); }
+    constexpr const auto name = "gs";
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    void set(T val) noexcept { _write_gs(gsl::narrow_cast<type>(val)); }
+    inline auto get() noexcept
+    { return gsl::narrow_cast<value_type>(_read_gs()); }
+
+    inline void set(value_type val) noexcept
+    { _write_gs(val); }
 
     namespace rpl
     {
@@ -333,11 +580,20 @@ namespace gs
         constexpr const auto from = 0;
         constexpr const auto name = "rpl";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_gs(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_gs(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_gs(gsl::narrow_cast<type>(set_bits(_read_gs(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_gs(gsl::narrow_cast<value_type>(set_bits(_read_gs(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_gs(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
     }
 
     namespace ti
@@ -346,11 +602,32 @@ namespace gs
         constexpr const auto from = 2;
         constexpr const auto name = "ti";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(_read_gs(), from)); }
+        inline auto is_enabled()
+        { return is_bit_set(_read_gs(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_gs(gsl::narrow_cast<type>(val ? set_bit(_read_gs(), from) : clear_bit(_read_gs(), from))); }
+        inline auto is_enabled(value_type sr)
+        { return is_bit_set(sr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_gs(), from); }
+
+        inline auto is_disabled(value_type sr)
+        { return is_bit_cleared(sr, from); }
+
+        inline void enable()
+        { _write_gs(gsl::narrow_cast<value_type>(set_bit(_read_gs(), from))); }
+
+        inline auto enable(value_type sr)
+        { _write_gs(gsl::narrow_cast<value_type>(set_bit(sr, from))); }
+
+        inline void disable()
+        { _write_gs(gsl::narrow_cast<value_type>(clear_bit(_read_gs(), from))); }
+
+        inline auto disable(value_type sr)
+        { _write_gs(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace index
@@ -359,21 +636,40 @@ namespace gs
         constexpr const auto from = 3;
         constexpr const auto name = "index";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_gs(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_gs(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_gs(gsl::narrow_cast<type>(set_bits(_read_gs(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_gs(gsl::narrow_cast<value_type>(set_bits(_read_gs(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_gs(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
+    }
+
+    inline void dump(int level)
+    {
+        bfdebug_nhex(level, name, get());
+        rpl::dump(level);
+        ti::dump(level);
+        index::dump(level);
     }
 }
 
 namespace ldtr
 {
-    inline auto get() noexcept
-    { return _read_ldtr(); }
+    constexpr const auto name = "ldtr";
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    void set(T val) noexcept { _write_ldtr(gsl::narrow_cast<type>(val)); }
+    inline auto get() noexcept
+    { return gsl::narrow_cast<value_type>(_read_ldtr()); }
+
+    inline void set(value_type val) noexcept
+    { _write_ldtr(val); }
 
     namespace rpl
     {
@@ -381,11 +677,20 @@ namespace ldtr
         constexpr const auto from = 0;
         constexpr const auto name = "rpl";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_ldtr(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_ldtr(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_ldtr(gsl::narrow_cast<type>(set_bits(_read_ldtr(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_ldtr(gsl::narrow_cast<value_type>(set_bits(_read_ldtr(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_ldtr(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
     }
 
     namespace ti
@@ -394,11 +699,32 @@ namespace ldtr
         constexpr const auto from = 2;
         constexpr const auto name = "ti";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(_read_ldtr(), from)); }
+        inline auto is_enabled()
+        { return is_bit_set(_read_ldtr(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_ldtr(gsl::narrow_cast<type>(val ? set_bit(_read_ldtr(), from) : clear_bit(_read_ldtr(), from))); }
+        inline auto is_enabled(value_type sr)
+        { return is_bit_set(sr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_ldtr(), from); }
+
+        inline auto is_disabled(value_type sr)
+        { return is_bit_cleared(sr, from); }
+
+        inline void enable()
+        { _write_ldtr(gsl::narrow_cast<value_type>(set_bit(_read_ldtr(), from))); }
+
+        inline auto enable(value_type sr)
+        { _write_ldtr(gsl::narrow_cast<value_type>(set_bit(sr, from))); }
+
+        inline void disable()
+        { _write_ldtr(gsl::narrow_cast<value_type>(clear_bit(_read_ldtr(), from))); }
+
+        inline auto disable(value_type sr)
+        { _write_ldtr(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace index
@@ -407,21 +733,40 @@ namespace ldtr
         constexpr const auto from = 3;
         constexpr const auto name = "index";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_ldtr(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_ldtr(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_ldtr(gsl::narrow_cast<type>(set_bits(_read_ldtr(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_ldtr(gsl::narrow_cast<value_type>(set_bits(_read_ldtr(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_ldtr(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
+    }
+
+    inline void dump(int level)
+    {
+        bfdebug_nhex(level, name, get());
+        rpl::dump(level);
+        ti::dump(level);
+        index::dump(level);
     }
 }
 
 namespace tr
 {
-    inline auto get() noexcept
-    { return _read_tr(); }
+    constexpr const auto name = "tr";
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    void set(T val) noexcept { _write_tr(gsl::narrow_cast<type>(val)); }
+    inline auto get() noexcept
+    { return gsl::narrow_cast<value_type>(_read_tr()); }
+
+    inline void set(value_type val) noexcept
+    { _write_tr(val); }
 
     namespace rpl
     {
@@ -429,11 +774,20 @@ namespace tr
         constexpr const auto from = 0;
         constexpr const auto name = "rpl";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_tr(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_tr(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_tr(gsl::narrow_cast<type>(set_bits(_read_tr(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_tr(gsl::narrow_cast<value_type>(set_bits(_read_tr(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_tr(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
     }
 
     namespace ti
@@ -442,11 +796,32 @@ namespace tr
         constexpr const auto from = 2;
         constexpr const auto name = "ti";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bit(_read_tr(), from)); }
+        inline auto is_enabled()
+        { return is_bit_set(_read_tr(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_tr(gsl::narrow_cast<type>(val ? set_bit(_read_tr(), from) : clear_bit(_read_tr(), from))); }
+        inline auto is_enabled(value_type sr)
+        { return is_bit_set(sr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_tr(), from); }
+
+        inline auto is_disabled(value_type sr)
+        { return is_bit_cleared(sr, from); }
+
+        inline void enable()
+        { _write_tr(gsl::narrow_cast<value_type>(set_bit(_read_tr(), from))); }
+
+        inline auto enable(value_type sr)
+        { _write_tr(gsl::narrow_cast<value_type>(set_bit(sr, from))); }
+
+        inline void disable()
+        { _write_tr(gsl::narrow_cast<value_type>(clear_bit(_read_tr(), from))); }
+
+        inline auto disable(value_type sr)
+        { _write_tr(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace index
@@ -455,13 +830,43 @@ namespace tr
         constexpr const auto from = 3;
         constexpr const auto name = "index";
 
-        inline auto get() noexcept
-        { return gsl::narrow_cast<type>(get_bits(_read_tr(), mask) >> from); }
+        inline auto get()
+        { return gsl::narrow_cast<value_type>(get_bits(_read_tr(), mask) >> from); }
 
-        template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-        void set(T val) noexcept { _write_tr(gsl::narrow_cast<type>(set_bits(_read_tr(), mask, val << from))); }
+        inline auto get(value_type sr)
+        { return gsl::narrow_cast<value_type>(get_bits(sr, mask) >> from); }
+
+        inline void set(value_type val)
+        { _write_tr(gsl::narrow_cast<value_type>(set_bits(_read_tr(), mask, val << from))); }
+
+        inline auto set(value_type sr, value_type val)
+        { _write_tr(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
+
+        inline void dump(int level)
+        { bfdebug_subnhex(level, name, get()); }
+    }
+
+    inline void dump(int level)
+    {
+        bfdebug_nhex(level, name, get());
+        rpl::dump(level);
+        ti::dump(level);
+        index::dump(level);
     }
 }
+
+inline void dump(int level)
+{
+    es::dump(level);
+    cs::dump(level);
+    ss::dump(level);
+    ds::dump(level);
+    fs::dump(level);
+    gs::dump(level);
+    ldtr::dump(level);
+    tr::dump(level);
+}
+
 }
 }
 
