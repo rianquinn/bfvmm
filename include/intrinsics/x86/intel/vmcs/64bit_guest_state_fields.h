@@ -27,8 +27,8 @@
 #include <type_traits>
 
 #include <intrinsics/x86/intel/vmcs/helpers.h>
-#include <intrinsics/x86/intel/msrs/msrs_intel_x64.h>
-#include <intrinsics/x86/common/cpuid/cpuid_x64.h>
+#include <intrinsics/x86/intel/msrs_intel_x64.h>
+#include <intrinsics/x86/common/cpuid_x64.h>
 
 /// Intel x86_64 VMCS 64-bit Guest-State Fields
 ///

@@ -27,6 +27,7 @@
 
 #include <bfgsl.h>
 #include <bfexception.h>
+#include <bftypes.h>
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -230,14 +231,12 @@ public:
     auto limit() const
     { return m_idt_reg.limit; }
 
-private:
+    PRIVATE
 
     idt_reg_x64_t m_idt_reg;
     std::vector<interrupt_descriptor_type> m_idt;
 
 public:
-
-    friend class intrinsics_ut;
 
     idt_x64(idt_x64 &&) noexcept = delete;
     idt_x64 &operator=(idt_x64 &&) noexcept = delete;

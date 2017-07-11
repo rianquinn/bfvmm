@@ -26,7 +26,7 @@
 #include <bfdebug.h>
 #include <bfbitmanip.h>
 
-#include <intrinsics/x86/common/msrs/msrs_x64.h>
+#include <intrinsics/x86/common/msrs_x64.h>
 
 // *INDENT-OFF*
 
@@ -6178,6 +6178,22 @@ namespace msrs
             { return (_read_msr(addr) & (mask << 32)) != 0; }
         }
 
+        namespace enable_encls_exiting
+        {
+            constexpr const auto mask = 0x0000000000008000ULL;
+            constexpr const auto from = 15;
+            constexpr const auto name = "enable_encls_exiting";
+
+            inline auto get() noexcept
+            { return get_bit(_read_msr(addr), from) != 0; }
+
+            inline auto is_allowed0() noexcept
+            { return (_read_msr(addr) & mask) == 0; }
+
+            inline auto is_allowed1() noexcept
+            { return (_read_msr(addr) & (mask << 32)) != 0; }
+        }
+
         namespace rdseed_exiting
         {
             constexpr const auto mask = 0x0000000000010000ULL;
@@ -6226,11 +6242,59 @@ namespace msrs
             { return (_read_msr(addr) & (mask << 32)) != 0; }
         }
 
+        namespace pt_conceal_nonroot_operation
+        {
+            constexpr const auto mask = 0x0000000000080000ULL;
+            constexpr const auto from = 19;
+            constexpr const auto name = "pt_conceal_nonroot_operation";
+
+            inline auto get() noexcept
+            { return get_bit(_read_msr(addr), from) != 0; }
+
+            inline auto is_allowed0() noexcept
+            { return (_read_msr(addr) & mask) == 0; }
+
+            inline auto is_allowed1() noexcept
+            { return (_read_msr(addr) & (mask << 32)) != 0; }
+        }
+
         namespace enable_xsaves_xrstors
         {
             constexpr const auto mask = 0x0000000000100000ULL;
             constexpr const auto from = 20;
             constexpr const auto name = "enable_xsaves_xrstors";
+
+            inline auto get() noexcept
+            { return get_bit(_read_msr(addr), from) != 0; }
+
+            inline auto is_allowed0() noexcept
+            { return (_read_msr(addr) & mask) == 0; }
+
+            inline auto is_allowed1() noexcept
+            { return (_read_msr(addr) & (mask << 32)) != 0; }
+        }
+
+        namespace ept_mode_based_control
+        {
+            constexpr const auto mask = 0x0000000000400000ULL;
+            constexpr const auto from = 22;
+            constexpr const auto name = "ept_mode_based_control";
+
+            inline auto get() noexcept
+            { return get_bit(_read_msr(addr), from) != 0; }
+
+            inline auto is_allowed0() noexcept
+            { return (_read_msr(addr) & mask) == 0; }
+
+            inline auto is_allowed1() noexcept
+            { return (_read_msr(addr) & (mask << 32)) != 0; }
+        }
+
+        namespace use_tsc_scaling
+        {
+            constexpr const auto mask = 0x0000000002000000ULL;
+            constexpr const auto from = 25;
+            constexpr const auto name = "use_tsc_scaling";
 
             inline auto get() noexcept
             { return get_bit(_read_msr(addr), from) != 0; }
@@ -6291,6 +6355,9 @@ namespace msrs
             if (vmcs_shadowing::get()) {
                 bfdebug << "    - " << vmcs_shadowing::name << bfendl;
             }
+            if (enable_encls_exiting::get()) {
+                bfdebug << "    - " << enable_encls_exiting::name << bfendl;
+            }
             if (rdseed_exiting::get()) {
                 bfdebug << "    - " << rdseed_exiting::name << bfendl;
             }
@@ -6300,8 +6367,17 @@ namespace msrs
             if (ept_violation_ve::get()) {
                 bfdebug << "    - " << ept_violation_ve::name << bfendl;
             }
+            if (pt_conceal_nonroot_operation::get()) {
+                bfdebug << "    - " << pt_conceal_nonroot_operation::name << bfendl;
+            }
             if (enable_xsaves_xrstors::get()) {
                 bfdebug << "    - " << enable_xsaves_xrstors::name << bfendl;
+            }
+            if (ept_mode_based_control::get()) {
+                bfdebug << "    - " << ept_mode_based_control::name << bfendl;
+            }
+            if (use_tsc_scaling::get()) {
+                bfdebug << "    - " << use_tsc_scaling::name << bfendl;
             }
 
             bfdebug << bfendl;
@@ -6352,6 +6428,9 @@ namespace msrs
             if (vmcs_shadowing::is_allowed0()) {
                 bfdebug << "    - " << vmcs_shadowing::name << bfendl;
             }
+            if (enable_encls_exiting::is_allowed0()) {
+                bfdebug << "    - " << enable_encls_exiting::name << bfendl;
+            }
             if (rdseed_exiting::is_allowed0()) {
                 bfdebug << "    - " << rdseed_exiting::name << bfendl;
             }
@@ -6361,8 +6440,17 @@ namespace msrs
             if (ept_violation_ve::is_allowed0()) {
                 bfdebug << "    - " << ept_violation_ve::name << bfendl;
             }
+            if (pt_conceal_nonroot_operation::is_allowed0()) {
+                bfdebug << "    - " << pt_conceal_nonroot_operation::name << bfendl;
+            }
             if (enable_xsaves_xrstors::is_allowed0()) {
                 bfdebug << "    - " << enable_xsaves_xrstors::name << bfendl;
+            }
+            if (ept_mode_based_control::is_allowed0()) {
+                bfdebug << "    - " << ept_mode_based_control::name << bfendl;
+            }
+            if (use_tsc_scaling::is_allowed0()) {
+                bfdebug << "    - " << use_tsc_scaling::name << bfendl;
             }
 
             bfdebug << bfendl;
@@ -6413,6 +6501,9 @@ namespace msrs
             if (vmcs_shadowing::is_allowed1()) {
                 bfdebug << "    - " << vmcs_shadowing::name << bfendl;
             }
+            if (enable_encls_exiting::is_allowed1()) {
+                bfdebug << "    - " << enable_encls_exiting::name << bfendl;
+            }
             if (rdseed_exiting::is_allowed1()) {
                 bfdebug << "    - " << rdseed_exiting::name << bfendl;
             }
@@ -6422,8 +6513,17 @@ namespace msrs
             if (ept_violation_ve::is_allowed1()) {
                 bfdebug << "    - " << ept_violation_ve::name << bfendl;
             }
+            if (pt_conceal_nonroot_operation::is_allowed1()) {
+                bfdebug << "    - " << pt_conceal_nonroot_operation::name << bfendl;
+            }
             if (enable_xsaves_xrstors::is_allowed1()) {
                 bfdebug << "    - " << enable_xsaves_xrstors::name << bfendl;
+            }
+            if (ept_mode_based_control::is_allowed1()) {
+                bfdebug << "    - " << ept_mode_based_control::name << bfendl;
+            }
+            if (use_tsc_scaling::is_allowed1()) {
+                bfdebug << "    - " << use_tsc_scaling::name << bfendl;
             }
         }
     }

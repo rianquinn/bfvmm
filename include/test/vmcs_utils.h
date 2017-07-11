@@ -34,7 +34,7 @@ using namespace msrs;
 
 struct control_flow_path {
     std::function<void()> setup{};
-    std::shared_ptr<std::exception> exception;
+    //    std::shared_ptr<std::exception> exception;
     bool throws_exception{false};
 };
 
@@ -82,69 +82,69 @@ test_virtptr_to_physint(void *ptr)
     return 0x0000000ABCDEF0000;
 }
 
-//inline void *
-//test_physint_to_virtptr(uintptr_t phys)
-//{
-//    (void) phys;
-//
-//    if (g_phys_to_virt_return_nullptr) {
-//        return nullptr;
-//    }
-//
-//    return static_cast<void *>(g_mock_mem[g_test_addr]);
-//}
+inline void *
+test_physint_to_virtptr(uintptr_t phys)
+{
+    (void) phys;
 
-//void
-//proc_ctl_allow1(uint64_t mask)
-//{ g_msrs[msrs::ia32_vmx_true_procbased_ctls::addr] |= mask << 32; }
-//
-//void
-//proc_ctl_allow0(uint64_t mask)
-//{ g_msrs[msrs::ia32_vmx_true_procbased_ctls::addr] &= ~mask; }
-//
-//void
-//proc_ctl_disallow1(uint64_t mask)
-//{ g_msrs[msrs::ia32_vmx_true_procbased_ctls::addr] &= ~(mask << 32); }
-//
-//void
-//proc_ctl2_allow1(uint64_t mask)
-//{ g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] |= mask << 32; }
-//
-//void
-//proc_ctl2_allow0(uint64_t mask)
-//{ g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] &= ~mask; }
-//
-//void
-//proc_ctl2_disallow1(uint64_t mask)
-//{ g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] &= ~(mask << 32); }
+    if (g_phys_to_virt_return_nullptr) {
+        return nullptr;
+    }
+
+    return static_cast<void *>(g_mock_mem[g_test_addr]);
+}
+
+inline void
+proc_ctl_allow1(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_true_procbased_ctls::addr] |= mask << 32; }
+
+inline void
+proc_ctl_allow0(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_true_procbased_ctls::addr] &= ~mask; }
+
+inline void
+proc_ctl_disallow1(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_true_procbased_ctls::addr] &= ~(mask << 32); }
+
+inline void
+proc_ctl2_allow1(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] |= mask << 32; }
+
+inline void
+proc_ctl2_allow0(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] &= ~mask; }
+
+inline void
+proc_ctl2_disallow1(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] &= ~(mask << 32); }
 
 inline void
 pin_ctl_allow1(uint64_t mask)
 { g_msrs[msrs::ia32_vmx_true_pinbased_ctls::addr] |= mask << 32; }
 
-//void
-//pin_ctl_allow0(uint64_t mask)
-//{ g_msrs[msrs::ia32_vmx_true_pinbased_ctls::addr] &= ~mask; }
-//
-//void
-//exit_ctl_allow1(uint64_t mask)
-//{ g_msrs[msrs::ia32_vmx_true_exit_ctls::addr] |= mask << 32; }
-//
-//void
-//exit_ctl_allow0(uint64_t mask)
-//{ g_msrs[msrs::ia32_vmx_true_exit_ctls::addr] &= ~mask; }
-//
-//void
-//entry_ctl_allow1(uint64_t mask)
-//{ g_msrs[msrs::ia32_vmx_true_entry_ctls::addr] |= mask << 32; }
-//
-//void
-//entry_ctl_allow0(uint64_t mask)
-//{ g_msrs[msrs::ia32_vmx_true_entry_ctls::addr] &= ~mask; }
-//
-//void
-//vmfunc_ctl_allow1(uint64_t mask)
-//{ g_msrs[msrs::ia32_vmx_vmfunc::addr] |= mask; }
+inline void
+pin_ctl_allow0(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_true_pinbased_ctls::addr] &= ~mask; }
+
+inline void
+exit_ctl_allow1(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_true_exit_ctls::addr] |= mask << 32; }
+
+inline void
+exit_ctl_allow0(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_true_exit_ctls::addr] &= ~mask; }
+
+inline void
+entry_ctl_allow1(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_true_entry_ctls::addr] |= mask << 32; }
+
+inline void
+entry_ctl_allow0(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_true_entry_ctls::addr] &= ~mask; }
+
+inline void
+vmfunc_ctl_allow1(uint64_t mask)
+{ g_msrs[msrs::ia32_vmx_vmfunc::addr] |= mask; }
 
 inline void
 setup_check_control_vm_execution_control_fields_all_paths(std::vector<struct control_flow_path>
@@ -391,6 +391,7 @@ setup_check_host_control_registers_and_msrs_all_paths(std::vector<struct control
     struct control_flow_path path;
 
     path.setup = [&] {
+        g_eax_cpuid[0x80000008ULL] = 48UL;
         g_msrs[ia32_vmx_cr0_fixed0::addr] = 0ULL;                  // allow cr0 and
         g_msrs[ia32_vmx_cr0_fixed1::addr] = 0xFFFFFFFFFFFFFFFFULL; // cr4 bits to be
         g_msrs[ia32_vmx_cr4_fixed0::addr] = 0ULL;                  // either 0 or 1
@@ -425,6 +426,7 @@ setup_check_host_segment_and_descriptor_table_registers_all_paths(
         host_cs_selector::set(~(cs::ti::mask | cs::rpl::mask)); // cs != 0
         host_tr_selector::set(~(tr::ti::mask | tr::rpl::mask)); // tr != 0
 
+        exit_ctl_allow1(ia32_vmx_true_exit_ctls::host_address_space_size::mask);
         vm_exit_controls::host_address_space_size::enable(); // VM-exit ctrl host_address_space_size is 1
         host_fs_base::set(0x1000UL); // fs base is canonical address
         host_gs_base::set(0x1000UL); // gs base is canonical address
@@ -443,6 +445,7 @@ setup_check_host_address_space_size_all_paths(std::vector<struct control_flow_pa
 
     path.setup = [&] {
         g_msrs[ia32_efer::addr] |= msrs::ia32_efer::lma::mask; // efer.lma == 1
+        exit_ctl_allow1(ia32_vmx_true_exit_ctls::host_address_space_size::mask);
         vm_exit_controls::host_address_space_size::enable(); // VM-exit ctrl host_address_space_size is 1
         host_cr4::physical_address_extensions::enable(); // host_cr4::physical_address_extensions == 1
         host_rip::set(0x1000UL); // rip is canonical address
@@ -462,6 +465,7 @@ setup_check_host_state_all_paths(std::vector<struct control_flow_path> &cfg)
     setup_check_host_address_space_size_all_paths(sub_cfg);
 
     path.setup = [sub_cfg] {
+        g_eax_cpuid[0x80000008ULL] = 48UL;
         for (const auto &sub_path : sub_cfg)
         { sub_path.setup(); }
     };

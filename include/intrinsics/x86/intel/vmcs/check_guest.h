@@ -25,7 +25,7 @@
 #include <type_traits>
 
 #include <intrinsics/x86/common/x64.h>
-#include <intrinsics/x86/common/cpuid/cpuid_x64.h>
+#include <intrinsics/x86/common/cpuid_x64.h>
 #include <intrinsics/x86/common/pdpte_x64.h>
 
 #include <intrinsics/x86/intel/crs_intel_x64.h>

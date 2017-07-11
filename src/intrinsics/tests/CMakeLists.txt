@@ -13,6 +13,7 @@ macro(do_test str)
     target_compile_definitions(test_${str} PRIVATE STATIC_INTRINSICS)
     target_link_libraries(test_${str} bfvmm_catch_static)
     target_link_libraries(test_${str} bfvmm_intrinsics_static)
+    target_link_libraries(test_${str} bfvmm_memory_manager_static)
     add_test(test_${str} test_${str})
 endmacro(do_test)
 

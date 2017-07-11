@@ -19,91 +19,109 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#define CATCH_CONFIG_MAIN
 #include <catch/catch.hpp>
+#include <hippomocks.h>
+#include <intrinsics/x86/common_x64.h>
+#include <bfgsl.h>
 
-TEST_CASE("test name goes here")
+#ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
+
+std::vector<idt_x64::interrupt_descriptor_type> g_idt = {
+    0xFFFFFFFFFFFFFFFF,
+    0xFFFFFFFFFFFFFFFF,
+    0xFFFFFFFFFFFFFFFF,
+    0xFFFFFFFFFFFFFFFF
+};
+
+idt_reg_x64_t g_idt_reg;
+
+void
+test_read_idt(idt_reg_x64_t *idt_reg) noexcept
+{ *idt_reg = g_idt_reg; }
+
+void
+test_write_idt(idt_reg_x64_t *idt_reg) noexcept
+{ g_idt_reg = *idt_reg; }
+
+static void
+setup_intrinsics(MockRepository &mocks)
 {
-    CHECK(true);
+    mocks.OnCallFunc(_read_idt).Do(test_read_idt);
+    mocks.OnCallFunc(_write_idt).Do(test_write_idt);
 }
 
-// #include <bfgsl.h>
+TEST_CASE("idt_reg_set_get")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// #include <test.h>
-// #include <intrinsics/idt_x64.h>
+    x64::idt::set(g_idt.data(), (4 << 3) - 1);
 
-// std::vector<idt_x64::interrupt_descriptor_type> g_idt =
-// {
-//     0xFFFFFFFFFFFFFFFF,
-//     0xFFFFFFFFFFFFFFFF,
-//     0xFFFFFFFFFFFFFFFF,
-//     0xFFFFFFFFFFFFFFFF
-// };
+    CHECK(x64::idt::get().base == g_idt.data());
+    CHECK(x64::idt::get().limit == (4 << 3) - 1);
+}
 
-// idt_reg_x64_t g_idt_reg;
+TEST_CASE("idt_reg_base_set_get")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// extern "C" void
-// __read_idt(idt_reg_x64_t *idt_reg) noexcept
-// { *idt_reg = g_idt_reg; }
+    x64::idt::base::set(g_idt.data());
+    CHECK(x64::idt::base::get() == g_idt.data());
+}
 
-// extern "C" void
-// __write_idt(idt_reg_x64_t *idt_reg) noexcept
-// { g_idt_reg = *idt_reg; }
+TEST_CASE("idt_reg_limit_set_get")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// void
-// intrinsics_ut::test_idt_reg_set_get()
-// {
-//     x64::idt::set(g_idt.data(), (4 << 3) - 1);
+    x64::idt::limit::set((4 << 3) - 1);
+    CHECK(x64::idt::limit::get() == (4 << 3) - 1);
+}
 
-//     this->expect_true(x64::idt::get().base == g_idt.data());
-//     this->expect_true(x64::idt::get().limit == (4 << 3) - 1);
-// }
+TEST_CASE("idt_constructor_no_size")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// void
-// intrinsics_ut::test_idt_reg_base_set_get()
-// {
-//     x64::idt::base::set(g_idt.data());
-//     this->expect_true(x64::idt::base::get() == g_idt.data());
-// }
+    idt_x64 idt;
+}
 
-// void
-// intrinsics_ut::test_idt_reg_limit_set_get()
-// {
-//     x64::idt::limit::set((4 << 3) - 1);
-//     this->expect_true(x64::idt::limit::get() == (4 << 3) - 1);
-// }
+TEST_CASE("idt_constructor_zero_size")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// void
-// intrinsics_ut::test_idt_constructor_no_size()
-// {
-//     idt_x64 idt;
-// }
+    CHECK_NOTHROW(idt_x64{0});
+}
 
-// void
-// intrinsics_ut::test_idt_constructor_zero_size()
-// {
-//     this->expect_no_exception([&] { idt_x64{0}; });
-// }
+TEST_CASE("idt_constructor_size")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// void
-// intrinsics_ut::test_idt_constructor_size()
-// {
-//     idt_x64 idt{4};
+    idt_x64 idt{4};
 
-//     this->expect_true(idt.base() != 0);
-//     this->expect_true(idt.limit() == (4 * sizeof(idt_x64::interrupt_descriptor_type)) - 1);
-// }
+    CHECK(idt.base() != 0);
+    CHECK(idt.limit() == (4 * sizeof(idt_x64::interrupt_descriptor_type)) - 1);
+}
 
-// void
-// intrinsics_ut::test_idt_base()
-// {
-//     idt_x64 idt;
-//     this->expect_true(idt.base() == reinterpret_cast<idt_x64::integer_pointer>(g_idt.data()));
-// }
+TEST_CASE("idt_base")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// void
-// intrinsics_ut::test_idt_limit()
-// {
-//     idt_x64 idt;
-//     this->expect_true(idt.limit() == (4 * sizeof(idt_x64::interrupt_descriptor_type)) - 1);
-// }
+    idt_x64 idt;
+    CHECK(idt.base() == reinterpret_cast<idt_x64::integer_pointer>(g_idt.data()));
+}
+
+TEST_CASE("idt_limit")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    idt_x64 idt;
+    CHECK(idt.limit() == (4 * sizeof(idt_x64::interrupt_descriptor_type)) - 1);
+}
+
+#endif

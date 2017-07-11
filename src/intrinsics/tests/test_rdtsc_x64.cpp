@@ -19,40 +19,48 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#define CATCH_CONFIG_MAIN
 #include <catch/catch.hpp>
+#include <hippomocks.h>
+#include <intrinsics/x86/common_x64.h>
 
-TEST_CASE("test name goes here")
+#ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
+
+using namespace x64;
+
+read_tsc::value_type g_read_tsc = 0;
+read_tscp::value_type g_read_tscp = 0;
+
+uint64_t
+test_read_tsc() noexcept
+{ return g_read_tsc; }
+
+uint64_t
+test_read_tscp() noexcept
+{ return g_read_tscp; }
+
+static void
+setup_intrinsics(MockRepository &mocks)
 {
-    CHECK(true);
+    mocks.OnCallFunc(_read_tsc).Do(test_read_tsc);
+    mocks.OnCallFunc(_read_tscp).Do(test_read_tscp);
 }
 
-// #include <test.h>
-// #include <intrinsics/rdtsc_x64.h>
+TEST_CASE("_rdtsc_x64")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// using namespace x64;
+    g_read_tsc = 10U;
+    CHECK(read_tsc::get() == 10U);
+}
 
-// read_tsc::value_type g_read_tsc = 0;
-// read_tscp::value_type g_read_tscp = 0;
+TEST_CASE("_rdtscp_x64")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// extern "C" uint64_t
-// __read_tsc(void) noexcept
-// { return g_read_tsc; }
+    g_read_tscp = 10U;
+    CHECK(read_tscp::get() == 10U);
+}
 
-// extern "C" uint64_t
-// __read_tscp(void) noexcept
-// { return g_read_tscp; }
-
-// void
-// intrinsics_ut::test_rdtsc_x64()
-// {
-//     g_read_tsc = 10U;
-//     this->expect_true(read_tsc::get() == 10U);
-// }
-
-// void
-// intrinsics_ut::test_rdtscp_x64()
-// {
-//     g_read_tscp = 10U;
-//     this->expect_true(read_tscp::get() == 10U);
-// }
+#endif

@@ -20,32 +20,42 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#define CATCH_CONFIG_MAIN
 #include <catch/catch.hpp>
+#include <hippomocks.h>
+#include <intrinsics/x86/common_x64.h>
 
-TEST_CASE("test name goes here")
+#ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
+
+using namespace x64;
+
+std::map<uint32_t, uint32_t> g_eax_cpuid;
+
+uint32_t
+test_cpuid_eax(uint32_t val) noexcept
+{ return g_eax_cpuid[val]; }
+
+static void
+setup_intrinsics(MockRepository &mocks)
 {
-    CHECK(true);
+    mocks.OnCallFunc(_cpuid_eax).Do(test_cpuid_eax);
 }
 
-// #include <test.h>
-// #include <intrinsics/cpuid_x64.h>
-// #include <intrinsics/pdpte_x64.h>
+TEST_CASE("pdpte_x64_reserved_mask")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// using namespace x64;
+    g_eax_cpuid[cpuid::addr_size::addr] = 48U;
+    CHECK(pdpte::reserved::mask() == 0xFFFF0000000001E6ULL);
+}
 
-// extern std::map<cpuid::field_type, cpuid::value_type> g_eax_cpuid;
+TEST_CASE("pdpte_x64_page_directory_addr_mask")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// void
-// intrinsics_ut::test_pdpte_x64_reserved_mask()
-// {
-//     g_eax_cpuid[cpuid::addr_size::addr] = 48U;
-//     this->expect_true(pdpte::reserved::mask() == 0xFFFF0000000001E6ULL);
-// }
+    g_eax_cpuid[cpuid::addr_size::addr] = 48U;
+    CHECK(pdpte::page_directory_addr::mask() == 0x0000FFFFFFFFF000ULL);
+}
 
-// void
-// intrinsics_ut::test_pdpte_x64_page_directory_addr_mask()
-// {
-//     g_eax_cpuid[cpuid::addr_size::addr] = 48U;
-//     this->expect_true(pdpte::page_directory_addr::mask() == 0x0000FFFFFFFFF000ULL);
-// }
+#endif

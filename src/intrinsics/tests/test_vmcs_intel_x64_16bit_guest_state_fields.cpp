@@ -640,4 +640,34 @@ TEST_CASE("vmcs_guest_interrupt_status")
     CHECK(vmcs::guest_interrupt_status::get() == 200UL);
 }
 
+TEST_CASE("vmcs_pml_index")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
+
+    g_msrs[msrs::ia32_vmx_true_procbased_ctls::addr] =
+        msrs::ia32_vmx_true_procbased_ctls::activate_secondary_controls::mask << 32;
+    g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] =
+        msrs::ia32_vmx_procbased_ctls2::enable_pml::mask << 32;
+
+    CHECK(vmcs::pml_index::exists());
+
+    vmcs::pml_index::set(100UL);
+    CHECK(vmcs::pml_index::get() == 100UL);
+
+    vmcs::pml_index::set_if_exists(200UL);
+    CHECK(vmcs::pml_index::get_if_exists() == 200UL);
+
+    g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] = 0x0;
+    CHECK_FALSE(vmcs::pml_index::exists());
+    CHECK_THROWS(vmcs::pml_index::set(1UL));
+    CHECK_THROWS(vmcs::pml_index::get());
+    CHECK_NOTHROW(vmcs::pml_index::set_if_exists(1UL));
+    CHECK_NOTHROW(vmcs::pml_index::get_if_exists());
+
+    g_msrs[msrs::ia32_vmx_procbased_ctls2::addr] =
+        msrs::ia32_vmx_procbased_ctls2::enable_pml::mask << 32;
+    CHECK(vmcs::pml_index::get() == 200UL);
+}
+
 #endif

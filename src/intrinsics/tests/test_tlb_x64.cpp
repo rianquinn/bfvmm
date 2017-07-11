@@ -19,25 +19,31 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#define CATCH_CONFIG_MAIN
 #include <catch/catch.hpp>
+#include <hippomocks.h>
+#include <intrinsics/x86/common_x64.h>
 
-TEST_CASE("test name goes here")
+#ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
+
+using namespace x64;
+
+void
+test_invlpg(const void *virt) noexcept
+{ (void) virt; }
+
+static void
+setup_intrinsics(MockRepository &mocks)
 {
-    CHECK(true);
+    mocks.OnCallFunc(_invlpg).Do(test_invlpg);
 }
 
-// #include <test.h>
-// #include <intrinsics/tlb_x64.h>
+TEST_CASE("tlb_x64_invlpg")
+{
+    MockRepository mocks;
+    setup_intrinsics(mocks);
 
-// using namespace x64;
+    int test = 8;
+    CHECK_NOTHROW(tlb::invlpg(&test));
+}
 
-// extern "C" void
-// __invlpg(const void *virt) noexcept
-// { (void) virt; }
-
-// void
-// intrinsics_ut::test_tlb_x64_invlpg()
-// {
-//     this->expect_no_exception([&] { tlb::invlpg(this); });
-// }
+#endif

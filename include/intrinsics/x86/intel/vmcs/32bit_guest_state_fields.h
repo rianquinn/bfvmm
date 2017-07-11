@@ -30,7 +30,7 @@
 #include <exit_handler/state_save_intel_x64.h>
 
 #include <intrinsics/x86/intel/vmx_intel_x64.h>
-#include <intrinsics/x86/intel/msrs/msrs_intel_x64.h>
+#include <intrinsics/x86/intel/msrs_intel_x64.h>
 
 /// Intel x86_64 VMCS 32-bit Guest-State Fields
 ///

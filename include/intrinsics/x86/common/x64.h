@@ -26,7 +26,7 @@
 #include <type_traits>
 
 #include <bfgsl.h>
-#include <intrinsics/x86/common/cpuid/cpuid_x64.h>
+#include <intrinsics/x86/common/cpuid_x64.h>
 
 // *INDENT-OFF*
 
