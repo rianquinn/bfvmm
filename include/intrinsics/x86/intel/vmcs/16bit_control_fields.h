@@ -23,9 +23,6 @@
 #ifndef VMCS_INTEL_X64_16BIT_CONTROL_FIELDS_H
 #define VMCS_INTEL_X64_16BIT_CONTROL_FIELDS_H
 
-#include <vmcs/vmcs_intel_x64_state.h>
-
-#include <intrinsics/x86/intel/msrs_intel_x64.h>
 #include <intrinsics/x86/intel/vmcs/helpers.h>
 
 /// Intel x86_64 VMCS 16-Bit Control Fields
@@ -47,7 +44,7 @@ namespace virtual_processor_identifier
     constexpr const auto addr = 0x0000000000000000ULL;
     constexpr const auto name = "virtual_processor_identifier";
 
-    inline bool exists() noexcept
+    inline bool exists()
     {
         return msrs::ia32_vmx_true_procbased_ctls::activate_secondary_controls::is_allowed1() &&
                msrs::ia32_vmx_procbased_ctls2::enable_vpid::is_allowed1();
@@ -56,15 +53,17 @@ namespace virtual_processor_identifier
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace posted_interrupt_notification_vector
@@ -72,21 +71,23 @@ namespace posted_interrupt_notification_vector
     constexpr const auto addr = 0x0000000000000002ULL;
     constexpr const auto name = "posted_interrupt_notification_vector";
 
-    inline bool exists() noexcept
+    inline bool exists()
     { return msrs::ia32_vmx_true_pinbased_ctls::process_posted_interrupts::is_allowed1(); }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace eptp_index
@@ -94,7 +95,7 @@ namespace eptp_index
     constexpr const auto addr = 0x0000000000000004ULL;
     constexpr const auto name = "eptp_index";
 
-    inline bool exists() noexcept
+    inline bool exists()
     {
         return msrs::ia32_vmx_true_procbased_ctls::activate_secondary_controls::is_allowed1() &&
                msrs::ia32_vmx_procbased_ctls2::ept_violation_ve::is_allowed1();
@@ -103,15 +104,17 @@ namespace eptp_index
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) { set_vmcs_field(val, addr, name, exists()); }
+    inline void set(value_type val)
+    { set_vmcs_field(val, addr, name, exists()); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set_if_exists(T val, bool verbose = false) noexcept
+    inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 }

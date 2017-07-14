@@ -23,11 +23,11 @@
 #ifndef VMCS_INTEL_X64_HELPERS_H
 #define VMCS_INTEL_X64_HELPERS_H
 
-#include <type_traits>
-
-#include <bfstring.h>
+#include <bfdebug.h>
+#include <bfbitmanip.h>
 
 #include <intrinsics/x86/common/x64.h>
+#include <intrinsics/x86/common/cpuid_x64.h>
 #include <intrinsics/x86/intel/vmx_intel_x64.h>
 #include <intrinsics/x86/intel/msrs_intel_x64.h>
 
@@ -41,124 +41,191 @@ namespace vmcs
 using field_type = uint64_t;
 using value_type = uint64_t;
 
-template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-auto get_vmcs_field(T addr, const char *name, bool exists)
+inline value_type
+get_vmcs_field(
+    field_type addr, const char *name, bool exists)
 {
     if (!exists) {
-        throw std::logic_error("get_vmcs_field failed: "_s + name + " field doesn't exist");
+        throw std::logic_error("field doesn't exit: " + std::string(name));
     }
 
     return intel_x64::vm::read(addr, name);
 }
 
-template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-auto get_vmcs_field_if_exists(T addr, const char *name, bool verbose, bool exists)
+inline value_type
+get_vmcs_field_if_exists(
+    field_type addr, const char *name, bool verbose, bool exists)
 {
     if (exists) {
         return intel_x64::vm::read(addr, name);
     }
-
-    if (!exists && verbose) {
-        bfwarning << "get_vmcs_field_if_exists failed: " << name << " field doesn't exist" << bfendl;
+    else {
+        if (verbose) {
+            bfwarning << "field doesn't exit: " << name << bfendl;
+        }
     }
 
-    return static_cast<intel_x64::vm::value_type>(0);
+    return 0ULL;
 }
 
-template <class V, class A,
-          class = typename std::enable_if<std::is_integral<V>::value>::type,
-          class = typename std::enable_if<std::is_integral<A>::value>::type>
-auto set_vmcs_field(V val, A addr, const char *name, bool exists)
+inline void
+set_vmcs_field(
+    value_type val, field_type addr, const char *name, bool exists)
 {
     if (!exists) {
-        throw std::logic_error("set_vmcs_field failed: "_s + name + " field doesn't exist");
+        throw std::logic_error("field doesn't exit: " + std::string(name));
     }
 
     intel_x64::vm::write(addr, val, name);
 }
 
-template <class V, class A,
-          class = typename std::enable_if<std::is_integral<V>::value>::type,
-          class = typename std::enable_if<std::is_integral<A>::value>::type>
-auto set_vmcs_field_if_exists(V val, A addr, const char *name, bool verbose, bool exists) noexcept
+inline void
+set_vmcs_field_if_exists(
+    value_type val, field_type addr, const char *name, bool verbose, bool exists)
 {
     if (exists) {
         intel_x64::vm::write(addr, val, name);
     }
-
-    if (!exists && verbose) {
-        bfwarning << "set_vmcs_field failed: " << name << " field doesn't exist" << bfendl;
+    else {
+        if (verbose) {
+            bfwarning << "field doesn't exit: " << name << bfendl;
+        }
     }
 }
 
-template <class MA, class CA, class M,
-          class = typename std::enable_if<std::is_integral<MA>::value>::type,
-          class = typename std::enable_if<std::is_integral<CA>::value>::type,
-          class = typename std::enable_if<std::is_integral<M>::value>::type>
-auto set_vm_control(bool val, MA msr_addr, CA ctls_addr, const char *name, M mask, bool field_exists)
+inline void
+set_vmcs_field_bits(
+    value_type val, field_type addr, value_type mask, value_type from, const char *name, bool exists)
 {
-    if (!field_exists) {
-        throw std::logic_error("set_vm_control failed: "_s + name + " control doesn't exist");
-    }
-
-    if (!val) {
-        auto is_allowed0 = (intel_x64::msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) & mask) == 0;
-
-        if (!is_allowed0) {
-            throw std::logic_error("set_vm_control failed: "_s + name + " control is not allowed to be cleared to 0");
-        }
-
-        intel_x64::vm::write(ctls_addr, (intel_x64::vm::read(ctls_addr, name) & ~mask), name);
-    } else {
-        auto is_allowed1 = (intel_x64::msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) & (mask << 32)) != 0;
-
-        if (!is_allowed1) {
-            throw std::logic_error("set_vm_control failed: "_s + name + " control is not allowed to be set to 1");
-        }
-
-        intel_x64::vm::write(ctls_addr, (intel_x64::vm::read(ctls_addr, name) | mask), name);
-    }
+    auto field = get_vmcs_field(addr, name, exists);
+    set_vmcs_field(set_bits(field, mask, (val << from)), addr, name, exists);
 }
 
-template <class MA, class CA, class M,
-          class = typename std::enable_if<std::is_integral<MA>::value>::type,
-          class = typename std::enable_if<std::is_integral<CA>::value>::type,
-          class = typename std::enable_if<std::is_integral<M>::value>::type>
-auto set_vm_control_if_allowed(bool val, MA msr_addr, CA ctls_addr, const char *name,
-                               M mask, bool verbose, bool field_exists) noexcept
+inline void
+set_vmcs_field_bits_if_exists(
+    value_type val, field_type addr, value_type mask, value_type from, const char *name, bool verbose, bool exists)
 {
-    if (!field_exists) {
-        bfwarning << "set_vm_control_if_allowed failed: " << name << " control doesn't exist" << bfendl;
+    auto field = get_vmcs_field_if_exists(addr, name, verbose, exists);
+    set_vmcs_field_if_exists(set_bits(field, mask, (val << from)), addr, name, verbose, exists);
+}
+
+inline void
+set_vmcs_field_bit(
+    field_type addr, value_type from, const char *name, bool exists)
+{
+    auto field = get_vmcs_field(addr, name, exists);
+    set_vmcs_field(set_bit(field, from), addr, name, exists);
+}
+
+inline void
+set_vmcs_field_bit_if_exists(
+    field_type addr, value_type from, const char *name, bool verbose, bool exists)
+{
+    auto field = get_vmcs_field_if_exists(addr, name, verbose, exists);
+    set_vmcs_field_if_exists(set_bit(field, from), addr, name, verbose, exists);
+}
+
+inline void
+clear_vmcs_field_bit(
+    field_type addr, value_type from, const char *name, bool exists)
+{
+    auto field = get_vmcs_field(addr, name, exists);
+    set_vmcs_field(clear_bit(field, from), addr, name, exists);
+}
+
+inline void
+clear_vmcs_field_bit_if_exists(
+    field_type addr, value_type from, const char *name, bool verbose, bool exists)
+{
+    auto field = get_vmcs_field_if_exists(addr, name, verbose, exists);
+    set_vmcs_field_if_exists(clear_bit(field, from), addr, name, verbose, exists);
+}
+
+inline void
+enable_vm_control(
+    field_type addr, value_type from, bool is_allowed1, const char *name, bool exists)
+{
+    if (!exists) {
+        throw std::logic_error("field doesn't exist: " + std::string(name));
+    }
+
+    if (!is_allowed1) {
+        throw std::logic_error("field is_allowed1 false: " + std::string(name));
+    }
+
+    intel_x64::vm::write(addr, set_bit(intel_x64::vm::read(addr, name), from), name);
+}
+
+inline void
+enable_vm_control_if_allowed(
+    field_type addr, value_type from, bool is_allowed1, const char *name, bool verbose, bool exists)
+{
+    if (!exists) {
+        if (verbose) {
+            bfwarning << "field doesn't exist: " << name << bfendl;
+        }
         return;
     }
 
-    if (!val) {
-        auto is_allowed0 = (intel_x64::msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) & mask) == 0;
-
-        if (is_allowed0) {
-            intel_x64::vm::write(ctls_addr, (intel_x64::vm::read(ctls_addr, name) & ~mask), name);
-        } else {
-            if (verbose) {
-                bfwarning << "set_vm_control_if_allowed failed: " << name
-                          << "control is not allowed to be cleared to 0" << bfendl;
-            }
+    if (!is_allowed1) {
+        if (verbose) {
+            bfwarning << "field is_allowed1 false: " << name << bfendl;
         }
-    } else {
-        auto is_allowed1 = (intel_x64::msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) & (mask << 32)) != 0;
-
-        if (is_allowed1) {
-            intel_x64::vm::write(ctls_addr, (intel_x64::vm::read(ctls_addr, name) | mask), name);
-        } else {
-            if (verbose) {
-                bfwarning << "set_vm_control_if_allowed failed: " << name
-                          << "control is not allowed to be set to 1" << bfendl;
-            }
-        }
+        return;
     }
+
+    intel_x64::vm::write(addr, set_bit(intel_x64::vm::read(addr, name), from), name);
 }
 
-template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-auto memory_type_reserved(T memory_type)
+inline void
+disable_vm_control(
+    field_type addr, value_type from, bool is_allowed0, const char *name, bool exists)
+{
+    if (!exists) {
+        throw std::logic_error("field doesn't exist: " + std::string(name));
+    }
+
+    if (!is_allowed0) {
+        throw std::logic_error("field is_allowed0 false: " + std::string(name));
+    }
+
+    intel_x64::vm::write(addr, clear_bit(intel_x64::vm::read(addr, name), from), name);
+}
+
+inline void
+disable_vm_control_if_allowed(
+    field_type addr, value_type from, bool is_allowed0, const char *name, bool verbose, bool exists)
+{
+    if (!exists) {
+        if (verbose) {
+            bfwarning << "field doesn't exist: " << name << bfendl;
+        }
+        return;
+    }
+
+    if (!is_allowed0) {
+        if (verbose) {
+            bfwarning << "field is_allowed0 false: " << name << bfendl;
+        }
+        return;
+    }
+
+    intel_x64::vm::write(addr, clear_bit(intel_x64::vm::read(addr, name), from), name);
+}
+
+inline void
+dump_vm_control(int level, bool exists, bool is_allowed1, bool enabled, const char *name)
+{
+    if (!exists || !is_allowed1) {
+        bfdebug_subtext(level, name, "unsupported");
+        return;
+    }
+
+    bfdebug_subbool(level, name, enabled);
+}
+
+inline auto
+memory_type_reserved(value_type memory_type)
 {
     switch (memory_type) {
         case x64::memory_type::uncacheable:
@@ -173,6 +240,54 @@ auto memory_type_reserved(T memory_type)
             return true;
     }
 }
+
+#define dump_vmcs_nhex(a)                                                                          \
+    if (exists()) {                                                                                \
+        bfdebug_nhex(a, name, get());                                                              \
+    }                                                                                              \
+    else {                                                                                         \
+        bfdebug_text(a, name, "unsupported");                                                      \
+    }
+
+#define dump_vmcs_subnhex(a)                                                                       \
+    if (exists()) {                                                                                \
+        bfdebug_subnhex(a, name, get());                                                           \
+    }                                                                                              \
+    else {                                                                                         \
+        bfdebug_subtext(a, name, "unsupported");                                                   \
+    }
+
+#define dump_vmcs_bool(a)                                                                          \
+    if (exists()) {                                                                                \
+        bfdebug_bool(a, name, is_enabled());                                                       \
+    }                                                                                              \
+    else {                                                                                         \
+        bfdebug_text(a, name, "unsupported");                                                      \
+    }
+
+#define dump_vmcs_subbool(a)                                                                       \
+    if (exists()) {                                                                                \
+        bfdebug_subbool(a, name, is_enabled());                                                    \
+    }                                                                                              \
+    else {                                                                                         \
+        bfdebug_subtext(a, name, "unsupported");                                                   \
+    }
+
+#define dump_vmcs_text(a)                                                                          \
+    if (exists()) {                                                                                \
+        bfdebug_text(a, name, description());                                                      \
+    }                                                                                              \
+    else {                                                                                         \
+        bfdebug_text(a, name, "unsupported");                                                      \
+    }
+
+#define dump_vmcs_subtext(a)                                                                       \
+    if (exists()) {                                                                                \
+        bfdebug_subtext(a, name, description());                                                   \
+    }                                                                                              \
+    else {                                                                                         \
+        bfdebug_subtext(a, name, "unsupported");                                                   \
+    }
 
 }
 }

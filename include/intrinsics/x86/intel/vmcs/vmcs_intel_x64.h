@@ -42,11 +42,6 @@
 #include <intrinsics/x86/intel/vmcs/natural_width_read_only_data_fields.h>
 
 #include <intrinsics/x86/intel/vmcs/check.h>
-#include <intrinsics/x86/intel/vmcs/check_controls.h>
-#include <intrinsics/x86/intel/vmcs/check_guest.h>
-#include <intrinsics/x86/intel/vmcs/check_host.h>
-
 #include <intrinsics/x86/intel/vmcs/debug.h>
-#include <intrinsics/x86/intel/vmcs/helpers.h>
 
 #endif

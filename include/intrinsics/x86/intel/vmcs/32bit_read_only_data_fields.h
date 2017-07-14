@@ -23,7 +23,6 @@
 #ifndef VMCS_INTEL_X64_32BIT_READ_ONLY_DATA_FIELDS_H
 #define VMCS_INTEL_X64_32BIT_READ_ONLY_DATA_FIELDS_H
 
-#include <bfbitmanip.h>
 #include <intrinsics/x86/intel/vmcs/helpers.h>
 
 /// Intel x86_64 VMCS 32-bit Read-Only Data Fields
@@ -45,17 +44,13 @@ namespace vm_instruction_error
     constexpr const auto addr = 0x0000000000004400ULL;
     constexpr const auto name = "vm_instruction_error";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
-    { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
-
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    auto __vm_instruction_error_description(T error)
+    inline auto vm_instruction_error_description(value_type error)
     {
         switch (error) {
             case 1U:
@@ -143,38 +138,8 @@ namespace vm_instruction_error
         }
     }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    auto vm_instruction_error_description(T error, bool exists)
-    {
-        if (!exists) {
-            throw std::logic_error("vm_instruction_error() failed: vm_instruction_error field doesn't exist");
-        }
-
-        return __vm_instruction_error_description(error);
-    }
-
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    auto vm_instruction_error_description_if_exists(T error, bool verbose, bool exists)
-    {
-        if (!exists && verbose) {
-            bfwarning << "vm_instruction_error() failed: vm_instruction_error field doesn't exist" << '\n';
-        }
-
-        if (exists) {
-            return __vm_instruction_error_description(error);
-        }
-
-        return "";
-    }
-
     inline auto description()
-    { return vm_instruction_error_description(get_vmcs_field(addr, name, exists()), exists()); }
-
-    inline auto description_if_exists(bool verbose = false) noexcept
-    {
-        auto&& field = get_vmcs_field_if_exists(addr, name, verbose, exists());
-        return vm_instruction_error_description_if_exists(field, verbose, exists());
-    }
+    { return vm_instruction_error_description(get_vmcs_field(addr, name, exists())); }
 }
 
 namespace exit_reason
@@ -182,14 +147,11 @@ namespace exit_reason
     constexpr const auto addr = 0x0000000000004402ULL;
     constexpr const auto name = "exit_reason";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
-
-    inline auto get_if_exists(bool verbose = false) noexcept
-    { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
     namespace basic_exit_reason
     {
@@ -261,15 +223,11 @@ namespace exit_reason
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
-        { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
-
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto __basic_exit_reason_description(T reason)
+        inline auto basic_exit_reason_description(value_type reason)
         {
             switch (reason) {
                 case exception_or_non_maskable_interrupt:
-                    return "exception_or_non_maskable_interrupt";
+                    return "exception_or_nmi";
 
                 case external_interrupt:
                     return "external_interrupt";
@@ -453,41 +411,14 @@ namespace exit_reason
             }
         }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto basic_exit_reason_description(T reason, bool exists)
-        {
-            if (!exists) {
-                throw std::logic_error("basic_exit_reason_description failed: exit_reason field doesn't exist");
-            }
-
-            return __basic_exit_reason_description(reason);
-        }
-
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto basic_exit_reason_description_if_exists(T reason, bool verbose, bool exists)
-        {
-            if (!exists && verbose) {
-                bfwarning << "basic_exit_reason_description_if_exists failed: exit_reason field doesn't exist" << '\n';
-            }
-
-            if (exists) {
-                return __basic_exit_reason_description(reason);
-            }
-
-            return "";
-        }
-
         inline auto description()
         {
-            auto&& field = get_bits(get_vmcs_field(addr, name, exists()), mask) >> from;
-            return basic_exit_reason_description(field, exists());
+            auto field = get_bits(get_vmcs_field(addr, name, exists()), mask) >> from;
+            return basic_exit_reason_description(field);
         }
 
-        inline auto description_if_exists(bool verbose = false) noexcept
-        {
-            auto&& field = get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from;
-            return basic_exit_reason_description_if_exists(field, verbose, exists());
-        }
+        inline void dump(int level)
+        { dump_vmcs_text(level); }
     }
 
     namespace reserved
@@ -497,10 +428,10 @@ namespace exit_reason
         constexpr const auto name = "reserved";
 
         inline auto get()
-        { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+        { return get_bits(get_vmcs_field(addr, name, true), mask) >> from; }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
-        { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+        inline void dump(int level)
+        { dump_vmcs_subnhex(level); }
     }
 
     namespace vm_exit_incident_to_enclave_mode
@@ -510,16 +441,25 @@ namespace exit_reason
         constexpr const auto name = "vm_exit_incident_to_enclave_mode";
 
         inline auto is_enabled()
-        { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
+        { return is_bit_set(get_vmcs_field(addr, name, true), from); }
+
+        inline auto is_enabled(value_type field)
+        { return is_bit_set(field, from); }
 
         inline auto is_enabled_if_exists(bool verbose = false)
-        { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+        { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, true), from); }
 
         inline auto is_disabled()
-        { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+        { return is_bit_cleared(get_vmcs_field(addr, name, true), from); }
+
+        inline auto is_disabled(value_type field)
+        { return is_bit_cleared(field, from); }
 
         inline auto is_disabled_if_exists(bool verbose = false)
-        { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+        { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, true), from); }
+
+        inline void dump(int level)
+        { dump_vmcs_subbool(level); }
     }
 
     namespace pending_mtf_vm_exit
@@ -529,16 +469,25 @@ namespace exit_reason
         constexpr const auto name = "pending_mtf_vm_exit";
 
         inline auto is_enabled()
-        { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
+        { return is_bit_set(get_vmcs_field(addr, name, true), from); }
+
+        inline auto is_enabled(value_type field)
+        { return is_bit_set(field, from); }
 
         inline auto is_enabled_if_exists(bool verbose = false)
-        { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+        { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, true), from); }
 
         inline auto is_disabled()
-        { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+        { return is_bit_cleared(get_vmcs_field(addr, name, true), from); }
+
+        inline auto is_disabled(value_type field)
+        { return is_bit_cleared(field, from); }
 
         inline auto is_disabled_if_exists(bool verbose = false)
-        { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+        { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, true), from); }
+
+        inline void dump(int level)
+        { dump_vmcs_subbool(level); }
     }
 
     namespace vm_exit_from_vmx_root_operation
@@ -548,16 +497,25 @@ namespace exit_reason
         constexpr const auto name = "vm_exit_from_vmx_root_operation";
 
         inline auto is_enabled()
-        { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
+        { return is_bit_set(get_vmcs_field(addr, name, true), from); }
+
+        inline auto is_enabled(value_type field)
+        { return is_bit_set(field, from); }
 
         inline auto is_enabled_if_exists(bool verbose = false)
-        { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+        { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, true), from); }
 
         inline auto is_disabled()
-        { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+        { return is_bit_cleared(get_vmcs_field(addr, name, true), from); }
+
+        inline auto is_disabled(value_type field)
+        { return is_bit_cleared(field, from); }
 
         inline auto is_disabled_if_exists(bool verbose = false)
-        { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+        { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, true), from); }
+
+        inline void dump(int level)
+        { dump_vmcs_subbool(level); }
     }
 
     namespace vm_entry_failure
@@ -567,16 +525,36 @@ namespace exit_reason
         constexpr const auto name = "vm_entry_failure";
 
         inline auto is_enabled()
-        { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
+        { return is_bit_set(get_vmcs_field(addr, name, true), from); }
+
+        inline auto is_enabled(value_type field)
+        { return is_bit_set(field, from); }
 
         inline auto is_enabled_if_exists(bool verbose = false)
-        { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+        { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, true), from); }
 
         inline auto is_disabled()
-        { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+        { return is_bit_cleared(get_vmcs_field(addr, name, true), from); }
+
+        inline auto is_disabled(value_type field)
+        { return is_bit_cleared(field, from); }
 
         inline auto is_disabled_if_exists(bool verbose = false)
-        { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+        { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, true), from); }
+
+        inline void dump(int level)
+        { dump_vmcs_subbool(level); }
+    }
+
+    inline void dump(int level)
+    {
+        dump_vmcs_nhex(level);
+        basic_exit_reason::dump(level);
+        reserved::dump(level);
+        vm_exit_incident_to_enclave_mode::dump(level);
+        pending_mtf_vm_exit::dump(level);
+        vm_exit_from_vmx_root_operation::dump(level);
+        vm_entry_failure::dump(level);
     }
 }
 
@@ -585,13 +563,13 @@ namespace vm_exit_interruption_information
     constexpr const auto addr = 0x0000000000004404ULL;
     constexpr const auto name = "vm_exit_interruption_information";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
     namespace vector
@@ -603,12 +581,14 @@ namespace vm_exit_interruption_information
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto get(T t)
-        { return get_bits(t, mask) >> from; }
+        inline auto get(value_type field)
+        { return get_bits(field, mask) >> from; }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+        inline void dump(int level)
+        { dump_vmcs_subnhex(level); }
     }
 
     namespace interruption_type
@@ -625,12 +605,14 @@ namespace vm_exit_interruption_information
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto get(T t)
-        { return get_bits(t, mask) >> from; }
+        inline auto get(value_type field)
+        { return get_bits(field, mask) >> from; }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+        inline void dump(int level)
+        { dump_vmcs_subnhex(level); }
     }
 
     namespace error_code_valid
@@ -642,22 +624,23 @@ namespace vm_exit_interruption_information
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled(value_type field)
+        { return is_bit_set(field, from); }
+
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled(value_type field)
+        { return is_bit_cleared(field, from); }
+
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto is_enabled(T t)
-        { return is_bit_set(t, from); }
-
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto is_disabled(T t)
-        { return is_bit_cleared(t, from); }
+        inline void dump(int level)
+        { dump_vmcs_subbool(level); }
     }
 
     namespace nmi_unblocking_due_to_iret
@@ -669,22 +652,23 @@ namespace vm_exit_interruption_information
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled(value_type field)
+        { return is_bit_set(field, from); }
+
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled(value_type field)
+        { return is_bit_cleared(field, from); }
+
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto is_enabled(T t)
-        { return is_bit_set(t, from); }
-
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto is_disabled(T t)
-        { return is_bit_cleared(t, from); }
+        inline void dump(int level)
+        { dump_vmcs_subbool(level); }
     }
 
     namespace reserved
@@ -696,12 +680,14 @@ namespace vm_exit_interruption_information
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get(value_type field)
+        { return get_bits(field, mask) >> from; }
+
+        inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto get(T t)
-        { return get_bits(t, mask) >> from; }
+        inline void dump(int level)
+        { dump_vmcs_subnhex(level); }
     }
 
     namespace valid_bit
@@ -713,22 +699,34 @@ namespace vm_exit_interruption_information
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled(value_type field)
+        { return is_bit_set(field, from); }
+
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled(value_type field)
+        { return is_bit_cleared(field, from); }
+
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto is_enabled(T t)
-        { return is_bit_set(t, from); }
+        inline void dump(int level)
+        { dump_vmcs_subbool(level); }
+    }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto is_disabled(T t)
-        { return is_bit_cleared(t, from); }
+    inline void dump(int level)
+    {
+        dump_vmcs_nhex(level);
+        vector::dump(level);
+        interruption_type::dump(level);
+        error_code_valid::dump(level);
+        nmi_unblocking_due_to_iret::dump(level);
+        reserved::dump(level);
+        valid_bit::dump(level);
     }
 }
 
@@ -737,14 +735,17 @@ namespace vm_exit_interruption_error_code
     constexpr const auto addr = 0x0000000000004406ULL;
     constexpr const auto name = "vm_exit_interruption_error_code";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace idt_vectoring_information
@@ -752,13 +753,13 @@ namespace idt_vectoring_information
     constexpr const auto addr = 0x0000000000004408ULL;
     constexpr const auto name = "idt_vectoring_information_field";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
     namespace vector
@@ -770,12 +771,14 @@ namespace idt_vectoring_information
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto get(T t)
-        { return get_bits(t, mask) >> from; }
+        inline auto get(value_type field)
+        { return get_bits(field, mask) >> from; }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+        inline void dump(int level)
+        { dump_vmcs_subnhex(level); }
     }
 
     namespace interruption_type
@@ -794,12 +797,14 @@ namespace idt_vectoring_information
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto get(T t)
-        { return get_bits(t, mask) >> from; }
+        inline auto get(value_type field)
+        { return get_bits(field, mask) >> from; }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+        inline void dump(int level)
+        { dump_vmcs_subnhex(level); }
     }
 
     namespace error_code_valid
@@ -811,22 +816,23 @@ namespace idt_vectoring_information
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled(value_type field)
+        { return is_bit_set(field, from); }
+
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled(value_type field)
+        { return is_bit_cleared(field, from); }
+
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto is_enabled(T t)
-        { return is_bit_set(t, from); }
-
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto is_disabled(T t)
-        { return is_bit_cleared(t, from); }
+        inline void dump(int level)
+        { dump_vmcs_subbool(level); }
     }
 
     namespace reserved
@@ -838,12 +844,14 @@ namespace idt_vectoring_information
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto get(T t)
-        { return get_bits(t, mask) >> from; }
+        inline auto get(value_type field)
+        { return get_bits(field, mask) >> from; }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+        inline void dump(int level)
+        { dump_vmcs_subnhex(level); }
     }
 
     namespace valid_bit
@@ -855,22 +863,33 @@ namespace idt_vectoring_information
         inline auto is_enabled()
         { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_enabled_if_exists(bool verbose = false) noexcept
+        inline auto is_enabled(value_type field)
+        { return is_bit_set(field, from); }
+
+        inline auto is_enabled_if_exists(bool verbose = false)
         { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
         inline auto is_disabled()
         { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
 
-        inline auto is_disabled_if_exists(bool verbose = false) noexcept
+        inline auto is_disabled(value_type field)
+        { return is_bit_cleared(field, from); }
+
+        inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto is_enabled(T t)
-        { return is_bit_set(t, from); }
+        inline void dump(int level)
+        { dump_vmcs_subbool(level); }
+    }
 
-        template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-        auto is_disabled(T t)
-        { return is_bit_cleared(t, from); }
+    inline void dump(int level)
+    {
+        dump_vmcs_nhex(level);
+        vector::dump(level);
+        interruption_type::dump(level);
+        error_code_valid::dump(level);
+        reserved::dump(level);
+        valid_bit::dump(level);
     }
 }
 
@@ -879,14 +898,17 @@ namespace idt_vectoring_error_code
     constexpr const auto addr = 0x000000000000440AULL;
     constexpr const auto name = "idt_vectoring_error_code";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace vm_exit_instruction_length
@@ -894,14 +916,17 @@ namespace vm_exit_instruction_length
     constexpr const auto addr = 0x000000000000440CULL;
     constexpr const auto name = "vm_exit_instruction_length";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 }
 
 namespace vm_exit_instruction_information
@@ -909,26 +934,26 @@ namespace vm_exit_instruction_information
     constexpr const auto addr = 0x000000000000440EULL;
     constexpr const auto name = "vm_exit_instruction_information";
 
-    inline auto exists() noexcept
+    inline auto exists()
     { return true; }
 
     inline auto get()
     { return get_vmcs_field(addr, name, exists()); }
 
-    inline auto get_if_exists(bool verbose = false) noexcept
+    inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
+
+    inline void dump(int level)
+    { dump_vmcs_nhex(level); }
 
     namespace ins
     {
         constexpr const auto name = "ins";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace address_size
@@ -944,8 +969,20 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            address_size::dump(level);
         }
     }
 
@@ -953,13 +990,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "outs";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace address_size
@@ -975,8 +1009,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -995,8 +1035,21 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            address_size::dump(level);
+            segment_register::dump(level);
         }
     }
 
@@ -1004,13 +1057,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "invept";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -1027,8 +1077,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -1044,8 +1100,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -1064,8 +1126,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -1094,8 +1162,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -1104,14 +1178,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -1140,8 +1226,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -1150,14 +1242,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace reg2
@@ -1186,8 +1290,27 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            address_size::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
+            reg2::dump(level);
         }
     }
 
@@ -1195,13 +1318,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "invpcid";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -1218,8 +1338,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -1235,8 +1361,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -1255,8 +1387,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -1285,8 +1423,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -1295,14 +1439,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -1331,8 +1487,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -1341,14 +1503,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace reg2
@@ -1377,8 +1551,27 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            address_size::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
+            reg2::dump(level);
         }
     }
 
@@ -1386,13 +1579,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "invvpid";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -1409,8 +1599,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -1426,8 +1622,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -1446,8 +1648,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -1476,8 +1684,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -1486,14 +1700,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -1522,8 +1748,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -1532,14 +1764,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace reg2
@@ -1568,8 +1812,27 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            address_size::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
+            reg2::dump(level);
         }
     }
 
@@ -1577,13 +1840,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "lidt";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -1600,8 +1860,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -1617,8 +1883,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace operand_size
@@ -1633,8 +1905,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -1653,8 +1931,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -1683,8 +1967,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -1693,14 +1983,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -1729,8 +2031,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -1739,14 +2047,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace instruction_identity
@@ -1763,8 +2083,28 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            address_size::dump(level);
+            operand_size::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
+            instruction_identity::dump(level);
         }
     }
 
@@ -1772,13 +2112,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "lgdt";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -1795,8 +2132,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -1812,8 +2155,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace operand_size
@@ -1828,8 +2177,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -1848,8 +2203,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -1878,8 +2239,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -1888,14 +2255,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -1924,8 +2303,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -1934,14 +2319,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace instruction_identity
@@ -1958,8 +2355,28 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            address_size::dump(level);
+            operand_size::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
+            instruction_identity::dump(level);
         }
     }
 
@@ -1967,13 +2384,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "sidt";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -1990,8 +2404,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -2007,8 +2427,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace operand_size
@@ -2023,8 +2449,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -2043,8 +2475,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -2073,8 +2511,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -2083,14 +2527,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -2119,8 +2575,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -2129,14 +2591,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace instruction_identity
@@ -2153,8 +2627,28 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            address_size::dump(level);
+            operand_size::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
+            instruction_identity::dump(level);
         }
     }
 
@@ -2162,13 +2656,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "sgdt";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -2185,8 +2676,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -2202,8 +2699,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace operand_size
@@ -2218,8 +2721,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -2238,8 +2747,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -2268,8 +2783,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -2278,14 +2799,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -2314,8 +2847,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -2324,14 +2863,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace instruction_identity
@@ -2348,8 +2899,28 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            address_size::dump(level);
+            operand_size::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
+            instruction_identity::dump(level);
         }
     }
 
@@ -2357,13 +2928,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "lldt";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -2380,8 +2948,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace reg1
@@ -2410,8 +2984,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -2427,8 +3007,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace mem_reg
@@ -2443,8 +3029,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -2463,8 +3055,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -2493,8 +3091,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -2503,14 +3107,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -2539,8 +3155,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -2549,14 +3171,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace instruction_identity
@@ -2573,8 +3207,29 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            reg1::dump(level);
+            address_size::dump(level);
+            mem_reg::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
+            instruction_identity::dump(level);
         }
     }
 
@@ -2582,13 +3237,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "ltr";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -2605,8 +3257,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace reg1
@@ -2635,8 +3293,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -2652,8 +3316,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace mem_reg
@@ -2668,8 +3338,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -2688,8 +3364,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -2718,8 +3400,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -2728,14 +3416,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -2764,8 +3464,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -2774,14 +3480,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace instruction_identity
@@ -2798,8 +3516,29 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            reg1::dump(level);
+            address_size::dump(level);
+            mem_reg::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
+            instruction_identity::dump(level);
         }
     }
 
@@ -2807,13 +3546,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "sldt";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -2830,8 +3566,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace reg1
@@ -2860,8 +3602,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -2877,8 +3625,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace mem_reg
@@ -2893,8 +3647,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -2913,8 +3673,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -2943,8 +3709,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -2953,14 +3725,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -2989,8 +3773,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -2999,14 +3789,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace instruction_identity
@@ -3023,8 +3825,29 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            reg1::dump(level);
+            address_size::dump(level);
+            mem_reg::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
+            instruction_identity::dump(level);
         }
     }
 
@@ -3032,13 +3855,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "str";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -3055,8 +3875,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace reg1
@@ -3085,8 +3911,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -3102,8 +3934,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace mem_reg
@@ -3118,8 +3956,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -3138,8 +3982,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -3168,8 +4018,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -3178,14 +4034,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -3214,8 +4082,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -3224,14 +4098,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace instruction_identity
@@ -3248,8 +4134,29 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            reg1::dump(level);
+            address_size::dump(level);
+            mem_reg::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
+            instruction_identity::dump(level);
         }
     }
 
@@ -3257,13 +4164,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "rdrand";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace destination_register
@@ -3292,8 +4196,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace operand_size
@@ -3309,8 +4219,21 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            destination_register::dump(level);
+            operand_size::dump(level);
         }
     }
 
@@ -3318,13 +4241,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "rdseed";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace destination_register
@@ -3353,8 +4273,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace operand_size
@@ -3370,8 +4296,21 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            destination_register::dump(level);
+            operand_size::dump(level);
         }
     }
 
@@ -3379,13 +4318,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "vmclear";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -3402,8 +4338,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -3419,8 +4361,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -3439,8 +4387,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -3469,8 +4423,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -3479,14 +4439,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -3515,8 +4487,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -3525,14 +4503,38 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            address_size::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
         }
     }
 
@@ -3540,13 +4542,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "vmptrld";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -3563,8 +4562,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -3580,8 +4585,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -3600,8 +4611,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -3630,8 +4647,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -3640,14 +4663,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -3676,8 +4711,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -3686,14 +4727,38 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            address_size::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
         }
     }
 
@@ -3701,13 +4766,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "vmptrst";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -3724,8 +4786,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -3741,8 +4809,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -3761,8 +4835,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -3791,8 +4871,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -3801,14 +4887,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -3837,8 +4935,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -3847,14 +4951,38 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            address_size::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
         }
     }
 
@@ -3862,13 +4990,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "vmxon";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -3885,8 +5010,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -3902,8 +5033,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -3922,8 +5059,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -3952,8 +5095,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -3962,14 +5111,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -3998,8 +5159,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -4008,14 +5175,38 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            address_size::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
         }
     }
 
@@ -4023,13 +5214,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "xrstors";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -4046,8 +5234,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -4063,8 +5257,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -4083,8 +5283,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -4113,8 +5319,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -4123,14 +5335,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -4159,8 +5383,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -4169,14 +5399,38 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            address_size::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
         }
     }
 
@@ -4184,13 +5438,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "xsaves";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -4207,8 +5458,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -4224,8 +5481,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -4244,8 +5507,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -4274,8 +5543,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -4284,14 +5559,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -4320,8 +5607,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -4330,14 +5623,38 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            address_size::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
         }
     }
 
@@ -4345,13 +5662,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "vmread";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -4368,8 +5682,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace reg1
@@ -4398,8 +5718,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -4415,8 +5741,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace mem_reg
@@ -4431,8 +5763,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -4451,8 +5789,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -4481,8 +5825,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -4491,14 +5841,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -4527,8 +5889,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -4537,14 +5905,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace reg2
@@ -4573,8 +5953,29 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            reg1::dump(level);
+            address_size::dump(level);
+            mem_reg::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
+            reg2::dump(level);
         }
     }
 
@@ -4582,13 +5983,10 @@ namespace vm_exit_instruction_information
     {
         constexpr const auto name = "vmwrite";
 
-        inline auto get_name()
-        { return name; }
-
         inline auto get()
         { return get_vmcs_field(addr, name, exists()); }
 
-        inline auto get_if_exists(bool verbose = false) noexcept
+        inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
         namespace scaling
@@ -4605,8 +6003,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace reg1
@@ -4635,8 +6039,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace address_size
@@ -4652,8 +6062,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace mem_reg
@@ -4668,8 +6084,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace segment_register
@@ -4688,8 +6110,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg
@@ -4718,8 +6146,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace index_reg_invalid
@@ -4728,14 +6162,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 22;
             constexpr const auto name = "index_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace base_reg
@@ -4764,8 +6210,14 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
         }
 
         namespace base_reg_invalid
@@ -4774,14 +6226,26 @@ namespace vm_exit_instruction_information
             constexpr const auto from = 27;
             constexpr const auto name = "base_reg_invalid";
 
-            constexpr const auto valid = 0UL;
-            constexpr const auto invalid = 1UL;
+            inline auto is_enabled()
+            { return is_bit_set(get_vmcs_field(addr, name, exists()), from); }
 
-            inline auto get()
-            { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
+            inline auto is_enabled(value_type field)
+            { return is_bit_set(field, from); }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
-            { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+            inline auto is_enabled_if_exists(bool verbose = false)
+            { return is_bit_set(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(get_vmcs_field(addr, name, exists()), from); }
+
+            inline auto is_disabled(value_type field)
+            { return is_bit_cleared(field, from); }
+
+            inline auto is_disabled_if_exists(bool verbose = false)
+            { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
+
+            inline void dump(int level)
+            { dump_vmcs_subbool(level); }
         }
 
         namespace reg2
@@ -4810,8 +6274,29 @@ namespace vm_exit_instruction_information
             inline auto get()
             { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
 
-            inline auto get_if_exists(bool verbose = false) noexcept
+            inline auto get(value_type field)
+            { return get_bits(field, mask) >> from; }
+
+            inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
+
+            inline void dump(int level)
+            { dump_vmcs_subnhex(level); }
+        }
+
+        inline void dump(int level)
+        {
+            dump_vmcs_nhex(level);
+            scaling::dump(level);
+            reg1::dump(level);
+            address_size::dump(level);
+            mem_reg::dump(level);
+            segment_register::dump(level);
+            index_reg::dump(level);
+            index_reg_invalid::dump(level);
+            base_reg::dump(level);
+            base_reg_invalid::dump(level);
+            reg2::dump(level);
         }
     }
 }

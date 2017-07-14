@@ -42,15 +42,14 @@ namespace vmcs
 namespace check
 {
 
-template<class MA, class C,
-         class = typename std::enable_if<std::is_integral<MA>::value>::type,
-         class = typename std::enable_if<std::is_integral<C>::value>::type>
-auto control_reserved_properly_set(MA msr_addr, C ctls, const char *ctls_name)
+inline auto
+control_reserved_properly_set(
+    x64::msrs::field_type addr, x64::msrs::value_type ctls, const char *name)
 {
     using namespace vmcs::primary_processor_based_vm_execution_controls;
 
-    auto allowed0 = (msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) & 0x00000000FFFFFFFFULL);
-    auto allowed1 = ((msrs::get(gsl::narrow_cast<uint32_t>(msr_addr)) >> 32) & 0x00000000FFFFFFFFULL);
+    auto allowed0 = ((msrs::get(gsl::narrow_cast<uint32_t>(addr)) >> 0) & 0x00000000FFFFFFFFULL);
+    auto allowed1 = ((msrs::get(gsl::narrow_cast<uint32_t>(addr)) >> 32) & 0x00000000FFFFFFFFULL);
     auto allowed1_failed = false;
 
     ctls &= 0x00000000FFFFFFFFULL;
@@ -60,12 +59,12 @@ auto control_reserved_properly_set(MA msr_addr, C ctls, const char *ctls_name)
         bferror << "    - allowed0: " << view_as_pointer(allowed0) << '\n';
         bferror << "    - bad ctls: " << view_as_pointer(ctls) << '\n';
 
-        throw std::logic_error("invalid "_s + ctls_name);
+        throw std::logic_error("invalid " + std::string(name));
     }
 
     allowed1_failed = (ctls & ~allowed1) != 0ULL;
 
-    if (msrs::ia32_vmx_procbased_ctls2::addr == msr_addr) {
+    if (msrs::ia32_vmx_procbased_ctls2::addr == addr) {
         allowed1_failed = allowed1_failed && activate_secondary_controls::is_enabled();
     }
 
@@ -74,28 +73,28 @@ auto control_reserved_properly_set(MA msr_addr, C ctls, const char *ctls_name)
         bferror << "    - allowed1: " << view_as_pointer(allowed1) << '\n';
         bferror << "    - bad ctls: " << view_as_pointer(ctls) << '\n';
 
-        throw std::logic_error("invalid "_s + ctls_name);
+        throw std::logic_error("invalid " + std::string(name));
     }
 }
 
 inline void
 control_pin_based_ctls_reserved_properly_set()
 {
-    auto msr_addr = msrs::ia32_vmx_true_pinbased_ctls::addr;
+    auto addr = msrs::ia32_vmx_true_pinbased_ctls::addr;
     auto ctls = vmcs::pin_based_vm_execution_controls::get();
     auto name = vmcs::pin_based_vm_execution_controls::name;
 
-    control_reserved_properly_set(msr_addr, ctls, name);
+    control_reserved_properly_set(addr, ctls, name);
 }
 
 inline void
 control_proc_based_ctls_reserved_properly_set()
 {
-    auto msr_addr = msrs::ia32_vmx_true_procbased_ctls::addr;
+    auto addr = msrs::ia32_vmx_true_procbased_ctls::addr;
     auto ctls = vmcs::primary_processor_based_vm_execution_controls::get();
     auto name = vmcs::primary_processor_based_vm_execution_controls::name;
 
-    control_reserved_properly_set(msr_addr, ctls, name);
+    control_reserved_properly_set(addr, ctls, name);
 }
 
 inline void
@@ -105,11 +104,11 @@ control_proc_based_ctls2_reserved_properly_set()
         throw std::logic_error("the secondary controls field doesn't exist");
     }
 
-    auto msr_addr = msrs::ia32_vmx_procbased_ctls2::addr;
+    auto addr = msrs::ia32_vmx_procbased_ctls2::addr;
     auto ctls = vmcs::secondary_processor_based_vm_execution_controls::get();
     auto name = vmcs::secondary_processor_based_vm_execution_controls::name;
 
-    control_reserved_properly_set(msr_addr, ctls, name);
+    control_reserved_properly_set(addr, ctls, name);
 }
 
 inline void
@@ -174,6 +173,7 @@ control_tpr_shadow_and_virtual_apic()
     auto secondary_ctls_enabled = activate_secondary_controls::is_enabled();
 
     if (use_tpr_shadow::is_enabled()) {
+
         auto phys_addr = vmcs::virtual_apic_address::get();
 
         if (phys_addr == 0) {
@@ -218,6 +218,7 @@ control_tpr_shadow_and_virtual_apic()
         }
     }
     else {
+
         if (activate_secondary_controls::is_disabled()) {
             return;
         }
@@ -392,11 +393,11 @@ control_enable_ept_checks()
 
     auto mem_type = vmcs::ept_pointer::memory_type::get_if_exists();
 
-    if (mem_type == memory_type::uncacheable && !memory_type_uncacheable_supported::get()) {
+    if (mem_type == memory_type::uncacheable && memory_type_uncacheable_supported::is_disabled()) {
         throw std::logic_error("hardware does not support ept memory type: uncachable");
     }
 
-    if (mem_type == memory_type::write_back && !memory_type_write_back_supported::get()) {
+    if (mem_type == memory_type::write_back && memory_type_write_back_supported::is_disabled()) {
         throw std::logic_error("hardware does not support ept memory type: write-back");
     }
 
@@ -408,7 +409,7 @@ control_enable_ept_checks()
         throw std::logic_error("the ept walk-through length must be 1 less than 4, i.e. 3");
     }
 
-    if (accessed_and_dirty_flags::is_enabled_if_exists() && !accessed_dirty_support::get()) {
+    if (accessed_and_dirty_flags::is_enabled_if_exists() && accessed_dirty_support::is_disabled()) {
         throw std::logic_error("hardware does not support dirty / accessed flags for ept");
     }
 
@@ -554,11 +555,11 @@ control_enable_ept_violation_checks()
 inline void
 control_vm_exit_ctls_reserved_properly_set()
 {
-    auto msr_addr = msrs::ia32_vmx_true_exit_ctls::addr;
+    auto addr = msrs::ia32_vmx_true_exit_ctls::addr;
     auto ctls = vmcs::vm_exit_controls::get();
     auto name = vmcs::vm_exit_controls::name;
 
-    control_reserved_properly_set(msr_addr, ctls, name);
+    control_reserved_properly_set(addr, ctls, name);
 }
 
 inline void
@@ -629,11 +630,11 @@ control_exit_msr_load_address()
 inline void
 control_vm_entry_ctls_reserved_properly_set()
 {
-    auto msr_addr = msrs::ia32_vmx_true_entry_ctls::addr;
+    auto addr = msrs::ia32_vmx_true_entry_ctls::addr;
     auto ctls = vm_entry_controls::get();
     auto name = vm_entry_controls::name;
 
-    control_reserved_properly_set(msr_addr, ctls, name);
+    control_reserved_properly_set(addr, ctls, name);
 }
 
 inline void
@@ -774,7 +775,7 @@ control_event_injection_instr_length_checks()
     }
 
     if (instruction_length == 0 &&
-        !msrs::ia32_vmx_misc::injection_with_instruction_length_of_zero::get()) {
+        msrs::ia32_vmx_misc::injection_with_instruction_length_of_zero::is_disabled()) {
         throw std::logic_error("instruction length must be greater than zero");
     }
 

@@ -56,6 +56,46 @@ _cpuid_edx(uint32_t val) noexcept
     abort();
 }
 
+extern "C" uint32_t
+_cpuid_subeax(uint32_t val, uint32_t sub) noexcept
+{
+    bfignored(val);
+    bfignored(sub);
+
+    std::cerr << __BFFUNC__ << " called" << '\n';
+    abort();
+}
+
+extern "C" uint32_t
+_cpuid_subebx(uint32_t val, uint32_t sub) noexcept
+{
+    bfignored(val);
+    bfignored(sub);
+
+    std::cerr << __BFFUNC__ << " called" << '\n';
+    abort();
+}
+
+extern "C" uint32_t
+_cpuid_subecx(uint32_t val, uint32_t sub) noexcept
+{
+    bfignored(val);
+    bfignored(sub);
+
+    std::cerr << __BFFUNC__ << " called" << '\n';
+    abort();
+}
+
+extern "C" uint32_t
+_cpuid_subedx(uint32_t val, uint32_t sub) noexcept
+{
+    bfignored(val);
+    bfignored(sub);
+
+    std::cerr << __BFFUNC__ << " called" << '\n';
+    abort();
+}
+
 extern "C" void
 _cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept
 {

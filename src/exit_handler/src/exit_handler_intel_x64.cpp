@@ -48,36 +48,35 @@ exit_handler_intel_x64::dispatch()
 void
 exit_handler_intel_x64::halt() noexcept
 {
-    bferror << bfendl;
-    bferror << bfendl;
-    bferror << "Guest register state: " << bfendl;
-    bferror << "----------------------------------------------------" << bfendl;
-    bferror << "- m_state_save->rax: " << view_as_pointer(m_state_save->rax) << bfendl;
-    bferror << "- m_state_save->rbx: " << view_as_pointer(m_state_save->rbx) << bfendl;
-    bferror << "- m_state_save->rcx: " << view_as_pointer(m_state_save->rcx) << bfendl;
-    bferror << "- m_state_save->rdx: " << view_as_pointer(m_state_save->rdx) << bfendl;
-    bferror << "- m_state_save->rbp: " << view_as_pointer(m_state_save->rbp) << bfendl;
-    bferror << "- m_state_save->rsi: " << view_as_pointer(m_state_save->rsi) << bfendl;
-    bferror << "- m_state_save->rdi: " << view_as_pointer(m_state_save->rdi) << bfendl;
-    bferror << "- m_state_save->r08: " << view_as_pointer(m_state_save->r08) << bfendl;
-    bferror << "- m_state_save->r09: " << view_as_pointer(m_state_save->r09) << bfendl;
-    bferror << "- m_state_save->r10: " << view_as_pointer(m_state_save->r10) << bfendl;
-    bferror << "- m_state_save->r11: " << view_as_pointer(m_state_save->r11) << bfendl;
-    bferror << "- m_state_save->r12: " << view_as_pointer(m_state_save->r12) << bfendl;
-    bferror << "- m_state_save->r13: " << view_as_pointer(m_state_save->r13) << bfendl;
-    bferror << "- m_state_save->r14: " << view_as_pointer(m_state_save->r14) << bfendl;
-    bferror << "- m_state_save->r15: " << view_as_pointer(m_state_save->r15) << bfendl;
-    bferror << "- m_state_save->rip: " << view_as_pointer(m_state_save->rip) << bfendl;
-    bferror << "- m_state_save->rsp: " << view_as_pointer(m_state_save->rsp) << bfendl;
+    bferror_brline(0);
+    bferror_header(0, "halting vcpu");
+    bferror_break1(0);
 
-    bferror << bfendl;
-    bferror << bfendl;
-    bferror << "CPU Halted: " << bfendl;
-    bferror << "----------------------------------------------------" << bfendl;
-    bferror << "- vcpuid: " << m_state_save->vcpuid << bfendl;
+    bfdebug_subnhex(0, "m_state_save->rax", m_state_save->rax);
+    bfdebug_subnhex(0, "m_state_save->rbx", m_state_save->rbx);
+    bfdebug_subnhex(0, "m_state_save->rcx", m_state_save->rcx);
+    bfdebug_subnhex(0, "m_state_save->rdx", m_state_save->rdx);
+    bfdebug_subnhex(0, "m_state_save->rbp", m_state_save->rbp);
+    bfdebug_subnhex(0, "m_state_save->rsi", m_state_save->rsi);
+    bfdebug_subnhex(0, "m_state_save->rdi", m_state_save->rdi);
+    bfdebug_subnhex(0, "m_state_save->r08", m_state_save->r08);
+    bfdebug_subnhex(0, "m_state_save->r09", m_state_save->r09);
+    bfdebug_subnhex(0, "m_state_save->r10", m_state_save->r10);
+    bfdebug_subnhex(0, "m_state_save->r11", m_state_save->r11);
+    bfdebug_subnhex(0, "m_state_save->r12", m_state_save->r12);
+    bfdebug_subnhex(0, "m_state_save->r13", m_state_save->r13);
+    bfdebug_subnhex(0, "m_state_save->r14", m_state_save->r14);
+    bfdebug_subnhex(0, "m_state_save->r15", m_state_save->r15);
+    bfdebug_subnhex(0, "m_state_save->rip", m_state_save->rip);
+    bfdebug_subnhex(0, "m_state_save->rsp", m_state_save->rsp);
+    bfdebug_subnhex(0, "m_state_save->vcpuid", m_state_save->vcpuid);
 
-    bferror << bfendl;
-    bferror << bfendl;
+    // TODO:
+    //
+    // Need to put a place holder here. Instead of stopping, we should call
+    // a function that stops, but can also be overridden by an extension like
+    // the hyperkenel so that another vcpu can be scheduled instead.
+    //
 
     pm::stop();
 }
@@ -121,10 +120,10 @@ exit_handler_intel_x64::handle_exit(vmcs::value_type reason)
 void
 exit_handler_intel_x64::handle_cpuid()
 {
-    auto ret = cpuid::get(m_state_save->rax,
-                          m_state_save->rbx,
-                          m_state_save->rcx,
-                          m_state_save->rdx);
+    auto ret = x64::cpuid::get(gsl::narrow_cast<x64::cpuid::field_type>(m_state_save->rax),
+                               gsl::narrow_cast<x64::cpuid::field_type>(m_state_save->rbx),
+                               gsl::narrow_cast<x64::cpuid::field_type>(m_state_save->rcx),
+                               gsl::narrow_cast<x64::cpuid::field_type>(m_state_save->rdx));
 
     m_state_save->rax = std::get<0>(ret);
     m_state_save->rbx = std::get<1>(ret);
@@ -244,47 +243,48 @@ exit_handler_intel_x64::handle_vmxoff()
 void
 exit_handler_intel_x64::handle_rdmsr()
 {
-    intel_x64::msrs::value_type msr = 0;
+    auto val = 0ULL;
+    auto msr = gsl::narrow_cast<x64::msrs::field_type>(m_state_save->rcx);
 
-    switch (m_state_save->rcx) {
+    switch (msr) {
         case intel_x64::msrs::ia32_debugctl::addr:
-            msr = vmcs::guest_ia32_debugctl::get();
+            val = vmcs::guest_ia32_debugctl::get();
             break;
 
         case x64::msrs::ia32_pat::addr:
-            msr = vmcs::guest_ia32_pat::get();
+            val = vmcs::guest_ia32_pat::get();
             break;
 
         case intel_x64::msrs::ia32_efer::addr:
-            msr = vmcs::guest_ia32_efer::get();
+            val = vmcs::guest_ia32_efer::get();
             break;
 
         case intel_x64::msrs::ia32_perf_global_ctrl::addr:
-            msr = vmcs::guest_ia32_perf_global_ctrl::get();
+            val = vmcs::guest_ia32_perf_global_ctrl::get();
             break;
 
         case intel_x64::msrs::ia32_sysenter_cs::addr:
-            msr = vmcs::guest_ia32_sysenter_cs::get();
+            val = vmcs::guest_ia32_sysenter_cs::get();
             break;
 
         case intel_x64::msrs::ia32_sysenter_esp::addr:
-            msr = vmcs::guest_ia32_sysenter_esp::get();
+            val = vmcs::guest_ia32_sysenter_esp::get();
             break;
 
         case intel_x64::msrs::ia32_sysenter_eip::addr:
-            msr = vmcs::guest_ia32_sysenter_eip::get();
+            val = vmcs::guest_ia32_sysenter_eip::get();
             break;
 
         case intel_x64::msrs::ia32_fs_base::addr:
-            msr = vmcs::guest_fs_base::get();
+            val = vmcs::guest_fs_base::get();
             break;
 
         case intel_x64::msrs::ia32_gs_base::addr:
-            msr = vmcs::guest_gs_base::get();
+            val = vmcs::guest_gs_base::get();
             break;
 
         default:
-            msr = intel_x64::msrs::get(gsl::narrow_cast<uint32_t>(m_state_save->rcx));
+            val = intel_x64::msrs::get(msr);
             break;
 
         // QUIRK:
@@ -302,12 +302,12 @@ exit_handler_intel_x64::handle_rdmsr()
         case 0x1ae:
         case 0x1af:
         case 0x602:
-            msr = 0;
+            val = 0;
             break;
     }
 
-    m_state_save->rax = ((msr >> 0x00) & 0x00000000FFFFFFFF);
-    m_state_save->rdx = ((msr >> 0x20) & 0x00000000FFFFFFFF);
+    m_state_save->rax = ((val >> 0x00) & 0x00000000FFFFFFFF);
+    m_state_save->rdx = ((val >> 0x20) & 0x00000000FFFFFFFF);
 
     advance_rip();
 }
@@ -315,50 +315,51 @@ exit_handler_intel_x64::handle_rdmsr()
 void
 exit_handler_intel_x64::handle_wrmsr()
 {
-    intel_x64::msrs::value_type msr = 0;
+    auto val = 0ULL;
+    auto msr = gsl::narrow_cast<x64::msrs::field_type>(m_state_save->rcx);
 
-    msr |= ((m_state_save->rax & 0x00000000FFFFFFFF) << 0x00);
-    msr |= ((m_state_save->rdx & 0x00000000FFFFFFFF) << 0x20);
+    val |= ((m_state_save->rax & 0x00000000FFFFFFFF) << 0x00);
+    val |= ((m_state_save->rdx & 0x00000000FFFFFFFF) << 0x20);
 
-    switch (m_state_save->rcx) {
+    switch (msr) {
         case intel_x64::msrs::ia32_debugctl::addr:
-            vmcs::guest_ia32_debugctl::set(msr);
+            vmcs::guest_ia32_debugctl::set(val);
             break;
 
         case x64::msrs::ia32_pat::addr:
-            vmcs::guest_ia32_pat::set(msr);
+            vmcs::guest_ia32_pat::set(val);
             break;
 
         case intel_x64::msrs::ia32_efer::addr:
-            vmcs::guest_ia32_efer::set(msr);
+            vmcs::guest_ia32_efer::set(val);
             break;
 
         case intel_x64::msrs::ia32_perf_global_ctrl::addr:
-            vmcs::guest_ia32_perf_global_ctrl::set(msr);
+            vmcs::guest_ia32_perf_global_ctrl::set(val);
             break;
 
         case intel_x64::msrs::ia32_sysenter_cs::addr:
-            vmcs::guest_ia32_sysenter_cs::set(msr);
+            vmcs::guest_ia32_sysenter_cs::set(val);
             break;
 
         case intel_x64::msrs::ia32_sysenter_esp::addr:
-            vmcs::guest_ia32_sysenter_esp::set(msr);
+            vmcs::guest_ia32_sysenter_esp::set(val);
             break;
 
         case intel_x64::msrs::ia32_sysenter_eip::addr:
-            vmcs::guest_ia32_sysenter_eip::set(msr);
+            vmcs::guest_ia32_sysenter_eip::set(val);
             break;
 
         case intel_x64::msrs::ia32_fs_base::addr:
-            vmcs::guest_fs_base::set(msr);
+            vmcs::guest_fs_base::set(val);
             break;
 
         case intel_x64::msrs::ia32_gs_base::addr:
-            vmcs::guest_gs_base::set(msr);
+            vmcs::guest_gs_base::set(val);
             break;
 
         default:
-            intel_x64::msrs::set(m_state_save->rcx, msr);
+            intel_x64::msrs::set(msr, val);
             break;
     }
 
@@ -374,31 +375,19 @@ exit_handler_intel_x64::unimplemented_handler() noexcept
 {
     std::lock_guard<std::mutex> guard(g_unimplemented_handler_mutex);
 
-    bferror << bfendl;
-    bferror << bfendl;
-    bferror << "Unimplemented Exit Handler: " << bfendl;
-    bferror << "----------------------------------------------------" << bfendl;
-    bferror << "- exit reason: "
-            << view_as_pointer(vmcs::exit_reason::get()) << bfendl;
-    bferror << "- exit reason string: "
-            << vmcs::exit_reason::basic_exit_reason::description() << bfendl;
-    bferror << "- exit qualification: "
-            << view_as_pointer(vmcs::exit_qualification::get()) << bfendl;
-    bferror << "- exit interrupt information: "
-            << view_as_pointer(vmcs::vm_exit_interruption_information::get()) << bfendl;
-    bferror << "- instruction length: "
-            << view_as_pointer(vmcs::vm_exit_instruction_length::get()) << bfendl;
-    bferror << "- instruction information: "
-            << view_as_pointer(vmcs::vm_exit_instruction_information::get()) << bfendl;
-    bferror << "- guest linear address: "
-            << view_as_pointer(vmcs::guest_linear_address::get()) << bfendl;
-    bferror << "- guest physical address: "
-            << view_as_pointer(vmcs::guest_physical_address::get()) << bfendl;
+    bferror_brline(0);
+    bferror_header(0, "unhandled exit reason");
+    bferror_break1(0);
+
+    vmcs::exit_reason::basic_exit_reason::dump(0);
+    vmcs::exit_qualification::dump(0);
+    vmcs::vm_exit_instruction_information::dump(0);
+    vmcs::vm_exit_interruption_information::dump(0);
+    vmcs::vm_exit_instruction_length::dump(0);
+    vmcs::guest_linear_address::dump(0);
+    vmcs::guest_physical_address::dump(0);
 
     if (vmcs::exit_reason::vm_entry_failure::is_enabled()) {
-        bferror << bfendl;
-        bferror << "VM-entry failure detected!!!" << bfendl;
-        bferror << bfendl;
 
         guard_exceptions([&]
         { vmcs::check::all(); });

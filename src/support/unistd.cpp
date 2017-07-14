@@ -26,6 +26,7 @@
 #include <vcpu/vcpu_manager.h>
 #include <serial/serial_port_intel_x64.h>
 #include <debug_ring/debug_ring.h>
+#include <intrinsics/x86/common_x64.h>
 
 static auto
 g_debug_ring() noexcept
@@ -59,8 +60,15 @@ write(int file, const void *buffer, size_t count)
             return static_cast<int>(count);
         }
         else {
+            std::stringstream ss;
+            ss << "[" << thread_context_cpuid() << "] ";
+
+            g_debug_ring()->write(ss.str());
             g_debug_ring()->write(str);
+
+            serial_port_intel_x64::instance()->write(ss.str());
             serial_port_intel_x64::instance()->write(str);
+
             return static_cast<int>(count);
         }
     }

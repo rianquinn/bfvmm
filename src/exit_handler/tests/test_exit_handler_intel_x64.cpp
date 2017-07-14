@@ -53,9 +53,8 @@ static state_save_intel_x64 g_state_save{};
 static uintptr_t g_rip = 0;
 
 static void
-vmcs_check_all()
-{
-}
+test_vmcs_check_all()
+{ }
 
 static bool
 test_vmread(uint64_t field, uint64_t *val) noexcept
@@ -99,37 +98,39 @@ test_vmwrite(uint64_t field, uint64_t val) noexcept
 
 static uint64_t
 test_read_msr(uint32_t addr) noexcept
-{
-    return g_msrs[addr];
-}
+{ return g_msrs[addr]; }
 
 static void
 test_write_msr(uint32_t addr, uint64_t val) noexcept
-{
-    g_msrs[addr] = val;
-}
+{ g_msrs[addr] = val; }
 
 static void
 test_stop() noexcept
-{
-}
+{ }
 
 static void
 test_wbinvd() noexcept
+{ }
+
+static uint32_t
+test_cpuid_eax(uint32_t val)
 {
+    bfignored(val);
+    return 0;
 }
 
 static void
 test_cpuid(void *eax, void *ebx, void *ecx, void *edx) noexcept
 {
-    (void) eax; (void) ebx; (void) ecx; (void) edx;
+    bfignored(eax);
+    bfignored(ebx);
+    bfignored(ecx);
+    bfignored(edx);
 }
 
 static void
 test_invlpg(const void *addr) noexcept
-{
-    (void) addr;
-}
+{ bfignored(addr); }
 
 static void
 setup_intrinsics(MockRepository &mocks)
@@ -140,6 +141,7 @@ setup_intrinsics(MockRepository &mocks)
     mocks.OnCallFunc(_write_msr).Do(test_write_msr);
     mocks.OnCallFunc(_stop).Do(test_stop);
     mocks.OnCallFunc(_wbinvd).Do(test_wbinvd);
+    mocks.OnCallFunc(_cpuid_eax).Do(test_cpuid_eax);
     mocks.OnCallFunc(_cpuid).Do(test_cpuid);
     mocks.OnCallFunc(_invlpg).Do(test_invlpg);
 }
@@ -889,7 +891,7 @@ TEST_CASE("exit_handler: vm_exit_reason_vmcall_data_string_json_invalid")
     ehlr.m_state_save->r11 = 0x1234U;                            // r08
     ehlr.m_state_save->r12 = g_msg.size();                       // r09
 
-    auto msg = "hello world"_s;
+    std::string msg = "hello world";
     memcpy(static_cast<char *>(g_map), msg.data(), msg.size());
 
     CHECK_NOTHROW(ehlr.dispatch());
@@ -1564,7 +1566,7 @@ TEST_CASE("exit_handler: vm_exit_failure_check")
     auto vmcs = setup_vmcs_unhandled(mocks, exit_reason::basic_exit_reason::xrstors | 0x80000000);
     auto ehlr = setup_ehlr(vmcs);
 
-    mocks.OnCallFunc(vmcs::check::all).Do(vmcs_check_all);
+    mocks.OnCallFunc(vmcs::check::all).Do(test_vmcs_check_all);
 
     CHECK_NOTHROW(ehlr.dispatch());
 }

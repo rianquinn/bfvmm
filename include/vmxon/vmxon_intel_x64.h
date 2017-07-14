@@ -101,6 +101,10 @@ protected:
 
     void create_vmxon_region();
     void release_vmxon_region() noexcept;
+
+    void enable_vmx();
+    void disable_vmx() noexcept;
+
     void execute_vmxon();
     void execute_vmxoff();
 

@@ -26,7 +26,6 @@
 
 using namespace x64;
 using namespace intel_x64;
-using namespace cpuid;
 
 vmcs_intel_x64_host_vm_state::vmcs_intel_x64_host_vm_state()
 {
@@ -59,7 +58,7 @@ vmcs_intel_x64_host_vm_state::vmcs_intel_x64_host_vm_state()
     m_ia32_pat_msr = x64::msrs::ia32_pat::get();
     m_ia32_efer_msr = intel_x64::msrs::ia32_efer::get();
 
-    if (arch_perf_monitoring::eax::version_id::get() >= 2) {
+    if (intel_x64::cpuid::arch_perf_monitoring::eax::version_id::get() >= 2) {
         m_ia32_perf_global_ctrl_msr = intel_x64::msrs::ia32_perf_global_ctrl::get();
     }
 

@@ -87,7 +87,7 @@ namespace gdt
 {
     inline auto get() noexcept
     {
-        auto &&reg = gdt_reg_x64_t{};
+        auto reg = gdt_reg_x64_t{};
         _read_gdt(&reg);
 
         return reg;
@@ -95,7 +95,7 @@ namespace gdt
 
     inline void set(gdt_reg_x64_t::base_type base, gdt_reg_x64_t::limit_type limit) noexcept
     {
-        auto &&reg = gdt_reg_x64_t{base, limit};
+        auto reg = gdt_reg_x64_t{base, limit};
         _write_gdt(&reg);
     }
 
@@ -103,7 +103,7 @@ namespace gdt
     {
         inline auto get() noexcept
         {
-            auto &&reg = gdt_reg_x64_t{};
+            auto reg = gdt_reg_x64_t{};
             _read_gdt(&reg);
 
             return reg.base;
@@ -111,7 +111,7 @@ namespace gdt
 
         inline void set(gdt_reg_x64_t::base_type base) noexcept
         {
-            auto &&reg = gdt_reg_x64_t{};
+            auto reg = gdt_reg_x64_t{};
             _read_gdt(&reg);
 
             reg.base = base;
@@ -123,7 +123,7 @@ namespace gdt
     {
         inline auto get() noexcept
         {
-            auto &&reg = gdt_reg_x64_t{};
+            auto reg = gdt_reg_x64_t{};
             _read_gdt(&reg);
 
             return reg.limit;
@@ -131,7 +131,7 @@ namespace gdt
 
         inline void set(gdt_reg_x64_t::limit_type limit) noexcept
         {
-            auto &&reg = gdt_reg_x64_t{};
+            auto reg = gdt_reg_x64_t{};
             _read_gdt(&reg);
 
             reg.limit = limit;
@@ -438,10 +438,8 @@ public:
             limit = (limit >> 12);
         }
 
-        auto limit_15_00 = ((static_cast<segment_descriptor_type>
-                             (limit) & 0x000000000000FFFF) << 0);
-        auto limit_19_16 = ((static_cast<segment_descriptor_type>
-                             (limit) & 0x00000000000F0000) << 32);
+        auto limit_15_00 = ((static_cast<segment_descriptor_type>(limit) & 0x000000000000FFFF) << 0);
+        auto limit_19_16 = ((static_cast<segment_descriptor_type>(limit) & 0x00000000000F0000) << 32);
 
         m_gdt.at(index) = sd1 | limit_19_16 | limit_15_00;
     }
@@ -522,10 +520,8 @@ public:
         // ------------------------------------------------------------------
         //
 
-        auto access_rights_07_00 = ((static_cast<segment_descriptor_type>
-                                     (access_rights) & 0x00000000000000FF) << 40);
-        auto access_rights_15_12 = ((static_cast<segment_descriptor_type>
-                                     (access_rights) & 0x000000000000F000) << 40);
+        auto access_rights_07_00 = ((static_cast<segment_descriptor_type>(access_rights) & 0x00000000000000FF) << 40);
+        auto access_rights_15_12 = ((static_cast<segment_descriptor_type>(access_rights) & 0x000000000000F000) << 40);
 
         m_gdt.at(index) = sd1 | access_rights_15_12 | access_rights_07_00;
     }
@@ -557,15 +553,13 @@ public:
         // ------------------------------------------------------------------
         //
 
-        auto access_rights_07_00 = static_cast<access_rights_type>((
-                                       sd1 & 0x0000FF0000000000) >> 40);
-        auto access_rights_15_12 = static_cast<access_rights_type>((
-                                       sd1 & 0x00F0000000000000) >> 40);
+        auto access_rights_07_00 = static_cast<access_rights_type>((sd1 & 0x0000FF0000000000) >> 40);
+        auto access_rights_15_12 = static_cast<access_rights_type>((sd1 & 0x00F0000000000000) >> 40);
 
         return access_rights_15_12 | access_rights_07_00;
     }
 
-    PRIVATE
+PRIVATE
 
     gdt_reg_x64_t m_gdt_reg;
     std::vector<segment_descriptor_type> m_gdt;

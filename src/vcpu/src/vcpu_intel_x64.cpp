@@ -82,12 +82,18 @@ vcpu_intel_x64::init(user_data *data)
     m_exit_handler->set_vmcs(m_vmcs.get());
     m_exit_handler->set_state_save(m_state_save.get());
 
+    bfdebug_break2(1)
+    bfdebug_nhex(1, "init vcpu", id());
+
     vcpu::init(data);
 }
 
 void
 vcpu_intel_x64::fini(user_data *data)
-{ vcpu::fini(data); }
+{
+    vcpu::fini(data);
+    bfdebug_nhex(1, "fini vcpu", id());
+}
 
 void
 vcpu_intel_x64::run(user_data *data)
@@ -97,28 +103,33 @@ vcpu_intel_x64::run(user_data *data)
     if (!m_vmcs_launched) {
         m_vmcs_launched = true;
 
-        auto ___ = gsl::on_failure([&]
-        { m_vmcs_launched = false; });
+        auto ___ = gsl::on_failure([&] {
+            m_vmcs_launched = false;
+        });
 
         vcpu::run(data);
 
-        auto ___ = gsl::on_failure([&]
-        { vcpu::hlt(data); });
+        auto ___ = gsl::on_failure([&] {
+            vcpu::hlt(data);
+        });
 
         if (this->is_host_vm_vcpu()) {
             m_vmxon->start();
         }
 
         auto ___ = gsl::on_failure([&] {
-            if (this->is_host_vm_vcpu())
-            {
+            if (this->is_host_vm_vcpu()) {
                 m_vmxon->stop();
             }
         });
 
+        bfdebug_nhex(1, "launching vcpu", id());
         m_vmcs->launch(m_vmm_state.get(), m_guest_state.get());
     }
     else {
+
+        bfdebug_nhex(1, "resuming vcpu", id());
+
         m_vmcs->load();
         m_vmcs->resume();
     }
@@ -132,12 +143,16 @@ vcpu_intel_x64::hlt(user_data *data)
     }
 
     if (m_vmcs_launched) {
-        auto ___ = gsl::on_success([&]
-        { m_vmcs_launched = false; });
+
+        auto ___ = gsl::on_success([&] {
+            m_vmcs_launched = false;
+        });
 
         if (this->is_host_vm_vcpu()) {
             m_vmxon->stop();
         }
+
+        bfdebug_nhex(1, "halting vcpu", id());
     }
 
     vcpu::hlt(data);

@@ -48,13 +48,12 @@ static std::map<uint32_t, uint32_t> g_ebx;
 
 static uint32_t
 test_cpuid_ecx(uint32_t addr) noexcept
-{
-    return g_ecx[addr];
-}
+{ return g_ecx[addr]; }
 
 static uint32_t
-test_cpuid_ebx(uint32_t addr) noexcept
+test_cpuid_subebx(uint32_t addr, uint32_t leaf)
 {
+    bfignored(leaf);
     return g_ebx[addr];
 }
 
@@ -62,7 +61,7 @@ static void
 setup_intrinsics(MockRepository &mocks)
 {
     mocks.OnCallFunc(_cpuid_ecx).Do(test_cpuid_ecx);
-    mocks.OnCallFunc(_cpuid_ebx).Do(test_cpuid_ebx);
+    mocks.OnCallFunc(_cpuid_subebx).Do(test_cpuid_subebx);
 }
 
 static void
@@ -153,8 +152,8 @@ TEST_CASE("vmcs: vmm_state_control_registers")
     MockRepository mocks;
     setup_vmm_state(mocks);
 
-    g_ebx[x64::cpuid::extended_feature_flags::addr] = 0x00100080UL;
-    g_ecx[x64::cpuid::feature_information::addr] = 0x4000000UL;
+    g_ebx[intel_x64::cpuid::extended_feature_flags::addr] = 0x00100080UL;
+    g_ecx[intel_x64::cpuid::feature_information::addr] = 0x4000000UL;
 
     vmcs_intel_x64_vmm_state state{};
 

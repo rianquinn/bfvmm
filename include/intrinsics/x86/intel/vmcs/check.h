@@ -22,8 +22,6 @@
 #ifndef VMCS_INTEL_X64_CHECK_H
 #define VMCS_INTEL_X64_CHECK_H
 
-#include <type_traits>
-#include <intrinsics/x86/common/x64.h>
 #include <intrinsics/x86/intel/vmcs/check_controls.h>
 #include <intrinsics/x86/intel/vmcs/check_guest.h>
 #include <intrinsics/x86/intel/vmcs/check_host.h>
@@ -43,7 +41,8 @@ namespace vmcs
 namespace check
 {
 
-inline void all()
+inline void
+all()
 {
     vmx_controls_all();
     host_state_all();

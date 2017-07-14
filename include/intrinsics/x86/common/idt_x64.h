@@ -87,7 +87,7 @@ namespace idt
 {
     inline auto get() noexcept
     {
-        auto &&reg = idt_reg_x64_t{};
+        auto reg = idt_reg_x64_t{};
         _read_idt(&reg);
 
         return reg;
@@ -95,7 +95,7 @@ namespace idt
 
     inline void set(idt_reg_x64_t::base_type base, idt_reg_x64_t::limit_type limit) noexcept
     {
-        auto &&reg = idt_reg_x64_t{base, limit};
+        auto reg = idt_reg_x64_t{base, limit};
         _write_idt(&reg);
     }
 
@@ -103,7 +103,7 @@ namespace idt
     {
         inline auto get() noexcept
         {
-            auto &&reg = idt_reg_x64_t{};
+            auto reg = idt_reg_x64_t{};
             _read_idt(&reg);
 
             return reg.base;
@@ -111,7 +111,7 @@ namespace idt
 
         inline void set(idt_reg_x64_t::base_type base) noexcept
         {
-            auto &&reg = idt_reg_x64_t{};
+            auto reg = idt_reg_x64_t{};
             _read_idt(&reg);
 
             reg.base = base;
@@ -123,7 +123,7 @@ namespace idt
     {
         inline auto get() noexcept
         {
-            auto &&reg = idt_reg_x64_t{};
+            auto reg = idt_reg_x64_t{};
             _read_idt(&reg);
 
             return reg.limit;
@@ -131,7 +131,7 @@ namespace idt
 
         inline void set(idt_reg_x64_t::limit_type limit) noexcept
         {
-            auto &&reg = idt_reg_x64_t{};
+            auto reg = idt_reg_x64_t{};
             _read_idt(&reg);
 
             reg.limit = limit;

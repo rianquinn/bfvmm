@@ -66,13 +66,15 @@ namespace intel_x64
 {
 namespace cr0
 {
+    constexpr const auto name = "cr0";
+
     using value_type = uint64_t;
 
     inline auto get() noexcept
     { return _read_cr0(); }
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    void set(T val) noexcept { _write_cr0(val); }
+    inline void set(value_type val) noexcept
+    { _write_cr0(val); }
 
     namespace protection_enable
     {
@@ -80,11 +82,33 @@ namespace cr0
         constexpr const auto from = 0;
         constexpr const auto name = "protection_enable";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr0(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr0(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr0(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr0(set_bit(_read_cr0(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr0(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr0(clear_bit(_read_cr0(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr0(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
+
     }
 
     namespace monitor_coprocessor
@@ -93,11 +117,32 @@ namespace cr0
         constexpr const auto from = 1;
         constexpr const auto name = "monitor_coprocessor";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr0(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr0(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr0(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr0(set_bit(_read_cr0(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr0(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr0(clear_bit(_read_cr0(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr0(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace emulation
@@ -106,11 +151,32 @@ namespace cr0
         constexpr const auto from = 2;
         constexpr const auto name = "emulation";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr0(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr0(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr0(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr0(set_bit(_read_cr0(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr0(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr0(clear_bit(_read_cr0(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr0(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace task_switched
@@ -119,11 +185,32 @@ namespace cr0
         constexpr const auto from = 3;
         constexpr const auto name = "task_switched";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr0(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr0(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr0(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr0(set_bit(_read_cr0(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr0(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr0(clear_bit(_read_cr0(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr0(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace extension_type
@@ -132,11 +219,32 @@ namespace cr0
         constexpr const auto from = 4;
         constexpr const auto name = "extension_type";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr0(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr0(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr0(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr0(set_bit(_read_cr0(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr0(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr0(clear_bit(_read_cr0(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr0(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace numeric_error
@@ -145,11 +253,32 @@ namespace cr0
         constexpr const auto from = 5;
         constexpr const auto name = "numeric_error";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr0(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr0(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr0(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr0(set_bit(_read_cr0(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr0(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr0(clear_bit(_read_cr0(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr0(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace write_protect
@@ -158,11 +287,32 @@ namespace cr0
         constexpr const auto from = 16;
         constexpr const auto name = "write_protect";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr0(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr0(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr0(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr0(set_bit(_read_cr0(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr0(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr0(clear_bit(_read_cr0(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr0(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace alignment_mask
@@ -171,11 +321,32 @@ namespace cr0
         constexpr const auto from = 18;
         constexpr const auto name = "alignment_mask";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr0(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr0(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr0(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr0(set_bit(_read_cr0(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr0(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr0(clear_bit(_read_cr0(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr0(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace not_write_through
@@ -184,11 +355,32 @@ namespace cr0
         constexpr const auto from = 29;
         constexpr const auto name = "not_write_through";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr0(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr0(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr0(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr0(set_bit(_read_cr0(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr0(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr0(clear_bit(_read_cr0(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr0(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace cache_disable
@@ -197,11 +389,32 @@ namespace cr0
         constexpr const auto from = 30;
         constexpr const auto name = "cache_disable";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr0(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr0(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr0(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr0(set_bit(_read_cr0(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr0(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr0(clear_bit(_read_cr0(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr0(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace paging
@@ -210,84 +423,94 @@ namespace cr0
         constexpr const auto from = 31;
         constexpr const auto name = "paging";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr0(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr0(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr0(val ? set_bit(_read_cr0(), from) : clear_bit(_read_cr0(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr0(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr0(set_bit(_read_cr0(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr0(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr0(clear_bit(_read_cr0(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr0(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
-    inline void dump() noexcept
+    inline void dump(int level)
     {
-        bfdebug << "cr0 enabled flags:" << bfendl;
-
-        if (protection_enable::get()) {
-            bfdebug << "    - " << protection_enable::name << bfendl;
-        }
-        if (monitor_coprocessor::get()) {
-            bfdebug << "    - " << monitor_coprocessor::name << bfendl;
-        }
-        if (emulation::get()) {
-            bfdebug << "    - " << emulation::name << bfendl;
-        }
-        if (task_switched::get()) {
-            bfdebug << "    - " << task_switched::name << bfendl;
-        }
-        if (extension_type::get()) {
-            bfdebug << "    - " << extension_type::name << bfendl;
-        }
-        if (numeric_error::get()) {
-            bfdebug << "    - " << numeric_error::name << bfendl;
-        }
-        if (write_protect::get()) {
-            bfdebug << "    - " << write_protect::name << bfendl;
-        }
-        if (alignment_mask::get()) {
-            bfdebug << "    - " << alignment_mask::name << bfendl;
-        }
-        if (not_write_through::get()) {
-            bfdebug << "    - " << not_write_through::name << bfendl;
-        }
-        if (cache_disable::get()) {
-            bfdebug << "    - " << cache_disable::name << bfendl;
-        }
-        if (paging::get()) {
-            bfdebug << "    - " << paging::name << bfendl;
-        }
+        bfdebug_nhex(level, name, get());
+        protection_enable::dump(level);
+        monitor_coprocessor::dump(level);
+        emulation::dump(level);
+        task_switched::dump(level);
+        extension_type::dump(level);
+        numeric_error::dump(level);
+        write_protect::dump(level);
+        alignment_mask::dump(level);
+        not_write_through::dump(level);
+        cache_disable::dump(level);
+        paging::dump(level);
     }
 }
 
 namespace cr2
 {
+    constexpr const auto name = "cr2";
+
     using value_type = uint64_t;
 
     inline auto get() noexcept
     { return _read_cr2(); }
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    void set(T val) noexcept { _write_cr2(val); }
+    inline void set(value_type val) noexcept
+    { _write_cr2(val); }
+
+    inline void dump(int level)
+    { bfdebug_nhex(level, name, get()); }
 }
 
 namespace cr3
 {
+    constexpr const auto name = "cr3";
+
     using value_type = uint64_t;
 
     inline auto get() noexcept
     { return _read_cr3(); }
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    void set(T val) noexcept { _write_cr3(val); }
+    inline void set(value_type val) noexcept
+    { _write_cr3(val); }
+
+    inline void dump(int level)
+    { bfdebug_nhex(level, name, get()); }
 }
 
 namespace cr4
 {
+    constexpr const auto name = "cr4";
+
     using value_type = uint64_t;
 
     inline auto get() noexcept
     { return _read_cr4(); }
 
-    template<typename T, typename = std::enable_if<std::is_integral<T>::value>>
-    void set(T val) noexcept { _write_cr4(val); }
+    inline void set(value_type val) noexcept
+    { _write_cr4(val); }
 
     namespace v8086_mode_extensions
     {
@@ -295,11 +518,32 @@ namespace cr4
         constexpr const auto from = 0;
         constexpr const auto name = "v8086_mode_extensions";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace protected_mode_virtual_interrupts
@@ -308,11 +552,32 @@ namespace cr4
         constexpr const auto from = 1;
         constexpr const auto name = "protected_mode_virtual_interrupts";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace time_stamp_disable
@@ -321,11 +586,32 @@ namespace cr4
         constexpr const auto from = 2;
         constexpr const auto name = "time_stamp_disable";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace debugging_extensions
@@ -334,11 +620,32 @@ namespace cr4
         constexpr const auto from = 3;
         constexpr const auto name = "debugging_extensions";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace page_size_extensions
@@ -347,11 +654,32 @@ namespace cr4
         constexpr const auto from = 4;
         constexpr const auto name = "page_size_extensions";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace physical_address_extensions
@@ -360,11 +688,32 @@ namespace cr4
         constexpr const auto from = 5;
         constexpr const auto name = "physical_address_extensions";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace machine_check_enable
@@ -373,11 +722,32 @@ namespace cr4
         constexpr const auto from = 6;
         constexpr const auto name = "machine_check_enable";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace page_global_enable
@@ -386,11 +756,32 @@ namespace cr4
         constexpr const auto from = 7;
         constexpr const auto name = "page_global_enable";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace performance_monitor_counter_enable
@@ -399,11 +790,32 @@ namespace cr4
         constexpr const auto from = 8;
         constexpr const auto name = "performance_monitor_counter_enable";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace osfxsr
@@ -412,11 +824,32 @@ namespace cr4
         constexpr const auto from = 9;
         constexpr const auto name = "osfxsr";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace osxmmexcpt
@@ -425,11 +858,32 @@ namespace cr4
         constexpr const auto from = 10;
         constexpr const auto name = "osxmmexcpt";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace vmx_enable_bit
@@ -438,11 +892,32 @@ namespace cr4
         constexpr const auto from = 13;
         constexpr const auto name = "vmx_enable_bit";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace smx_enable_bit
@@ -451,11 +926,32 @@ namespace cr4
         constexpr const auto from = 14;
         constexpr const auto name = "smx_enable_bit";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace fsgsbase_enable_bit
@@ -464,11 +960,32 @@ namespace cr4
         constexpr const auto from = 16;
         constexpr const auto name = "fsgsbase_enable_bit";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace pcid_enable_bit
@@ -477,11 +994,32 @@ namespace cr4
         constexpr const auto from = 17;
         constexpr const auto name = "pcid_enable_bit";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace osxsave
@@ -490,11 +1028,32 @@ namespace cr4
         constexpr const auto from = 18;
         constexpr const auto name = "osxsave";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace smep_enable_bit
@@ -503,11 +1062,32 @@ namespace cr4
         constexpr const auto from = 20;
         constexpr const auto name = "smep_enable_bit";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace smap_enable_bit
@@ -516,11 +1096,32 @@ namespace cr4
         constexpr const auto from = 21;
         constexpr const auto name = "smap_enable_bit";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
     namespace protection_key_enable_bit
@@ -529,89 +1130,73 @@ namespace cr4
         constexpr const auto from = 22;
         constexpr const auto name = "protection_key_enable_bit";
 
-        inline auto get() noexcept
-        { return get_bit(_read_cr4(), from) != 0; }
+        inline auto is_enabled()
+        { return is_bit_set(_read_cr4(), from); }
 
-        inline void set(bool val) noexcept
-        { _write_cr4(val ? set_bit(_read_cr4(), from) : clear_bit(_read_cr4(), from)); }
+        inline auto is_enabled(value_type cr)
+        { return is_bit_set(cr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_cr4(), from); }
+
+        inline auto is_disabled(value_type cr)
+        { return is_bit_cleared(cr, from); }
+
+        inline void enable()
+        { _write_cr4(set_bit(_read_cr4(), from)); }
+
+        inline auto enable(value_type cr)
+        { _write_cr4(set_bit(cr, from)); }
+
+        inline void disable()
+        { _write_cr4(clear_bit(_read_cr4(), from)); }
+
+        inline auto disable(value_type cr)
+        { _write_cr4(clear_bit(cr, from)); }
+
+        inline void dump(int level)
+        { bfdebug_subbool(level, name, is_enabled()); }
     }
 
-    inline void dump() noexcept
+    inline void dump(int level)
     {
-        bfdebug << "cr4 enabled flags:" << bfendl;
-
-        if (v8086_mode_extensions::get()) {
-            bfdebug << "    - " << v8086_mode_extensions::name << bfendl;
-        }
-        if (protected_mode_virtual_interrupts::get()) {
-            bfdebug << "    - " << protected_mode_virtual_interrupts::name << bfendl;
-        }
-        if (time_stamp_disable::get()) {
-            bfdebug << "    - " << time_stamp_disable::name << bfendl;
-        }
-        if (debugging_extensions::get()) {
-            bfdebug << "    - " << debugging_extensions::name << bfendl;
-        }
-        if (page_size_extensions::get()) {
-            bfdebug << "    - " << page_size_extensions::name << bfendl;
-        }
-        if (physical_address_extensions::get()) {
-            bfdebug << "    - " << physical_address_extensions::name << bfendl;
-        }
-        if (machine_check_enable::get()) {
-            bfdebug << "    - " << machine_check_enable::name << bfendl;
-        }
-        if (page_global_enable::get()) {
-            bfdebug << "    - " << page_global_enable::name << bfendl;
-        }
-        if (performance_monitor_counter_enable::get()) {
-            bfdebug << "    - " << performance_monitor_counter_enable::name << bfendl;
-        }
-        if (osfxsr::get()) {
-            bfdebug << "    - " << osfxsr::name << bfendl;
-        }
-        if (osxmmexcpt::get()) {
-            bfdebug << "    - " << osxmmexcpt::name << bfendl;
-        }
-        if (vmx_enable_bit::get()) {
-            bfdebug << "    - " << vmx_enable_bit::name << bfendl;
-        }
-        if (smx_enable_bit::get()) {
-            bfdebug << "    - " << smx_enable_bit::name << bfendl;
-        }
-        if (smx_enable_bit::get()) {
-            bfdebug << "    - " << smx_enable_bit::name << bfendl;
-        }
-        if (fsgsbase_enable_bit::get()) {
-            bfdebug << "    - " << fsgsbase_enable_bit::name << bfendl;
-        }
-        if (pcid_enable_bit::get()) {
-            bfdebug << "    - " << pcid_enable_bit::name << bfendl;
-        }
-        if (osxsave::get()) {
-            bfdebug << "    - " << osxsave::name << bfendl;
-        }
-        if (smep_enable_bit::get()) {
-            bfdebug << "    - " << smep_enable_bit::name << bfendl;
-        }
-        if (smap_enable_bit::get()) {
-            bfdebug << "    - " << smap_enable_bit::name << bfendl;
-        }
-        if (protection_key_enable_bit::get()) {
-            bfdebug << "    - " << protection_key_enable_bit::name << bfendl;
-        }
+        bfdebug_nhex(level, name, get());
+        v8086_mode_extensions::dump(level);
+        protected_mode_virtual_interrupts::dump(level);
+        time_stamp_disable::dump(level);
+        debugging_extensions::dump(level);
+        page_size_extensions::dump(level);
+        physical_address_extensions::dump(level);
+        machine_check_enable::dump(level);
+        page_global_enable::dump(level);
+        performance_monitor_counter_enable::dump(level);
+        osfxsr::dump(level);
+        osxmmexcpt::dump(level);
+        vmx_enable_bit::dump(level);
+        smx_enable_bit::dump(level);
+        fsgsbase_enable_bit::dump(level);
+        pcid_enable_bit::dump(level);
+        osxsave::dump(level);
+        smep_enable_bit::dump(level);
+        smap_enable_bit::dump(level);
+        protection_key_enable_bit::dump(level);
     }
 }
 
 namespace cr8
 {
+    constexpr const auto name = "cr8";
+
     using value_type = uint64_t;
 
     inline auto get() noexcept
     { return _read_cr8(); }
 
-    template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
-    void set(T val) noexcept { _write_cr8(val); }
+    inline void set(value_type val) noexcept
+    { _write_cr8(val); }
+
+    inline void dump(int level)
+    { bfdebug_nhex(level, name, get()); }
 }
 
 }

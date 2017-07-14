@@ -75,38 +75,38 @@ public:
     vmcs_intel_x64_state() = default;
     virtual ~vmcs_intel_x64_state() = default;
 
-    virtual x64::segment_register::type es() const
+    virtual x64::segment_register::value_type es() const
     { return 0; }
-    virtual x64::segment_register::type cs() const
+    virtual x64::segment_register::value_type cs() const
     { return 0; }
-    virtual x64::segment_register::type ss() const
+    virtual x64::segment_register::value_type ss() const
     { return 0; }
-    virtual x64::segment_register::type ds() const
+    virtual x64::segment_register::value_type ds() const
     { return 0; }
-    virtual x64::segment_register::type fs() const
+    virtual x64::segment_register::value_type fs() const
     { return 0; }
-    virtual x64::segment_register::type gs() const
+    virtual x64::segment_register::value_type gs() const
     { return 0; }
-    virtual x64::segment_register::type ldtr() const
+    virtual x64::segment_register::value_type ldtr() const
     { return 0; }
-    virtual x64::segment_register::type tr() const
+    virtual x64::segment_register::value_type tr() const
     { return 0; }
 
-    virtual void set_es(x64::segment_register::type val)
+    virtual void set_es(x64::segment_register::value_type val)
     { (void) val; }
-    virtual void set_cs(x64::segment_register::type val)
+    virtual void set_cs(x64::segment_register::value_type val)
     { (void) val; }
-    virtual void set_ss(x64::segment_register::type val)
+    virtual void set_ss(x64::segment_register::value_type val)
     { (void) val; }
-    virtual void set_ds(x64::segment_register::type val)
+    virtual void set_ds(x64::segment_register::value_type val)
     { (void) val; }
-    virtual void set_fs(x64::segment_register::type val)
+    virtual void set_fs(x64::segment_register::value_type val)
     { (void) val; }
-    virtual void set_gs(x64::segment_register::type val)
+    virtual void set_gs(x64::segment_register::value_type val)
     { (void) val; }
-    virtual void set_ldtr(x64::segment_register::type val)
+    virtual void set_ldtr(x64::segment_register::value_type val)
     { (void) val; }
-    virtual void set_tr(x64::segment_register::type val)
+    virtual void set_tr(x64::segment_register::value_type val)
     { (void) val; }
 
     virtual intel_x64::cr0::value_type cr0() const
