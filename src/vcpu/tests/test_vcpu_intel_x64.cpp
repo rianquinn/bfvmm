@@ -25,13 +25,45 @@
 #include <cstdlib>
 
 #include <vcpu/vcpu_intel_x64.h>
-#include <debug_ring/debug_ring.h>
 #include <memory_manager/memory_manager_x64.h>
 #include <memory_manager/root_page_table_x64.h>
 
 #include <intrinsics/x86/common_x64.h>
-
 using namespace x64;
+
+#ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
+
+gdt_reg_x64_t test_gdtr{};
+idt_reg_x64_t test_idtr{};
+
+std::vector<gdt_x64::segment_descriptor_type> test_gdt = {
+    0x0,
+    0xFF7FFFFFFFFFFFFF,
+    0xFF7FFFFFFFFFFFFF,
+    0xFF7FFFFFFFFFFFFF,
+    0xFF7FFFFFFFFFFFFF,
+    0xFF7FFFFFFFFFFFFF
+};
+
+std::vector<idt_x64::interrupt_descriptor_type> test_idt{512};
+
+void
+setup_gdt()
+{
+    auto limit = test_gdt.size() * sizeof(gdt_x64::segment_descriptor_type);
+
+    test_gdtr.base = &test_gdt.at(0);
+    test_gdtr.limit = gsl::narrow_cast<gdt_reg_x64_t::limit_type>(limit);
+}
+
+void
+setup_idt()
+{
+    auto limit = test_idt.size() * sizeof(idt_x64::interrupt_descriptor_type);
+
+    test_idtr.base = &test_idt.at(0);
+    test_idtr.limit = gsl::narrow_cast<idt_reg_x64_t::limit_type>(limit);
+}
 
 static uint64_t
 test_read_msr(uint32_t addr) noexcept
@@ -59,11 +91,11 @@ test_read_dr7() noexcept
 
 static void
 test_read_gdt(gdt_reg_x64_t *gdt_reg) noexcept
-{ bfignored(gdt_reg); }
+{ *gdt_reg = test_gdtr; }
 
 static void
 test_read_idt(idt_reg_x64_t *idt_reg) noexcept
-{ bfignored(idt_reg); }
+{ *idt_reg = test_idtr; }
 
 static uint16_t
 test_read_es() noexcept
@@ -136,6 +168,9 @@ setup_intrinsics(MockRepository &mocks)
     mocks.OnCallFunc(_cpuid_ecx).Do(test_cpuid_ecx);
     mocks.OnCallFunc(_cpuid_eax).Do(test_cpuid_eax);
     mocks.OnCallFunc(_cpuid_subebx).Do(test_cpuid_subebx);
+
+    setup_gdt();
+    setup_idt();
 }
 
 static auto
@@ -184,13 +219,19 @@ TEST_CASE("vcpu_intel_x64: valid")
     setup_intrinsics(mocks);
 
     auto test = [&] {
-        auto dr = mock_unique<debug_ring>(mocks);
         auto on = mock_unique<vmxon_intel_x64>(mocks);
         auto cs = mock_unique<vmcs_intel_x64>(mocks);
         auto eh = mock_unique<exit_handler_intel_x64>(mocks);
         auto vs = mock_unique<vmcs_intel_x64_vmm_state>(mocks);
         auto gs = mock_unique<vmcs_intel_x64_host_vm_state>(mocks);
-        std::make_unique<vcpu_intel_x64>(0, std::move(dr), std::move(on), std::move(cs), std::move(eh), std::move(vs), std::move(gs));
+        std::make_unique<vcpu_intel_x64>(
+            0,
+            std::move(on),
+            std::move(cs),
+            std::move(eh),
+            std::move(vs),
+            std::move(gs)
+        );
     };
 
     CHECK_NOTHROW(test());
@@ -209,8 +250,8 @@ TEST_CASE("vcpu_intel_x64: init_null_params")
                   nullptr,
                   nullptr,
                   nullptr,
-                  nullptr,
-                  nullptr);
+                  nullptr
+              );
 
     CHECK_NOTHROW(vc->init());
 }
@@ -222,7 +263,6 @@ TEST_CASE("vcpu_intel_x64: init_valid_params")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -237,12 +277,12 @@ TEST_CASE("vcpu_intel_x64: init_valid_params")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     CHECK_NOTHROW(vc->init());
 }
@@ -254,7 +294,6 @@ TEST_CASE("vcpu_intel_x64: init_valid")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -269,12 +308,12 @@ TEST_CASE("vcpu_intel_x64: init_valid")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     CHECK_NOTHROW(vc->init());
 }
@@ -286,7 +325,6 @@ TEST_CASE("vcpu_intel_x64: init_vmcs_throws")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -301,12 +339,12 @@ TEST_CASE("vcpu_intel_x64: init_vmcs_throws")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     CHECK_THROWS(vc->init());
 }
@@ -323,8 +361,8 @@ TEST_CASE("vcpu_intel_x64: fini_null_params")
                   nullptr,
                   nullptr,
                   nullptr,
-                  nullptr,
-                  nullptr);
+                  nullptr
+              );
 
     vc->init();
     CHECK_NOTHROW(vc->fini());
@@ -337,7 +375,6 @@ TEST_CASE("vcpu_intel_x64: fini_valid_params")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -352,12 +389,12 @@ TEST_CASE("vcpu_intel_x64: fini_valid_params")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     vc->init();
     CHECK_NOTHROW(vc->fini());
@@ -370,7 +407,6 @@ TEST_CASE("vcpu_intel_x64: fini_valid")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -385,12 +421,12 @@ TEST_CASE("vcpu_intel_x64: fini_valid")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     vc->init();
     CHECK_NOTHROW(vc->fini());
@@ -403,7 +439,6 @@ TEST_CASE("vcpu_intel_x64: fini_no_init")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -412,12 +447,12 @@ TEST_CASE("vcpu_intel_x64: fini_no_init")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     CHECK_NOTHROW(vc->fini());
 }
@@ -429,7 +464,6 @@ TEST_CASE("vcpu_intel_x64: run_launch")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -450,12 +484,12 @@ TEST_CASE("vcpu_intel_x64: run_launch")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0x0001000000000000,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     vc->init();
     CHECK_NOTHROW(vc->run());
@@ -468,7 +502,6 @@ TEST_CASE("vcpu_intel_x64: run_launch_is_host_vcpu")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -489,12 +522,12 @@ TEST_CASE("vcpu_intel_x64: run_launch_is_host_vcpu")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     vc->init();
     CHECK_NOTHROW(vc->run());
@@ -507,7 +540,6 @@ TEST_CASE("vcpu_intel_x64: run_resume")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -528,12 +560,12 @@ TEST_CASE("vcpu_intel_x64: run_resume")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     vc->init();
     vc->run();
@@ -547,7 +579,6 @@ TEST_CASE("vcpu_intel_x64: run_no_init")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -568,12 +599,12 @@ TEST_CASE("vcpu_intel_x64: run_no_init")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     CHECK_THROWS(vc->run());
 }
@@ -585,7 +616,6 @@ TEST_CASE("vcpu_intel_x64: run_vmxon_throws")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -606,12 +636,12 @@ TEST_CASE("vcpu_intel_x64: run_vmxon_throws")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     vc->init();
     CHECK_THROWS(vc->run());
@@ -624,7 +654,6 @@ TEST_CASE("vcpu_intel_x64: run_vmcs_throws")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -645,12 +674,12 @@ TEST_CASE("vcpu_intel_x64: run_vmcs_throws")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     vc->init();
     CHECK_THROWS(vc->run());
@@ -663,7 +692,6 @@ TEST_CASE("vcpu_intel_x64: hlt_no_init")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -684,12 +712,12 @@ TEST_CASE("vcpu_intel_x64: hlt_no_init")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0x0001000000000000,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     CHECK_NOTHROW(vc->hlt());
 }
@@ -701,7 +729,6 @@ TEST_CASE("vcpu_intel_x64: hlt_no_run")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -722,12 +749,12 @@ TEST_CASE("vcpu_intel_x64: hlt_no_run")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0x0001000000000000,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     vc->init();
     CHECK_NOTHROW(vc->hlt());
@@ -740,7 +767,6 @@ TEST_CASE("vcpu_intel_x64: hlt_valid")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -761,12 +787,12 @@ TEST_CASE("vcpu_intel_x64: hlt_valid")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0x0001000000000000,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     vc->init();
     vc->run();
@@ -780,7 +806,6 @@ TEST_CASE("vcpu_intel_x64: hlt_valid_is_host_vcpu")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -801,12 +826,12 @@ TEST_CASE("vcpu_intel_x64: hlt_valid_is_host_vcpu")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     vc->init();
     vc->run();
@@ -820,7 +845,6 @@ TEST_CASE("vcpu_intel_x64: hlt_vmxon_throws")
     setup_mm(mocks);
     setup_pt(mocks);
 
-    auto dr = mock_unique<debug_ring>(mocks);
     auto on = mock_unique<vmxon_intel_x64>(mocks);
     auto cs = mock_unique<vmcs_intel_x64>(mocks);
     auto eh = mock_unique<exit_handler_intel_x64>(mocks);
@@ -841,15 +865,17 @@ TEST_CASE("vcpu_intel_x64: hlt_vmxon_throws")
 
     auto vc = std::make_unique<vcpu_intel_x64>(
                   0,
-                  std::move(dr),
                   std::move(on),
                   std::move(cs),
                   std::move(eh),
                   std::move(vs),
-                  std::move(gs));
+                  std::move(gs)
+              );
 
     vc->init();
     vc->run();
 
     CHECK_THROWS(vc->hlt());
 }
+
+#endif

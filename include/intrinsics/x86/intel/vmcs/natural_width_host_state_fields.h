@@ -62,7 +62,7 @@ namespace host_cr0
     namespace protection_enable
     {
         constexpr const auto mask = 0x0000000000000001ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "protection_enable";
 
         inline auto is_enabled()
@@ -101,14 +101,23 @@ namespace host_cr0
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace monitor_coprocessor
     {
         constexpr const auto mask = 0x0000000000000002ULL;
-        constexpr const auto from = 1;
+        constexpr const auto from = 1ULL;
         constexpr const auto name = "monitor_coprocessor";
 
         inline auto is_enabled()
@@ -147,14 +156,23 @@ namespace host_cr0
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace emulation
     {
         constexpr const auto mask = 0x0000000000000004ULL;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "emulation";
 
         inline auto is_enabled()
@@ -193,14 +211,23 @@ namespace host_cr0
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace task_switched
     {
         constexpr const auto mask = 0x0000000000000008ULL;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "task_switched";
 
         inline auto is_enabled()
@@ -239,14 +266,23 @@ namespace host_cr0
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace extension_type
     {
         constexpr const auto mask = 0x0000000000000010ULL;
-        constexpr const auto from = 4;
+        constexpr const auto from = 4ULL;
         constexpr const auto name = "extension_type";
 
         inline auto is_enabled()
@@ -285,14 +321,23 @@ namespace host_cr0
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace numeric_error
     {
         constexpr const auto mask = 0x0000000000000020ULL;
-        constexpr const auto from = 5;
+        constexpr const auto from = 5ULL;
         constexpr const auto name = "numeric_error";
 
         inline auto is_enabled()
@@ -331,14 +376,23 @@ namespace host_cr0
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace write_protect
     {
         constexpr const auto mask = 0x0000000000010000ULL;
-        constexpr const auto from = 16;
+        constexpr const auto from = 16ULL;
         constexpr const auto name = "write_protect";
 
         inline auto is_enabled()
@@ -377,14 +431,23 @@ namespace host_cr0
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace alignment_mask
     {
         constexpr const auto mask = 0x0000000000040000ULL;
-        constexpr const auto from = 18;
+        constexpr const auto from = 18ULL;
         constexpr const auto name = "alignment_mask";
 
         inline auto is_enabled()
@@ -423,14 +486,23 @@ namespace host_cr0
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace not_write_through
     {
         constexpr const auto mask = 0x0000000020000000ULL;
-        constexpr const auto from = 29;
+        constexpr const auto from = 29ULL;
         constexpr const auto name = "not_write_through";
 
         inline auto is_enabled()
@@ -469,14 +541,23 @@ namespace host_cr0
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace cache_disable
     {
         constexpr const auto mask = 0x0000000040000000ULL;
-        constexpr const auto from = 30;
+        constexpr const auto from = 30ULL;
         constexpr const auto name = "cache_disable";
 
         inline auto is_enabled()
@@ -515,14 +596,23 @@ namespace host_cr0
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace paging
     {
         constexpr const auto mask = 0x0000000080000000ULL;
-        constexpr const auto from = 31;
+        constexpr const auto from = 31ULL;
         constexpr const auto name = "paging";
 
         inline auto is_enabled()
@@ -561,24 +651,33 @@ namespace host_cr0
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        protection_enable::dump(level);
-        monitor_coprocessor::dump(level);
-        emulation::dump(level);
-        task_switched::dump(level);
-        extension_type::dump(level);
-        numeric_error::dump(level);
-        write_protect::dump(level);
-        alignment_mask::dump(level);
-        not_write_through::dump(level);
-        cache_disable::dump(level);
-        paging::dump(level);
+        dump_vmcs_nhex(level, msg);
+        protection_enable::dump(level, msg);
+        monitor_coprocessor::dump(level, msg);
+        emulation::dump(level, msg);
+        task_switched::dump(level, msg);
+        extension_type::dump(level, msg);
+        numeric_error::dump(level, msg);
+        write_protect::dump(level, msg);
+        alignment_mask::dump(level, msg);
+        not_write_through::dump(level, msg);
+        cache_disable::dump(level, msg);
+        paging::dump(level, msg);
     }
 }
 
@@ -602,8 +701,8 @@ namespace host_cr3
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace host_cr4
@@ -629,7 +728,7 @@ namespace host_cr4
     namespace v8086_mode_extensions
     {
         constexpr const auto mask = 0x0000000000000001ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "v8086_mode_extensions";
 
         inline auto is_enabled()
@@ -668,14 +767,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace protected_mode_virtual_interrupts
     {
         constexpr const auto mask = 0x0000000000000002ULL;
-        constexpr const auto from = 1;
+        constexpr const auto from = 1ULL;
         constexpr const auto name = "protected_mode_virtual_interrupts";
 
         inline auto is_enabled()
@@ -714,14 +822,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace time_stamp_disable
     {
         constexpr const auto mask = 0x0000000000000004ULL;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "time_stamp_disable";
 
         inline auto is_enabled()
@@ -760,14 +877,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace debugging_extensions
     {
         constexpr const auto mask = 0x0000000000000008ULL;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "debugging_extensions";
 
         inline auto is_enabled()
@@ -806,14 +932,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace page_size_extensions
     {
         constexpr const auto mask = 0x0000000000000010ULL;
-        constexpr const auto from = 4;
+        constexpr const auto from = 4ULL;
         constexpr const auto name = "page_size_extensions";
 
         inline auto is_enabled()
@@ -852,14 +987,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace physical_address_extensions
     {
         constexpr const auto mask = 0x0000000000000020ULL;
-        constexpr const auto from = 5;
+        constexpr const auto from = 5ULL;
         constexpr const auto name = "physical_address_extensions";
 
         inline auto is_enabled()
@@ -898,14 +1042,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace machine_check_enable
     {
         constexpr const auto mask = 0x0000000000000040ULL;
-        constexpr const auto from = 6;
+        constexpr const auto from = 6ULL;
         constexpr const auto name = "machine_check_enable";
 
         inline auto is_enabled()
@@ -944,14 +1097,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace page_global_enable
     {
         constexpr const auto mask = 0x0000000000000080ULL;
-        constexpr const auto from = 7;
+        constexpr const auto from = 7ULL;
         constexpr const auto name = "page_global_enable";
 
         inline auto is_enabled()
@@ -990,14 +1152,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace performance_monitor_counter_enable
     {
         constexpr const auto mask = 0x0000000000000100ULL;
-        constexpr const auto from = 8;
+        constexpr const auto from = 8ULL;
         constexpr const auto name = "performance_monitor_counter_enable";
 
         inline auto is_enabled()
@@ -1036,14 +1207,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace osfxsr
     {
         constexpr const auto mask = 0x0000000000000200ULL;
-        constexpr const auto from = 9;
+        constexpr const auto from = 9ULL;
         constexpr const auto name = "osfxsr";
 
         inline auto is_enabled()
@@ -1082,14 +1262,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace osxmmexcpt
     {
         constexpr const auto mask = 0x0000000000000400ULL;
-        constexpr const auto from = 10;
+        constexpr const auto from = 10ULL;
         constexpr const auto name = "osxmmexcpt";
 
         inline auto is_enabled()
@@ -1128,14 +1317,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace vmx_enable_bit
     {
         constexpr const auto mask = 0x0000000000002000ULL;
-        constexpr const auto from = 13;
+        constexpr const auto from = 13ULL;
         constexpr const auto name = "vmx_enable_bit";
 
         inline auto is_enabled()
@@ -1174,14 +1372,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace smx_enable_bit
     {
         constexpr const auto mask = 0x0000000000004000ULL;
-        constexpr const auto from = 14;
+        constexpr const auto from = 14ULL;
         constexpr const auto name = "smx_enable_bit";
 
         inline auto is_enabled()
@@ -1220,14 +1427,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace fsgsbase_enable_bit
     {
         constexpr const auto mask = 0x0000000000010000ULL;
-        constexpr const auto from = 16;
+        constexpr const auto from = 16ULL;
         constexpr const auto name = "fsgsbase_enable_bit";
 
         inline auto is_enabled()
@@ -1266,14 +1482,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace pcid_enable_bit
     {
         constexpr const auto mask = 0x0000000000020000ULL;
-        constexpr const auto from = 17;
+        constexpr const auto from = 17ULL;
         constexpr const auto name = "pcid_enable_bit";
 
         inline auto is_enabled()
@@ -1312,14 +1537,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace osxsave
     {
         constexpr const auto mask = 0x0000000000040000ULL;
-        constexpr const auto from = 18;
+        constexpr const auto from = 18ULL;
         constexpr const auto name = "osxsave";
 
         inline auto is_enabled()
@@ -1358,14 +1592,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace smep_enable_bit
     {
         constexpr const auto mask = 0x0000000000100000ULL;
-        constexpr const auto from = 20;
+        constexpr const auto from = 20ULL;
         constexpr const auto name = "smep_enable_bit";
 
         inline auto is_enabled()
@@ -1404,14 +1647,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace smap_enable_bit
     {
         constexpr const auto mask = 0x0000000000200000ULL;
-        constexpr const auto from = 21;
+        constexpr const auto from = 21ULL;
         constexpr const auto name = "smap_enable_bit";
 
         inline auto is_enabled()
@@ -1450,14 +1702,23 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace protection_key_enable_bit
     {
         constexpr const auto mask = 0x0000000000400000ULL;
-        constexpr const auto from = 22;
+        constexpr const auto from = 22ULL;
         constexpr const auto name = "protection_key_enable_bit";
 
         inline auto is_enabled()
@@ -1496,32 +1757,41 @@ namespace host_cr4
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        v8086_mode_extensions::dump(level);
-        protected_mode_virtual_interrupts::dump(level);
-        time_stamp_disable::dump(level);
-        debugging_extensions::dump(level);
-        page_size_extensions::dump(level);
-        physical_address_extensions::dump(level);
-        machine_check_enable::dump(level);
-        page_global_enable::dump(level);
-        performance_monitor_counter_enable::dump(level);
-        osfxsr::dump(level);
-        osxmmexcpt::dump(level);
-        vmx_enable_bit::dump(level);
-        smx_enable_bit::dump(level);
-        fsgsbase_enable_bit::dump(level);
-        pcid_enable_bit::dump(level);
-        osxsave::dump(level);
-        smep_enable_bit::dump(level);
-        smap_enable_bit::dump(level);
-        protection_key_enable_bit::dump(level);
+        dump_vmcs_nhex(level, msg);
+        v8086_mode_extensions::dump(level, msg);
+        protected_mode_virtual_interrupts::dump(level, msg);
+        time_stamp_disable::dump(level, msg);
+        debugging_extensions::dump(level, msg);
+        page_size_extensions::dump(level, msg);
+        physical_address_extensions::dump(level, msg);
+        machine_check_enable::dump(level, msg);
+        page_global_enable::dump(level, msg);
+        performance_monitor_counter_enable::dump(level, msg);
+        osfxsr::dump(level, msg);
+        osxmmexcpt::dump(level, msg);
+        vmx_enable_bit::dump(level, msg);
+        smx_enable_bit::dump(level, msg);
+        fsgsbase_enable_bit::dump(level, msg);
+        pcid_enable_bit::dump(level, msg);
+        osxsave::dump(level, msg);
+        smep_enable_bit::dump(level, msg);
+        smap_enable_bit::dump(level, msg);
+        protection_key_enable_bit::dump(level, msg);
     }
 }
 
@@ -1545,8 +1815,8 @@ namespace host_fs_base
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace host_gs_base
@@ -1569,8 +1839,8 @@ namespace host_gs_base
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace host_tr_base
@@ -1593,8 +1863,8 @@ namespace host_tr_base
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace host_gdtr_base
@@ -1617,8 +1887,8 @@ namespace host_gdtr_base
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace host_idtr_base
@@ -1641,8 +1911,8 @@ namespace host_idtr_base
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace host_ia32_sysenter_esp
@@ -1665,8 +1935,8 @@ namespace host_ia32_sysenter_esp
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace host_ia32_sysenter_eip
@@ -1689,8 +1959,8 @@ namespace host_ia32_sysenter_eip
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace host_rsp
@@ -1713,8 +1983,8 @@ namespace host_rsp
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace host_rip
@@ -1737,8 +2007,8 @@ namespace host_rip
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 }

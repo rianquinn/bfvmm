@@ -46,6 +46,11 @@
 #define EXPORT_MEMORY_MANAGER
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
 // -----------------------------------------------------------------------------
 // Definitions
 // -----------------------------------------------------------------------------
@@ -203,5 +208,9 @@ public:
     page_table_x64(const page_table_x64 &) = delete;
     page_table_x64 &operator=(const page_table_x64 &) = delete;
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

@@ -46,7 +46,7 @@ get_vmcs_field(
     field_type addr, const char *name, bool exists)
 {
     if (!exists) {
-        throw std::logic_error("field doesn't exit: " + std::string(name));
+        throw std::logic_error("field doesn't exist: " + std::string(name));
     }
 
     return intel_x64::vm::read(addr, name);
@@ -61,7 +61,7 @@ get_vmcs_field_if_exists(
     }
     else {
         if (verbose) {
-            bfwarning << "field doesn't exit: " << name << bfendl;
+            bfalert_text(0, "field doesn't exist: ", name);
         }
     }
 
@@ -73,7 +73,7 @@ set_vmcs_field(
     value_type val, field_type addr, const char *name, bool exists)
 {
     if (!exists) {
-        throw std::logic_error("field doesn't exit: " + std::string(name));
+        throw std::logic_error("field doesn't exist: " + std::string(name));
     }
 
     intel_x64::vm::write(addr, val, name);
@@ -88,7 +88,7 @@ set_vmcs_field_if_exists(
     }
     else {
         if (verbose) {
-            bfwarning << "field doesn't exit: " << name << bfendl;
+            bfalert_text(0, "field doesn't exist: ", name);
         }
     }
 }
@@ -162,14 +162,14 @@ enable_vm_control_if_allowed(
 {
     if (!exists) {
         if (verbose) {
-            bfwarning << "field doesn't exist: " << name << bfendl;
+            bfalert_text(0, "field doesn't exist: ", name);
         }
         return;
     }
 
     if (!is_allowed1) {
         if (verbose) {
-            bfwarning << "field is_allowed1 false: " << name << bfendl;
+            bfalert_text(0, "field is_allowed1 false: ", name);
         }
         return;
     }
@@ -198,14 +198,14 @@ disable_vm_control_if_allowed(
 {
     if (!exists) {
         if (verbose) {
-            bfwarning << "field doesn't exist: " << name << bfendl;
+            bfalert_text(0, "field doesn't exist: ", name);
         }
         return;
     }
 
     if (!is_allowed0) {
         if (verbose) {
-            bfwarning << "field is_allowed0 false: " << name << bfendl;
+            bfalert_text(0, "field is_allowed0 false: ", name);
         }
         return;
     }
@@ -214,14 +214,14 @@ disable_vm_control_if_allowed(
 }
 
 inline void
-dump_vm_control(int level, bool exists, bool is_allowed1, bool enabled, const char *name)
+dump_vm_control(int level, bool exists, bool is_allowed1, bool enabled, const char *name, std::string *msg)
 {
     if (!exists || !is_allowed1) {
-        bfdebug_subtext(level, name, "unsupported");
+        bfdebug_subtext(level, name, "unsupported", msg);
         return;
     }
 
-    bfdebug_subbool(level, name, enabled);
+    bfdebug_subbool(level, name, enabled, msg);
 }
 
 inline auto
@@ -241,52 +241,52 @@ memory_type_reserved(value_type memory_type)
     }
 }
 
-#define dump_vmcs_nhex(a)                                                                          \
+#define dump_vmcs_nhex(a,b)                                                                        \
     if (exists()) {                                                                                \
-        bfdebug_nhex(a, name, get());                                                              \
+        bfdebug_nhex(a, name, get(), b);                                                           \
     }                                                                                              \
     else {                                                                                         \
-        bfdebug_text(a, name, "unsupported");                                                      \
+        bfdebug_text(a, name, "unsupported", b);                                                   \
     }
 
-#define dump_vmcs_subnhex(a)                                                                       \
+#define dump_vmcs_subnhex(a,b)                                                                     \
     if (exists()) {                                                                                \
-        bfdebug_subnhex(a, name, get());                                                           \
+        bfdebug_subnhex(a, name, get(), b);                                                        \
     }                                                                                              \
     else {                                                                                         \
-        bfdebug_subtext(a, name, "unsupported");                                                   \
+        bfdebug_subtext(a, name, "unsupported", b);                                                \
     }
 
-#define dump_vmcs_bool(a)                                                                          \
+#define dump_vmcs_bool(a,b)                                                                        \
     if (exists()) {                                                                                \
-        bfdebug_bool(a, name, is_enabled());                                                       \
+        bfdebug_bool(a, name, is_enabled(), b);                                                    \
     }                                                                                              \
     else {                                                                                         \
-        bfdebug_text(a, name, "unsupported");                                                      \
+        bfdebug_text(a, name, "unsupported", b);                                                   \
     }
 
-#define dump_vmcs_subbool(a)                                                                       \
+#define dump_vmcs_subbool(a,b)                                                                     \
     if (exists()) {                                                                                \
-        bfdebug_subbool(a, name, is_enabled());                                                    \
+        bfdebug_subbool(a, name, is_enabled(), b);                                                 \
     }                                                                                              \
     else {                                                                                         \
-        bfdebug_subtext(a, name, "unsupported");                                                   \
+        bfdebug_subtext(a, name, "unsupported", b);                                                \
     }
 
-#define dump_vmcs_text(a)                                                                          \
+#define dump_vmcs_text(a,b)                                                                        \
     if (exists()) {                                                                                \
-        bfdebug_text(a, name, description());                                                      \
+        bfdebug_text(a, name, description(), b);                                                   \
     }                                                                                              \
     else {                                                                                         \
-        bfdebug_text(a, name, "unsupported");                                                      \
+        bfdebug_text(a, name, "unsupported", b);                                                   \
     }
 
-#define dump_vmcs_subtext(a)                                                                       \
+#define dump_vmcs_subtext(a,b)                                                                     \
     if (exists()) {                                                                                \
-        bfdebug_subtext(a, name, description());                                                   \
+        bfdebug_subtext(a, name, description(), b);                                                \
     }                                                                                              \
     else {                                                                                         \
-        bfdebug_subtext(a, name, "unsupported");                                                   \
+        bfdebug_subtext(a, name, "unsupported", b);                                                \
     }
 
 }

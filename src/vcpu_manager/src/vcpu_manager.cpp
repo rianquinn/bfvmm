@@ -48,7 +48,7 @@ vcpu_manager::create_vcpu(vcpuid::type vcpuid, user_data *data)
         m_vcpus.erase(vcpuid);
     });
 
-    if (auto && vcpu = add_vcpu(vcpuid, data)) {
+    if (auto &&vcpu = add_vcpu(vcpuid, data)) {
         vcpu->init(data);
     }
 }
@@ -61,7 +61,7 @@ vcpu_manager::delete_vcpu(vcpuid::type vcpuid, user_data *data)
         m_vcpus.erase(vcpuid);
     });
 
-    if (auto && vcpu = get_vcpu(vcpuid)) {
+    if (auto &&vcpu = get_vcpu(vcpuid)) {
         vcpu->fini(data);
     }
 }
@@ -69,7 +69,7 @@ vcpu_manager::delete_vcpu(vcpuid::type vcpuid, user_data *data)
 void
 vcpu_manager::run_vcpu(vcpuid::type vcpuid, user_data *data)
 {
-    if (auto && vcpu = get_vcpu(vcpuid)) {
+    if (auto &&vcpu = get_vcpu(vcpuid)) {
         vcpu->run(data);
     }
 }
@@ -77,16 +77,8 @@ vcpu_manager::run_vcpu(vcpuid::type vcpuid, user_data *data)
 void
 vcpu_manager::hlt_vcpu(vcpuid::type vcpuid, user_data *data)
 {
-    if (auto && vcpu = get_vcpu(vcpuid)) {
+    if (auto &&vcpu = get_vcpu(vcpuid)) {
         vcpu->hlt(data);
-    }
-}
-
-void
-vcpu_manager::write(vcpuid::type vcpuid, const std::string &str) noexcept
-{
-    if (auto && vcpu = m_vcpus[vcpuid]) {
-        vcpu->write(str);
     }
 }
 
@@ -101,11 +93,11 @@ vcpu_manager::add_vcpu(vcpuid::type vcpuid, user_data *data)
         throw std::runtime_error("invalid vcpu factory");
     }
 
-    if (auto && vcpu = get_vcpu(vcpuid)) {
+    if (auto &&vcpu = get_vcpu(vcpuid)) {
         return vcpu;
     }
 
-    if (auto && vcpu = m_vcpu_factory->make_vcpu(vcpuid, data)) {
+    if (auto &&vcpu = m_vcpu_factory->make_vcpu(vcpuid, data)) {
         std::lock_guard<std::mutex> guard(g_vcpu_manager_mutex);
         return m_vcpus[vcpuid] = std::move(vcpu);
     }

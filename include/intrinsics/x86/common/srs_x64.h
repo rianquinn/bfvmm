@@ -92,7 +92,7 @@ namespace es
     namespace rpl
     {
         constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -107,14 +107,14 @@ namespace es
         inline auto set(value_type sr, value_type val)
         { _write_es(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace ti
     {
         constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -141,14 +141,14 @@ namespace es
         inline auto disable(value_type sr)
         { _write_es(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace index
     {
         constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -163,16 +163,16 @@ namespace es
         inline auto set(value_type sr, value_type val)
         { _write_es(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
@@ -189,7 +189,7 @@ namespace cs
     namespace rpl
     {
         constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -204,14 +204,14 @@ namespace cs
         inline auto set(value_type sr, value_type val)
         { _write_cs(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace ti
     {
         constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -238,14 +238,14 @@ namespace cs
         inline auto disable(value_type sr)
         { _write_cs(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace index
     {
         constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -260,16 +260,16 @@ namespace cs
         inline auto set(value_type sr, value_type val)
         { _write_cs(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
@@ -286,7 +286,7 @@ namespace ss
     namespace rpl
     {
         constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -301,14 +301,14 @@ namespace ss
         inline auto set(value_type sr, value_type val)
         { _write_ss(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace ti
     {
         constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -335,14 +335,14 @@ namespace ss
         inline auto disable(value_type sr)
         { _write_ss(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace index
     {
         constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -357,16 +357,16 @@ namespace ss
         inline auto set(value_type sr, value_type val)
         { _write_ss(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
@@ -383,7 +383,7 @@ namespace ds
     namespace rpl
     {
         constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -398,14 +398,14 @@ namespace ds
         inline auto set(value_type sr, value_type val)
         { _write_ds(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace ti
     {
         constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -432,14 +432,14 @@ namespace ds
         inline auto disable(value_type sr)
         { _write_ds(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace index
     {
         constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -454,16 +454,16 @@ namespace ds
         inline auto set(value_type sr, value_type val)
         { _write_ds(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
@@ -480,7 +480,7 @@ namespace fs
     namespace rpl
     {
         constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -495,14 +495,14 @@ namespace fs
         inline auto set(value_type sr, value_type val)
         { _write_fs(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace ti
     {
         constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -529,14 +529,14 @@ namespace fs
         inline auto disable(value_type sr)
         { _write_fs(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace index
     {
         constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -551,16 +551,16 @@ namespace fs
         inline auto set(value_type sr, value_type val)
         { _write_fs(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
@@ -577,7 +577,7 @@ namespace gs
     namespace rpl
     {
         constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -592,14 +592,14 @@ namespace gs
         inline auto set(value_type sr, value_type val)
         { _write_gs(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace ti
     {
         constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -626,14 +626,14 @@ namespace gs
         inline auto disable(value_type sr)
         { _write_gs(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace index
     {
         constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -648,16 +648,16 @@ namespace gs
         inline auto set(value_type sr, value_type val)
         { _write_gs(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
@@ -674,7 +674,7 @@ namespace ldtr
     namespace rpl
     {
         constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -689,14 +689,14 @@ namespace ldtr
         inline auto set(value_type sr, value_type val)
         { _write_ldtr(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace ti
     {
         constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -723,14 +723,14 @@ namespace ldtr
         inline auto disable(value_type sr)
         { _write_ldtr(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace index
     {
         constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -745,16 +745,16 @@ namespace ldtr
         inline auto set(value_type sr, value_type val)
         { _write_ldtr(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
@@ -771,7 +771,7 @@ namespace tr
     namespace rpl
     {
         constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -786,14 +786,14 @@ namespace tr
         inline auto set(value_type sr, value_type val)
         { _write_tr(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace ti
     {
         constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -820,14 +820,14 @@ namespace tr
         inline auto disable(value_type sr)
         { _write_tr(gsl::narrow_cast<value_type>(clear_bit(sr, from))); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace index
     {
         constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -842,29 +842,29 @@ namespace tr
         inline auto set(value_type sr, value_type val)
         { _write_tr(gsl::narrow_cast<value_type>(set_bits(sr, mask, val << from))); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
-inline void dump(int level)
+inline void dump(int level, std::string *msg = nullptr)
 {
-    es::dump(level);
-    cs::dump(level);
-    ss::dump(level);
-    ds::dump(level);
-    fs::dump(level);
-    gs::dump(level);
-    ldtr::dump(level);
-    tr::dump(level);
+    es::dump(level, msg);
+    cs::dump(level, msg);
+    ss::dump(level, msg);
+    ds::dump(level, msg);
+    fs::dump(level, msg);
+    gs::dump(level, msg);
+    ldtr::dump(level, msg);
+    tr::dump(level, msg);
 }
 
 }

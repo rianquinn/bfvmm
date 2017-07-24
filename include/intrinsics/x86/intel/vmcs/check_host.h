@@ -49,10 +49,12 @@ host_cr0_for_unsupported_bits()
     auto ia32_vmx_cr0_fixed1 = msrs::ia32_vmx_cr0_fixed1::get();
 
     if (0 != ((~cr0 & ia32_vmx_cr0_fixed0) | (cr0 & ~ia32_vmx_cr0_fixed1))) {
-        bferror << " failed: check_host_cr0_for_unsupported_bits" << bfendl;
-        bferror << "    - ia32_vmx_cr0_fixed0: " << view_as_pointer(ia32_vmx_cr0_fixed0) << bfendl;
-        bferror << "    - ia32_vmx_cr0_fixed1: " << view_as_pointer(ia32_vmx_cr0_fixed1) << bfendl;
-        bferror << "    - cr0: " << view_as_pointer(cr0) << bfendl;
+        bfdebug_transaction(0, [&](std::string * msg) {
+            bferror_info(0, "failed: check_host_cr0_for_unsupported_bits", msg);
+            bferror_subnhex(0, "ia32_vmx_cr0_fixed0", ia32_vmx_cr0_fixed0, msg);
+            bferror_subnhex(0, "ia32_vmx_cr0_fixed1", ia32_vmx_cr0_fixed1, msg);
+            bferror_subnhex(0, "cr0", cr0, msg);
+        });
 
         throw std::logic_error("invalid cr0");
     }
@@ -66,10 +68,12 @@ host_cr4_for_unsupported_bits()
     auto ia32_vmx_cr4_fixed1 = msrs::ia32_vmx_cr4_fixed1::get();
 
     if (0 != ((~cr4 & ia32_vmx_cr4_fixed0) | (cr4 & ~ia32_vmx_cr4_fixed1))) {
-        bferror << " failed: check_host_cr4_for_unsupported_bits" << bfendl;
-        bferror << "    - ia32_vmx_cr4_fixed0: " << view_as_pointer(ia32_vmx_cr4_fixed0) << bfendl;
-        bferror << "    - ia32_vmx_cr4_fixed1: " << view_as_pointer(ia32_vmx_cr4_fixed1) << bfendl;
-        bferror << "    - cr4: " << view_as_pointer(cr4) << bfendl;
+        bfdebug_transaction(0, [&](std::string * msg) {
+            bferror_info(0, "failed: check_host_cr4_for_unsupported_bits", msg);
+            bferror_subnhex(0, "ia32_vmx_cr4_fixed0", ia32_vmx_cr4_fixed0, msg);
+            bferror_subnhex(0, "ia32_vmx_cr4_fixed1", ia32_vmx_cr4_fixed1, msg);
+            bferror_subnhex(0, "cr4", cr4, msg);
+        });
 
         throw std::logic_error("invalid cr4");
     }

@@ -156,7 +156,7 @@ namespace exit_reason
     namespace basic_exit_reason
     {
         constexpr const auto mask = 0x000000000000FFFFULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "basic_exit_reason";
 
         constexpr const auto exception_or_non_maskable_interrupt = 0U;
@@ -417,27 +417,27 @@ namespace exit_reason
             return basic_exit_reason_description(field);
         }
 
-        inline void dump(int level)
-        { dump_vmcs_text(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_text(level, msg); }
     }
 
     namespace reserved
     {
         constexpr const auto mask = 0x0000000047FF0000ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "reserved";
 
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, true), mask) >> from; }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace vm_exit_incident_to_enclave_mode
     {
         constexpr const auto mask = 0x0000000008000000ULL;
-        constexpr const auto from = 27;
+        constexpr const auto from = 27ULL;
         constexpr const auto name = "vm_exit_incident_to_enclave_mode";
 
         inline auto is_enabled()
@@ -458,14 +458,14 @@ namespace exit_reason
         inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, true), from); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace pending_mtf_vm_exit
     {
         constexpr const auto mask = 0x0000000010000000ULL;
-        constexpr const auto from = 28;
+        constexpr const auto from = 28ULL;
         constexpr const auto name = "pending_mtf_vm_exit";
 
         inline auto is_enabled()
@@ -486,14 +486,14 @@ namespace exit_reason
         inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, true), from); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace vm_exit_from_vmx_root_operation
     {
         constexpr const auto mask = 0x0000000020000000ULL;
-        constexpr const auto from = 29;
+        constexpr const auto from = 29ULL;
         constexpr const auto name = "vm_exit_from_vmx_root_operation";
 
         inline auto is_enabled()
@@ -514,14 +514,14 @@ namespace exit_reason
         inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, true), from); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace vm_entry_failure
     {
         constexpr const auto mask = 0x0000000080000000ULL;
-        constexpr const auto from = 31;
+        constexpr const auto from = 31ULL;
         constexpr const auto name = "vm_entry_failure";
 
         inline auto is_enabled()
@@ -542,19 +542,19 @@ namespace exit_reason
         inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, true), from); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        basic_exit_reason::dump(level);
-        reserved::dump(level);
-        vm_exit_incident_to_enclave_mode::dump(level);
-        pending_mtf_vm_exit::dump(level);
-        vm_exit_from_vmx_root_operation::dump(level);
-        vm_entry_failure::dump(level);
+        dump_vmcs_nhex(level, msg);
+        basic_exit_reason::dump(level, msg);
+        reserved::dump(level, msg);
+        vm_exit_incident_to_enclave_mode::dump(level, msg);
+        pending_mtf_vm_exit::dump(level, msg);
+        vm_exit_from_vmx_root_operation::dump(level, msg);
+        vm_entry_failure::dump(level, msg);
     }
 }
 
@@ -575,7 +575,7 @@ namespace vm_exit_interruption_information
     namespace vector
     {
         constexpr const auto mask = 0x000000FFULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "vector";
 
         inline auto get()
@@ -587,14 +587,14 @@ namespace vm_exit_interruption_information
         inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace interruption_type
     {
         constexpr const auto mask = 0x00000700ULL;
-        constexpr const auto from = 8;
+        constexpr const auto from = 8ULL;
         constexpr const auto name = "interruption_type";
 
         constexpr const auto external_interrupt = 0ULL;
@@ -611,14 +611,14 @@ namespace vm_exit_interruption_information
         inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace error_code_valid
     {
         constexpr const auto mask = 0x00000800ULL;
-        constexpr const auto from = 11;
+        constexpr const auto from = 11ULL;
         constexpr const auto name = "deliver_error_code_bit";
 
         inline auto is_enabled()
@@ -639,14 +639,14 @@ namespace vm_exit_interruption_information
         inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace nmi_unblocking_due_to_iret
     {
         constexpr const auto mask = 0x00001000ULL;
-        constexpr const auto from = 12;
+        constexpr const auto from = 12ULL;
         constexpr const auto name = "nmi_unblocking_due_to_iret";
 
         inline auto is_enabled()
@@ -667,14 +667,14 @@ namespace vm_exit_interruption_information
         inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace reserved
     {
         constexpr const auto mask = 0x7FFFE000ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "reserved";
 
         inline auto get()
@@ -686,14 +686,14 @@ namespace vm_exit_interruption_information
         inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace valid_bit
     {
         constexpr const auto mask = 0x80000000ULL;
-        constexpr const auto from = 31;
+        constexpr const auto from = 31ULL;
         constexpr const auto name = "valid_bit";
 
         inline auto is_enabled()
@@ -714,19 +714,19 @@ namespace vm_exit_interruption_information
         inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        vector::dump(level);
-        interruption_type::dump(level);
-        error_code_valid::dump(level);
-        nmi_unblocking_due_to_iret::dump(level);
-        reserved::dump(level);
-        valid_bit::dump(level);
+        dump_vmcs_nhex(level, msg);
+        vector::dump(level, msg);
+        interruption_type::dump(level, msg);
+        error_code_valid::dump(level, msg);
+        nmi_unblocking_due_to_iret::dump(level, msg);
+        reserved::dump(level, msg);
+        valid_bit::dump(level, msg);
     }
 }
 
@@ -744,8 +744,8 @@ namespace vm_exit_interruption_error_code
     inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace idt_vectoring_information
@@ -765,7 +765,7 @@ namespace idt_vectoring_information
     namespace vector
     {
         constexpr const auto mask = 0x000000FFULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "vector";
 
         inline auto get()
@@ -777,14 +777,14 @@ namespace idt_vectoring_information
         inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace interruption_type
     {
         constexpr const auto mask = 0x00000700ULL;
-        constexpr const auto from = 8;
+        constexpr const auto from = 8ULL;
         constexpr const auto name = "interruption_type";
 
         constexpr const auto external_interrupt = 0ULL;
@@ -803,14 +803,14 @@ namespace idt_vectoring_information
         inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace error_code_valid
     {
         constexpr const auto mask = 0x00000800ULL;
-        constexpr const auto from = 11;
+        constexpr const auto from = 11ULL;
         constexpr const auto name = "deliver_error_code_bit";
 
         inline auto is_enabled()
@@ -831,14 +831,14 @@ namespace idt_vectoring_information
         inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace reserved
     {
         constexpr const auto mask = 0x7FFFE000ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "reserved";
 
         inline auto get()
@@ -850,14 +850,14 @@ namespace idt_vectoring_information
         inline auto get_if_exists(bool verbose = false)
         { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace valid_bit
     {
         constexpr const auto mask = 0x80000000ULL;
-        constexpr const auto from = 31;
+        constexpr const auto from = 31ULL;
         constexpr const auto name = "valid_bit";
 
         inline auto is_enabled()
@@ -878,18 +878,18 @@ namespace idt_vectoring_information
         inline auto is_disabled_if_exists(bool verbose = false)
         { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        vector::dump(level);
-        interruption_type::dump(level);
-        error_code_valid::dump(level);
-        reserved::dump(level);
-        valid_bit::dump(level);
+        dump_vmcs_nhex(level, msg);
+        vector::dump(level, msg);
+        interruption_type::dump(level, msg);
+        error_code_valid::dump(level, msg);
+        reserved::dump(level, msg);
+        valid_bit::dump(level, msg);
     }
 }
 
@@ -907,8 +907,8 @@ namespace idt_vectoring_error_code
     inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace vm_exit_instruction_length
@@ -925,8 +925,8 @@ namespace vm_exit_instruction_length
     inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace vm_exit_instruction_information
@@ -943,8 +943,8 @@ namespace vm_exit_instruction_information
     inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 
     namespace ins
     {
@@ -959,7 +959,7 @@ namespace vm_exit_instruction_information
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -975,14 +975,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            address_size::dump(level);
+            dump_vmcs_nhex(level, msg);
+            address_size::dump(level, msg);
         }
     }
 
@@ -999,7 +999,7 @@ namespace vm_exit_instruction_information
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -1015,14 +1015,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -1041,15 +1041,15 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            address_size::dump(level);
-            segment_register::dump(level);
+            dump_vmcs_nhex(level, msg);
+            address_size::dump(level, msg);
+            segment_register::dump(level, msg);
         }
     }
 
@@ -1066,7 +1066,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -1083,14 +1083,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -1106,14 +1106,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -1132,14 +1132,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -1168,14 +1168,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -1196,14 +1196,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -1232,14 +1232,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -1260,14 +1260,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace reg2
         {
             constexpr const auto mask = 0x00000000F0000000ULL;
-            constexpr const auto from = 28;
+            constexpr const auto from = 28ULL;
             constexpr const auto name = "reg2";
 
             constexpr const auto rax = 0UL;
@@ -1296,21 +1296,21 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            address_size::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
-            reg2::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            address_size::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
+            reg2::dump(level, msg);
         }
     }
 
@@ -1327,7 +1327,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -1344,14 +1344,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -1367,14 +1367,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -1393,14 +1393,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -1429,14 +1429,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -1457,14 +1457,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -1493,14 +1493,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -1521,14 +1521,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace reg2
         {
             constexpr const auto mask = 0x00000000F0000000ULL;
-            constexpr const auto from = 28;
+            constexpr const auto from = 28ULL;
             constexpr const auto name = "reg2";
 
             constexpr const auto rax = 0UL;
@@ -1557,21 +1557,21 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            address_size::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
-            reg2::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            address_size::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
+            reg2::dump(level, msg);
         }
     }
 
@@ -1588,7 +1588,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -1605,14 +1605,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -1628,14 +1628,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -1654,14 +1654,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -1690,14 +1690,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -1718,14 +1718,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -1754,14 +1754,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -1782,14 +1782,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace reg2
         {
             constexpr const auto mask = 0x00000000F0000000ULL;
-            constexpr const auto from = 28;
+            constexpr const auto from = 28ULL;
             constexpr const auto name = "reg2";
 
             constexpr const auto rax = 0UL;
@@ -1818,21 +1818,21 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            address_size::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
-            reg2::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            address_size::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
+            reg2::dump(level, msg);
         }
     }
 
@@ -1849,7 +1849,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -1866,14 +1866,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -1889,14 +1889,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace operand_size
         {
             constexpr const auto mask = 0x0000000000000800ULL;
-            constexpr const auto from = 11;
+            constexpr const auto from = 11ULL;
             constexpr const auto name = "operand_size";
 
             constexpr const auto _16bit = 0UL;
@@ -1911,14 +1911,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -1937,14 +1937,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -1973,14 +1973,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -2001,14 +2001,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -2037,14 +2037,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -2065,14 +2065,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace instruction_identity
         {
             constexpr const auto mask = 0x0000000030000000ULL;
-            constexpr const auto from = 28;
+            constexpr const auto from = 28ULL;
             constexpr const auto name = "instruction_identity";
 
             constexpr const auto sgdt = 0UL;
@@ -2089,22 +2089,22 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            address_size::dump(level);
-            operand_size::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
-            instruction_identity::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            address_size::dump(level, msg);
+            operand_size::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
+            instruction_identity::dump(level, msg);
         }
     }
 
@@ -2121,7 +2121,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -2138,14 +2138,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -2161,14 +2161,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace operand_size
         {
             constexpr const auto mask = 0x0000000000000800ULL;
-            constexpr const auto from = 11;
+            constexpr const auto from = 11ULL;
             constexpr const auto name = "operand_size";
 
             constexpr const auto _16bit = 0UL;
@@ -2183,14 +2183,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -2209,14 +2209,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -2245,14 +2245,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -2273,14 +2273,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -2309,14 +2309,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -2337,14 +2337,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace instruction_identity
         {
             constexpr const auto mask = 0x0000000030000000ULL;
-            constexpr const auto from = 28;
+            constexpr const auto from = 28ULL;
             constexpr const auto name = "instruction_identity";
 
             constexpr const auto sgdt = 0UL;
@@ -2361,22 +2361,22 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            address_size::dump(level);
-            operand_size::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
-            instruction_identity::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            address_size::dump(level, msg);
+            operand_size::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
+            instruction_identity::dump(level, msg);
         }
     }
 
@@ -2393,7 +2393,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -2410,14 +2410,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -2433,14 +2433,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace operand_size
         {
             constexpr const auto mask = 0x0000000000000800ULL;
-            constexpr const auto from = 11;
+            constexpr const auto from = 11ULL;
             constexpr const auto name = "operand_size";
 
             constexpr const auto _16bit = 0UL;
@@ -2455,14 +2455,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -2481,14 +2481,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -2517,14 +2517,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -2545,14 +2545,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -2581,14 +2581,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -2609,14 +2609,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace instruction_identity
         {
             constexpr const auto mask = 0x0000000030000000ULL;
-            constexpr const auto from = 28;
+            constexpr const auto from = 28ULL;
             constexpr const auto name = "instruction_identity";
 
             constexpr const auto sgdt = 0UL;
@@ -2633,22 +2633,22 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            address_size::dump(level);
-            operand_size::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
-            instruction_identity::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            address_size::dump(level, msg);
+            operand_size::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
+            instruction_identity::dump(level, msg);
         }
     }
 
@@ -2665,7 +2665,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -2682,14 +2682,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -2705,14 +2705,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace operand_size
         {
             constexpr const auto mask = 0x0000000000000800ULL;
-            constexpr const auto from = 11;
+            constexpr const auto from = 11ULL;
             constexpr const auto name = "operand_size";
 
             constexpr const auto _16bit = 0UL;
@@ -2727,14 +2727,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -2753,14 +2753,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -2789,14 +2789,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -2817,14 +2817,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -2853,14 +2853,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -2881,14 +2881,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace instruction_identity
         {
             constexpr const auto mask = 0x0000000030000000ULL;
-            constexpr const auto from = 28;
+            constexpr const auto from = 28ULL;
             constexpr const auto name = "instruction_identity";
 
             constexpr const auto sgdt = 0UL;
@@ -2905,22 +2905,22 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            address_size::dump(level);
-            operand_size::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
-            instruction_identity::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            address_size::dump(level, msg);
+            operand_size::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
+            instruction_identity::dump(level, msg);
         }
     }
 
@@ -2937,7 +2937,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -2954,14 +2954,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reg1
         {
             constexpr const auto mask = 0x0000000000000078ULL;
-            constexpr const auto from = 3;
+            constexpr const auto from = 3ULL;
             constexpr const auto name = "reg1";
 
             constexpr const auto rax = 0UL;
@@ -2990,14 +2990,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -3013,14 +3013,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace mem_reg
         {
             constexpr const auto mask = 0x0000000000000400ULL;
-            constexpr const auto from = 10;
+            constexpr const auto from = 10ULL;
             constexpr const auto name = "mem/reg";
 
             constexpr const auto mem = 0UL;
@@ -3035,14 +3035,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -3061,14 +3061,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -3097,14 +3097,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -3125,14 +3125,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -3161,14 +3161,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -3189,14 +3189,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace instruction_identity
         {
             constexpr const auto mask = 0x0000000030000000ULL;
-            constexpr const auto from = 28;
+            constexpr const auto from = 28ULL;
             constexpr const auto name = "instruction_identity";
 
             constexpr const auto sldt = 0UL;
@@ -3213,23 +3213,23 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            reg1::dump(level);
-            address_size::dump(level);
-            mem_reg::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
-            instruction_identity::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            reg1::dump(level, msg);
+            address_size::dump(level, msg);
+            mem_reg::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
+            instruction_identity::dump(level, msg);
         }
     }
 
@@ -3246,7 +3246,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -3263,14 +3263,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reg1
         {
             constexpr const auto mask = 0x0000000000000078ULL;
-            constexpr const auto from = 3;
+            constexpr const auto from = 3ULL;
             constexpr const auto name = "reg1";
 
             constexpr const auto rax = 0UL;
@@ -3299,14 +3299,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -3322,14 +3322,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace mem_reg
         {
             constexpr const auto mask = 0x0000000000000400ULL;
-            constexpr const auto from = 10;
+            constexpr const auto from = 10ULL;
             constexpr const auto name = "mem/reg";
 
             constexpr const auto mem = 0UL;
@@ -3344,14 +3344,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -3370,14 +3370,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -3406,14 +3406,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -3434,14 +3434,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -3470,14 +3470,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -3498,14 +3498,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace instruction_identity
         {
             constexpr const auto mask = 0x0000000030000000ULL;
-            constexpr const auto from = 28;
+            constexpr const auto from = 28ULL;
             constexpr const auto name = "instruction_identity";
 
             constexpr const auto sldt = 0UL;
@@ -3522,23 +3522,23 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            reg1::dump(level);
-            address_size::dump(level);
-            mem_reg::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
-            instruction_identity::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            reg1::dump(level, msg);
+            address_size::dump(level, msg);
+            mem_reg::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
+            instruction_identity::dump(level, msg);
         }
     }
 
@@ -3555,7 +3555,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -3572,14 +3572,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reg1
         {
             constexpr const auto mask = 0x0000000000000078ULL;
-            constexpr const auto from = 3;
+            constexpr const auto from = 3ULL;
             constexpr const auto name = "reg1";
 
             constexpr const auto rax = 0UL;
@@ -3608,14 +3608,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -3631,14 +3631,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace mem_reg
         {
             constexpr const auto mask = 0x0000000000000400ULL;
-            constexpr const auto from = 10;
+            constexpr const auto from = 10ULL;
             constexpr const auto name = "mem/reg";
 
             constexpr const auto mem = 0UL;
@@ -3653,14 +3653,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -3679,14 +3679,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -3715,14 +3715,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -3743,14 +3743,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -3779,14 +3779,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -3807,14 +3807,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace instruction_identity
         {
             constexpr const auto mask = 0x0000000030000000ULL;
-            constexpr const auto from = 28;
+            constexpr const auto from = 28ULL;
             constexpr const auto name = "instruction_identity";
 
             constexpr const auto sldt = 0UL;
@@ -3831,23 +3831,23 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            reg1::dump(level);
-            address_size::dump(level);
-            mem_reg::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
-            instruction_identity::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            reg1::dump(level, msg);
+            address_size::dump(level, msg);
+            mem_reg::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
+            instruction_identity::dump(level, msg);
         }
     }
 
@@ -3864,7 +3864,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -3881,14 +3881,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reg1
         {
             constexpr const auto mask = 0x0000000000000078ULL;
-            constexpr const auto from = 3;
+            constexpr const auto from = 3ULL;
             constexpr const auto name = "reg1";
 
             constexpr const auto rax = 0UL;
@@ -3917,14 +3917,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -3940,14 +3940,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace mem_reg
         {
             constexpr const auto mask = 0x0000000000000400ULL;
-            constexpr const auto from = 10;
+            constexpr const auto from = 10ULL;
             constexpr const auto name = "mem/reg";
 
             constexpr const auto mem = 0UL;
@@ -3962,14 +3962,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -3988,14 +3988,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -4024,14 +4024,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -4052,14 +4052,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -4088,14 +4088,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -4116,14 +4116,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace instruction_identity
         {
             constexpr const auto mask = 0x0000000030000000ULL;
-            constexpr const auto from = 28;
+            constexpr const auto from = 28ULL;
             constexpr const auto name = "instruction_identity";
 
             constexpr const auto sldt = 0UL;
@@ -4140,23 +4140,23 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            reg1::dump(level);
-            address_size::dump(level);
-            mem_reg::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
-            instruction_identity::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            reg1::dump(level, msg);
+            address_size::dump(level, msg);
+            mem_reg::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
+            instruction_identity::dump(level, msg);
         }
     }
 
@@ -4173,7 +4173,7 @@ namespace vm_exit_instruction_information
         namespace destination_register
         {
             constexpr const auto mask = 0x0000000000000078ULL;
-            constexpr const auto from = 3;
+            constexpr const auto from = 3ULL;
             constexpr const auto name = "destination_register";
 
             constexpr const auto rax = 0UL;
@@ -4202,14 +4202,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace operand_size
         {
             constexpr const auto mask = 0x0000000000001800ULL;
-            constexpr const auto from = 11;
+            constexpr const auto from = 11ULL;
             constexpr const auto name = "operand_size";
 
             constexpr const auto _16bit = 0UL;
@@ -4225,15 +4225,15 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            destination_register::dump(level);
-            operand_size::dump(level);
+            dump_vmcs_nhex(level, msg);
+            destination_register::dump(level, msg);
+            operand_size::dump(level, msg);
         }
     }
 
@@ -4250,7 +4250,7 @@ namespace vm_exit_instruction_information
         namespace destination_register
         {
             constexpr const auto mask = 0x0000000000000078ULL;
-            constexpr const auto from = 3;
+            constexpr const auto from = 3ULL;
             constexpr const auto name = "destination_register";
 
             constexpr const auto rax = 0UL;
@@ -4279,14 +4279,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace operand_size
         {
             constexpr const auto mask = 0x0000000000001800ULL;
-            constexpr const auto from = 11;
+            constexpr const auto from = 11ULL;
             constexpr const auto name = "operand_size";
 
             constexpr const auto _16bit = 0UL;
@@ -4302,15 +4302,15 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            destination_register::dump(level);
-            operand_size::dump(level);
+            dump_vmcs_nhex(level, msg);
+            destination_register::dump(level, msg);
+            operand_size::dump(level, msg);
         }
     }
 
@@ -4327,7 +4327,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -4344,14 +4344,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -4367,14 +4367,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -4393,14 +4393,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -4429,14 +4429,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -4457,14 +4457,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -4493,14 +4493,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -4521,20 +4521,20 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            address_size::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            address_size::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
         }
     }
 
@@ -4551,7 +4551,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -4568,14 +4568,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -4591,14 +4591,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -4617,14 +4617,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -4653,14 +4653,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -4681,14 +4681,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -4717,14 +4717,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -4745,20 +4745,20 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            address_size::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            address_size::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
         }
     }
 
@@ -4775,7 +4775,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -4792,14 +4792,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -4815,14 +4815,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -4841,14 +4841,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -4877,14 +4877,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -4905,14 +4905,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -4941,14 +4941,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -4969,20 +4969,20 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            address_size::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            address_size::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
         }
     }
 
@@ -4999,7 +4999,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -5016,14 +5016,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -5039,14 +5039,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -5065,14 +5065,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -5101,14 +5101,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -5129,14 +5129,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -5165,14 +5165,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -5193,20 +5193,20 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            address_size::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            address_size::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
         }
     }
 
@@ -5223,7 +5223,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -5240,14 +5240,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -5263,14 +5263,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -5289,14 +5289,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -5325,14 +5325,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -5353,14 +5353,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -5389,14 +5389,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -5417,20 +5417,20 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            address_size::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            address_size::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
         }
     }
 
@@ -5447,7 +5447,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -5464,14 +5464,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -5487,14 +5487,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -5513,14 +5513,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -5549,14 +5549,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -5577,14 +5577,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -5613,14 +5613,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -5641,20 +5641,20 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            address_size::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            address_size::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
         }
     }
 
@@ -5671,7 +5671,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -5688,14 +5688,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reg1
         {
             constexpr const auto mask = 0x0000000000000078ULL;
-            constexpr const auto from = 3;
+            constexpr const auto from = 3ULL;
             constexpr const auto name = "reg1";
 
             constexpr const auto rax = 0UL;
@@ -5724,14 +5724,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -5747,14 +5747,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace mem_reg
         {
             constexpr const auto mask = 0x0000000000000400ULL;
-            constexpr const auto from = 10;
+            constexpr const auto from = 10ULL;
             constexpr const auto name = "mem/reg";
 
             constexpr const auto mem = 0UL;
@@ -5769,14 +5769,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -5795,14 +5795,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -5831,14 +5831,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -5859,14 +5859,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -5895,14 +5895,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -5923,14 +5923,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace reg2
         {
             constexpr const auto mask = 0x00000000F0000000ULL;
-            constexpr const auto from = 28;
+            constexpr const auto from = 28ULL;
             constexpr const auto name = "reg2";
 
             constexpr const auto rax = 0UL;
@@ -5959,23 +5959,23 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            reg1::dump(level);
-            address_size::dump(level);
-            mem_reg::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
-            reg2::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            reg1::dump(level, msg);
+            address_size::dump(level, msg);
+            mem_reg::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
+            reg2::dump(level, msg);
         }
     }
 
@@ -5992,7 +5992,7 @@ namespace vm_exit_instruction_information
         namespace scaling
         {
             constexpr const auto mask = 0x0000000000000003ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "scaling";
 
             constexpr const auto no_scaling = 0UL;
@@ -6009,14 +6009,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reg1
         {
             constexpr const auto mask = 0x0000000000000078ULL;
-            constexpr const auto from = 3;
+            constexpr const auto from = 3ULL;
             constexpr const auto name = "reg1";
 
             constexpr const auto rax = 0UL;
@@ -6045,14 +6045,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace address_size
         {
             constexpr const auto mask = 0x0000000000000380ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "address_size";
 
             constexpr const auto _16bit = 0UL;
@@ -6068,14 +6068,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace mem_reg
         {
             constexpr const auto mask = 0x0000000000000400ULL;
-            constexpr const auto from = 10;
+            constexpr const auto from = 10ULL;
             constexpr const auto name = "mem/reg";
 
             constexpr const auto mem = 0UL;
@@ -6090,14 +6090,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace segment_register
         {
             constexpr const auto mask = 0x0000000000038000ULL;
-            constexpr const auto from = 15;
+            constexpr const auto from = 15ULL;
             constexpr const auto name = "segment_register";
 
             constexpr const auto es = 0UL;
@@ -6116,14 +6116,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg
         {
             constexpr const auto mask = 0x00000000003C0000ULL;
-            constexpr const auto from = 18;
+            constexpr const auto from = 18ULL;
             constexpr const auto name = "index_reg";
 
             constexpr const auto rax = 0UL;
@@ -6152,14 +6152,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace index_reg_invalid
         {
             constexpr const auto mask = 0x0000000000400000ULL;
-            constexpr const auto from = 22;
+            constexpr const auto from = 22ULL;
             constexpr const auto name = "index_reg_invalid";
 
             inline auto is_enabled()
@@ -6180,14 +6180,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace base_reg
         {
             constexpr const auto mask = 0x0000000007800000ULL;
-            constexpr const auto from = 23;
+            constexpr const auto from = 23ULL;
             constexpr const auto name = "base_reg";
 
             constexpr const auto rax = 0UL;
@@ -6216,14 +6216,14 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace base_reg_invalid
         {
             constexpr const auto mask = 0x0000000008000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "base_reg_invalid";
 
             inline auto is_enabled()
@@ -6244,14 +6244,14 @@ namespace vm_exit_instruction_information
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace reg2
         {
             constexpr const auto mask = 0x00000000F0000000ULL;
-            constexpr const auto from = 28;
+            constexpr const auto from = 28ULL;
             constexpr const auto name = "reg2";
 
             constexpr const auto rax = 0UL;
@@ -6280,23 +6280,23 @@ namespace vm_exit_instruction_information
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            scaling::dump(level);
-            reg1::dump(level);
-            address_size::dump(level);
-            mem_reg::dump(level);
-            segment_register::dump(level);
-            index_reg::dump(level);
-            index_reg_invalid::dump(level);
-            base_reg::dump(level);
-            base_reg_invalid::dump(level);
-            reg2::dump(level);
+            dump_vmcs_nhex(level, msg);
+            scaling::dump(level, msg);
+            reg1::dump(level, msg);
+            address_size::dump(level, msg);
+            mem_reg::dump(level, msg);
+            segment_register::dump(level, msg);
+            index_reg::dump(level, msg);
+            index_reg_invalid::dump(level, msg);
+            base_reg::dump(level, msg);
+            base_reg_invalid::dump(level, msg);
+            reg2::dump(level, msg);
         }
     }
 }

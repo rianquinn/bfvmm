@@ -202,7 +202,7 @@ setup_check_control_vm_entry_control_fields_all_paths(std::vector<struct control
 
     path.setup = [&] {
         g_msrs[ia32_vmx_true_entry_ctls::addr] = 0xffffffff00000000UL;
-        vm_entry_interruption_information_field::valid_bit::disable();
+        vm_entry_interruption_information::valid_bit::disable();
         vm_entry_msr_load_count::set(0UL);
     };
     path.throws_exception = false;
@@ -326,7 +326,7 @@ setup_check_guest_rip_and_rflags_all_paths(std::vector<struct control_flow_path>
         guest_rflags::reserved::set(0UL);
         guest_rflags::always_enabled::set(0x2UL);
         guest_cr0::protection_enable::enable();
-        vm_entry_interruption_information_field::valid_bit::disable();
+        vm_entry_interruption_information::valid_bit::disable();
     };
     path.throws_exception = false;
     cfg.push_back(path);
@@ -342,7 +342,7 @@ setup_check_guest_non_register_state_all_paths(std::vector<struct control_flow_p
         guest_activity_state::set(guest_activity_state::active);
         guest_interruptibility_state::blocking_by_sti::disable();
         guest_interruptibility_state::blocking_by_mov_ss::disable();
-        vm_entry_interruption_information_field::valid_bit::disable();
+        vm_entry_interruption_information::valid_bit::disable();
         vm_entry_controls::entry_to_smm::disable();
         guest_interruptibility_state::reserved::set(0UL);
         guest_interruptibility_state::enclave_interruption::disable();

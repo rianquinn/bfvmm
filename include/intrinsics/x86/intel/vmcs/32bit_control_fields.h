@@ -61,7 +61,7 @@ namespace pin_based_vm_execution_controls
     namespace external_interrupt_exiting
     {
         constexpr const auto mask = 0x0000000000000001ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "external_interrupt_exiting";
 
         inline auto is_enabled()
@@ -94,14 +94,20 @@ namespace pin_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace nmi_exiting
     {
         constexpr const auto mask = 0x0000000000000008ULL;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "nmi_exiting";
 
         inline auto is_enabled()
@@ -134,14 +140,20 @@ namespace pin_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace virtual_nmis
     {
         constexpr const auto mask = 0x0000000000000020ULL;
-        constexpr const auto from = 5;
+        constexpr const auto from = 5ULL;
         constexpr const auto name = "virtual_nmis";
 
         inline auto is_enabled()
@@ -174,14 +186,20 @@ namespace pin_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace activate_vmx_preemption_timer
     {
         constexpr const auto mask = 0x0000000000000040ULL;
-        constexpr const auto from = 6;
+        constexpr const auto from = 6ULL;
         constexpr const auto name = "activate_vmx_preemption_timer";
 
         inline auto is_enabled()
@@ -214,14 +232,20 @@ namespace pin_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace process_posted_interrupts
     {
         constexpr const auto mask = 0x0000000000000080ULL;
-        constexpr const auto from = 7;
+        constexpr const auto from = 7ULL;
         constexpr const auto name = "process_posted_interrupts";
 
         inline auto is_enabled()
@@ -254,18 +278,24 @@ namespace pin_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, "pin_based_vm_execution_controls", get());
-        external_interrupt_exiting::dump(level);
-        nmi_exiting::dump(level);
-        virtual_nmis::dump(level);
-        activate_vmx_preemption_timer::dump(level);
-        process_posted_interrupts::dump(level);
+        bfdebug_nhex(level, "pin_based_vm_execution_controls", get(), msg);
+        external_interrupt_exiting::dump(level, msg);
+        nmi_exiting::dump(level, msg);
+        virtual_nmis::dump(level, msg);
+        activate_vmx_preemption_timer::dump(level, msg);
+        process_posted_interrupts::dump(level, msg);
     }
 }
 
@@ -292,7 +322,7 @@ namespace primary_processor_based_vm_execution_controls
     namespace interrupt_window_exiting
     {
         constexpr const auto mask = 0x0000000000000004ULL;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "interrupt_window_exiting";
 
         inline auto is_enabled()
@@ -325,14 +355,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace use_tsc_offsetting
     {
         constexpr const auto mask = 0x0000000000000008ULL;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "use_tsc_offsetting";
 
         inline auto is_enabled()
@@ -365,14 +401,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace hlt_exiting
     {
         constexpr const auto mask = 0x0000000000000080ULL;
-        constexpr const auto from = 7;
+        constexpr const auto from = 7ULL;
         constexpr const auto name = "hlt_exiting";
 
         inline auto is_enabled()
@@ -405,14 +447,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace invlpg_exiting
     {
         constexpr const auto mask = 0x0000000000000200ULL;
-        constexpr const auto from = 9;
+        constexpr const auto from = 9ULL;
         constexpr const auto name = "invlpg_exiting";
 
         inline auto is_enabled()
@@ -445,14 +493,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace mwait_exiting
     {
         constexpr const auto mask = 0x0000000000000400ULL;
-        constexpr const auto from = 10;
+        constexpr const auto from = 10ULL;
         constexpr const auto name = "mwait_exiting";
 
         inline auto is_enabled()
@@ -485,14 +539,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace rdpmc_exiting
     {
         constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11;
+        constexpr const auto from = 11ULL;
         constexpr const auto name = "rdpmc_exiting";
 
         inline auto is_enabled()
@@ -525,14 +585,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace rdtsc_exiting
     {
         constexpr const auto mask = 0x0000000000001000ULL;
-        constexpr const auto from = 12;
+        constexpr const auto from = 12ULL;
         constexpr const auto name = "rdtsc_exiting";
 
         inline auto is_enabled()
@@ -565,14 +631,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace cr3_load_exiting
     {
         constexpr const auto mask = 0x0000000000008000ULL;
-        constexpr const auto from = 15;
+        constexpr const auto from = 15ULL;
         constexpr const auto name = "cr3_load_exiting";
 
         inline auto is_enabled()
@@ -605,14 +677,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace cr3_store_exiting
     {
         constexpr const auto mask = 0x0000000000010000ULL;
-        constexpr const auto from = 16;
+        constexpr const auto from = 16ULL;
         constexpr const auto name = "cr3_store_exiting";
 
         inline auto is_enabled()
@@ -645,14 +723,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace cr8_load_exiting
     {
         constexpr const auto mask = 0x0000000000080000ULL;
-        constexpr const auto from = 19;
+        constexpr const auto from = 19ULL;
         constexpr const auto name = "cr8_load_exiting";
 
         inline auto is_enabled()
@@ -685,14 +769,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace cr8_store_exiting
     {
         constexpr const auto mask = 0x0000000000100000ULL;
-        constexpr const auto from = 20;
+        constexpr const auto from = 20ULL;
         constexpr const auto name = "cr8_store_exiting";
 
         inline auto is_enabled()
@@ -725,14 +815,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace use_tpr_shadow
     {
         constexpr const auto mask = 0x0000000000200000ULL;
-        constexpr const auto from = 21;
+        constexpr const auto from = 21ULL;
         constexpr const auto name = "use_tpr_shadow";
 
         inline auto is_enabled()
@@ -765,14 +861,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace nmi_window_exiting
     {
         constexpr const auto mask = 0x0000000000400000ULL;
-        constexpr const auto from = 22;
+        constexpr const auto from = 22ULL;
         constexpr const auto name = "nmi_window_exiting";
 
         inline auto is_enabled()
@@ -805,14 +907,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace mov_dr_exiting
     {
         constexpr const auto mask = 0x0000000000800000ULL;
-        constexpr const auto from = 23;
+        constexpr const auto from = 23ULL;
         constexpr const auto name = "mov_dr_exiting";
 
         inline auto is_enabled()
@@ -845,14 +953,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace unconditional_io_exiting
     {
         constexpr const auto mask = 0x0000000001000000ULL;
-        constexpr const auto from = 24;
+        constexpr const auto from = 24ULL;
         constexpr const auto name = "unconditional_io_exiting";
 
         inline auto is_enabled()
@@ -885,14 +999,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace use_io_bitmaps
     {
         constexpr const auto mask = 0x0000000002000000ULL;
-        constexpr const auto from = 25;
+        constexpr const auto from = 25ULL;
         constexpr const auto name = "use_io_bitmaps";
 
         inline auto is_enabled()
@@ -925,14 +1045,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace monitor_trap_flag
     {
         constexpr const auto mask = 0x0000000008000000ULL;
-        constexpr const auto from = 27;
+        constexpr const auto from = 27ULL;
         constexpr const auto name = "monitor_trap_flag";
 
         inline auto is_enabled()
@@ -965,14 +1091,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace use_msr_bitmap
     {
         constexpr const auto mask = 0x0000000010000000ULL;
-        constexpr const auto from = 28;
+        constexpr const auto from = 28ULL;
         constexpr const auto name = "use_msr_bitmap";
 
         inline auto is_enabled()
@@ -1005,14 +1137,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace monitor_exiting
     {
         constexpr const auto mask = 0x0000000020000000ULL;
-        constexpr const auto from = 29;
+        constexpr const auto from = 29ULL;
         constexpr const auto name = "monitor_exiting";
 
         inline auto is_enabled()
@@ -1045,14 +1183,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace pause_exiting
     {
         constexpr const auto mask = 0x0000000040000000ULL;
-        constexpr const auto from = 30;
+        constexpr const auto from = 30ULL;
         constexpr const auto name = "pause_exiting";
 
         inline auto is_enabled()
@@ -1085,14 +1229,20 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace activate_secondary_controls
     {
         constexpr const auto mask = 0x0000000080000000ULL;
-        constexpr const auto from = 31;
+        constexpr const auto from = 31ULL;
         constexpr const auto name = "activate_secondary_controls";
 
         inline auto is_enabled()
@@ -1125,34 +1275,40 @@ namespace primary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, "primary_processor_based_vm_execution_controls", get());
-        interrupt_window_exiting::dump(level);
-        use_tsc_offsetting::dump(level);
-        hlt_exiting::dump(level);
-        invlpg_exiting::dump(level);
-        mwait_exiting::dump(level);
-        rdpmc_exiting::dump(level);
-        rdtsc_exiting::dump(level);
-        cr3_load_exiting::dump(level);
-        cr3_store_exiting::dump(level);
-        cr8_load_exiting::dump(level);
-        cr8_store_exiting::dump(level);
-        use_tpr_shadow::dump(level);
-        nmi_window_exiting::dump(level);
-        mov_dr_exiting::dump(level);
-        unconditional_io_exiting::dump(level);
-        use_io_bitmaps::dump(level);
-        monitor_trap_flag::dump(level);
-        use_msr_bitmap::dump(level);
-        monitor_exiting::dump(level);
-        pause_exiting::dump(level);
-        activate_secondary_controls::dump(level);
+        bfdebug_nhex(level, "primary_processor_based_vm_execution_controls", get(), msg);
+        interrupt_window_exiting::dump(level, msg);
+        use_tsc_offsetting::dump(level, msg);
+        hlt_exiting::dump(level, msg);
+        invlpg_exiting::dump(level, msg);
+        mwait_exiting::dump(level, msg);
+        rdpmc_exiting::dump(level, msg);
+        rdtsc_exiting::dump(level, msg);
+        cr3_load_exiting::dump(level, msg);
+        cr3_store_exiting::dump(level, msg);
+        cr8_load_exiting::dump(level, msg);
+        cr8_store_exiting::dump(level, msg);
+        use_tpr_shadow::dump(level, msg);
+        nmi_window_exiting::dump(level, msg);
+        mov_dr_exiting::dump(level, msg);
+        unconditional_io_exiting::dump(level, msg);
+        use_io_bitmaps::dump(level, msg);
+        monitor_trap_flag::dump(level, msg);
+        use_msr_bitmap::dump(level, msg);
+        monitor_exiting::dump(level, msg);
+        pause_exiting::dump(level, msg);
+        activate_secondary_controls::dump(level, msg);
     }
 }
 
@@ -1176,8 +1332,8 @@ namespace exception_bitmap
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace page_fault_error_code_mask
@@ -1200,8 +1356,8 @@ namespace page_fault_error_code_mask
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace page_fault_error_code_match
@@ -1224,8 +1380,8 @@ namespace page_fault_error_code_match
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace cr3_target_count
@@ -1248,8 +1404,8 @@ namespace cr3_target_count
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace vm_exit_controls
@@ -1275,7 +1431,7 @@ namespace vm_exit_controls
     namespace save_debug_controls
     {
         constexpr const auto mask = 0x0000000000000004ULL;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "save_debug_controls";
 
         inline auto is_enabled()
@@ -1308,14 +1464,20 @@ namespace vm_exit_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace host_address_space_size
     {
         constexpr const auto mask = 0x0000000000000200ULL;
-        constexpr const auto from = 9;
+        constexpr const auto from = 9ULL;
         constexpr const auto name = "host_address_space_size";
 
         inline auto is_enabled()
@@ -1348,14 +1510,20 @@ namespace vm_exit_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace load_ia32_perf_global_ctrl
     {
         constexpr const auto mask = 0x0000000000001000ULL;
-        constexpr const auto from = 12;
+        constexpr const auto from = 12ULL;
         constexpr const auto name = "load_ia32_perf_global_ctrl";
 
         inline auto is_enabled()
@@ -1388,14 +1556,20 @@ namespace vm_exit_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace acknowledge_interrupt_on_exit
     {
         constexpr const auto mask = 0x0000000000008000ULL;
-        constexpr const auto from = 15;
+        constexpr const auto from = 15ULL;
         constexpr const auto name = "acknowledge_interrupt_on_exit";
 
         inline auto is_enabled()
@@ -1428,14 +1602,20 @@ namespace vm_exit_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace save_ia32_pat
     {
         constexpr const auto mask = 0x0000000000040000ULL;
-        constexpr const auto from = 18;
+        constexpr const auto from = 18ULL;
         constexpr const auto name = "save_ia32_pat";
 
         inline auto is_enabled()
@@ -1468,14 +1648,20 @@ namespace vm_exit_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace load_ia32_pat
     {
         constexpr const auto mask = 0x0000000000080000ULL;
-        constexpr const auto from = 19;
+        constexpr const auto from = 19ULL;
         constexpr const auto name = "load_ia32_pat";
 
         inline auto is_enabled()
@@ -1508,14 +1694,20 @@ namespace vm_exit_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace save_ia32_efer
     {
         constexpr const auto mask = 0x0000000000100000ULL;
-        constexpr const auto from = 20;
+        constexpr const auto from = 20ULL;
         constexpr const auto name = "save_ia32_efer";
 
         inline auto is_enabled()
@@ -1548,14 +1740,20 @@ namespace vm_exit_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace load_ia32_efer
     {
         constexpr const auto mask = 0x0000000000200000ULL;
-        constexpr const auto from = 21;
+        constexpr const auto from = 21ULL;
         constexpr const auto name = "load_ia32_efer";
 
         inline auto is_enabled()
@@ -1588,14 +1786,20 @@ namespace vm_exit_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace save_vmx_preemption_timer_value
     {
         constexpr const auto mask = 0x0000000000400000ULL;
-        constexpr const auto from = 22;
+        constexpr const auto from = 22ULL;
         constexpr const auto name = "save_vmx_preemption_timer_value";
 
         inline auto is_enabled()
@@ -1628,14 +1832,20 @@ namespace vm_exit_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace clear_ia32_bndcfgs
     {
         constexpr const auto mask = 0x0000000000800000ULL;
-        constexpr const auto from = 23;
+        constexpr const auto from = 23ULL;
         constexpr const auto name = "clear_ia32_bndcfgs";
 
         inline auto is_enabled()
@@ -1668,14 +1878,20 @@ namespace vm_exit_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace pt_conceal_vm_exits
     {
         constexpr const auto mask = 0x0000000000800000ULL;
-        constexpr const auto from = 23;
+        constexpr const auto from = 23ULL;
         constexpr const auto name = "pt_conceal_vm_exits";
 
         inline auto is_enabled()
@@ -1708,24 +1924,30 @@ namespace vm_exit_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, "vm_exit_controls", get());
-        save_debug_controls::dump(level);
-        host_address_space_size::dump(level);
-        load_ia32_perf_global_ctrl::dump(level);
-        acknowledge_interrupt_on_exit::dump(level);
-        save_ia32_pat::dump(level);
-        load_ia32_pat::dump(level);
-        save_ia32_efer::dump(level);
-        load_ia32_efer::dump(level);
-        save_vmx_preemption_timer_value::dump(level);
-        clear_ia32_bndcfgs::dump(level);
-        pt_conceal_vm_exits::dump(level);
+        bfdebug_nhex(level, "vm_exit_controls", get(), msg);
+        save_debug_controls::dump(level, msg);
+        host_address_space_size::dump(level, msg);
+        load_ia32_perf_global_ctrl::dump(level, msg);
+        acknowledge_interrupt_on_exit::dump(level, msg);
+        save_ia32_pat::dump(level, msg);
+        load_ia32_pat::dump(level, msg);
+        save_ia32_efer::dump(level, msg);
+        load_ia32_efer::dump(level, msg);
+        save_vmx_preemption_timer_value::dump(level, msg);
+        clear_ia32_bndcfgs::dump(level, msg);
+        pt_conceal_vm_exits::dump(level, msg);
     }
 }
 
@@ -1749,8 +1971,8 @@ namespace vm_exit_msr_store_count
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace vm_exit_msr_load_count
@@ -1773,8 +1995,8 @@ namespace vm_exit_msr_load_count
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace vm_entry_controls
@@ -1800,7 +2022,7 @@ namespace vm_entry_controls
     namespace load_debug_controls
     {
         constexpr const auto mask = 0x0000000000000004ULL;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "load_debug_controls";
 
         inline auto is_enabled()
@@ -1833,14 +2055,20 @@ namespace vm_entry_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace ia_32e_mode_guest
     {
         constexpr const auto mask = 0x0000000000000200ULL;
-        constexpr const auto from = 9;
+        constexpr const auto from = 9ULL;
         constexpr const auto name = "ia_32e_mode_guest";
 
         inline auto is_enabled()
@@ -1873,14 +2101,20 @@ namespace vm_entry_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace entry_to_smm
     {
         constexpr const auto mask = 0x0000000000000400ULL;
-        constexpr const auto from = 10;
+        constexpr const auto from = 10ULL;
         constexpr const auto name = "entry_to_smm";
 
         inline auto is_enabled()
@@ -1913,14 +2147,20 @@ namespace vm_entry_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace deactivate_dual_monitor_treatment
     {
         constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11;
+        constexpr const auto from = 11ULL;
         constexpr const auto name = "deactivate_dual_monitor_treatment";
 
         inline auto is_enabled()
@@ -1953,14 +2193,20 @@ namespace vm_entry_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace load_ia32_perf_global_ctrl
     {
         constexpr const auto mask = 0x0000000000002000ULL;
-        constexpr const auto from = 13;
+        constexpr const auto from = 13ULL;
         constexpr const auto name = "load_ia32_perf_global_ctrl";
 
         inline auto is_enabled()
@@ -1993,14 +2239,20 @@ namespace vm_entry_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace load_ia32_pat
     {
         constexpr const auto mask = 0x0000000000004000ULL;
-        constexpr const auto from = 14;
+        constexpr const auto from = 14ULL;
         constexpr const auto name = "load_ia32_pat";
 
         inline auto is_enabled()
@@ -2033,14 +2285,20 @@ namespace vm_entry_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace load_ia32_efer
     {
         constexpr const auto mask = 0x0000000000008000ULL;
-        constexpr const auto from = 15;
+        constexpr const auto from = 15ULL;
         constexpr const auto name = "load_ia32_efer";
 
         inline auto is_enabled()
@@ -2073,14 +2331,20 @@ namespace vm_entry_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace load_ia32_bndcfgs
     {
         constexpr const auto mask = 0x0000000000010000ULL;
-        constexpr const auto from = 16;
+        constexpr const auto from = 16ULL;
         constexpr const auto name = "load_ia32_bndcfgs";
 
         inline auto is_enabled()
@@ -2113,14 +2377,20 @@ namespace vm_entry_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace pt_conceal_vm_entries
     {
         constexpr const auto mask = 0x0000000000020000ULL;
-        constexpr const auto from = 17;
+        constexpr const auto from = 17ULL;
         constexpr const auto name = "pt_conceal_vm_entries";
 
         inline auto is_enabled()
@@ -2153,22 +2423,28 @@ namespace vm_entry_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, "vm_entry_controls", get());
-        load_debug_controls::dump(level);
-        ia_32e_mode_guest::dump(level);
-        entry_to_smm::dump(level);
-        deactivate_dual_monitor_treatment::dump(level);
-        load_ia32_perf_global_ctrl::dump(level);
-        load_ia32_pat::dump(level);
-        load_ia32_efer::dump(level);
-        load_ia32_bndcfgs::dump(level);
-        pt_conceal_vm_entries::dump(level);
+        bfdebug_nhex(level, "vm_entry_controls", get(), msg);
+        load_debug_controls::dump(level, msg);
+        ia_32e_mode_guest::dump(level, msg);
+        entry_to_smm::dump(level, msg);
+        deactivate_dual_monitor_treatment::dump(level, msg);
+        load_ia32_perf_global_ctrl::dump(level, msg);
+        load_ia32_pat::dump(level, msg);
+        load_ia32_efer::dump(level, msg);
+        load_ia32_bndcfgs::dump(level, msg);
+        pt_conceal_vm_entries::dump(level, msg);
     }
 }
 
@@ -2192,14 +2468,14 @@ namespace vm_entry_msr_load_count
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
-namespace vm_entry_interruption_information_field
+namespace vm_entry_interruption_information
 {
     constexpr const auto addr = 0x0000000000004016ULL;
-    constexpr const auto name = "vm_entry_interruption_information_field";
+    constexpr const auto name = "vm_entry_interruption_information";
 
     inline auto exists()
     { return true; }
@@ -2219,7 +2495,7 @@ namespace vm_entry_interruption_information_field
     namespace vector
     {
         constexpr const auto mask = 0x000000FFULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "vector";
 
         inline auto get()
@@ -2240,14 +2516,14 @@ namespace vm_entry_interruption_information_field
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace interruption_type
     {
         constexpr const auto mask = 0x00000700ULL;
-        constexpr const auto from = 8;
+        constexpr const auto from = 8ULL;
         constexpr const auto name = "interruption_type";
 
         constexpr const auto external_interrupt = 0ULL;
@@ -2277,14 +2553,14 @@ namespace vm_entry_interruption_information_field
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace deliver_error_code_bit
     {
         constexpr const auto mask = 0x00000800ULL;
-        constexpr const auto from = 11;
+        constexpr const auto from = 11ULL;
         constexpr const auto name = "deliver_error_code_bit";
 
         inline auto is_enabled()
@@ -2323,14 +2599,23 @@ namespace vm_entry_interruption_information_field
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace reserved
     {
         constexpr const auto mask = 0x7FFFF000ULL;
-        constexpr const auto from = 12;
+        constexpr const auto from = 12ULL;
         constexpr const auto name = "reserved";
 
         inline auto get()
@@ -2351,14 +2636,14 @@ namespace vm_entry_interruption_information_field
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace valid_bit
     {
         constexpr const auto mask = 0x80000000ULL;
-        constexpr const auto from = 31;
+        constexpr const auto from = 31ULL;
         constexpr const auto name = "valid_bit";
 
         inline auto is_enabled()
@@ -2397,18 +2682,27 @@ namespace vm_entry_interruption_information_field
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        vector::dump(level);
-        interruption_type::dump(level);
-        deliver_error_code_bit::dump(level);
-        reserved::dump(level);
-        valid_bit::dump(level);
+        dump_vmcs_nhex(level, msg);
+        vector::dump(level, msg);
+        interruption_type::dump(level, msg);
+        deliver_error_code_bit::dump(level, msg);
+        reserved::dump(level, msg);
+        valid_bit::dump(level, msg);
     }
 }
 
@@ -2432,8 +2726,8 @@ namespace vm_entry_exception_error_code
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace vm_entry_instruction_length
@@ -2456,8 +2750,8 @@ namespace vm_entry_instruction_length
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace tpr_threshold
@@ -2480,8 +2774,8 @@ namespace tpr_threshold
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace secondary_processor_based_vm_execution_controls
@@ -2507,7 +2801,7 @@ namespace secondary_processor_based_vm_execution_controls
     namespace virtualize_apic_accesses
     {
         constexpr const auto mask = 0x0000000000000001ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "virtualize_apic_accesses";
 
         inline auto is_enabled()
@@ -2540,14 +2834,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace enable_ept
     {
         constexpr const auto mask = 0x0000000000000002ULL;
-        constexpr const auto from = 1;
+        constexpr const auto from = 1ULL;
         constexpr const auto name = "enable_ept";
 
         inline auto is_enabled()
@@ -2580,14 +2880,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace descriptor_table_exiting
     {
         constexpr const auto mask = 0x0000000000000004ULL;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "descriptor_table_exiting";
 
         inline auto is_enabled()
@@ -2620,14 +2926,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace enable_rdtscp
     {
         constexpr const auto mask = 0x0000000000000008ULL;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "enable_rdtscp";
 
         inline auto is_enabled()
@@ -2660,14 +2972,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace virtualize_x2apic_mode
     {
         constexpr const auto mask = 0x0000000000000010ULL;
-        constexpr const auto from = 4;
+        constexpr const auto from = 4ULL;
         constexpr const auto name = "virtualize_x2apic_mode";
 
         inline auto is_enabled()
@@ -2700,14 +3018,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace enable_vpid
     {
         constexpr const auto mask = 0x0000000000000020ULL;
-        constexpr const auto from = 5;
+        constexpr const auto from = 5ULL;
         constexpr const auto name = "enable_vpid";
 
         inline auto is_enabled()
@@ -2740,14 +3064,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace wbinvd_exiting
     {
         constexpr const auto mask = 0x0000000000000040ULL;
-        constexpr const auto from = 6;
+        constexpr const auto from = 6ULL;
         constexpr const auto name = "wbinvd_exiting";
 
         inline auto is_enabled()
@@ -2780,14 +3110,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace unrestricted_guest
     {
         constexpr const auto mask = 0x0000000000000080ULL;
-        constexpr const auto from = 7;
+        constexpr const auto from = 7ULL;
         constexpr const auto name = "unrestricted_guest";
 
         inline auto is_enabled()
@@ -2820,14 +3156,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace apic_register_virtualization
     {
         constexpr const auto mask = 0x0000000000000100ULL;
-        constexpr const auto from = 8;
+        constexpr const auto from = 8ULL;
         constexpr const auto name = "apic_register_virtualization";
 
         inline auto is_enabled()
@@ -2860,14 +3202,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace virtual_interrupt_delivery
     {
         constexpr const auto mask = 0x0000000000000200ULL;
-        constexpr const auto from = 9;
+        constexpr const auto from = 9ULL;
         constexpr const auto name = "virtual_interrupt_delivery";
 
         inline auto is_enabled()
@@ -2900,14 +3248,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace pause_loop_exiting
     {
         constexpr const auto mask = 0x0000000000000400ULL;
-        constexpr const auto from = 10;
+        constexpr const auto from = 10ULL;
         constexpr const auto name = "pause_loop_exiting";
 
         inline auto is_enabled()
@@ -2940,14 +3294,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace rdrand_exiting
     {
         constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11;
+        constexpr const auto from = 11ULL;
         constexpr const auto name = "rdrand_exiting";
 
         inline auto is_enabled()
@@ -2980,14 +3340,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace enable_invpcid
     {
         constexpr const auto mask = 0x0000000000001000ULL;
-        constexpr const auto from = 12;
+        constexpr const auto from = 12ULL;
         constexpr const auto name = "enable_invpcid";
 
         inline auto is_enabled()
@@ -3020,14 +3386,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace enable_vm_functions
     {
         constexpr const auto mask = 0x0000000000002000ULL;
-        constexpr const auto from = 13;
+        constexpr const auto from = 13ULL;
         constexpr const auto name = "enable_vm_functions";
 
         inline auto is_enabled()
@@ -3060,14 +3432,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace vmcs_shadowing
     {
         constexpr const auto mask = 0x0000000000004000ULL;
-        constexpr const auto from = 14;
+        constexpr const auto from = 14ULL;
         constexpr const auto name = "vmcs_shadowing";
 
         inline auto is_enabled()
@@ -3100,14 +3478,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace enable_encls_exiting
     {
         constexpr const auto mask = 0x0000000000008000ULL;
-        constexpr const auto from = 15;
+        constexpr const auto from = 15ULL;
         constexpr const auto name = "vmcs_shadowing";
 
         inline auto is_enabled()
@@ -3140,14 +3524,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace rdseed_exiting
     {
         constexpr const auto mask = 0x0000000000010000ULL;
-        constexpr const auto from = 16;
+        constexpr const auto from = 16ULL;
         constexpr const auto name = "rdseed_exiting";
 
         inline auto is_enabled()
@@ -3180,14 +3570,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace enable_pml
     {
         constexpr const auto mask = 0x0000000000020000ULL;
-        constexpr const auto from = 17;
+        constexpr const auto from = 17ULL;
         constexpr const auto name = "enable_pml";
 
         inline auto is_enabled()
@@ -3220,14 +3616,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace ept_violation_ve
     {
         constexpr const auto mask = 0x0000000000040000ULL;
-        constexpr const auto from = 18;
+        constexpr const auto from = 18ULL;
         constexpr const auto name = "ept_violation_ve";
 
         inline auto is_enabled()
@@ -3260,14 +3662,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace pt_conceal_vmx_nonroot_operation
     {
         constexpr const auto mask = 0x0000000000080000ULL;
-        constexpr const auto from = 19;
+        constexpr const auto from = 19ULL;
         constexpr const auto name = "pt_conceal_vmx_nonroot_operation";
 
         inline auto is_enabled()
@@ -3300,14 +3708,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace enable_xsaves_xrstors
     {
         constexpr const auto mask = 0x0000000000100000ULL;
-        constexpr const auto from = 20 ;
+        constexpr const auto from = 20ULL;
         constexpr const auto name = "enable_xsaves_xrstors";
 
         inline auto is_enabled()
@@ -3340,14 +3754,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace ept_mode_based_control
     {
         constexpr const auto mask = 0x0000000000400000ULL;
-        constexpr const auto from = 22 ;
+        constexpr const auto from = 22ULL;
         constexpr const auto name = "ept_mode_based_control";
 
         inline auto is_enabled()
@@ -3380,14 +3800,20 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
     namespace use_tsc_scaling
     {
         constexpr const auto mask = 0x0000000002000000ULL;
-        constexpr const auto from = 25 ;
+        constexpr const auto from = 25ULL;
         constexpr const auto name = "use_tsc_scaling";
 
         inline auto is_enabled()
@@ -3420,36 +3846,42 @@ namespace secondary_processor_based_vm_execution_controls
         inline void disable_if_allowed(bool verbose = false)
         { disable_vm_control_if_allowed(addr, from, is_allowed0(), name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline void set_if_allowed(bool val, bool verbose = false)
+        { val ? enable_if_allowed(verbose) : disable_if_allowed(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vm_control(level, exists(), is_allowed1(), is_enabled_if_exists(), name, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, "secondary_processor_based_vm_execution_controls", get());
-        virtualize_apic_accesses::dump(level);
-        enable_ept::dump(level);
-        descriptor_table_exiting::dump(level);
-        enable_rdtscp::dump(level);
-        virtualize_x2apic_mode::dump(level);
-        enable_vpid::dump(level);
-        wbinvd_exiting::dump(level);
-        unrestricted_guest::dump(level);
-        apic_register_virtualization::dump(level);
-        virtual_interrupt_delivery::dump(level);
-        pause_loop_exiting::dump(level);
-        rdrand_exiting::dump(level);
-        enable_invpcid::dump(level);
-        enable_vm_functions::dump(level);
-        vmcs_shadowing::dump(level);
-        enable_encls_exiting::dump(level);
-        rdseed_exiting::dump(level);
-        enable_pml::dump(level);
-        ept_violation_ve::dump(level);
-        pt_conceal_vmx_nonroot_operation::dump(level);
-        enable_xsaves_xrstors::dump(level);
-        ept_mode_based_control::dump(level);
-        use_tsc_scaling::dump(level);
+        bfdebug_nhex(level, "secondary_processor_based_vm_execution_controls", get(), msg);
+        virtualize_apic_accesses::dump(level, msg);
+        enable_ept::dump(level, msg);
+        descriptor_table_exiting::dump(level, msg);
+        enable_rdtscp::dump(level, msg);
+        virtualize_x2apic_mode::dump(level, msg);
+        enable_vpid::dump(level, msg);
+        wbinvd_exiting::dump(level, msg);
+        unrestricted_guest::dump(level, msg);
+        apic_register_virtualization::dump(level, msg);
+        virtual_interrupt_delivery::dump(level, msg);
+        pause_loop_exiting::dump(level, msg);
+        rdrand_exiting::dump(level, msg);
+        enable_invpcid::dump(level, msg);
+        enable_vm_functions::dump(level, msg);
+        vmcs_shadowing::dump(level, msg);
+        enable_encls_exiting::dump(level, msg);
+        rdseed_exiting::dump(level, msg);
+        enable_pml::dump(level, msg);
+        ept_violation_ve::dump(level, msg);
+        pt_conceal_vmx_nonroot_operation::dump(level, msg);
+        enable_xsaves_xrstors::dump(level, msg);
+        ept_mode_based_control::dump(level, msg);
+        use_tsc_scaling::dump(level, msg);
     }
 }
 
@@ -3476,8 +3908,8 @@ namespace ple_gap
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace ple_window
@@ -3503,8 +3935,8 @@ namespace ple_window
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 }

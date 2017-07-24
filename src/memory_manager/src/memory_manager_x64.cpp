@@ -237,12 +237,12 @@ memory_manager_x64::remove_md(integer_pointer virt) noexcept
     integer_pointer phys;
 
     if (virt == 0) {
-        bferror << "remove_md: virt == 0" << bfendl;
+        bfalert_info(0, "memory_manager_x64::remove_md: virt == 0");
         return;
     }
 
     if (lower(virt) != 0) {
-        bferror << "remove_md: lower(virt) != 0" << bfendl;
+        bfalert_nhex(0, "memory_manager_x64::remove_md: lower(virt) != 0", lower(virt));
         return;
     }
 

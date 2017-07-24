@@ -29,6 +29,8 @@
 #include <bfexception.h>
 #include <bftypes.h>
 
+#include <intrinsics/x86/common/x64.h>
+
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
@@ -43,6 +45,11 @@
 #endif
 #else
 #define EXPORT_INTRINSICS
+#endif
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
 #endif
 
 // -----------------------------------------------------------------------------
@@ -140,6 +147,7 @@ namespace idt
     }
 }
 }
+
 // *INDENT-ON*
 
 // -----------------------------------------------------------------------------
@@ -148,27 +156,18 @@ namespace idt
 
 /// Interrupt Descriptor Table
 ///
-/// The interrupt descriptor tables is like the GDT. Each descriptor in
-/// 64bit mode is 16 bytes with the upper 64bits containing the upper 32bit
-/// offset (like like a TSS descriptor). Unlike the GDT, entry 0 is used,
-/// and there "should be" 256 entries, which means it consumes 4k. We left
-/// the implementation in a way where you can decide how big you want it, but
-/// it really should be 256.
-///
-/// For more information on the IDT, please see Volume 3, section 6.10
-/// of the Intel Manual. For 64bit, see section 6.14.
-///
-/// @note For now, the IDT is global, and blank as we have interrupts
-///     disabled. At some point when we decide to add support for
-///     interrupts we will need to implement this class completely.
 ///
 class EXPORT_INTRINSICS idt_x64
 {
 public:
 
+    using pointer = void(*)();
     using size_type = uint16_t;
+    using index_type = uint32_t;
     using integer_pointer = uintptr_t;
     using interrupt_descriptor_type = uint64_t;
+    using offset_type = uint64_t;
+    using selector_type = uint64_t;
 
     /// Constructor
     ///
@@ -182,6 +181,8 @@ public:
         guard_exceptions([&] {
             m_idt_reg.base = x64::idt::base::get();
             m_idt_reg.limit = x64::idt::limit::get();
+
+            std::copy_n(m_idt_reg.base, (m_idt_reg.limit + 1) >> 3, std::back_inserter(m_idt));
         });
     }
 
@@ -190,13 +191,13 @@ public:
     /// Creates a new IDT, with size defining the number of descriptors
     /// in the IDT.
     ///
-    /// @expects size != 0
+    /// @expects none
     /// @ensures none
     ///
     /// @param size number of entries in the IDT
     ///
     idt_x64(size_type size) noexcept :
-        m_idt(size)
+        m_idt(size * 2U)
     {
         guard_exceptions([&] {
             m_idt_reg.base = m_idt.data();
@@ -231,7 +232,156 @@ public:
     auto limit() const
     { return m_idt_reg.limit; }
 
-    PRIVATE
+    /// Set Descriptor Offset
+    ///
+    /// @expects index < m_idt.size() + 1
+    /// @expects offset is canonical
+    /// @ensures none
+    ///
+    /// @param index the index of the IDT descriptor
+    /// @param offset the RIP address of the ISR.
+    ///
+    void set_offset(index_type index, offset_type off)
+    {
+        expects(x64::is_address_canonical(off));
+
+        auto sd1 = m_idt.at((index * 2U) + 0U) & 0x0000FFFFFFFF0000ULL;
+        auto sd2 = m_idt.at((index * 2U) + 1U) & 0xFFFFFFFF00000000ULL;
+
+        auto offset_15_00 = ((off & 0x000000000000FFFFULL) << 0);
+        auto offset_31_16 = ((off & 0x00000000FFFF0000ULL) << 32);
+        auto offset_63_32 = ((off & 0xFFFFFFFF00000000ULL) >> 32);
+
+        m_idt.at((index * 2U) + 0U) = sd1 | offset_31_16 | offset_15_00;
+        m_idt.at((index * 2U) + 1U) = sd2 | offset_63_32;
+    }
+
+    /// Set Descriptor Offset
+    ///
+    /// @expects index < m_idt.size() + 1
+    /// @expects offset is canonical
+    /// @ensures none
+    ///
+    /// @param index the index of the IDT descriptor
+    /// @param offset the RIP address of the ISR.
+    ///
+    void set_offset(index_type index, pointer off)
+    { set_offset(index, reinterpret_cast<offset_type>(off)); }
+
+    /// Get Descriptor Offset
+    ///
+    /// @expects index < m_idt.size() + 1
+    /// @ensures none
+    ///
+    /// @param index the index of the IDT descriptor
+    /// @return the offset
+    ///
+    offset_type offset(index_type index) const
+    {
+        auto sd1 = m_idt.at((index * 2U) + 0U);
+        auto sd2 = m_idt.at((index * 2U) + 1U);
+
+        auto base_15_00 = ((sd1 & 0x000000000000FFFFULL) >> 0);
+        auto base_31_16 = ((sd1 & 0xFFFF000000000000ULL) >> 32);
+        auto base_63_32 = ((sd2 & 0x00000000FFFFFFFFULL) << 32);
+
+        return base_63_32 | base_31_16 | base_15_00;
+    }
+
+    /// Set Descriptor Segment Selector
+    ///
+    /// @expects index < m_idt.size()
+    /// @ensures none
+    ///
+    /// @param index the index of the IDT descriptor
+    /// @param selector the descriptor
+    ///
+    void set_selector(index_type index, selector_type selector)
+    {
+        auto sd1 = m_idt.at(index * 2U) & 0xFFFFFFFF0000FFFFULL;
+        m_idt.at(index * 2U) = sd1 | ((selector & 0x000000000000FFFFULL) << 16);
+    }
+
+    /// Get Descriptor Segment Selector
+    ///
+    /// @expects index < m_idt.size()
+    /// @ensures none
+    ///
+    /// @param index the index of the IDT descriptor
+    /// @return the selector
+    ///
+    selector_type selector(index_type index) const
+    {
+        auto sd1 = m_idt.at(index * 2U);
+        return ((sd1 & 0x00000000FFFF0000ULL) >> 16);
+    }
+
+    /// Set Present
+    ///
+    /// Sets the present bit. Since the IDT is only used by the hypervisor,
+    /// this also sets DPL = 0 and type = interrupt gate when enabling the
+    /// descriptor
+    ///
+    /// @expects index < m_idt.size()
+    /// @ensures none
+    ///
+    /// @param index the index of the IDT descriptor
+    /// @param p true if present, false otherwise
+    ///
+    void set_present(index_type index, bool selector)
+    {
+        auto sd1 = m_idt.at(index * 2U) & 0xFFFF0000FFFFFFFFULL;
+        m_idt.at(index * 2U) = selector ? sd1 | 0x00008E0100000000ULL : sd1;
+    }
+
+    /// Get Present
+    ///
+    /// @expects index < m_idt.size()
+    /// @ensures none
+    ///
+    /// @param index the index of the IDT descriptor
+    /// @return the selector
+    ///
+    bool present(index_type index) const
+    {
+        return m_idt.at(index * 2U) & 0x0000800000000000ULL;
+    }
+
+    /// Set All Fields
+    ///
+    /// @expects index < m_idt.size()
+    /// @ensures none
+    ///
+    /// @param index the index of the IDT descriptor
+    /// @param offset the RIP address of the ISR.
+    /// @param selector the descriptor
+    ///
+    void set(
+        index_type index, offset_type off, selector_type selector)
+    {
+        this->set_offset(index, off);
+        this->set_selector(index, selector);
+        this->set_present(index, true);
+    }
+
+    /// Set All Fields
+    ///
+    /// @expects index < m_idt.size()
+    /// @ensures none
+    ///
+    /// @param index the index of the IDT descriptor
+    /// @param offset the RIP address of the ISR.
+    /// @param selector the descriptor
+    ///
+    void set(
+        index_type index, pointer off, selector_type selector)
+    {
+        this->set_offset(index, off);
+        this->set_selector(index, selector);
+        this->set_present(index, true);
+    }
+
+private:
 
     idt_reg_x64_t m_idt_reg;
     std::vector<interrupt_descriptor_type> m_idt;
@@ -244,5 +394,9 @@ public:
     idt_x64(const idt_x64 &) = delete;
     idt_x64 &operator=(const idt_x64 &) = delete;
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

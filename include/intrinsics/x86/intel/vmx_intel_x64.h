@@ -164,8 +164,8 @@ namespace vm
 
         if (!_vmread(field, &value))
         {
-            bferror << "vm::read failed:" << bfendl;
-            bferror << "    - field: " << name << bfendl;
+            bferror_info(0, "vm::read failed:");
+            bferror_subtext(0, "field", name);
 
             throw std::runtime_error("vm::read failed");
         }
@@ -177,9 +177,9 @@ namespace vm
     {
         if (!_vmwrite(field, value))
         {
-            bferror << "vm::write failed:" << bfendl;
-            bferror << "    - field: " << name << bfendl;
-            bferror << "    - value: " << view_as_pointer(value) << bfendl;
+            bferror_info(0, "vm::write failed:");
+            bferror_subtext(0, "field", name);
+            bferror_subnhex(0, "value", value);
 
             throw std::runtime_error("vm::write failed");
         }

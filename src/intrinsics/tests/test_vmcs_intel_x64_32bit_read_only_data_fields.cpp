@@ -173,7 +173,7 @@ TEST_CASE("vmcs_vm_instruction_error")
 
     CHECK(vmcs::vm_instruction_error::exists());
 
-    for (auto && code : vm_instruction_error_codes) {
+    for (auto &&code : vm_instruction_error_codes) {
         g_vmcs_fields[vmcs::vm_instruction_error::addr] = code.first;
         CHECK(vmcs::vm_instruction_error::get() == code.first);
         CHECK(vmcs::vm_instruction_error::get_if_exists() == code.first);
@@ -191,7 +191,7 @@ TEST_CASE("vmcs_vm_instruction_error_description")
 
     CHECK_THROWS(vm_instruction_error_description(0UL, false));
     CHECK(vm_instruction_error_description(1UL,
-                      true) == "VMCALL executed in VMX root operation"_s);
+                                           true) == "VMCALL executed in VMX root operation"_s);
 }
 
 TEST_CASE("vmcs_vm_instruction_error_description_if_exists")
@@ -204,7 +204,7 @@ TEST_CASE("vmcs_vm_instruction_error_description_if_exists")
     CHECK_NOTHROW(vm_instruction_error_description_if_exists(0UL, true, false));
     CHECK(vm_instruction_error_description_if_exists(0UL, true, false) == ""_s);
     CHECK(vm_instruction_error_description_if_exists(1UL, true,
-                      true) == "VMCALL executed in VMX root operation"_s);
+            true) == "VMCALL executed in VMX root operation"_s);
 }
 
 TEST_CASE("vmcs_exit_reason")
@@ -225,7 +225,7 @@ TEST_CASE("vmcs_exit_reason_basic_exit_reason")
 {
     using namespace vmcs::exit_reason;
 
-    for (auto && reason : exit_reasons) {
+    for (auto &&reason : exit_reasons) {
         MockRepository mocks;
         setup_intrinsics(mocks);
 
@@ -246,7 +246,7 @@ TEST_CASE("vmcs_exit_reason_basic_exit_reason_description")
 
     CHECK_THROWS(basic_exit_reason::basic_exit_reason_description(0UL, false));
     CHECK(basic_exit_reason::basic_exit_reason_description(40UL,
-                      true) == "pause"_s);
+            true) == "pause"_s);
 }
 
 TEST_CASE("vmcs_exit_reason_basic_exit_reason_description_if_exists")
@@ -258,9 +258,9 @@ TEST_CASE("vmcs_exit_reason_basic_exit_reason_description_if_exists")
 
     CHECK_NOTHROW(basic_exit_reason::basic_exit_reason_description_if_exists(0UL, true, false));
     CHECK(basic_exit_reason::basic_exit_reason_description_if_exists(0UL, true,
-                      false) == ""_s);
+            false) == ""_s);
     CHECK(basic_exit_reason::basic_exit_reason_description_if_exists(
-                          40UL, true, true) == "pause"_s);
+              40UL, true, true) == "pause"_s);
 }
 
 TEST_CASE("vmcs_exit_reason_reserved")
@@ -371,7 +371,7 @@ TEST_CASE("vmcs_vm_exit_interruption_information_interruption_type")
 
     CHECK(vmcs::vm_exit_interruption_information::interruption_type::get() == 7UL);
     CHECK(vmcs::vm_exit_interruption_information::interruption_type::get_if_exists() ==
-                      7UL);
+          7UL);
 }
 
 TEST_CASE("vmcs_vm_exit_interruption_information_error_code_valid")
@@ -830,7 +830,7 @@ TEST_CASE("vmcs_vm_exit_instruction_information_invpcid_index_reg_invalid")
 
     g_vmcs_fields[addr] = invpcid::index_reg_invalid::invalid << invpcid::index_reg_invalid::from;
     CHECK(invpcid::index_reg_invalid::get_if_exists() ==
-                      invpcid::index_reg_invalid::invalid);
+          invpcid::index_reg_invalid::invalid);
 }
 
 TEST_CASE("vmcs_vm_exit_instruction_information_invpcid_base_reg")
@@ -957,7 +957,7 @@ TEST_CASE("vmcs_vm_exit_instruction_information_invvpid_index_reg_invalid")
 
     g_vmcs_fields[addr] = invvpid::index_reg_invalid::invalid << invvpid::index_reg_invalid::from;
     CHECK(invvpid::index_reg_invalid::get_if_exists() ==
-                      invvpid::index_reg_invalid::invalid);
+          invvpid::index_reg_invalid::invalid);
 }
 
 TEST_CASE("vmcs_vm_exit_instruction_information_invvpid_base_reg")
@@ -2204,7 +2204,7 @@ TEST_CASE("vmcs_vm_exit_instruction_information_rdrand_destination_register")
 
     g_vmcs_fields[addr] = rdrand::destination_register::r14 << rdrand::destination_register::from;
     CHECK(rdrand::destination_register::get_if_exists() ==
-                      rdrand::destination_register::r14);
+          rdrand::destination_register::r14);
 }
 
 TEST_CASE("vmcs_vm_exit_instruction_information_rdrand_operand_size")
@@ -2247,7 +2247,7 @@ TEST_CASE("vmcs_vm_exit_instruction_information_rdseed_destination_register")
 
     g_vmcs_fields[addr] = rdseed::destination_register::r14 << rdseed::destination_register::from;
     CHECK(rdseed::destination_register::get_if_exists() ==
-                      rdseed::destination_register::r14);
+          rdseed::destination_register::r14);
 }
 
 TEST_CASE("vmcs_vm_exit_instruction_information_rdseed_operand_size")
@@ -2346,7 +2346,7 @@ TEST_CASE("vmcs_vm_exit_instruction_information_vmclear_index_reg_invalid")
 
     g_vmcs_fields[addr] = vmclear::index_reg_invalid::invalid << vmclear::index_reg_invalid::from;
     CHECK(vmclear::index_reg_invalid::get_if_exists() ==
-                      vmclear::index_reg_invalid::invalid);
+          vmclear::index_reg_invalid::invalid);
 }
 
 TEST_CASE("vmcs_vm_exit_instruction_information_vmclear_base_reg")
@@ -2459,7 +2459,7 @@ TEST_CASE("vmcs_vm_exit_instruction_information_vmptrld_index_reg_invalid")
 
     g_vmcs_fields[addr] = vmptrld::index_reg_invalid::invalid << vmptrld::index_reg_invalid::from;
     CHECK(vmptrld::index_reg_invalid::get_if_exists() ==
-                      vmptrld::index_reg_invalid::invalid);
+          vmptrld::index_reg_invalid::invalid);
 }
 
 TEST_CASE("vmcs_vm_exit_instruction_information_vmptrld_base_reg")
@@ -2572,7 +2572,7 @@ TEST_CASE("vmcs_vm_exit_instruction_information_vmptrst_index_reg_invalid")
 
     g_vmcs_fields[addr] = vmptrst::index_reg_invalid::invalid << vmptrst::index_reg_invalid::from;
     CHECK(vmptrst::index_reg_invalid::get_if_exists() ==
-                      vmptrst::index_reg_invalid::invalid);
+          vmptrst::index_reg_invalid::invalid);
 }
 
 TEST_CASE("vmcs_vm_exit_instruction_information_vmptrst_base_reg")
@@ -2797,7 +2797,7 @@ TEST_CASE("vmcs_vm_exit_instruction_information_xrstors_index_reg_invalid")
 
     g_vmcs_fields[addr] = xrstors::index_reg_invalid::invalid << xrstors::index_reg_invalid::from;
     CHECK(xrstors::index_reg_invalid::get_if_exists() ==
-                      xrstors::index_reg_invalid::invalid);
+          xrstors::index_reg_invalid::invalid);
 }
 
 TEST_CASE("vmcs_vm_exit_instruction_information_xrstors_base_reg")
@@ -3204,7 +3204,7 @@ TEST_CASE("vmcs_vm_exit_instruction_information_vmwrite_index_reg_invalid")
 
     g_vmcs_fields[addr] = vmwrite::index_reg_invalid::invalid << vmwrite::index_reg_invalid::from;
     CHECK(vmwrite::index_reg_invalid::get_if_exists() ==
-                      vmwrite::index_reg_invalid::invalid);
+          vmwrite::index_reg_invalid::invalid);
 }
 
 TEST_CASE("vmcs_vm_exit_instruction_information_vmwrite_base_reg")

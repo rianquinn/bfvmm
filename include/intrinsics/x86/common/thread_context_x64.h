@@ -23,6 +23,8 @@
 #define THREAD_CONTEXT_X64_H
 
 #include <cstdint>
+#include <bfconstants.h>
+#include <bfthreadcontext.h>
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -46,5 +48,25 @@
 
 extern "C" EXPORT_INTRINSICS uint64_t thread_context_cpuid(void);
 extern "C" EXPORT_INTRINSICS uint64_t thread_context_tlsptr(void);
+
+// -----------------------------------------------------------------------------
+// Setup Stack
+// -----------------------------------------------------------------------------
+
+inline auto
+setup_stack(void *stack)
+{
+    auto stack_uintptr = reinterpret_cast<uintptr_t>(stack);
+
+    auto stack_top = stack_uintptr + (STACK_SIZE * 2);
+    stack_top = (stack_top & ~(STACK_SIZE - 1)) - 1;
+    stack_uintptr = stack_top - sizeof(thread_context_t) - 1;
+
+    auto tc = reinterpret_cast<thread_context_t *>(stack_top - sizeof(thread_context_t));
+    tc->cpuid = thread_context_cpuid();
+    tc->tlsptr = thread_context_tlsptr();
+
+    return stack_uintptr;
+}
 
 #endif

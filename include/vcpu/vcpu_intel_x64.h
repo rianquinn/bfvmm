@@ -45,6 +45,11 @@
 #define EXPORT_VCPU
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
 // -----------------------------------------------------------------------------
 // Definitions
 // -----------------------------------------------------------------------------
@@ -79,8 +84,6 @@ public:
     /// @ensures none
     ///
     /// @param id the id of the vcpu
-    /// @param debug_ring the debug ring the vcpu should use. If you
-    ///     provide nullptr, a default debug ring will be created.
     /// @param vmxon the vmxon the vcpu should use. If you
     ///     provide nullptr, a default vmxon will be created.
     /// @param vmcs the vmcs the vcpu should use. If you
@@ -94,7 +97,6 @@ public:
     ///
     vcpu_intel_x64(
         vcpuid::type id,
-        std::unique_ptr<debug_ring> debug_ring = nullptr,
         std::unique_ptr<vmxon_intel_x64> vmxon = nullptr,
         std::unique_ptr<vmcs_intel_x64> vmcs = nullptr,
         std::unique_ptr<exit_handler_intel_x64> exit_handler = nullptr,
@@ -162,5 +164,9 @@ public:
     vcpu_intel_x64(const vcpu_intel_x64 &) = delete;
     vcpu_intel_x64 &operator=(const vcpu_intel_x64 &) = delete;
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

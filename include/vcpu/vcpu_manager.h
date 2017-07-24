@@ -43,6 +43,11 @@
 #define EXPORT_VCPU
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
 // -----------------------------------------------------------------------------
 // Definitions
 // -----------------------------------------------------------------------------
@@ -86,7 +91,8 @@ public:
     /// @param data user data that can be passed around as needed
     ///     by extensions of Bareflank
     ///
-    virtual void create_vcpu(vcpuid::type vcpuid, user_data *data = nullptr);
+    virtual void create_vcpu(
+        vcpuid::type vcpuid, user_data *data = nullptr);
 
     /// Delete vCPU
     ///
@@ -96,7 +102,8 @@ public:
     /// @param data user data that can be passed around as needed
     ///     by extensions of Bareflank
     ///
-    virtual void delete_vcpu(vcpuid::type vcpuid, user_data *data = nullptr);
+    virtual void delete_vcpu(
+        vcpuid::type vcpuid, user_data *data = nullptr);
 
     /// Run vCPU
     ///
@@ -109,7 +116,8 @@ public:
     /// @param data user data that can be passed around as needed
     ///     by extensions of Bareflank
     ///
-    virtual void run_vcpu(vcpuid::type vcpuid, user_data *data = nullptr);
+    virtual void run_vcpu(
+        vcpuid::type vcpuid, user_data *data = nullptr);
 
     /// Halt vCPU
     ///
@@ -122,19 +130,20 @@ public:
     /// @param data user data that can be passed around as needed
     ///     by extensions of Bareflank
     ///
-    virtual void hlt_vcpu(vcpuid::type vcpuid, user_data *data = nullptr);
+    virtual void hlt_vcpu(
+        vcpuid::type vcpuid, user_data *data = nullptr);
 
-    /// Write to Log
+    /// Set Factory
     ///
-    /// Write's a string the vCPU's debug ring.
+    /// Should only be used by unit tests
     ///
     /// @expects none
     /// @ensures none
     ///
-    /// @param vcpuid the vCPU to write to
-    /// @param str the string to write
+    /// @param factory the new factory to use
     ///
-    virtual void write(vcpuid::type vcpuid, const std::string &str) noexcept;
+    void set_factory(std::unique_ptr<vcpu_factory> factory)
+    { m_vcpu_factory = std::move(factory); }
 
 private:
 
@@ -144,18 +153,10 @@ private:
 
 private:
 
-    friend class vcpu_ut;
-
+    std::unique_ptr<vcpu_factory> m_vcpu_factory;
     std::map<vcpuid::type, std::unique_ptr<vcpu>> m_vcpus;
 
-private:
-
-    std::unique_ptr<vcpu_factory> m_vcpu_factory;
-
 public:
-
-    void set_factory(std::unique_ptr<vcpu_factory> factory)
-    { m_vcpu_factory = std::move(factory); }
 
     vcpu_manager(vcpu_manager &&) noexcept = delete;
     vcpu_manager &operator=(vcpu_manager &&) noexcept = delete;
@@ -174,5 +175,9 @@ public:
 /// @ensures ret != nullptr
 ///
 #define g_vcm vcpu_manager::instance()
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

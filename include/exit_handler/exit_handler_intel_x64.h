@@ -47,6 +47,11 @@
 #define EXPORT_EXIT_HANDLER
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
 // -----------------------------------------------------------------------------
 // Exit Handler
 // -----------------------------------------------------------------------------
@@ -105,26 +110,26 @@ public:
     ///
     virtual void halt() noexcept;
 
-    /// Complete VMCall
+    /// Stop
     ///
-    /// Completes a VMCall given a set of previously setup registers. Note
-    /// that most of the time you should not need to run this function as
-    /// a vmcall will call this for you. If however your VMCall never returns
-    /// and state is lost, you can complete the VMCall at a later time using
-    /// this function. Special care should be taken to ensure the proper
-    /// register values are maintained.
+    /// The only difference between halt and stop is halt first prints some
+    /// debug information and then halts. Stop simply halts the vCPU. Note
+    /// that users can override the stop program to continue execution if it
+    /// is possible (for example, running a different vcpu).
     ///
-    /// @expects none
-    /// @ensures none
-    ///
-    /// @param ret BF_VMCALL_SUCCESS on success, failure otherwise
-    /// @param regs the register state to return
-    ///
-    virtual void complete_vmcall(ret_type ret, vmcall_registers_t &regs) noexcept;
+    virtual void stop() noexcept;
 
+#ifndef ENABLE_UNITTESTING
 protected:
+#endif
 
-    virtual void handle_exit(intel_x64::vmcs::value_type reason);
+    virtual void promote();
+
+    virtual void resume();
+    virtual void advance_and_resume();
+
+    virtual void handle_exit(
+        intel_x64::vmcs::value_type reason);
 
     void handle_cpuid();
     void handle_invd();
@@ -136,13 +141,23 @@ protected:
     void advance_rip() noexcept;
     void unimplemented_handler() noexcept;
 
-    virtual void handle_vmcall_versions(vmcall_registers_t &regs);
-    virtual void handle_vmcall_registers(vmcall_registers_t &regs);
-    virtual void handle_vmcall_data(vmcall_registers_t &regs);
-    virtual void handle_vmcall_event(vmcall_registers_t &regs);
-    virtual void handle_vmcall_start(vmcall_registers_t &regs);
-    virtual void handle_vmcall_stop(vmcall_registers_t &regs);
-    virtual void handle_vmcall_unittest(vmcall_registers_t &regs);
+    virtual void complete_vmcall(
+        ret_type ret, vmcall_registers_t &regs) noexcept;
+
+    virtual void handle_vmcall_versions(
+        vmcall_registers_t &regs);
+    virtual void handle_vmcall_registers(
+        vmcall_registers_t &regs);
+    virtual void handle_vmcall_data(
+        vmcall_registers_t &regs);
+    virtual void handle_vmcall_event(
+        vmcall_registers_t &regs);
+    virtual void handle_vmcall_start(
+        vmcall_registers_t &regs);
+    virtual void handle_vmcall_stop(
+        vmcall_registers_t &regs);
+    virtual void handle_vmcall_unittest(
+        vmcall_registers_t &regs);
 
     virtual void handle_vmcall_data_string_unformatted(
         const std::string &istr, std::string &ostr);
@@ -171,10 +186,12 @@ public:
     vmcs_intel_x64 *m_vmcs{nullptr};
     state_save_intel_x64 *m_state_save{nullptr};
 
-    virtual void set_vmcs(gsl::not_null<vmcs_intel_x64 *> vmcs)
+    virtual void set_vmcs(
+        gsl::not_null<vmcs_intel_x64 *> vmcs)
     { m_vmcs = vmcs; }
 
-    virtual void set_state_save(gsl::not_null<state_save_intel_x64 *> state_save)
+    virtual void set_state_save(
+        gsl::not_null<state_save_intel_x64 *> state_save)
     { m_state_save = state_save; }
 
 private:
@@ -203,5 +220,9 @@ public:
     exit_handler_intel_x64(const exit_handler_intel_x64 &) = delete;
     exit_handler_intel_x64 &operator=(const exit_handler_intel_x64 &) = delete;
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

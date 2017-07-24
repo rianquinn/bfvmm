@@ -50,6 +50,11 @@
 #define EXPORT_MEMORY_MANAGER
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
 // -----------------------------------------------------------------------------
 // Definitions
 // -----------------------------------------------------------------------------
@@ -111,7 +116,8 @@ public:
     /// @param phys the physical address to map the virt address
     /// @param attr describes how to map the virt address
     ///
-    virtual void map_1g(integer_pointer virt, integer_pointer phys, attr_type attr)
+    virtual void map_1g(
+        integer_pointer virt, integer_pointer phys, attr_type attr)
     { this->map_page(virt, phys, attr, x64::page_table::pdpt::size_bytes); }
 
     /// Map (2 Megabytes)
@@ -126,7 +132,8 @@ public:
     /// @param phys the physical address to map the virt address
     /// @param attr describes how to map the virt address
     ///
-    virtual void map_2m(integer_pointer virt, integer_pointer phys, attr_type attr)
+    virtual void map_2m(
+        integer_pointer virt, integer_pointer phys, attr_type attr)
     { this->map_page(virt, phys, attr, x64::page_table::pd::size_bytes); }
 
     /// Map (1 Kilobytes)
@@ -141,7 +148,8 @@ public:
     /// @param phys the physical address to map the virt address
     /// @param attr describes how to map the virt address
     ///
-    virtual void map_4k(integer_pointer virt, integer_pointer phys, attr_type attr)
+    virtual void map_4k(
+        integer_pointer virt, integer_pointer phys, attr_type attr)
     { this->map_page(virt, phys, attr, x64::page_table::pt::size_bytes); }
 
     /// Unmap
@@ -166,7 +174,8 @@ public:
     /// @param saddr the starting address for the identify map
     /// @param eaddr the ending address for the identify map
     ///
-    void setup_identity_map_1g(integer_pointer saddr, integer_pointer eaddr);
+    void setup_identity_map_1g(
+        integer_pointer saddr, integer_pointer eaddr);
 
     /// Setup Identify Map (2m Granularity)
     ///
@@ -179,7 +188,8 @@ public:
     /// @param saddr the starting address for the identify map
     /// @param eaddr the ending address for the identify map
     ///
-    void setup_identity_map_2m(integer_pointer saddr, integer_pointer eaddr);
+    void setup_identity_map_2m(
+        integer_pointer saddr, integer_pointer eaddr);
 
     /// Setup Identify Map (4k Granularity)
     ///
@@ -192,7 +202,8 @@ public:
     /// @param saddr the starting address for the identify map
     /// @param eaddr the ending address for the identify map
     ///
-    void setup_identity_map_4k(integer_pointer saddr, integer_pointer eaddr);
+    void setup_identity_map_4k(
+        integer_pointer saddr, integer_pointer eaddr);
 
     /// Unmap Identify Map (1g Granularity)
     ///
@@ -205,7 +216,8 @@ public:
     /// @param saddr the starting address for the identify map
     /// @param eaddr the ending address for the identify map
     ///
-    void unmap_identity_map_1g(integer_pointer saddr, integer_pointer eaddr);
+    void unmap_identity_map_1g(
+        integer_pointer saddr, integer_pointer eaddr);
 
     /// Unmap Identify Map (2m Granularity)
     ///
@@ -218,7 +230,8 @@ public:
     /// @param saddr the starting address for the identify map
     /// @param eaddr the ending address for the identify map
     ///
-    void unmap_identity_map_2m(integer_pointer saddr, integer_pointer eaddr);
+    void unmap_identity_map_2m(
+        integer_pointer saddr, integer_pointer eaddr);
 
     /// Unmap Identify Map (4k Granularity)
     ///
@@ -231,7 +244,8 @@ public:
     /// @param saddr the starting address for the identify map
     /// @param eaddr the ending address for the identify map
     ///
-    void unmap_identity_map_4k(integer_pointer saddr, integer_pointer eaddr);
+    void unmap_identity_map_4k(
+        integer_pointer saddr, integer_pointer eaddr);
 
     /// Virtual Address To Page Table Entry
     ///
@@ -248,7 +262,8 @@ public:
     /// @param virt the virtual address to lookup
     /// @return the resulting PTE
     ///
-    page_table_entry_x64 virt_to_pte(integer_pointer virt) const;
+    page_table_entry_x64 virt_to_pte(
+        integer_pointer virt) const;
 
     /// Page Table to Memory Descriptor List
     ///
@@ -282,8 +297,6 @@ private:
 
 public:
 
-    friend class memory_manager_ut;
-
     root_page_table_x64(root_page_table_x64 &&) noexcept = delete;
     root_page_table_x64 &operator=(root_page_table_x64 &&) noexcept = delete;
 
@@ -309,5 +322,9 @@ EXPORT_MEMORY_MANAGER root_page_table_x64 *root_pt() noexcept;
 /// @ensures ret != nullptr
 ///
 #define g_pt root_pt()
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

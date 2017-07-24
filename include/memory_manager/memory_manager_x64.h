@@ -47,6 +47,11 @@
 #define EXPORT_MEMORY_MANAGER
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
 // -----------------------------------------------------------------------------
 // Definitions
 // -----------------------------------------------------------------------------
@@ -130,7 +135,8 @@ public:
     ///     pointer is page aligned if size is a multiple of MAX_PAGE_SIZE.
     ///     Returns 0 otherwise, or on error
     ///
-    virtual pointer alloc(size_type size) noexcept;
+    virtual pointer alloc(
+        size_type size) noexcept;
 
     /// Allocate Map
     ///
@@ -145,7 +151,8 @@ public:
     /// @return a pointer to the starting address of the memory allocated.
     ///     Returns 0 otherwise, or on error
     ///
-    virtual pointer alloc_map(size_type size) noexcept;
+    virtual pointer alloc_map(
+        size_type size) noexcept;
 
     /// Free Memory
     ///
@@ -159,7 +166,8 @@ public:
     ///
     /// @param ptr a pointer to memory previously allocated using alloc.
     ///
-    virtual void free(pointer ptr) noexcept;
+    virtual void free(
+        pointer ptr) noexcept;
 
     /// Free Map
     ///
@@ -173,7 +181,8 @@ public:
     ///
     /// @param ptr a pointer to memory previously allocated using alloc_map.
     ///
-    virtual void free_map(pointer ptr) noexcept;
+    virtual void free_map(
+        pointer ptr) noexcept;
 
     /// Size
     ///
@@ -186,7 +195,8 @@ public:
     ///
     /// @param ptr a pointer to memory previously allocated using alloc.
     ///
-    virtual size_type size(pointer ptr) const noexcept;
+    virtual size_type size(
+        pointer ptr) const noexcept;
 
     /// Size of Map
     ///
@@ -199,7 +209,8 @@ public:
     ///
     /// @param ptr a pointer to memory previously allocated using alloc_map.
     ///
-    virtual size_type size_map(pointer ptr) const noexcept;
+    virtual size_type size_map(
+        pointer ptr) const noexcept;
 
     /// Virtual Address To Physical Address
     ///
@@ -211,7 +222,8 @@ public:
     /// @param virt virtual address to convert
     /// @return physical address
     ///
-    virtual integer_pointer virtint_to_physint(integer_pointer virt) const;
+    virtual integer_pointer virtint_to_physint(
+        integer_pointer virt) const;
 
     /// Virtual Address To Physical Address
     ///
@@ -223,7 +235,8 @@ public:
     /// @param virt virtual address to convert
     /// @return physical address
     ///
-    virtual integer_pointer virtptr_to_physint(pointer virt) const;
+    virtual integer_pointer virtptr_to_physint(
+        pointer virt) const;
 
     /// Virtual Address To Physical Address
     ///
@@ -235,7 +248,8 @@ public:
     /// @param virt virtual address to convert
     /// @return physical address
     ///
-    virtual pointer virtint_to_physptr(integer_pointer virt) const;
+    virtual pointer virtint_to_physptr(
+        integer_pointer virt) const;
 
     /// Virtual Address To Physical Address
     ///
@@ -247,7 +261,8 @@ public:
     /// @param virt virtual address to convert
     /// @return physical address
     ///
-    virtual pointer virtptr_to_physptr(pointer virt) const;
+    virtual pointer virtptr_to_physptr(
+        pointer virt) const;
 
     /// Physical Address To Virtual Address
     ///
@@ -259,7 +274,8 @@ public:
     /// @param phys physical address to convert
     /// @return virtual address
     ///
-    virtual integer_pointer physint_to_virtint(integer_pointer phys) const;
+    virtual integer_pointer physint_to_virtint(
+        integer_pointer phys) const;
 
     /// Physical Address To Virtual Address
     ///
@@ -271,7 +287,8 @@ public:
     /// @param phys physical address to convert
     /// @return virtual address
     ///
-    virtual integer_pointer physptr_to_virtint(pointer phys) const;
+    virtual integer_pointer physptr_to_virtint(
+        pointer phys) const;
 
     /// Physical Address To Virtual Address
     ///
@@ -283,7 +300,8 @@ public:
     /// @param phys physical address to convert
     /// @return virtual address
     ///
-    virtual pointer physint_to_virtptr(integer_pointer phys) const;
+    virtual pointer physint_to_virtptr(
+        integer_pointer phys) const;
 
     /// Physical Address To Virtual Address
     ///
@@ -295,7 +313,8 @@ public:
     /// @param phys physical address to convert
     /// @return virtual address
     ///
-    virtual pointer physptr_to_virtptr(pointer phys) const;
+    virtual pointer physptr_to_virtptr(
+        pointer phys) const;
 
     /// Virtual Address To Attribute
     ///
@@ -307,7 +326,8 @@ public:
     /// @param virt virtual address for the attributes to fetch
     /// @return attributes associated with virt
     ///
-    virtual attr_type virtint_to_attrint(integer_pointer virt) const;
+    virtual attr_type virtint_to_attrint(
+        integer_pointer virt) const;
 
     /// Virtual Address To Attribute
     ///
@@ -319,7 +339,8 @@ public:
     /// @param virt virtual address for the attributes to fetch
     /// @return attributes associated with virt
     ///
-    virtual attr_type virtptr_to_attrint(pointer virt) const;
+    virtual attr_type virtptr_to_attrint(
+        pointer virt) const;
 
     /// Adds Memory Descriptor
     ///
@@ -336,7 +357,8 @@ public:
     /// @param phys physical address mapped to virt
     /// @param attr how the memory was mapped
     ///
-    virtual void add_md(integer_pointer virt, integer_pointer phys, attr_type attr);
+    virtual void add_md(
+        integer_pointer virt, integer_pointer phys, attr_type attr);
 
     /// Remove Memory Descriptor
     ///
@@ -347,7 +369,8 @@ public:
     ///
     /// @param virt virtual address to remove
     ///
-    virtual void remove_md(integer_pointer virt) noexcept;
+    virtual void remove_md(
+        integer_pointer virt) noexcept;
 
     /// Descriptor List
     ///
@@ -398,5 +421,9 @@ public:
 /// @ensures g_mm != nullptr
 ///
 #define g_mm memory_manager_x64::instance()
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

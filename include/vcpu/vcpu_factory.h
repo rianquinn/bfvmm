@@ -41,6 +41,11 @@
 #define EXPORT_VCPU
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
 // -----------------------------------------------------------------------------
 // Definitions
 // -----------------------------------------------------------------------------
@@ -89,7 +94,8 @@ public:
     /// @param data user data passed to the vcpu
     /// @return returns a pointer to a newly created vCPU.
     ///
-    virtual std::unique_ptr<vcpu> make_vcpu(vcpuid::type vcpuid, user_data *data = nullptr);
+    virtual std::unique_ptr<vcpu> make_vcpu(
+        vcpuid::type vcpuid, user_data *data = nullptr);
 
 public:
 
@@ -99,5 +105,9 @@ public:
     vcpu_factory(const vcpu_factory &) = delete;
     vcpu_factory &operator=(const vcpu_factory &) = delete;
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

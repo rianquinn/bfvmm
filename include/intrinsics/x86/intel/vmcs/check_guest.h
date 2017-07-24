@@ -60,10 +60,12 @@ guest_cr0_for_unsupported_bits()
     }
 
     if (0 != ((~cr0 & ia32_vmx_cr0_fixed0) | (cr0 & ~ia32_vmx_cr0_fixed1))) {
-        bferror << " failed: check_guest_cr0_for_unsupported_bits" << bfendl;
-        bferror << "    - ia32_vmx_cr0_fixed0: " << view_as_pointer(ia32_vmx_cr0_fixed0) << bfendl;
-        bferror << "    - ia32_vmx_cr0_fixed1: " << view_as_pointer(ia32_vmx_cr0_fixed1) << bfendl;
-        bferror << "    - cr0: " << view_as_pointer(cr0) << bfendl;
+        bfdebug_transaction(0, [&](std::string * msg) {
+            bferror_info(0, "failed: check_guest_cr0_for_unsupported_bits", msg);
+            bferror_subnhex(0, "ia32_vmx_cr0_fixed0", ia32_vmx_cr0_fixed0, msg);
+            bferror_subnhex(0, "ia32_vmx_cr0_fixed1", ia32_vmx_cr0_fixed1, msg);
+            bferror_subnhex(0, "cr0", cr0, msg);
+        });
 
         throw std::logic_error("invalid cr0");
     }
@@ -89,10 +91,12 @@ guest_cr4_for_unsupported_bits()
     auto ia32_vmx_cr4_fixed1 = msrs::ia32_vmx_cr4_fixed1::get();
 
     if (0 != ((~cr4 & ia32_vmx_cr4_fixed0) | (cr4 & ~ia32_vmx_cr4_fixed1))) {
-        bferror << " failed: check_guest_cr4_for_unsupported_bits" << bfendl;
-        bferror << "    - ia32_vmx_cr4_fixed0: " << view_as_pointer(ia32_vmx_cr4_fixed0) << bfendl;
-        bferror << "    - ia32_vmx_cr4_fixed1: " << view_as_pointer(ia32_vmx_cr4_fixed1) << bfendl;
-        bferror << "    - cr4: " << view_as_pointer(cr4) << bfendl;
+        bfdebug_transaction(0, [&](std::string * msg) {
+            bferror_info(0, "failed: check_guest_cr4_for_unsupported_bits", msg);
+            bferror_subnhex(0, "ia32_vmx_cr4_fixed0", ia32_vmx_cr4_fixed0, msg);
+            bferror_subnhex(0, "ia32_vmx_cr4_fixed1", ia32_vmx_cr4_fixed1, msg);
+            bferror_subnhex(0, "cr4", cr4, msg);
+        });
 
         throw std::logic_error("invalid cr4");
     }
@@ -1848,7 +1852,7 @@ guest_rflags_vm_bit()
 inline void
 guest_rflag_interrupt_enable()
 {
-    using namespace vm_entry_interruption_information_field;
+    using namespace vm_entry_interruption_information;
 
     if (valid_bit::is_disabled()) {
         return;
@@ -1904,7 +1908,7 @@ guest_must_be_active_if_injecting_blocking_state()
 inline void
 guest_hlt_valid_interrupts()
 {
-    using namespace vm_entry_interruption_information_field;
+    using namespace vm_entry_interruption_information;
 
     if (valid_bit::is_disabled()) {
         return;
@@ -1950,7 +1954,7 @@ guest_hlt_valid_interrupts()
 inline void
 guest_shutdown_valid_interrupts()
 {
-    using namespace vm_entry_interruption_information_field;
+    using namespace vm_entry_interruption_information;
 
     if (valid_bit::is_disabled()) {
         return;
@@ -1984,7 +1988,7 @@ guest_shutdown_valid_interrupts()
 inline void
 guest_sipi_valid_interrupts()
 {
-    if (vm_entry_interruption_information_field::valid_bit::is_disabled()) {
+    if (vm_entry_interruption_information::valid_bit::is_disabled()) {
         return;
     }
 
@@ -2044,7 +2048,7 @@ guest_interruptibility_state_sti()
 inline void
 guest_interruptibility_state_external_interrupt()
 {
-    using namespace vm_entry_interruption_information_field;
+    using namespace vm_entry_interruption_information;
 
     if (valid_bit::is_disabled()) {
         return;
@@ -2060,15 +2064,15 @@ guest_interruptibility_state_external_interrupt()
     }
 
     if (vmcs::guest_interruptibility_state::blocking_by_mov_ss::is_enabled()) {
-        throw std::logic_error("activity state must be active if "
-                               "interruptibility state is mov-ss");
+        throw std::logic_error("interruptibility state mov_ss must be 0 if "
+                               "interrupt type is external and valid");
     }
 }
 
 inline void
 guest_interruptibility_state_nmi()
 {
-    using namespace vm_entry_interruption_information_field;
+    using namespace vm_entry_interruption_information;
 
     if (valid_bit::is_disabled()) {
         return;
@@ -2079,7 +2083,7 @@ guest_interruptibility_state_nmi()
     }
 
     if (vmcs::guest_interruptibility_state::blocking_by_mov_ss::is_enabled()) {
-        throw std::logic_error("vali interrupt type must not be nmi if "
+        throw std::logic_error("valid interrupt type must not be nmi if "
                                "interruptibility state is mov-ss");
     }
 }
@@ -2105,7 +2109,7 @@ guest_interruptibility_entry_to_smm()
 inline void
 guest_interruptibility_state_sti_and_nmi()
 {
-    using namespace vm_entry_interruption_information_field;
+    using namespace vm_entry_interruption_information;
 
     if (valid_bit::is_disabled()) {
         return;
@@ -2124,7 +2128,7 @@ guest_interruptibility_state_sti_and_nmi()
 inline void
 guest_interruptibility_state_virtual_nmi()
 {
-    using namespace vm_entry_interruption_information_field;
+    using namespace vm_entry_interruption_information;
 
     if (pin_based_vm_execution_controls::virtual_nmis::is_disabled()) {
         return;

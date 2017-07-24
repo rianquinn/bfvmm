@@ -197,14 +197,14 @@ TEST_CASE("vmcs_exit_qualification_page_fault_exception")
     setup_intrinsics(mocks);
 
     CHECK(vmcs::exit_qualification::page_fault_exception::get_name() ==
-                      "page_fault_exception"_s);
+          "page_fault_exception"_s);
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x4000UL;
     CHECK(vmcs::exit_qualification::page_fault_exception::address() == 0x4000UL);
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x10000000UL;
     CHECK(vmcs::exit_qualification::page_fault_exception::address_if_exists() ==
-                      0x10000000UL);
+          0x10000000UL);
 }
 
 TEST_CASE("vmcs_exit_qualification_sipi")
@@ -256,7 +256,7 @@ TEST_CASE("vmcs_exit_qualification_task_switch_tss_selector")
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0xF0003456UL;
     CHECK(vmcs::exit_qualification::task_switch::tss_selector::get() == 0x3456UL);
     CHECK(vmcs::exit_qualification::task_switch::tss_selector::get(
-                          0xF0003456UL) == 0x3456UL);
+              0xF0003456UL) == 0x3456UL);
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x0UL;
     CHECK(vmcs::exit_qualification::task_switch::tss_selector::get_if_exists() == 0x0UL);
@@ -284,23 +284,23 @@ TEST_CASE("vmcs_exit_qualification_task_switch_source_of_task_switch_init")
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x0UL;
     CHECK(source_of_task_switch_init::get() ==
-                      source_of_task_switch_init::call_instruction);
+          source_of_task_switch_init::call_instruction);
     CHECK(source_of_task_switch_init::get(0x0UL) ==
-                      source_of_task_switch_init::call_instruction);
+          source_of_task_switch_init::call_instruction);
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x40000000UL;
     CHECK(source_of_task_switch_init::get() ==
-                      source_of_task_switch_init::iret_instruction);
+          source_of_task_switch_init::iret_instruction);
     CHECK(source_of_task_switch_init::get(0x40000000UL) ==
-                      source_of_task_switch_init::iret_instruction);
+          source_of_task_switch_init::iret_instruction);
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x80000000UL;
     CHECK(source_of_task_switch_init::get_if_exists() ==
-                      source_of_task_switch_init::jmp_instruction);
+          source_of_task_switch_init::jmp_instruction);
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0xC0000000UL;
     CHECK(source_of_task_switch_init::get_if_exists() ==
-                      source_of_task_switch_init::task_gate_in_idt);
+          source_of_task_switch_init::task_gate_in_idt);
 }
 
 TEST_CASE("vmcs_exit_qualification_invept")
@@ -575,7 +575,7 @@ TEST_CASE("vmcs_exit_qualification_control_register_access")
     setup_intrinsics(mocks);
 
     CHECK(vmcs::exit_qualification::control_register_access::get_name() ==
-                      "control_register_access"_s);
+          "control_register_access"_s);
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x34UL;
     CHECK(vmcs::exit_qualification::control_register_access::get() == 0x34UL);
@@ -591,9 +591,9 @@ TEST_CASE("vmcs_exit_qualification_control_register_access_control_register_numb
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x42UL;
     CHECK(vmcs::exit_qualification::control_register_access::control_register_number::get()
-                      == 0x2UL);
+          == 0x2UL);
     CHECK(vmcs::exit_qualification::control_register_access::control_register_number::get(
-                          0x42UL) == 0x2UL);
+              0x42UL) == 0x2UL);
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x0UL;
     CHECK(
@@ -646,11 +646,11 @@ TEST_CASE("vmcs_exit_qualification_control_register_access_reserved")
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x3080UL;
     CHECK(vmcs::exit_qualification::control_register_access::reserved::get() == 0x3080UL);
     CHECK(vmcs::exit_qualification::control_register_access::reserved::get(
-                          0x3080UL) == 0x3080UL);
+              0x3080UL) == 0x3080UL);
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x0UL;
     CHECK(vmcs::exit_qualification::control_register_access::reserved::get_if_exists() ==
-                      0x0UL);
+          0x0UL);
 }
 
 TEST_CASE("vmcs_exit_qualification_control_register_access_general_purpose_register")
@@ -708,7 +708,7 @@ TEST_CASE("vmcs_exit_qualification_mov_dr_debug_register_number")
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x0UL;
     CHECK(vmcs::exit_qualification::mov_dr::debug_register_number::get_if_exists() ==
-                      0x0UL);
+          0x0UL);
 }
 
 TEST_CASE("vmcs_exit_qualification_mov_dr_reserved")
@@ -986,7 +986,7 @@ TEST_CASE("vmcs_exit_qualification_guest_physical_apic_access_access_type")
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0xFUL << access_type::from;
     CHECK(access_type::get() == access_type::instruction_fetch_or_execution);
     CHECK(access_type::get(0xFUL << access_type::from) ==
-                      access_type::instruction_fetch_or_execution);
+          access_type::instruction_fetch_or_execution);
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0xAUL << access_type::from;
     CHECK(access_type::get_if_exists() == access_type::event_delivery);
@@ -1154,13 +1154,13 @@ TEST_CASE("vmcs_exit_qualification_ept_violation_valid_guest_linear_address")
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x1UL << valid_guest_linear_address::from;
     CHECK(valid_guest_linear_address::is_enabled());
     CHECK(valid_guest_linear_address::is_enabled(0x1UL <<
-                      valid_guest_linear_address::from));
+            valid_guest_linear_address::from));
     CHECK(valid_guest_linear_address::is_enabled_if_exists());
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x0UL << valid_guest_linear_address::from;
     CHECK(valid_guest_linear_address::is_disabled());
     CHECK(valid_guest_linear_address::is_disabled(0x0UL <<
-                      valid_guest_linear_address::from));
+            valid_guest_linear_address::from));
     CHECK(valid_guest_linear_address::is_disabled_if_exists());
 }
 
@@ -1174,13 +1174,13 @@ TEST_CASE("vmcs_exit_qualification_ept_violation_nmi_unblocking_due_to_iret")
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x1UL << nmi_unblocking_due_to_iret::from;
     CHECK(nmi_unblocking_due_to_iret::is_enabled());
     CHECK(nmi_unblocking_due_to_iret::is_enabled(0x1UL <<
-                      nmi_unblocking_due_to_iret::from));
+            nmi_unblocking_due_to_iret::from));
     CHECK(nmi_unblocking_due_to_iret::is_enabled_if_exists());
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x0UL << nmi_unblocking_due_to_iret::from;
     CHECK(nmi_unblocking_due_to_iret::is_disabled());
     CHECK(nmi_unblocking_due_to_iret::is_disabled(0x0UL <<
-                      nmi_unblocking_due_to_iret::from));
+            nmi_unblocking_due_to_iret::from));
     CHECK(nmi_unblocking_due_to_iret::is_disabled_if_exists());
 }
 
@@ -1190,7 +1190,7 @@ TEST_CASE("vmcs_exit_qualification_eoi_virtualization")
     setup_intrinsics(mocks);
 
     CHECK(vmcs::exit_qualification::eoi_virtualization::get_name() ==
-                      "eoi_virtualization"_s);
+          "eoi_virtualization"_s);
 
     g_vmcs_fields[vmcs::exit_qualification::addr] = 0x1UL;
     CHECK(vmcs::exit_qualification::eoi_virtualization::get() == 1UL);

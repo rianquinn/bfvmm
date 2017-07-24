@@ -669,7 +669,7 @@ setup_check_control_enable_ept_checks_paths(std::vector<struct control_flow_path
         secondary_processor_based_vm_execution_controls::enable_ept::enable();
         ept_pointer::memory_type::set(vmcs::ept_pointer::memory_type::uncacheable);
         g_msrs[ia32_vmx_ept_vpid_cap::addr] = ~(ia32_vmx_ept_vpid_cap::memory_type_uncacheable_supported::mask |
-        ia32_vmx_ept_vpid_cap::memory_type_write_back_supported::mask);
+                                                ia32_vmx_ept_vpid_cap::memory_type_write_back_supported::mask);
     };
     path.throws_exception = true;
     cfg.push_back(path);

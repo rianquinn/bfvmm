@@ -49,31 +49,19 @@
 /* @cond */
 
 struct EXPORT_INTRINSICS tss_x64 {
-    using integer_pointer = uintptr_t;
-
     uint32_t reserved1{0};
-    uint32_t rsp0_lower{0};
-    uint32_t rsp0_upper{0};
-    uint32_t rsp1_lower{0};
-    uint32_t rsp1_upper{0};
-    uint32_t rsp2_lower{0};
-    uint32_t rsp2_upper{0};
+    uint64_t rsp0{0};
+    uint64_t rsp1{0};
+    uint64_t rsp2{0};
     uint32_t reserved2{0};
     uint32_t reserved3{0};
-    uint32_t ist1_lower{0};
-    uint32_t ist1_upper{0};
-    uint32_t ist2_lower{0};
-    uint32_t ist2_upper{0};
-    uint32_t ist3_lower{0};
-    uint32_t ist3_upper{0};
-    uint32_t ist4_lower{0};
-    uint32_t ist4_upper{0};
-    uint32_t ist5_lower{0};
-    uint32_t ist5_upper{0};
-    uint32_t ist6_lower{0};
-    uint32_t ist6_upper{0};
-    uint32_t ist7_lower{0};
-    uint32_t ist7_upper{0};
+    uint64_t ist1{0};
+    uint64_t ist2{0};
+    uint64_t ist3{0};
+    uint64_t ist4{0};
+    uint64_t ist5{0};
+    uint64_t ist6{0};
+    uint64_t ist7{0};
     uint32_t reserved4{0};
     uint32_t reserved5{0};
     uint16_t reserved6{0};

@@ -65,10 +65,17 @@ namespace cpuid
 using field_type = uint32_t;
 using value_type = uint32_t;
 
+struct cpuid_regs {
+    uint64_t rax;
+    uint64_t rbx;
+    uint64_t rcx;
+    uint64_t rdx;
+};
+
 inline auto get(field_type eax, field_type ebx, field_type ecx, field_type edx) noexcept
 {
     _cpuid(&eax, &ebx, &ecx, &edx);
-    return std::make_tuple(eax, ebx, ecx, edx);
+    return cpuid_regs{eax, ebx, ecx, edx};
 }
 
 namespace eax
@@ -106,7 +113,7 @@ namespace addr_size
     namespace phys
     {
         constexpr const auto mask = 0x000000FFULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "phys";
 
         inline auto get() noexcept
@@ -115,14 +122,14 @@ namespace addr_size
         inline auto get(value_type msr) noexcept
         { return get_bits(msr, mask) >> from; }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace linear
     {
         constexpr const auto mask = 0x0000FF00ULL;
-        constexpr const auto from = 8;
+        constexpr const auto from = 8ULL;
         constexpr const auto name = "linear";
 
         inline auto get() noexcept
@@ -131,15 +138,15 @@ namespace addr_size
         inline auto get(value_type msr) noexcept
         { return get_bits(msr, mask) >> from; }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        phys::dump(level);
-        linear::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        phys::dump(level, msg);
+        linear::dump(level, msg);
     }
 }
 
@@ -154,13 +161,13 @@ namespace basic_cpuid_info
         inline auto get() noexcept
         { return _cpuid_eax(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        eax::dump(level);
+        eax::dump(level, msg);
     }
 }
 
@@ -175,13 +182,13 @@ namespace extend_cpuid_info
         inline auto get() noexcept
         { return _cpuid_eax(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        eax::dump(level);
+        eax::dump(level, msg);
     }
 }
 
@@ -196,8 +203,8 @@ namespace processor_string_1
         inline auto get() noexcept
         { return _cpuid_eax(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 
     namespace ebx
@@ -207,8 +214,8 @@ namespace processor_string_1
         inline auto get() noexcept
         { return _cpuid_ebx(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 
     namespace ecx
@@ -218,8 +225,8 @@ namespace processor_string_1
         inline auto get() noexcept
         { return _cpuid_ecx(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 
     namespace edx
@@ -229,16 +236,16 @@ namespace processor_string_1
         inline auto get() noexcept
         { return _cpuid_edx(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        eax::dump(level);
-        ebx::dump(level);
-        ecx::dump(level);
-        edx::dump(level);
+        eax::dump(level, msg);
+        ebx::dump(level, msg);
+        ecx::dump(level, msg);
+        edx::dump(level, msg);
     }
 }
 
@@ -253,8 +260,8 @@ namespace processor_string_2
         inline auto get() noexcept
         { return _cpuid_eax(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 
     namespace ebx
@@ -264,8 +271,8 @@ namespace processor_string_2
         inline auto get() noexcept
         { return _cpuid_ebx(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 
     namespace ecx
@@ -275,8 +282,8 @@ namespace processor_string_2
         inline auto get() noexcept
         { return _cpuid_ecx(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 
     namespace edx
@@ -286,16 +293,16 @@ namespace processor_string_2
         inline auto get() noexcept
         { return _cpuid_edx(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        eax::dump(level);
-        ebx::dump(level);
-        ecx::dump(level);
-        edx::dump(level);
+        eax::dump(level, msg);
+        ebx::dump(level, msg);
+        ecx::dump(level, msg);
+        edx::dump(level, msg);
     }
 }
 
@@ -310,8 +317,8 @@ namespace processor_string_3
         inline auto get() noexcept
         { return _cpuid_eax(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 
     namespace ebx
@@ -321,8 +328,8 @@ namespace processor_string_3
         inline auto get() noexcept
         { return _cpuid_ebx(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 
     namespace ecx
@@ -332,8 +339,8 @@ namespace processor_string_3
         inline auto get() noexcept
         { return _cpuid_ecx(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 
     namespace edx
@@ -343,8 +350,8 @@ namespace processor_string_3
         inline auto get() noexcept
         { return _cpuid_edx(addr); }
 
-        inline void dump(int level)
-        { bfdebug_nhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_nhex(level, name, get(), msg); }
     }
 }
 

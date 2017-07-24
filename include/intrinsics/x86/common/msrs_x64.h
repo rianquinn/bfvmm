@@ -73,8 +73,8 @@ namespace ia32_p5_mc_addr
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_p5_mc_type
@@ -85,8 +85,8 @@ namespace ia32_p5_mc_type
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_tsc
@@ -97,8 +97,8 @@ namespace ia32_tsc
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_apic_base
@@ -115,7 +115,7 @@ namespace ia32_apic_base
     namespace bsp_flag
     {
         constexpr const auto mask = 0x0000000000000100ULL;
-        constexpr const auto from = 8;
+        constexpr const auto from = 8ULL;
         constexpr const auto name = "bsp_flag";
 
         inline auto is_enabled()
@@ -142,14 +142,14 @@ namespace ia32_apic_base
         inline auto disable(value_type msr)
         { return clear_bit(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace enable_x2apic
     {
         constexpr const auto mask = 0x0000000000000400ULL;
-        constexpr const auto from = 10;
+        constexpr const auto from = 10ULL;
         constexpr const auto name = "enable_x2apic";
 
         inline auto is_enabled()
@@ -176,14 +176,14 @@ namespace ia32_apic_base
         inline auto disable(value_type msr)
         { return clear_bit(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace apic_global_enable
     {
         constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11;
+        constexpr const auto from = 11ULL;
         constexpr const auto name = "apic_global_enable";
 
         inline auto is_enabled()
@@ -210,14 +210,14 @@ namespace ia32_apic_base
         inline auto disable(value_type msr)
         { return clear_bit(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace apic_base
     {
         constexpr const auto mask = 0xFFFFFFFFFFFFF000ULL;
-        constexpr const auto from = 12;
+        constexpr const auto from = 12ULL;
         constexpr const auto name = "apic_base";
 
         inline auto get() noexcept
@@ -232,17 +232,17 @@ namespace ia32_apic_base
         inline auto set(value_type msr, value_type val) noexcept
         { return set_bits(msr, mask, val << from); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        bsp_flag::dump(level);
-        enable_x2apic::dump(level);
-        apic_global_enable::dump(level);
-        apic_base::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        bsp_flag::dump(level, msg);
+        enable_x2apic::dump(level, msg);
+        apic_global_enable::dump(level, msg);
+        apic_base::dump(level, msg);
     }
 }
 
@@ -260,7 +260,7 @@ namespace ia32_mperf
     namespace tsc_freq_clock_count
     {
         constexpr const auto mask = 0xFFFFFFFFFFFFFFFFULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "tsc_freq_clock_count";
 
         inline auto get() noexcept
@@ -275,14 +275,14 @@ namespace ia32_mperf
         inline auto set(value_type msr, value_type val) noexcept
         { return set_bits(msr, mask, val << from); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        tsc_freq_clock_count::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        tsc_freq_clock_count::dump(level, msg);
     }
 }
 
@@ -300,7 +300,7 @@ namespace ia32_aperf
     namespace actual_freq_clock_count
     {
         constexpr const auto mask = 0xFFFFFFFFFFFFFFFFULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "actual_freq_clock_count";
 
         inline auto get() noexcept
@@ -315,14 +315,14 @@ namespace ia32_aperf
         inline auto set(value_type msr, value_type val) noexcept
         { return set_bits(msr, mask, val << from); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        actual_freq_clock_count::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        actual_freq_clock_count::dump(level, msg);
     }
 }
 
@@ -337,7 +337,7 @@ namespace ia32_mtrrcap
     namespace vcnt
     {
         constexpr const auto mask = 0x00000000000000FFULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "vcnt";
 
         inline auto get() noexcept
@@ -346,14 +346,14 @@ namespace ia32_mtrrcap
         inline auto get(value_type msr) noexcept
         { return get_bits(msr, mask) >> from; }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace fixed_range_mtrr
     {
         constexpr const auto mask = 0x0000000000000100ULL;
-        constexpr const auto from = 8;
+        constexpr const auto from = 8ULL;
         constexpr const auto name = "fixed_range_mtrr";
 
         inline auto is_enabled()
@@ -368,14 +368,14 @@ namespace ia32_mtrrcap
         inline auto is_disabled(value_type msr)
         { return is_bit_cleared(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace wc
     {
         constexpr const auto mask = 0x0000000000000400ULL;
-        constexpr const auto from = 10;
+        constexpr const auto from = 10ULL;
         constexpr const auto name = "wc";
 
         inline auto is_enabled()
@@ -390,14 +390,14 @@ namespace ia32_mtrrcap
         inline auto is_disabled(value_type msr)
         { return is_bit_cleared(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace smrr
     {
         constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11;
+        constexpr const auto from = 11ULL;
         constexpr const auto name = "smrr";
 
         inline auto is_enabled()
@@ -412,17 +412,17 @@ namespace ia32_mtrrcap
         inline auto is_disabled(value_type msr)
         { return is_bit_cleared(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        vcnt::dump(level);
-        fixed_range_mtrr::dump(level);
-        wc::dump(level);
-        smrr::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        vcnt::dump(level, msg);
+        fixed_range_mtrr::dump(level, msg);
+        wc::dump(level, msg);
+        smrr::dump(level, msg);
     }
 }
 
@@ -440,7 +440,7 @@ namespace ia32_sysenter_cs
     namespace cs_selector
     {
         constexpr const auto mask = 0x000000000000FFFFULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "cs_selector";
 
         inline auto get() noexcept
@@ -455,14 +455,14 @@ namespace ia32_sysenter_cs
         inline auto set(value_type msr, value_type val) noexcept
         { return set_bits(msr, mask, val << from); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        cs_selector::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        cs_selector::dump(level, msg);
     }
 }
 
@@ -477,8 +477,8 @@ namespace ia32_sysenter_esp
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_sysenter_eip
@@ -492,8 +492,8 @@ namespace ia32_sysenter_eip
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mcg_cap
@@ -507,7 +507,7 @@ namespace ia32_mcg_cap
     namespace count
     {
         constexpr const auto mask = 0x00000000000000FFULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "count";
 
         inline auto get() noexcept
@@ -516,14 +516,14 @@ namespace ia32_mcg_cap
         inline auto get(value_type msr) noexcept
         { return get_bits(msr, mask) >> from; }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace mcg_ctl
     {
         constexpr const auto mask = 0x0000000000000100ULL;
-        constexpr const auto from = 8;
+        constexpr const auto from = 8ULL;
         constexpr const auto name = "mcg_ctl";
 
         inline auto is_enabled()
@@ -538,14 +538,14 @@ namespace ia32_mcg_cap
         inline auto is_disabled(value_type msr)
         { return is_bit_cleared(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace mcg_ext
     {
         constexpr const auto mask = 0x0000000000000200ULL;
-        constexpr const auto from = 9;
+        constexpr const auto from = 9ULL;
         constexpr const auto name = "mcg_ext";
 
         inline auto is_enabled()
@@ -560,14 +560,14 @@ namespace ia32_mcg_cap
         inline auto is_disabled(value_type msr)
         { return is_bit_cleared(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace mcg_cmci
     {
         constexpr const auto mask = 0x0000000000000400ULL;
-        constexpr const auto from = 10;
+        constexpr const auto from = 10ULL;
         constexpr const auto name = "mcg_cmci";
 
         inline auto is_enabled()
@@ -582,14 +582,14 @@ namespace ia32_mcg_cap
         inline auto is_disabled(value_type msr)
         { return is_bit_cleared(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace mcg_tes
     {
         constexpr const auto mask = 0x0000000000000400ULL;
-        constexpr const auto from = 11;
+        constexpr const auto from = 11ULL;
         constexpr const auto name = "mcg_tes";
 
         inline auto is_enabled()
@@ -604,14 +604,14 @@ namespace ia32_mcg_cap
         inline auto is_disabled(value_type msr)
         { return is_bit_cleared(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace mcg_ext_cnt
     {
         constexpr const auto mask = 0x0000000000FF0000ULL;
-        constexpr const auto from = 16;
+        constexpr const auto from = 16ULL;
         constexpr const auto name = "mcg_ext_cnt";
 
         inline auto get() noexcept
@@ -620,14 +620,14 @@ namespace ia32_mcg_cap
         inline auto get(value_type msr) noexcept
         { return get_bits(msr, mask) >> from; }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace mcg_ser
     {
         constexpr const auto mask = 0x0000000001000000ULL;
-        constexpr const auto from = 24;
+        constexpr const auto from = 24ULL;
         constexpr const auto name = "mcg_ser";
 
         inline auto is_enabled()
@@ -642,14 +642,14 @@ namespace ia32_mcg_cap
         inline auto is_disabled(value_type msr)
         { return is_bit_cleared(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace mcg_elog
     {
         constexpr const auto mask = 0x0000000004000000ULL;
-        constexpr const auto from = 26;
+        constexpr const auto from = 26ULL;
         constexpr const auto name = "mcg_elog";
 
         inline auto is_enabled()
@@ -664,14 +664,14 @@ namespace ia32_mcg_cap
         inline auto is_disabled(value_type msr)
         { return is_bit_cleared(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace mcg_lmce
     {
         constexpr const auto mask = 0x0000000008000000ULL;
-        constexpr const auto from = 27;
+        constexpr const auto from = 27ULL;
         constexpr const auto name = "mcg_lmce";
 
         inline auto is_enabled()
@@ -686,22 +686,22 @@ namespace ia32_mcg_cap
         inline auto is_disabled(value_type msr)
         { return is_bit_cleared(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        count::dump(level);
-        mcg_ctl::dump(level);
-        mcg_ext::dump(level);
-        mcg_cmci::dump(level);
-        mcg_tes::dump(level);
-        mcg_ext_cnt::dump(level);
-        mcg_ser::dump(level);
-        mcg_elog::dump(level);
-        mcg_lmce::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        count::dump(level, msg);
+        mcg_ctl::dump(level, msg);
+        mcg_ext::dump(level, msg);
+        mcg_cmci::dump(level, msg);
+        mcg_tes::dump(level, msg);
+        mcg_ext_cnt::dump(level, msg);
+        mcg_ser::dump(level, msg);
+        mcg_elog::dump(level, msg);
+        mcg_lmce::dump(level, msg);
     }
 }
 
@@ -719,7 +719,7 @@ namespace ia32_mcg_status
     namespace ripv
     {
         constexpr const auto mask = 0x0000000000000001ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "ripv";
 
         inline auto is_enabled()
@@ -746,14 +746,14 @@ namespace ia32_mcg_status
         inline auto disable(value_type msr)
         { return clear_bit(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace eipv
     {
         constexpr const auto mask = 0x0000000000000002ULL;
-        constexpr const auto from = 1;
+        constexpr const auto from = 1ULL;
         constexpr const auto name = "eipv";
 
         inline auto is_enabled()
@@ -780,14 +780,14 @@ namespace ia32_mcg_status
         inline auto disable(value_type msr)
         { return clear_bit(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace mcip
     {
         constexpr const auto mask = 0x0000000000000004ULL;
-        constexpr const auto from = 2;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "mcip";
 
         inline auto is_enabled()
@@ -814,14 +814,14 @@ namespace ia32_mcg_status
         inline auto disable(value_type msr)
         { return clear_bit(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
     namespace lmce_s
     {
         constexpr const auto mask = 0x0000000000000008ULL;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "lmce_s";
 
         inline auto is_enabled()
@@ -848,17 +848,17 @@ namespace ia32_mcg_status
         inline auto disable(value_type msr)
         { return clear_bit(msr, from); }
 
-        inline void dump(int level)
-        { bfdebug_subbool(level, name, is_enabled()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        ripv::dump(level);
-        eipv::dump(level);
-        mcip::dump(level);
-        lmce_s::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        ripv::dump(level, msg);
+        eipv::dump(level, msg);
+        mcip::dump(level, msg);
+        lmce_s::dump(level, msg);
     }
 }
 
@@ -873,8 +873,8 @@ namespace ia32_mcg_ctl
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_pat
@@ -891,7 +891,7 @@ namespace ia32_pat
     namespace pa0
     {
         constexpr const auto mask = 0x0000000000000007ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "pa0";
 
         inline auto get() noexcept
@@ -906,14 +906,14 @@ namespace ia32_pat
         inline auto set(value_type msr, value_type val) noexcept
         { return set_bits(msr, mask, val << from); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace pa1
     {
         constexpr const auto mask = 0x0000000000000700ULL;
-        constexpr const auto from = 8;
+        constexpr const auto from = 8ULL;
         constexpr const auto name = "pa1";
 
         inline auto get() noexcept
@@ -928,14 +928,14 @@ namespace ia32_pat
         inline auto set(value_type msr, value_type val) noexcept
         { return set_bits(msr, mask, val << from); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace pa2
     {
         constexpr const auto mask = 0x0000000000070000ULL;
-        constexpr const auto from = 16;
+        constexpr const auto from = 16ULL;
         constexpr const auto name = "pa2";
 
         inline auto get() noexcept
@@ -950,14 +950,14 @@ namespace ia32_pat
         inline auto set(value_type msr, value_type val) noexcept
         { return set_bits(msr, mask, val << from); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace pa3
     {
         constexpr const auto mask = 0x0000000007000000ULL;
-        constexpr const auto from = 24;
+        constexpr const auto from = 24ULL;
         constexpr const auto name = "pa3";
 
         inline auto get() noexcept
@@ -972,14 +972,14 @@ namespace ia32_pat
         inline auto set(value_type msr, value_type val) noexcept
         { return set_bits(msr, mask, val << from); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace pa4
     {
         constexpr const auto mask = 0x0000000700000000ULL;
-        constexpr const auto from = 32;
+        constexpr const auto from = 32ULL;
         constexpr const auto name = "pa4";
 
         inline auto get() noexcept
@@ -994,14 +994,14 @@ namespace ia32_pat
         inline auto set(value_type msr, value_type val) noexcept
         { return set_bits(msr, mask, val << from); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace pa5
     {
         constexpr const auto mask = 0x0000070000000000ULL;
-        constexpr const auto from = 40;
+        constexpr const auto from = 40ULL;
         constexpr const auto name = "pa5";
 
         inline auto get() noexcept
@@ -1016,14 +1016,14 @@ namespace ia32_pat
         inline auto set(value_type msr, value_type val) noexcept
         { return set_bits(msr, mask, val << from); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace pa6
     {
         constexpr const auto mask = 0x0007000000000000ULL;
-        constexpr const auto from = 48;
+        constexpr const auto from = 48ULL;
         constexpr const auto name = "pa6";
 
         inline auto get() noexcept
@@ -1038,14 +1038,14 @@ namespace ia32_pat
         inline auto set(value_type msr, value_type val) noexcept
         { return set_bits(msr, mask, val << from); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     namespace pa7
     {
         constexpr const auto mask = 0x0700000000000000ULL;
-        constexpr const auto from = 56;
+        constexpr const auto from = 56ULL;
         constexpr const auto name = "pa7";
 
         inline auto get() noexcept
@@ -1060,8 +1060,8 @@ namespace ia32_pat
         inline auto set(value_type msr, value_type val) noexcept
         { return set_bits(msr, mask, val << from); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
     inline auto pa(value_type index)
@@ -1097,17 +1097,17 @@ namespace ia32_pat
         }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        pa0::dump(level);
-        pa1::dump(level);
-        pa2::dump(level);
-        pa3::dump(level);
-        pa4::dump(level);
-        pa5::dump(level);
-        pa6::dump(level);
-        pa7::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        pa0::dump(level, msg);
+        pa1::dump(level, msg);
+        pa2::dump(level, msg);
+        pa3::dump(level, msg);
+        pa4::dump(level, msg);
+        pa5::dump(level, msg);
+        pa6::dump(level, msg);
+        pa7::dump(level, msg);
     }
 }
 
@@ -1119,8 +1119,8 @@ namespace ia32_mc0_ctl
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc0_status
@@ -1131,8 +1131,8 @@ namespace ia32_mc0_status
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc0_addr
@@ -1143,8 +1143,8 @@ namespace ia32_mc0_addr
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc0_misc
@@ -1155,8 +1155,8 @@ namespace ia32_mc0_misc
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc1_ctl
@@ -1167,8 +1167,8 @@ namespace ia32_mc1_ctl
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc1_status
@@ -1179,8 +1179,8 @@ namespace ia32_mc1_status
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc1_addr
@@ -1191,8 +1191,8 @@ namespace ia32_mc1_addr
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc1_misc
@@ -1203,8 +1203,8 @@ namespace ia32_mc1_misc
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc2_ctl
@@ -1215,8 +1215,8 @@ namespace ia32_mc2_ctl
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc2_status
@@ -1227,8 +1227,8 @@ namespace ia32_mc2_status
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc2_addr
@@ -1239,8 +1239,8 @@ namespace ia32_mc2_addr
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc2_misc
@@ -1251,8 +1251,8 @@ namespace ia32_mc2_misc
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc3_ctl
@@ -1263,8 +1263,8 @@ namespace ia32_mc3_ctl
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc3_status
@@ -1275,8 +1275,8 @@ namespace ia32_mc3_status
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc3_addr
@@ -1287,8 +1287,8 @@ namespace ia32_mc3_addr
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc3_misc
@@ -1299,8 +1299,8 @@ namespace ia32_mc3_misc
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc4_ctl
@@ -1311,8 +1311,8 @@ namespace ia32_mc4_ctl
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc4_status
@@ -1323,8 +1323,8 @@ namespace ia32_mc4_status
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc4_addr
@@ -1335,8 +1335,8 @@ namespace ia32_mc4_addr
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc4_misc
@@ -1347,8 +1347,8 @@ namespace ia32_mc4_misc
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc5_ctl
@@ -1359,8 +1359,8 @@ namespace ia32_mc5_ctl
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc5_status
@@ -1371,8 +1371,8 @@ namespace ia32_mc5_status
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc5_addr
@@ -1383,8 +1383,8 @@ namespace ia32_mc5_addr
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_mc5_misc
@@ -1395,8 +1395,8 @@ namespace ia32_mc5_misc
     inline auto get() noexcept
     { return _read_msr(addr); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_star
@@ -1410,8 +1410,8 @@ namespace ia32_star
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_lstar
@@ -1425,8 +1425,8 @@ namespace ia32_lstar
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_fmask
@@ -1440,8 +1440,8 @@ namespace ia32_fmask
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_kernel_gs_base
@@ -1455,8 +1455,8 @@ namespace ia32_kernel_gs_base
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
-    inline void dump(int level)
-    { bfdebug_nhex(level, name, get()); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { bfdebug_nhex(level, name, get(), msg); }
 }
 
 namespace ia32_tsc_aux
@@ -1473,7 +1473,7 @@ namespace ia32_tsc_aux
     namespace aux
     {
         constexpr const auto mask = 0x00000000FFFFFFFFULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "aux";
 
         inline auto get() noexcept
@@ -1488,14 +1488,14 @@ namespace ia32_tsc_aux
         inline auto set(value_type msr, value_type val) noexcept
         { return set_bits(msr, mask, val << from); }
 
-        inline void dump(int level)
-        { bfdebug_subnhex(level, name, get()); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        bfdebug_nhex(level, name, get());
-        aux::dump(level);
+        bfdebug_nhex(level, name, get(), msg);
+        aux::dump(level, msg);
     }
 }
 

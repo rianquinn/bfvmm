@@ -30,7 +30,6 @@
 #include <exit_handler/exit_handler_intel_x64_entry.h>
 #include <exit_handler/exit_handler_intel_x64_support.h>
 
-#include <intrinsics/x86/common_x64.h>
 #include <intrinsics/x86/intel_x64.h>
 
 using namespace x64;
@@ -41,44 +40,54 @@ std::mutex g_unimplemented_handler_mutex;
 
 void
 exit_handler_intel_x64::dispatch()
-{
-    handle_exit(vmcs::exit_reason::basic_exit_reason::get());
-}
+{ handle_exit(vmcs::exit_reason::basic_exit_reason::get()); }
 
 void
 exit_handler_intel_x64::halt() noexcept
 {
-    bferror_brline(0);
-    bferror_header(0, "halting vcpu");
-    bferror_break1(0);
+    bferror_lnbr(0);
+    bferror_info(0, "halting vcpu");
+    bferror_brk1(0);
 
-    bfdebug_subnhex(0, "m_state_save->rax", m_state_save->rax);
-    bfdebug_subnhex(0, "m_state_save->rbx", m_state_save->rbx);
-    bfdebug_subnhex(0, "m_state_save->rcx", m_state_save->rcx);
-    bfdebug_subnhex(0, "m_state_save->rdx", m_state_save->rdx);
-    bfdebug_subnhex(0, "m_state_save->rbp", m_state_save->rbp);
-    bfdebug_subnhex(0, "m_state_save->rsi", m_state_save->rsi);
-    bfdebug_subnhex(0, "m_state_save->rdi", m_state_save->rdi);
-    bfdebug_subnhex(0, "m_state_save->r08", m_state_save->r08);
-    bfdebug_subnhex(0, "m_state_save->r09", m_state_save->r09);
-    bfdebug_subnhex(0, "m_state_save->r10", m_state_save->r10);
-    bfdebug_subnhex(0, "m_state_save->r11", m_state_save->r11);
-    bfdebug_subnhex(0, "m_state_save->r12", m_state_save->r12);
-    bfdebug_subnhex(0, "m_state_save->r13", m_state_save->r13);
-    bfdebug_subnhex(0, "m_state_save->r14", m_state_save->r14);
-    bfdebug_subnhex(0, "m_state_save->r15", m_state_save->r15);
-    bfdebug_subnhex(0, "m_state_save->rip", m_state_save->rip);
-    bfdebug_subnhex(0, "m_state_save->rsp", m_state_save->rsp);
-    bfdebug_subnhex(0, "m_state_save->vcpuid", m_state_save->vcpuid);
+    bferror_subnhex(0, "m_state_save->rax", m_state_save->rax);
+    bferror_subnhex(0, "m_state_save->rbx", m_state_save->rbx);
+    bferror_subnhex(0, "m_state_save->rcx", m_state_save->rcx);
+    bferror_subnhex(0, "m_state_save->rdx", m_state_save->rdx);
+    bferror_subnhex(0, "m_state_save->rbp", m_state_save->rbp);
+    bferror_subnhex(0, "m_state_save->rsi", m_state_save->rsi);
+    bferror_subnhex(0, "m_state_save->rdi", m_state_save->rdi);
+    bferror_subnhex(0, "m_state_save->r08", m_state_save->r08);
+    bferror_subnhex(0, "m_state_save->r09", m_state_save->r09);
+    bferror_subnhex(0, "m_state_save->r10", m_state_save->r10);
+    bferror_subnhex(0, "m_state_save->r11", m_state_save->r11);
+    bferror_subnhex(0, "m_state_save->r12", m_state_save->r12);
+    bferror_subnhex(0, "m_state_save->r13", m_state_save->r13);
+    bferror_subnhex(0, "m_state_save->r14", m_state_save->r14);
+    bferror_subnhex(0, "m_state_save->r15", m_state_save->r15);
+    bferror_subnhex(0, "m_state_save->rip", m_state_save->rip);
+    bferror_subnhex(0, "m_state_save->rsp", m_state_save->rsp);
+    bferror_subnhex(0, "m_state_save->vcpuid", m_state_save->vcpuid);
 
-    // TODO:
-    //
-    // Need to put a place holder here. Instead of stopping, we should call
-    // a function that stops, but can also be overridden by an extension like
-    // the hyperkenel so that another vcpu can be scheduled instead.
-    //
+    this->stop();
+}
 
-    pm::stop();
+void
+exit_handler_intel_x64::stop() noexcept
+{ pm::stop(); }
+
+void
+exit_handler_intel_x64::resume()
+{ m_vmcs->resume(); }
+
+void
+exit_handler_intel_x64::promote()
+{ m_vmcs->promote(); }
+
+void
+exit_handler_intel_x64::advance_and_resume()
+{
+    this->advance_rip();
+    this->resume();
 }
 
 void
@@ -114,7 +123,7 @@ exit_handler_intel_x64::handle_exit(vmcs::value_type reason)
             break;
     };
 
-    m_vmcs->resume();
+    this->resume();
 }
 
 void
@@ -125,10 +134,10 @@ exit_handler_intel_x64::handle_cpuid()
                                gsl::narrow_cast<x64::cpuid::field_type>(m_state_save->rcx),
                                gsl::narrow_cast<x64::cpuid::field_type>(m_state_save->rdx));
 
-    m_state_save->rax = std::get<0>(ret);
-    m_state_save->rbx = std::get<1>(ret);
-    m_state_save->rcx = std::get<2>(ret);
-    m_state_save->rdx = std::get<3>(ret);
+    m_state_save->rax = ret.rax;
+    m_state_save->rbx = ret.rbx;
+    m_state_save->rcx = ret.rcx;
+    m_state_save->rdx = ret.rdx;
 
     advance_rip();
 }
@@ -209,36 +218,8 @@ exit_handler_intel_x64::handle_vmcall()
 }
 
 void
-exit_handler_intel_x64::complete_vmcall(
-    ret_type ret, vmcall_registers_t &regs) noexcept
-{
-    switch (m_state_save->rax) {
-        case VMCALL_EVENT:
-            m_state_save->rcx = regs.r02;
-            break;
-
-        default:
-            m_state_save->r15 = regs.r12;
-            m_state_save->r14 = regs.r11;
-            m_state_save->r13 = regs.r10;
-            m_state_save->r12 = regs.r09;
-            m_state_save->r11 = regs.r08;
-            m_state_save->r10 = regs.r07;
-            m_state_save->r09 = regs.r06;
-            m_state_save->r08 = regs.r05;
-            m_state_save->rsi = regs.r04;
-            m_state_save->rbx = regs.r03;
-            m_state_save->rcx = regs.r02;
-            break;
-    };
-
-    m_state_save->rdx = static_cast < decltype(m_state_save->rdx) > (ret);
-    advance_rip();
-}
-
-void
 exit_handler_intel_x64::handle_vmxoff()
-{ m_vmcs->promote(); }
+{ this->promote(); }
 
 void
 exit_handler_intel_x64::handle_rdmsr()
@@ -375,17 +356,10 @@ exit_handler_intel_x64::unimplemented_handler() noexcept
 {
     std::lock_guard<std::mutex> guard(g_unimplemented_handler_mutex);
 
-    bferror_brline(0);
-    bferror_header(0, "unhandled exit reason");
-    bferror_break1(0);
-
-    vmcs::exit_reason::basic_exit_reason::dump(0);
-    vmcs::exit_qualification::dump(0);
-    vmcs::vm_exit_instruction_information::dump(0);
-    vmcs::vm_exit_interruption_information::dump(0);
-    vmcs::vm_exit_instruction_length::dump(0);
-    vmcs::guest_linear_address::dump(0);
-    vmcs::guest_physical_address::dump(0);
+    bferror_lnbr(0);
+    bferror_info(0, "unhandled exit reason");
+    bferror_brk1(0);
+    bferror_subtext(0, "exit_reason", vmcs::exit_reason::basic_exit_reason::description());
 
     if (vmcs::exit_reason::vm_entry_failure::is_enabled()) {
 
@@ -397,6 +371,34 @@ exit_handler_intel_x64::unimplemented_handler() noexcept
     }
 
     this->halt();
+}
+
+void
+exit_handler_intel_x64::complete_vmcall(
+    ret_type ret, vmcall_registers_t &regs) noexcept
+{
+    switch (m_state_save->rax) {
+        case VMCALL_EVENT:
+            m_state_save->rcx = regs.r02;
+            break;
+
+        default:
+            m_state_save->r15 = regs.r12;
+            m_state_save->r14 = regs.r11;
+            m_state_save->r13 = regs.r10;
+            m_state_save->r12 = regs.r09;
+            m_state_save->r11 = regs.r08;
+            m_state_save->r10 = regs.r07;
+            m_state_save->r09 = regs.r06;
+            m_state_save->r08 = regs.r05;
+            m_state_save->rsi = regs.r04;
+            m_state_save->rbx = regs.r03;
+            m_state_save->rcx = regs.r02;
+            break;
+    };
+
+    m_state_save->rdx = static_cast < decltype(m_state_save->rdx) > (ret);
+    advance_rip();
 }
 
 void
@@ -429,18 +431,20 @@ exit_handler_intel_x64::handle_vmcall_versions(vmcall_registers_t &regs)
 void
 exit_handler_intel_x64::handle_vmcall_registers(vmcall_registers_t &regs)
 {
-    bfdebug << "vmcall registers:" << bfendl;
-    bfdebug << "r02: " << view_as_pointer(regs.r02) << bfendl;
-    bfdebug << "r03: " << view_as_pointer(regs.r03) << bfendl;
-    bfdebug << "r04: " << view_as_pointer(regs.r04) << bfendl;
-    bfdebug << "r05: " << view_as_pointer(regs.r05) << bfendl;
-    bfdebug << "r06: " << view_as_pointer(regs.r06) << bfendl;
-    bfdebug << "r07: " << view_as_pointer(regs.r07) << bfendl;
-    bfdebug << "r08: " << view_as_pointer(regs.r08) << bfendl;
-    bfdebug << "r09: " << view_as_pointer(regs.r09) << bfendl;
-    bfdebug << "r10: " << view_as_pointer(regs.r10) << bfendl;
-    bfdebug << "r11: " << view_as_pointer(regs.r11) << bfendl;
-    bfdebug << "r12: " << view_as_pointer(regs.r12) << bfendl;
+    bfdebug_transaction(0, [&](std::string * msg) {
+        bfdebug_info(0, "vmcall registers", msg);
+        bfdebug_subnhex(0, "r02", regs.r02, msg);
+        bfdebug_subnhex(0, "r03", regs.r03, msg);
+        bfdebug_subnhex(0, "r04", regs.r04, msg);
+        bfdebug_subnhex(0, "r05", regs.r05, msg);
+        bfdebug_subnhex(0, "r06", regs.r06, msg);
+        bfdebug_subnhex(0, "r07", regs.r07, msg);
+        bfdebug_subnhex(0, "r08", regs.r08, msg);
+        bfdebug_subnhex(0, "r09", regs.r09, msg);
+        bfdebug_subnhex(0, "r10", regs.r10, msg);
+        bfdebug_subnhex(0, "r11", regs.r11, msg);
+        bfdebug_subnhex(0, "r12", regs.r12, msg);
+    });
 }
 
 void
@@ -489,23 +493,31 @@ exit_handler_intel_x64::handle_vmcall_data(vmcall_registers_t &regs)
 void
 exit_handler_intel_x64::handle_vmcall_event(vmcall_registers_t &regs)
 {
-    bfdebug << "vmcall event:" << bfendl;
-    bfdebug << "r02: " << view_as_pointer(regs.r02) << bfendl;
+    bfdebug_transaction(0, [&](std::string * msg) {
+        bfdebug_info(0, "vmcall event", msg);
+        bfdebug_subnhex(0, "r02", regs.r02, msg);
+    });
 }
 
 void
 exit_handler_intel_x64::handle_vmcall_start(vmcall_registers_t &regs)
-{ (void) regs; }
+{
+    (void) regs;
+    bfdebug_info(0, "host os is" bfcolor_green " now " bfcolor_end "in a vm");
+}
 
 void
 exit_handler_intel_x64::handle_vmcall_stop(vmcall_registers_t &regs)
-{ (void) regs; }
+{
+    (void) regs;
+    bfdebug_info(0, "host os is" bfcolor_red " not " bfcolor_end "in a vm");
+}
 
 void
 exit_handler_intel_x64::handle_vmcall_data_string_unformatted(
     const std::string &istr, std::string &ostr)
 {
-    bfdebug << "received in vmm: " << istr << bfendl;
+    std::cout << "received in vmm: " << istr << '\n';
     ostr = istr;
 }
 
@@ -513,7 +525,7 @@ void
 exit_handler_intel_x64::handle_vmcall_data_string_json(
     const json &ijson, json &ojson)
 {
-    bfdebug << "received in vmm: " << ijson << bfendl;
+    std::cout << "received in vmm: " << ijson << '\n';
     ojson = ijson;
 }
 
@@ -522,7 +534,7 @@ exit_handler_intel_x64::handle_vmcall_data_binary_unformatted(
     const bfn::unique_map_ptr_x64<char> &imap,
     const bfn::unique_map_ptr_x64<char> &omap)
 {
-    bfdebug << "received binary data" << bfendl;
+    bfdebug_info(0, "received binary data");
     memcpy(omap.get(), imap.get(), imap.size());
 }
 

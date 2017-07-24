@@ -42,6 +42,11 @@
 #define EXPORT_VMCS
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
 // -----------------------------------------------------------------------------
 // Definitions
 // -----------------------------------------------------------------------------
@@ -92,8 +97,9 @@ public:
     /// @expects guest_state != nullptr
     /// @ensures none
     ///
-    virtual void launch(gsl::not_null<vmcs_intel_x64_state *> host_state,
-                        gsl::not_null<vmcs_intel_x64_state *> guest_state);
+    virtual void launch(
+        gsl::not_null<vmcs_intel_x64_state *> host_state,
+        gsl::not_null<vmcs_intel_x64_state *> guest_state);
 
     /// Resume
     ///
@@ -167,12 +173,6 @@ public:
     ///
     virtual void clear();
 
-    virtual void set_state_save(gsl::not_null<state_save_intel_x64 *> state_save)
-    { m_state_save = state_save; }
-
-    virtual void set_exit_handler_entry(void *entry)
-    { m_exit_handler_entry = entry; }
-
 protected:
 
     virtual void write_fields(gsl::not_null<vmcs_intel_x64_state *> host_state,
@@ -209,18 +209,18 @@ protected:
 
     uintptr_t m_vmcs_region_phys{0};
     std::unique_ptr<uint32_t[]> m_vmcs_region;
+    std::unique_ptr<gsl::byte[]> m_exit_handler_stack;
 
-    state_save_intel_x64 *m_state_save{nullptr};
-    std::unique_ptr<char[]> m_exit_handler_stack;
+public:
 
     void *m_exit_handler_entry{nullptr};
+    state_save_intel_x64 *m_state_save{nullptr};
 
-private:
+    virtual void set_state_save(gsl::not_null<state_save_intel_x64 *> state_save)
+    { m_state_save = state_save; }
 
-    friend class vcpu_ut;
-    friend class vcpu_intel_x64;
-    friend class exit_handler_intel_x64;
-    friend class exit_handler_intel_x64_ut;
+    virtual void set_exit_handler_entry(void *entry)
+    { m_exit_handler_entry = entry; }
 
 public:
 
@@ -230,5 +230,9 @@ public:
     vmcs_intel_x64(const vmcs_intel_x64 &) = delete;
     vmcs_intel_x64 &operator=(const vmcs_intel_x64 &) = delete;
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

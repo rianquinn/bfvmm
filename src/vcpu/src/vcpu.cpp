@@ -21,16 +21,11 @@
 
 #include <vcpu/vcpu.h>
 
-vcpu::vcpu(vcpuid::type id, std::unique_ptr<debug_ring> dr) :
-    m_id(id),
-    m_debug_ring(std::move(dr))
+vcpu::vcpu(vcpuid::type id) :
+    m_id(id)
 {
     if ((id & vcpuid::reserved) != 0) {
         throw std::invalid_argument("invalid vcpuid");
-    }
-
-    if (!m_debug_ring) {
-        m_debug_ring = std::make_unique<debug_ring>(id);
     }
 }
 
@@ -69,7 +64,3 @@ vcpu::hlt(user_data *data)
 
     m_is_running = false;
 }
-
-void
-vcpu::write(const std::string &str) noexcept
-{ m_debug_ring->write(str); }

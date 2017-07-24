@@ -62,8 +62,8 @@ namespace virtual_processor_identifier
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace posted_interrupt_notification_vector
@@ -86,8 +86,8 @@ namespace posted_interrupt_notification_vector
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace eptp_index
@@ -113,8 +113,8 @@ namespace eptp_index
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 }

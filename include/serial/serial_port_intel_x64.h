@@ -44,6 +44,11 @@
 #define EXPORT_SERIAL
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
 // -----------------------------------------------------------------------------
 // Constants
 // -----------------------------------------------------------------------------
@@ -323,5 +328,9 @@ public:
     serial_port_intel_x64(const serial_port_intel_x64 &) = delete;
     serial_port_intel_x64 &operator=(const serial_port_intel_x64 &) = delete;
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

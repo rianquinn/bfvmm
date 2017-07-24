@@ -53,8 +53,8 @@ namespace exit_qualification
     inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 
     namespace debug_exception
     {
@@ -69,7 +69,7 @@ namespace exit_qualification
         namespace b0
         {
             constexpr const auto mask = 0x0000000000000001ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "b0";
 
             inline auto is_enabled()
@@ -90,14 +90,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace b1
         {
             constexpr const auto mask = 0x0000000000000002ULL;
-            constexpr const auto from = 1;
+            constexpr const auto from = 1ULL;
             constexpr const auto name = "b1";
 
             inline auto is_enabled()
@@ -118,14 +118,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace b2
         {
             constexpr const auto mask = 0x0000000000000004ULL;
-            constexpr const auto from = 2;
+            constexpr const auto from = 2ULL;
             constexpr const auto name = "b2";
 
             inline auto is_enabled()
@@ -146,14 +146,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace b3
         {
             constexpr const auto mask = 0x0000000000000008ULL;
-            constexpr const auto from = 3;
+            constexpr const auto from = 3ULL;
             constexpr const auto name = "b3";
 
             inline auto is_enabled()
@@ -174,14 +174,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0xFFFFFFFFFFFF9FF0ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -193,14 +193,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace bd
         {
             constexpr const auto mask = 0x0000000000002000ULL;
-            constexpr const auto from = 13;
+            constexpr const auto from = 13ULL;
             constexpr const auto name = "bd";
 
             inline auto is_enabled()
@@ -221,14 +221,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace bs
         {
             constexpr const auto mask = 0x0000000000004000ULL;
-            constexpr const auto from = 14;
+            constexpr const auto from = 14ULL;
             constexpr const auto name = "bs";
 
             inline auto is_enabled()
@@ -249,20 +249,20 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            b0::dump(level);
-            b1::dump(level);
-            b2::dump(level);
-            b3::dump(level);
-            reserved::dump(level);
-            bd::dump(level);
-            bs::dump(level);
+            dump_vmcs_nhex(level, msg);
+            b0::dump(level, msg);
+            b1::dump(level, msg);
+            b2::dump(level, msg);
+            b3::dump(level, msg);
+            reserved::dump(level, msg);
+            bd::dump(level, msg);
+            bs::dump(level, msg);
         }
     }
 
@@ -276,8 +276,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace sipi
@@ -293,7 +293,7 @@ namespace exit_qualification
         namespace vector
         {
             constexpr const auto mask = 0x00000000000000FFULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "vector";
 
             inline auto get()
@@ -305,14 +305,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            vector::dump(level);
+            dump_vmcs_nhex(level, msg);
+            vector::dump(level, msg);
         }
     }
 
@@ -329,7 +329,7 @@ namespace exit_qualification
         namespace tss_selector
         {
             constexpr const auto mask = 0x000000000000FFFFULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "tss_selector";
 
             inline auto get()
@@ -341,14 +341,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0xFFFFFFFF3FFF0000ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -360,14 +360,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace source_of_task_switch_init
         {
             constexpr const auto mask = 0x00000000C0000000ULL;
-            constexpr const auto from = 30;
+            constexpr const auto from = 30ULL;
             constexpr const auto name = "task_switch_init_source";
 
             constexpr const auto call_instruction = 0U;
@@ -384,16 +384,16 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            tss_selector::dump(level);
-            reserved::dump(level);
-            source_of_task_switch_init::dump(level);
+            dump_vmcs_nhex(level, msg);
+            tss_selector::dump(level, msg);
+            reserved::dump(level, msg);
+            source_of_task_switch_init::dump(level, msg);
         }
     }
 
@@ -407,8 +407,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace invpcid
@@ -421,8 +421,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace invvpid
@@ -435,8 +435,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace lgdt
@@ -449,8 +449,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace lidt
@@ -463,8 +463,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace lldt
@@ -477,8 +477,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace ltr
@@ -491,8 +491,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace sgdt
@@ -505,8 +505,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace sidt
@@ -519,8 +519,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace sldt
@@ -533,8 +533,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace str
@@ -547,8 +547,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace vmclear
@@ -561,8 +561,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace vmptrld
@@ -575,8 +575,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace vmptrst
@@ -589,8 +589,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace vmread
@@ -603,8 +603,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace vmwrite
@@ -617,8 +617,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace vmxon
@@ -631,8 +631,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace xrstors
@@ -645,8 +645,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace xsaves
@@ -659,8 +659,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace control_register_access
@@ -676,7 +676,7 @@ namespace exit_qualification
         namespace control_register_number
         {
             constexpr const auto mask = 0x000000000000000FULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "control_register_number";
 
             inline auto get()
@@ -688,14 +688,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace access_type
         {
             constexpr const auto mask = 0x0000000000000030ULL;
-            constexpr const auto from = 4;
+            constexpr const auto from = 4ULL;
             constexpr const auto name = "access_type";
 
             constexpr const auto mov_to_cr = 0U;
@@ -712,14 +712,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace lmsw_operand_type
         {
             constexpr const auto mask = 0x0000000000000040ULL;
-            constexpr const auto from = 6;
+            constexpr const auto from = 6ULL;
             constexpr const auto name = "lmsw_operand_type";
 
             constexpr const auto reg = 0U;
@@ -734,14 +734,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0xFFFFFFFF0000F080ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -753,14 +753,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace general_purpose_register
         {
             constexpr const auto mask = 0x0000000000000F00ULL;
-            constexpr const auto from = 8;
+            constexpr const auto from = 8ULL;
             constexpr const auto name = "general_purpose_register";
 
             constexpr const auto rax = 0U;
@@ -789,14 +789,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace source_data
         {
             constexpr const auto mask = 0x00000000FFFF0000ULL;
-            constexpr const auto from = 16;
+            constexpr const auto from = 16ULL;
             constexpr const auto name = "source_data";
 
             inline auto get()
@@ -808,20 +808,20 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
 
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            control_register_number::dump(level);
-            access_type::dump(level);
-            lmsw_operand_type::dump(level);
-            reserved::dump(level);
-            general_purpose_register::dump(level);
-            source_data::dump(level);
+            dump_vmcs_nhex(level, msg);
+            control_register_number::dump(level, msg);
+            access_type::dump(level, msg);
+            lmsw_operand_type::dump(level, msg);
+            reserved::dump(level, msg);
+            general_purpose_register::dump(level, msg);
+            source_data::dump(level, msg);
         }
     }
 
@@ -838,7 +838,7 @@ namespace exit_qualification
         namespace debug_register_number
         {
             constexpr const auto mask = 0x0000000000000007ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "debug_register_number";
 
             inline auto get()
@@ -850,14 +850,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0xFFFFFFFFFFFFF0E8ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -869,14 +869,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace direction_of_access
         {
             constexpr const auto mask = 0x0000000000000010ULL;
-            constexpr const auto from = 4;
+            constexpr const auto from = 4ULL;
             constexpr const auto name = "direction_of_access";
 
             constexpr const auto to_dr = 0U;
@@ -891,14 +891,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace general_purpose_register
         {
             constexpr const auto mask = 0x0000000000000F00ULL;
-            constexpr const auto from = 8;
+            constexpr const auto from = 8ULL;
             constexpr const auto name = "general_purpose_register";
 
             constexpr const auto rax = 0U;
@@ -927,17 +927,17 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            debug_register_number::dump(level);
-            reserved::dump(level);
-            direction_of_access::dump(level);
-            general_purpose_register::dump(level);
+            dump_vmcs_nhex(level, msg);
+            debug_register_number::dump(level, msg);
+            reserved::dump(level, msg);
+            direction_of_access::dump(level, msg);
+            general_purpose_register::dump(level, msg);
         }
     }
 
@@ -954,7 +954,7 @@ namespace exit_qualification
         namespace size_of_access
         {
             constexpr const auto mask = 0x0000000000000007ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "size_of_access";
 
             constexpr const auto one_byte = 0U;
@@ -970,14 +970,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace direction_of_access
         {
             constexpr const auto mask = 0x0000000000000008ULL;
-            constexpr const auto from = 3;
+            constexpr const auto from = 3ULL;
             constexpr const auto name = "direction_of_access";
 
             constexpr const auto out = 0U;
@@ -992,14 +992,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace string_instruction
         {
             constexpr const auto mask = 0x0000000000000010ULL;
-            constexpr const auto from = 4;
+            constexpr const auto from = 4ULL;
             constexpr const auto name = "string_instruction";
 
             inline auto is_enabled()
@@ -1020,14 +1020,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace rep_prefixed
         {
             constexpr const auto mask = 0x0000000000000020ULL;
-            constexpr const auto from = 5;
+            constexpr const auto from = 5ULL;
             constexpr const auto name = "rep_prefixed";
 
             inline auto is_enabled()
@@ -1048,14 +1048,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace operand_encoding
         {
             constexpr const auto mask = 0x0000000000000040ULL;
-            constexpr const auto from = 6;
+            constexpr const auto from = 6ULL;
             constexpr const auto name = "operand_encoding";
 
             constexpr const auto dx = 0U;
@@ -1070,14 +1070,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0xFFFFFFFF0000FF80ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -1089,14 +1089,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace port_number
         {
             constexpr const auto mask = 0x00000000FFFF0000ULL;
-            constexpr const auto from = 16;
+            constexpr const auto from = 16ULL;
             constexpr const auto name = "port_number";
 
             inline auto get()
@@ -1108,20 +1108,20 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            size_of_access::dump(level);
-            direction_of_access::dump(level);
-            string_instruction::dump(level);
-            rep_prefixed::dump(level);
-            operand_encoding::dump(level);
-            reserved::dump(level);
-            port_number::dump(level);
+            dump_vmcs_nhex(level, msg);
+            size_of_access::dump(level, msg);
+            direction_of_access::dump(level, msg);
+            string_instruction::dump(level, msg);
+            rep_prefixed::dump(level, msg);
+            operand_encoding::dump(level, msg);
+            reserved::dump(level, msg);
+            port_number::dump(level, msg);
         }
     }
 
@@ -1135,8 +1135,8 @@ namespace exit_qualification
         inline auto get_if_exists(bool verbose = false)
         { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_nhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_nhex(level, msg); }
     }
 
     namespace linear_apic_access
@@ -1152,7 +1152,7 @@ namespace exit_qualification
         namespace offset
         {
             constexpr const auto mask = 0x0000000000000FFFULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "offset";
 
             inline auto get()
@@ -1164,14 +1164,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace access_type
         {
             constexpr const auto mask = 0x000000000000F000ULL;
-            constexpr const auto from = 12;
+            constexpr const auto from = 12ULL;
             constexpr const auto name = "access_type";
 
             constexpr const auto read_during_instruction_execution = 0U;
@@ -1188,14 +1188,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0xFFFFFFFFFFFF0000ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -1207,16 +1207,16 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            offset::dump(level);
-            access_type::dump(level);
-            reserved::dump(level);
+            dump_vmcs_nhex(level, msg);
+            offset::dump(level, msg);
+            access_type::dump(level, msg);
+            reserved::dump(level, msg);
         }
     }
 
@@ -1233,7 +1233,7 @@ namespace exit_qualification
         namespace access_type
         {
             constexpr const auto mask = 0x000000000000F000ULL;
-            constexpr const auto from = 12;
+            constexpr const auto from = 12ULL;
             constexpr const auto name = "access_type";
 
             constexpr const auto event_delivery = 10U;
@@ -1248,14 +1248,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0xFFFFFFFFFFFF0000ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -1267,15 +1267,15 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            access_type::dump(level);
-            reserved::dump(level);
+            dump_vmcs_nhex(level, msg);
+            access_type::dump(level, msg);
+            reserved::dump(level, msg);
         }
     }
 
@@ -1292,7 +1292,7 @@ namespace exit_qualification
         namespace data_read
         {
             constexpr const auto mask = 0x0000000000000001ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "data_read";
 
             inline auto is_enabled()
@@ -1313,14 +1313,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace data_write
         {
             constexpr const auto mask = 0x0000000000000002ULL;
-            constexpr const auto from = 1;
+            constexpr const auto from = 1ULL;
             constexpr const auto name = "data_write";
 
             inline auto is_enabled()
@@ -1341,14 +1341,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace instruction_fetch
         {
             constexpr const auto mask = 0x0000000000000004ULL;
-            constexpr const auto from = 2;
+            constexpr const auto from = 2ULL;
             constexpr const auto name = "instruction_fetch";
 
             inline auto is_enabled()
@@ -1369,14 +1369,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace readable
         {
             constexpr const auto mask = 0x0000000000000008ULL;
-            constexpr const auto from = 3;
+            constexpr const auto from = 3ULL;
             constexpr const auto name = "readable";
 
             inline auto is_enabled()
@@ -1397,14 +1397,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace writeable
         {
             constexpr const auto mask = 0x0000000000000010ULL;
-            constexpr const auto from = 4;
+            constexpr const auto from = 4ULL;
             constexpr const auto name = "writeable";
 
             inline auto is_enabled()
@@ -1425,14 +1425,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace executable
         {
             constexpr const auto mask = 0x0000000000000020ULL;
-            constexpr const auto from = 5;
+            constexpr const auto from = 5ULL;
             constexpr const auto name = "executable";
 
             inline auto is_enabled()
@@ -1453,14 +1453,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0xFFFFFFFFFFFFEE40ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -1472,14 +1472,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace valid_guest_linear_address
         {
             constexpr const auto mask = 0x0000000000000080ULL;
-            constexpr const auto from = 7;
+            constexpr const auto from = 7ULL;
             constexpr const auto name = "valid_guest_linear_address";
 
             inline auto is_enabled()
@@ -1500,14 +1500,14 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
         namespace nmi_unblocking_due_to_iret
         {
             constexpr const auto mask = 0x0000000000001000ULL;
-            constexpr const auto from = 12;
+            constexpr const auto from = 12ULL;
             constexpr const auto name = "nmi_unblocking_due_to_iret";
 
             inline auto is_enabled()
@@ -1528,22 +1528,22 @@ namespace exit_qualification
             inline auto is_disabled_if_exists(bool verbose = false)
             { return is_bit_cleared(get_vmcs_field_if_exists(addr, name, verbose, exists()), from); }
 
-            inline void dump(int level)
-            { dump_vmcs_subbool(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subbool(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            data_read::dump(level);
-            data_write::dump(level);
-            instruction_fetch::dump(level);
-            readable::dump(level);
-            writeable::dump(level);
-            executable::dump(level);
-            reserved::dump(level);
-            valid_guest_linear_address::dump(level);
-            nmi_unblocking_due_to_iret::dump(level);
+            dump_vmcs_nhex(level, msg);
+            data_read::dump(level, msg);
+            data_write::dump(level, msg);
+            instruction_fetch::dump(level, msg);
+            readable::dump(level, msg);
+            writeable::dump(level, msg);
+            executable::dump(level, msg);
+            reserved::dump(level, msg);
+            valid_guest_linear_address::dump(level, msg);
+            nmi_unblocking_due_to_iret::dump(level, msg);
         }
     }
 
@@ -1560,7 +1560,7 @@ namespace exit_qualification
         namespace vector
         {
             constexpr const auto mask = 0x00000000000000FFULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "vector";
 
             inline auto get()
@@ -1572,14 +1572,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            vector::dump(level);
+            dump_vmcs_nhex(level, msg);
+            vector::dump(level, msg);
         }
     }
 
@@ -1596,7 +1596,7 @@ namespace exit_qualification
         namespace offset
         {
             constexpr const auto mask = 0x0000000000000FFFULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "offset";
 
             inline auto get()
@@ -1608,14 +1608,14 @@ namespace exit_qualification
             inline auto get_if_exists(bool verbose = false)
             { return get_bits(get_vmcs_field_if_exists(addr, name, verbose, exists()), mask) >> from; }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            offset::dump(level);
+            dump_vmcs_nhex(level, msg);
+            offset::dump(level, msg);
         }
     }
 }
@@ -1634,8 +1634,8 @@ namespace io_rcx
     inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace io_rsi
@@ -1652,8 +1652,8 @@ namespace io_rsi
     inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace io_rdi
@@ -1670,8 +1670,8 @@ namespace io_rdi
     inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace io_rip
@@ -1688,8 +1688,8 @@ namespace io_rip
     inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace guest_linear_address
@@ -1706,8 +1706,8 @@ namespace guest_linear_address
     inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 }

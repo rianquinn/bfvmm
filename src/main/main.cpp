@@ -65,7 +65,6 @@ private_init_vmm(uint64_t arg) noexcept
 
         g_vcm->run_vcpu(arg, pre_run_vcpu(arg));
 
-        bfdebug_nhex(0, "success: host os is now in a vm", arg);
         return ENTRY_SUCCESS;
     });
 }
@@ -86,7 +85,6 @@ private_fini_vmm(uint64_t arg) noexcept
         g_vcm->hlt_vcpu(arg, pre_hlt_vcpu(arg));
         g_vcm->delete_vcpu(arg, pre_delete_vcpu(arg));
 
-        bfdebug_nhex(0, "success: host os is not in a vm", arg);
         return ENTRY_SUCCESS;
     });
 }
@@ -118,6 +116,5 @@ bfmain(uintptr_t request, uintptr_t arg1, uintptr_t arg2, uintptr_t arg3)
             break;
     }
 
-    bferror << "unknown request: " << request << "\n";
     return ENTRY_ERROR_UNKNOWN;
 }

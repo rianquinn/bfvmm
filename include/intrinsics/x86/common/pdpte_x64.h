@@ -35,13 +35,13 @@ namespace pdpte
     namespace present
     {
         constexpr const auto mask = 0x0000000000000001ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "present";
     }
 
     namespace reserved
     {
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "reserved";
 
         inline auto mask() noexcept
@@ -51,20 +51,20 @@ namespace pdpte
     namespace pwt
     {
         constexpr const auto mask = 0x0000000000000008ULL;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "pwt";
     }
 
     namespace pcd
     {
         constexpr const auto mask = 0x0000000000000010ULL;
-        constexpr const auto from = 4;
+        constexpr const auto from = 4ULL;
         constexpr const auto name = "pcd";
     }
 
     namespace page_directory_addr
     {
-        constexpr const auto from = 12;
+        constexpr const auto from = 12ULL;
         constexpr const auto name = "page_directory_addr";
 
         inline auto mask() noexcept

@@ -60,7 +60,10 @@ vmcs_intel_x64::launch(gsl::not_null<vmcs_intel_x64_state *> host_state,
 
     auto ___ = gsl::on_failure([&] {
         vmcs::check::all();
-        vmcs::debug::dump();
+        bfdebug_transaction(0, [&](std::string * msg)
+        {
+            vmcs::debug::dump(0, msg);
+        });
     });
 
     if (guest_state->is_guest()) {
@@ -117,17 +120,21 @@ vmcs_intel_x64::create_vmcs_region()
     gsl::span<uint32_t> id{m_vmcs_region.get(), 1024};
     id[0] = gsl::narrow<uint32_t>(intel_x64::msrs::ia32_vmx_basic::revision_id::get());
 
-    bfdebug_pass(1, "create vmcs region");
-    bfdebug_subnhex(1, "virt address", m_vmcs_region.get());
-    bfdebug_subnhex(1, "phys address", m_vmcs_region_phys);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "create vmcs region", msg);
+        bfdebug_subnhex(1, "virt address", m_vmcs_region.get(), msg);
+        bfdebug_subnhex(1, "phys address", m_vmcs_region_phys, msg);
+    });
 }
 
 void
 vmcs_intel_x64::release_vmcs_region() noexcept
 {
-    bfdebug_pass(1, "release vmcs region");
-    bfdebug_subnhex(1, "virt address", m_vmcs_region.get());
-    bfdebug_subnhex(1, "phys address", m_vmcs_region_phys);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "release vmcs region", msg);
+        bfdebug_subnhex(1, "virt address", m_vmcs_region.get(), msg);
+        bfdebug_subnhex(1, "phys address", m_vmcs_region_phys, msg);
+    });
 
     m_vmcs_region.reset();
     m_vmcs_region_phys = 0;
@@ -137,18 +144,22 @@ void
 vmcs_intel_x64::create_exit_handler_stack()
 {
     auto size = STACK_SIZE * 2;
-    m_exit_handler_stack = std::make_unique<char[]>(size);
+    m_exit_handler_stack = std::make_unique<gsl::byte[]>(size);
 
-    bfdebug_pass(1, "create vmm stack");
-    bfdebug_subnhex(1, "size", size);
-    bfdebug_subnhex(1, "addr", m_exit_handler_stack.get());
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "create vmm stack", msg);
+        bfdebug_subnhex(1, "size", size, msg);
+        bfdebug_subnhex(1, "addr", m_exit_handler_stack.get(), msg);
+    });
 }
 
 void
 vmcs_intel_x64::release_exit_handler_stack() noexcept
 {
-    bfdebug_pass(1, "release vmm stack");
-    bfdebug_subnhex(1, "addr", m_exit_handler_stack.get());
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "release vmm stack", msg);
+        bfdebug_subnhex(1, "addr", m_exit_handler_stack.get(), msg);
+    });
 
     m_exit_handler_stack.reset();
 }
@@ -266,11 +277,13 @@ vmcs_intel_x64::write_32bit_control_state(gsl::not_null<vmcs_intel_x64_state *> 
     // unused: VMCS_PLE_GAP
     // unused: VMCS_PLE_WINDOW
 
-    bfdebug_pass(1, "write 32bit control state");
-    bfdebug_subnhex(1, "ia32_vmx_pinbased_ctls_msr", ia32_vmx_pinbased_ctls_msr);
-    bfdebug_subnhex(1, "ia32_vmx_procbased_ctls_msr", ia32_vmx_procbased_ctls_msr);
-    bfdebug_subnhex(1, "ia32_vmx_exit_ctls_msr", ia32_vmx_exit_ctls_msr);
-    bfdebug_subnhex(1, "ia32_vmx_entry_ctls_msr", ia32_vmx_entry_ctls_msr);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "write 32bit control state", msg);
+        bfdebug_subnhex(1, "ia32_vmx_pinbased_ctls_msr", ia32_vmx_pinbased_ctls_msr, msg);
+        bfdebug_subnhex(1, "ia32_vmx_procbased_ctls_msr", ia32_vmx_procbased_ctls_msr, msg);
+        bfdebug_subnhex(1, "ia32_vmx_exit_ctls_msr", ia32_vmx_exit_ctls_msr, msg);
+        bfdebug_subnhex(1, "ia32_vmx_entry_ctls_msr", ia32_vmx_entry_ctls_msr, msg);
+    });
 }
 
 void
@@ -313,15 +326,17 @@ vmcs_intel_x64::write_16bit_guest_state(gsl::not_null<vmcs_intel_x64_state *> st
 
     // unused: VMCS_GUEST_INTERRUPT_STATUS
 
-    bfdebug_pass(1, "write 16bit guest state");
-    bfdebug_subnhex(1, "es", es);
-    bfdebug_subnhex(1, "cs", cs);
-    bfdebug_subnhex(1, "ss", ss);
-    bfdebug_subnhex(1, "ds", ds);
-    bfdebug_subnhex(1, "fs", fs);
-    bfdebug_subnhex(1, "gs", gs);
-    bfdebug_subnhex(1, "ldtr", ldtr);
-    bfdebug_subnhex(1, "tr", tr);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "write 16bit guest state", msg);
+        bfdebug_subnhex(1, "es", es, msg);
+        bfdebug_subnhex(1, "cs", cs, msg);
+        bfdebug_subnhex(1, "ss", ss, msg);
+        bfdebug_subnhex(1, "ds", ds, msg);
+        bfdebug_subnhex(1, "fs", fs, msg);
+        bfdebug_subnhex(1, "gs", gs, msg);
+        bfdebug_subnhex(1, "ldtr", ldtr, msg);
+        bfdebug_subnhex(1, "tr", tr, msg);
+    });
 }
 
 void
@@ -344,12 +359,14 @@ vmcs_intel_x64::write_64bit_guest_state(gsl::not_null<vmcs_intel_x64_state *> st
     // unused: VMCS_GUEST_PDPTE2
     // unused: VMCS_GUEST_PDPTE3
 
-    bfdebug_pass(1, "write 64bit guest state");
-    bfdebug_subnhex(1, "vmcs link pointer", link_pointer);
-    bfdebug_subnhex(1, "ia32_debugctl_msr", ia32_debugctl_msr);
-    bfdebug_subnhex(1, "ia32_pat_msr", ia32_pat_msr);
-    bfdebug_subnhex(1, "ia32_efer_msr", ia32_efer_msr);
-    bfdebug_subnhex(1, "ia32_perf_global_ctrl_msr", ia32_perf_global_ctrl_msr);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "write 64bit guest state", msg);
+        bfdebug_subnhex(1, "vmcs link pointer", link_pointer, msg);
+        bfdebug_subnhex(1, "ia32_debugctl_msr", ia32_debugctl_msr, msg);
+        bfdebug_subnhex(1, "ia32_pat_msr", ia32_pat_msr, msg);
+        bfdebug_subnhex(1, "ia32_efer_msr", ia32_efer_msr, msg);
+        bfdebug_subnhex(1, "ia32_perf_global_ctrl_msr", ia32_perf_global_ctrl_msr, msg);
+    });
 }
 
 void
@@ -406,26 +423,28 @@ vmcs_intel_x64::write_32bit_guest_state(gsl::not_null<vmcs_intel_x64_state *> st
     // unused: VMCS_GUEST_SMBASE
     // unused: VMCS_VMX_PREEMPTION_TIMER_VALUE
 
-    bfdebug_pass(1, "write 32bit guest state");
-    bfdebug_subnhex(1, "es limit", es_limit);
-    bfdebug_subnhex(1, "cs limit", cs_limit);
-    bfdebug_subnhex(1, "ss limit", ss_limit);
-    bfdebug_subnhex(1, "ds limit", ds_limit);
-    bfdebug_subnhex(1, "fs limit", fs_limit);
-    bfdebug_subnhex(1, "gs limit", gs_limit);
-    bfdebug_subnhex(1, "ldtr limit", ldtr_limit);
-    bfdebug_subnhex(1, "tr limit", tr_limit);
-    bfdebug_subnhex(1, "gdt limit", gdt_limit);
-    bfdebug_subnhex(1, "idt limit", idt_limit);
-    bfdebug_subnhex(1, "es access rights", es_access_rights);
-    bfdebug_subnhex(1, "cs access rights", cs_access_rights);
-    bfdebug_subnhex(1, "ss access rights", ss_access_rights);
-    bfdebug_subnhex(1, "ds access rights", ds_access_rights);
-    bfdebug_subnhex(1, "fs access rights", fs_access_rights);
-    bfdebug_subnhex(1, "gs access rights", gs_access_rights);
-    bfdebug_subnhex(1, "ldtr access rights", ldtr_access_rights);
-    bfdebug_subnhex(1, "tr access rights", tr_access_rights);
-    bfdebug_subnhex(1, "sysenter cs msr", ia32_sysenter_cs_msr);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "write 32bit guest state", msg);
+        bfdebug_subnhex(1, "es limit", es_limit, msg);
+        bfdebug_subnhex(1, "cs limit", cs_limit, msg);
+        bfdebug_subnhex(1, "ss limit", ss_limit, msg);
+        bfdebug_subnhex(1, "ds limit", ds_limit, msg);
+        bfdebug_subnhex(1, "fs limit", fs_limit, msg);
+        bfdebug_subnhex(1, "gs limit", gs_limit, msg);
+        bfdebug_subnhex(1, "ldtr limit", ldtr_limit, msg);
+        bfdebug_subnhex(1, "tr limit", tr_limit, msg);
+        bfdebug_subnhex(1, "gdt limit", gdt_limit, msg);
+        bfdebug_subnhex(1, "idt limit", idt_limit, msg);
+        bfdebug_subnhex(1, "es access rights", es_access_rights, msg);
+        bfdebug_subnhex(1, "cs access rights", cs_access_rights, msg);
+        bfdebug_subnhex(1, "ss access rights", ss_access_rights, msg);
+        bfdebug_subnhex(1, "ds access rights", ds_access_rights, msg);
+        bfdebug_subnhex(1, "fs access rights", fs_access_rights, msg);
+        bfdebug_subnhex(1, "gs access rights", gs_access_rights, msg);
+        bfdebug_subnhex(1, "ldtr access rights", ldtr_access_rights, msg);
+        bfdebug_subnhex(1, "tr access rights", tr_access_rights, msg);
+        bfdebug_subnhex(1, "sysenter cs msr", ia32_sysenter_cs_msr, msg);
+    });
 }
 
 void
@@ -479,24 +498,26 @@ vmcs_intel_x64::write_natural_guest_state(gsl::not_null<vmcs_intel_x64_state *> 
     // unused: VMCS_GUEST_RIP, see m_intrinsics->vmlaunch()
     // unused: VMCS_GUEST_PENDING_DEBUG_EXCEPTIONS
 
-    bfdebug_pass(1, "write natural width guest state");
-    bfdebug_subnhex(1, "cr0", cr0);
-    bfdebug_subnhex(1, "cr3", cr3);
-    bfdebug_subnhex(1, "cr4", cr4);
-    bfdebug_subnhex(1, "es base", es_base);
-    bfdebug_subnhex(1, "cs base", cs_base);
-    bfdebug_subnhex(1, "ss base", ss_base);
-    bfdebug_subnhex(1, "ds base", ds_base);
-    bfdebug_subnhex(1, "fs base", fs_base);
-    bfdebug_subnhex(1, "gs base", gs_base);
-    bfdebug_subnhex(1, "ldtr base", ldtr_base);
-    bfdebug_subnhex(1, "tr base", tr_base);
-    bfdebug_subnhex(1, "gdt base", gdt_base);
-    bfdebug_subnhex(1, "idt base", idt_base);
-    bfdebug_subnhex(1, "dr7", dr7);
-    bfdebug_subnhex(1, "rflags", rflags);
-    bfdebug_subnhex(1, "ia32_sysenter_esp_msr", ia32_sysenter_esp_msr);
-    bfdebug_subnhex(1, "ia32_sysenter_eip_msr", ia32_sysenter_eip_msr);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "write natural width guest state", msg);
+        bfdebug_subnhex(1, "cr0", cr0, msg);
+        bfdebug_subnhex(1, "cr3", cr3, msg);
+        bfdebug_subnhex(1, "cr4", cr4, msg);
+        bfdebug_subnhex(1, "es base", es_base, msg);
+        bfdebug_subnhex(1, "cs base", cs_base, msg);
+        bfdebug_subnhex(1, "ss base", ss_base, msg);
+        bfdebug_subnhex(1, "ds base", ds_base, msg);
+        bfdebug_subnhex(1, "fs base", fs_base, msg);
+        bfdebug_subnhex(1, "gs base", gs_base, msg);
+        bfdebug_subnhex(1, "ldtr base", ldtr_base, msg);
+        bfdebug_subnhex(1, "tr base", tr_base, msg);
+        bfdebug_subnhex(1, "gdt base", gdt_base, msg);
+        bfdebug_subnhex(1, "idt base", idt_base, msg);
+        bfdebug_subnhex(1, "dr7", dr7, msg);
+        bfdebug_subnhex(1, "rflags", rflags, msg);
+        bfdebug_subnhex(1, "ia32_sysenter_esp_msr", ia32_sysenter_esp_msr, msg);
+        bfdebug_subnhex(1, "ia32_sysenter_eip_msr", ia32_sysenter_eip_msr, msg);
+    });
 }
 
 void
@@ -518,14 +539,16 @@ vmcs_intel_x64::write_16bit_host_state(gsl::not_null<vmcs_intel_x64_state *> sta
     vmcs::host_gs_selector::set(gs);
     vmcs::host_tr_selector::set(tr);
 
-    bfdebug_pass(1, "write 16bit host state");
-    bfdebug_subnhex(1, "es", es);
-    bfdebug_subnhex(1, "cs", cs);
-    bfdebug_subnhex(1, "ss", ss);
-    bfdebug_subnhex(1, "ds", ds);
-    bfdebug_subnhex(1, "fs", fs);
-    bfdebug_subnhex(1, "gs", gs);
-    bfdebug_subnhex(1, "tr", tr);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "write 16bit host state", msg);
+        bfdebug_subnhex(1, "es", es, msg);
+        bfdebug_subnhex(1, "cs", cs, msg);
+        bfdebug_subnhex(1, "ss", ss, msg);
+        bfdebug_subnhex(1, "ds", ds, msg);
+        bfdebug_subnhex(1, "fs", fs, msg);
+        bfdebug_subnhex(1, "gs", gs, msg);
+        bfdebug_subnhex(1, "tr", tr, msg);
+    });
 }
 
 void
@@ -539,10 +562,12 @@ vmcs_intel_x64::write_64bit_host_state(gsl::not_null<vmcs_intel_x64_state *> sta
     vmcs::host_ia32_efer::set(ia32_efer_msr);
     vmcs::host_ia32_perf_global_ctrl::set_if_exists(ia32_perf_global_ctrl_msr);
 
-    bfdebug_pass(1, "write 64bit host state");
-    bfdebug_subnhex(1, "ia32_pat_msr", ia32_pat_msr);
-    bfdebug_subnhex(1, "ia32_efer_msr", ia32_efer_msr);
-    bfdebug_subnhex(1, "ia32_perf_global_ctrl_msr", ia32_perf_global_ctrl_msr);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "write 64bit host state", msg);
+        bfdebug_subnhex(1, "ia32_pat_msr", ia32_pat_msr, msg);
+        bfdebug_subnhex(1, "ia32_efer_msr", ia32_efer_msr, msg);
+        bfdebug_subnhex(1, "ia32_perf_global_ctrl_msr", ia32_perf_global_ctrl_msr, msg);
+    });
 }
 
 void
@@ -552,8 +577,10 @@ vmcs_intel_x64::write_32bit_host_state(gsl::not_null<vmcs_intel_x64_state *> sta
 
     vmcs::host_ia32_sysenter_cs::set(ia32_sysenter_cs_msr);
 
-    bfdebug_pass(1, "write 32bit host state");
-    bfdebug_subnhex(1, "ia32_sysenter_cs_msr", ia32_sysenter_cs_msr);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "write 32bit host state", msg);
+        bfdebug_subnhex(1, "ia32_sysenter_cs_msr", ia32_sysenter_cs_msr, msg);
+    });
 }
 
 void
@@ -587,33 +614,27 @@ vmcs_intel_x64::write_natural_host_state(gsl::not_null<vmcs_intel_x64_state *> s
     vmcs::host_ia32_sysenter_esp::set(ia32_sysenter_esp_msr);
     vmcs::host_ia32_sysenter_eip::set(ia32_sysenter_eip_msr);
 
+    auto exit_handler_stack = setup_stack(m_exit_handler_stack.get());
     auto exit_handler_entry = reinterpret_cast<uintptr_t>(m_exit_handler_entry);
-    auto exit_handler_stack = reinterpret_cast<uintptr_t>(m_exit_handler_stack.get());
-
-    auto stack_top = exit_handler_stack + (STACK_SIZE * 2);
-    stack_top = (stack_top & ~(STACK_SIZE - 1)) - 1;
-    exit_handler_stack = stack_top - sizeof(thread_context_t) - 1;
-
-    auto tc = reinterpret_cast<thread_context_t *>(stack_top - sizeof(thread_context_t));
-    tc->cpuid = thread_context_cpuid();
-    tc->tlsptr = thread_context_tlsptr();
 
     vmcs::host_rsp::set(exit_handler_stack);
     vmcs::host_rip::set(exit_handler_entry);
 
-    bfdebug_pass(1, "write natural width host state");
-    bfdebug_subnhex(1, "cr0", cr0);
-    bfdebug_subnhex(1, "cr3", cr3);
-    bfdebug_subnhex(1, "cr4", cr4);
-    bfdebug_subnhex(1, "fs base", fs_base);
-    bfdebug_subnhex(1, "gs base", gs_base);
-    bfdebug_subnhex(1, "tr base", tr_base);
-    bfdebug_subnhex(1, "gdt base", gdt_base);
-    bfdebug_subnhex(1, "idt base", idt_base);
-    bfdebug_subnhex(1, "ia32_sysenter_esp_msr", ia32_sysenter_esp_msr);
-    bfdebug_subnhex(1, "ia32_sysenter_eip_msr", ia32_sysenter_eip_msr);
-    bfdebug_subnhex(1, "exit_handler_entry", exit_handler_entry);
-    bfdebug_subnhex(1, "exit_handler_stack", exit_handler_stack);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "write natural width host state", msg);
+        bfdebug_subnhex(1, "cr0", cr0, msg);
+        bfdebug_subnhex(1, "cr3", cr3, msg);
+        bfdebug_subnhex(1, "cr4", cr4, msg);
+        bfdebug_subnhex(1, "fs base", fs_base, msg);
+        bfdebug_subnhex(1, "gs base", gs_base, msg);
+        bfdebug_subnhex(1, "tr base", tr_base, msg);
+        bfdebug_subnhex(1, "gdt base", gdt_base, msg);
+        bfdebug_subnhex(1, "idt base", idt_base, msg);
+        bfdebug_subnhex(1, "ia32_sysenter_esp_msr", ia32_sysenter_esp_msr, msg);
+        bfdebug_subnhex(1, "ia32_sysenter_eip_msr", ia32_sysenter_eip_msr, msg);
+        bfdebug_subnhex(1, "exit_handler_stack", exit_handler_stack, msg);
+        bfdebug_subnhex(1, "exit_handler_entry", exit_handler_entry, msg);
+    });
 }
 
 void
@@ -625,7 +646,9 @@ vmcs_intel_x64::pin_based_vm_execution_controls()
     // pin_based_vm_execution_controls::activate_vmx_preemption_timer::enable_if_allowed();
     // pin_based_vm_execution_controls::process_posted_interrupts::enable_if_allowed();
 
-    pin_based_vm_execution_controls::dump(1);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        pin_based_vm_execution_controls::dump(1, msg);
+    });
 }
 
 void
@@ -653,7 +676,9 @@ vmcs_intel_x64::primary_processor_based_vm_execution_controls()
     // primary_processor_based_vm_execution_controls::pause_exiting::enable_if_allowed();
     primary_processor_based_vm_execution_controls::activate_secondary_controls::enable_if_allowed();
 
-    primary_processor_based_vm_execution_controls::dump(1);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        primary_processor_based_vm_execution_controls::dump(1, msg);
+    });
 }
 
 void
@@ -678,7 +703,9 @@ vmcs_intel_x64::secondary_processor_based_vm_execution_controls()
     // secondary_processor_based_vm_execution_controls::ept_violation_ve::enable_if_allowed();
     secondary_processor_based_vm_execution_controls::enable_xsaves_xrstors::enable_if_allowed();
 
-    secondary_processor_based_vm_execution_controls::dump(1);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        secondary_processor_based_vm_execution_controls::dump(1, msg);
+    });
 }
 
 void
@@ -694,7 +721,9 @@ vmcs_intel_x64::vm_exit_controls()
     vm_exit_controls::load_ia32_efer::enable_if_allowed();
     // vm_exit_controls::save_vmx_preemption_timer_value::enable_if_allowed();
 
-    vm_exit_controls::dump(1);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        vm_exit_controls::dump(1, msg);
+    });
 }
 
 void
@@ -708,5 +737,7 @@ vmcs_intel_x64::vm_entry_controls()
     vm_entry_controls::load_ia32_pat::enable_if_allowed();
     vm_entry_controls::load_ia32_efer::enable_if_allowed();
 
-    vm_entry_controls::dump(1);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        vm_entry_controls::dump(1, msg);
+    });
 }

@@ -55,9 +55,11 @@ control_reserved_properly_set(
     ctls &= 0x00000000FFFFFFFFULL;
 
     if ((allowed0 & ctls) != allowed0) {
-        bferror << " failed: controls_reserved_properly_set" << '\n';
-        bferror << "    - allowed0: " << view_as_pointer(allowed0) << '\n';
-        bferror << "    - bad ctls: " << view_as_pointer(ctls) << '\n';
+        bfdebug_transaction(0, [&](std::string * msg) {
+            bferror_info(0, "failed: controls_reserved_properly_set", msg);
+            bferror_subnhex(0, "allowed0", allowed0, msg);
+            bferror_subnhex(0, "bad ctls", ctls, msg);
+        });
 
         throw std::logic_error("invalid " + std::string(name));
     }
@@ -69,9 +71,11 @@ control_reserved_properly_set(
     }
 
     if (allowed1_failed) {
-        bferror << " failed: check_control_ctls_reserved_properly_set" << '\n';
-        bferror << "    - allowed1: " << view_as_pointer(allowed1) << '\n';
-        bferror << "    - bad ctls: " << view_as_pointer(ctls) << '\n';
+        bfdebug_transaction(0, [&](std::string * msg) {
+            bferror_info(0, "failed: controls_reserved_properly_set", msg);
+            bferror_subnhex(0, "allowed1", allowed1, msg);
+            bferror_subnhex(0, "bad ctls", ctls, msg);
+        });
 
         throw std::logic_error("invalid " + std::string(name));
     }
@@ -640,15 +644,15 @@ control_vm_entry_ctls_reserved_properly_set()
 inline void
 control_event_injection_type_vector_checks()
 {
-    using namespace vm_entry_interruption_information_field;
+    using namespace vm_entry_interruption_information;
     using namespace msrs::ia32_vmx_true_procbased_ctls;
 
-    if (vm_entry_interruption_information_field::valid_bit::is_disabled()) {
+    if (vm_entry_interruption_information::valid_bit::is_disabled()) {
         return;
     }
 
-    auto vector = vm_entry_interruption_information_field::vector::get();
-    auto type = vm_entry_interruption_information_field::interruption_type::get();
+    auto vector = vm_entry_interruption_information::vector::get();
+    auto type = vm_entry_interruption_information::interruption_type::get();
 
     if (type == interruption_type::reserved) {
         throw std::logic_error("interrupt information field type of 1 is reserved");
@@ -678,16 +682,16 @@ control_event_injection_type_vector_checks()
 inline void
 control_event_injection_delivery_ec_checks()
 {
-    using namespace vm_entry_interruption_information_field;
+    using namespace vm_entry_interruption_information;
     using namespace primary_processor_based_vm_execution_controls;
     using namespace secondary_processor_based_vm_execution_controls;
 
-    if (vm_entry_interruption_information_field::valid_bit::is_disabled()) {
+    if (vm_entry_interruption_information::valid_bit::is_disabled()) {
         return;
     }
 
-    auto type = vm_entry_interruption_information_field::interruption_type::get();
-    auto vector = vm_entry_interruption_information_field::vector::get();
+    auto type = vm_entry_interruption_information::interruption_type::get();
+    auto vector = vm_entry_interruption_information::vector::get();
 
     if (unrestricted_guest::is_enabled() && activate_secondary_controls::is_enabled()) {
         if (guest_cr0::protection_enable::is_disabled() && deliver_error_code_bit::is_enabled()) {
@@ -709,6 +713,9 @@ control_event_injection_delivery_ec_checks()
         case 13:
         case 14:
         case 17:
+            if (deliver_error_code_bit::is_disabled()) {
+                throw std::logic_error("deliver_error_code_bit must be 1");
+            }
             break;
 
         default:
@@ -716,21 +723,18 @@ control_event_injection_delivery_ec_checks()
                 throw std::logic_error("vector must indicate exception that would normally "
                                        "deliver an error code if deliver_error_code_bit is set");
             }
-    }
-
-    if (deliver_error_code_bit::is_disabled()) {
-        throw std::logic_error("deliver_error_code_bit must be 1");
+            break;
     }
 }
 
 inline void
 control_event_injection_reserved_bits_checks()
 {
-    if (vm_entry_interruption_information_field::valid_bit::is_disabled()) {
+    if (vm_entry_interruption_information::valid_bit::is_disabled()) {
         return;
     }
 
-    if (vm_entry_interruption_information_field::reserved::get() != 0) {
+    if (vm_entry_interruption_information::reserved::get() != 0) {
         throw std::logic_error("reserved bits of the interrupt info field must be 0");
     }
 }
@@ -738,11 +742,11 @@ control_event_injection_reserved_bits_checks()
 inline void
 control_event_injection_ec_checks()
 {
-    if (vm_entry_interruption_information_field::valid_bit::is_disabled()) {
+    if (vm_entry_interruption_information::valid_bit::is_disabled()) {
         return;
     }
 
-    if (vm_entry_interruption_information_field::deliver_error_code_bit::is_disabled()) {
+    if (vm_entry_interruption_information::deliver_error_code_bit::is_disabled()) {
         return;
     }
 
@@ -755,13 +759,13 @@ control_event_injection_ec_checks()
 inline void
 control_event_injection_instr_length_checks()
 {
-    using namespace vm_entry_interruption_information_field;
+    using namespace vm_entry_interruption_information;
 
-    if (vm_entry_interruption_information_field::valid_bit::is_disabled()) {
+    if (vm_entry_interruption_information::valid_bit::is_disabled()) {
         return;
     }
 
-    auto type = vm_entry_interruption_information_field::interruption_type::get();
+    auto type = vm_entry_interruption_information::interruption_type::get();
     auto instruction_length = vm_entry_instruction_length::get();
 
     switch (type) {

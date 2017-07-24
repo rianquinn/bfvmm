@@ -35,6 +35,7 @@
 /// @expects none
 /// @ensures none
 ///
-extern "C" EXPORT_EXIT_HANDLER void exit_handler_entry(void) noexcept;
+extern "C" EXPORT_EXIT_HANDLER void exit_handler_entry(
+    void) noexcept;
 
 #endif

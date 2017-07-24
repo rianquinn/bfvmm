@@ -59,8 +59,8 @@ namespace cr0_guest_host_mask
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace cr4_guest_host_mask
@@ -83,8 +83,8 @@ namespace cr4_guest_host_mask
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace cr0_read_shadow
@@ -107,8 +107,8 @@ namespace cr0_read_shadow
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace cr4_read_shadow
@@ -131,8 +131,8 @@ namespace cr4_read_shadow
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace cr3_target_value_0
@@ -155,8 +155,8 @@ namespace cr3_target_value_0
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace cr3_target_value_1
@@ -179,8 +179,8 @@ namespace cr3_target_value_1
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace cr3_target_value_2
@@ -203,8 +203,8 @@ namespace cr3_target_value_2
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace cr3_target_value_3
@@ -227,8 +227,8 @@ namespace cr3_target_value_3
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 }

@@ -32,7 +32,7 @@ page_table_x64::page_table_x64(gsl::not_null<pointer> pte)
 {
     m_pt = std::make_unique<integer_pointer[]>(page_table::num_entries);
 
-    auto &&entry = page_table_entry_x64(pte);
+    auto entry = page_table_entry_x64(pte);
     entry.clear();
     entry.set_phys_addr(g_mm->virtptr_to_physint(m_pt.get()));
     entry.set_present(true);
@@ -43,16 +43,16 @@ page_table_x64::page_table_x64(gsl::not_null<pointer> pte)
 page_table_entry_x64
 page_table_x64::add_page(integer_pointer addr, integer_pointer bits, integer_pointer end)
 {
-    auto &&index = page_table::index(addr, bits);
+    auto index = page_table::index(addr, bits);
 
     if (bits > end) {
         if (m_pts.empty()) {
             m_pts = std::vector<std::unique_ptr<page_table_x64>>(page_table::num_entries);
         }
 
-        auto &&iter = bfn::find(m_pts, index);
+        auto iter = bfn::find(m_pts, index);
         if (!(*iter)) {
-            auto &&view = gsl::make_span(m_pt, page_table::num_entries);
+            auto view = gsl::make_span(m_pt, page_table::num_entries);
             (*iter) = std::make_unique<page_table_x64>(&view.at(index));
         }
 
@@ -64,29 +64,29 @@ page_table_x64::add_page(integer_pointer addr, integer_pointer bits, integer_poi
         m_pts.shrink_to_fit();
     }
 
-    auto &&view = gsl::make_span(m_pt, page_table::num_entries);
+    auto view = gsl::make_span(m_pt, page_table::num_entries);
     return page_table_entry_x64(&view.at(index));
 }
 
 void
 page_table_x64::remove_page(integer_pointer addr, integer_pointer bits)
 {
-    auto &&index = page_table::index(addr, bits);
+    auto index = page_table::index(addr, bits);
 
     if (!m_pts.empty()) {
-        auto &&iter = bfn::find(m_pts, index);
+        auto iter = bfn::find(m_pts, index);
         if (auto pt = (*iter).get()) {
             pt->remove_page(addr, bits - page_table::pt::size);
             if (pt->empty()) {
                 (*iter) = nullptr;
 
-                auto &&view = gsl::make_span(m_pt, page_table::num_entries);
+                auto view = gsl::make_span(m_pt, page_table::num_entries);
                 view.at(index) = 0;
             }
         }
     }
     else {
-        auto &&view = gsl::make_span(m_pt, page_table::num_entries);
+        auto view = gsl::make_span(m_pt, page_table::num_entries);
         view.at(index) = 0;
 
         return;
@@ -96,10 +96,10 @@ page_table_x64::remove_page(integer_pointer addr, integer_pointer bits)
 page_table_entry_x64
 page_table_x64::virt_to_pte(integer_pointer addr, integer_pointer bits) const
 {
-    auto &&index = page_table::index(addr, bits);
+    auto index = page_table::index(addr, bits);
 
     if (!m_pts.empty()) {
-        auto &&iter = bfn::cfind(m_pts, index);
+        auto iter = bfn::cfind(m_pts, index);
         if (auto pt = (*iter).get()) {
             return pt->virt_to_pte(addr, bits - page_table::pt::size);
         }
@@ -107,16 +107,16 @@ page_table_x64::virt_to_pte(integer_pointer addr, integer_pointer bits) const
         throw std::runtime_error("unable to locate pte. invalid address");
     }
 
-    auto &&view = gsl::make_span(m_pt, page_table::num_entries);
+    auto view = gsl::make_span(m_pt, page_table::num_entries);
     return page_table_entry_x64(&view.at(index));
 }
 
 page_table_x64::memory_descriptor_list
 page_table_x64::pt_to_mdl(memory_descriptor_list &mdl) const
 {
-    auto &&virt = reinterpret_cast<uintptr_t>(m_pt.get());
-    auto &&phys = g_mm->virtint_to_physint(virt);
-    auto &&type = MEMORY_TYPE_R | MEMORY_TYPE_W;
+    auto virt = reinterpret_cast<uintptr_t>(m_pt.get());
+    auto phys = g_mm->virtint_to_physint(virt);
+    auto type = MEMORY_TYPE_R | MEMORY_TYPE_W;
 
     mdl.push_back({phys, virt, type});
 
@@ -130,11 +130,12 @@ page_table_x64::pt_to_mdl(memory_descriptor_list &mdl) const
 bool
 page_table_x64::empty() const noexcept
 {
-    auto size = 0UL;
+    auto size = 0ULL;
 
-    auto &&view = gsl::make_span(m_pt, x64::page_table::num_entries);
-    for (auto element : view) {
-        size += element != 0 ? 1U : 0U;
+    for (auto entry : gsl::make_span(m_pt, page_table::num_entries)) {
+        if (entry != 0) {
+            size++;
+        }
     }
 
     return size == 0;
@@ -143,15 +144,16 @@ page_table_x64::empty() const noexcept
 page_table_x64::size_type
 page_table_x64::global_size() const noexcept
 {
-    auto size = 0UL;
+    auto size = 0ULL;
 
-    auto &&view = gsl::make_span(m_pt, x64::page_table::num_entries);
-    for (auto element : view) {
-        size += element != 0 ? 1U : 0U;
+    for (auto entry : gsl::make_span(m_pt, page_table::num_entries)) {
+        size += entry != 0 ? 1U : 0U;
     }
 
     for (const auto &pt : m_pts) {
-        if (pt != nullptr) { size += pt->global_size(); }
+        if (pt != nullptr) {
+            size += pt->global_size();
+        }
     }
 
     return size;
@@ -163,7 +165,9 @@ page_table_x64::global_capacity() const noexcept
     auto size = m_pts.capacity();
 
     for (const auto &pt : m_pts) {
-        if (pt != nullptr) { size += pt->global_capacity(); }
+        if (pt != nullptr) {
+            size += pt->global_capacity();
+        }
     }
 
     return size;

@@ -20,7 +20,6 @@ macro(do_test str)
     target_link_libraries(test_${str} bfvmm_vmcs_static)
     target_link_libraries(test_${str} bfvmm_memory_manager_static)
     target_link_libraries(test_${str} bfvmm_intrinsics_static)
-    target_link_libraries(test_${str} bfvmm_debug_ring_static)
     add_test(test_${str} test_${str})
 endmacro(do_test)
 

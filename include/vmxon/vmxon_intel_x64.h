@@ -40,6 +40,11 @@
 #define EXPORT_VMXON
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
 // -----------------------------------------------------------------------------
 // Definitions
 // -----------------------------------------------------------------------------
@@ -110,8 +115,6 @@ protected:
 
 private:
 
-    friend class vmxon_ut;
-
     bool m_vmxon_enabled{false};
     uintptr_t m_vmxon_region_phys{0};
     std::unique_ptr<uint32_t[]> m_vmxon_region;
@@ -124,5 +127,9 @@ public:
     vmxon_intel_x64(const vmxon_intel_x64 &) = delete;
     vmxon_intel_x64 &operator=(const vmxon_intel_x64 &) = delete;
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

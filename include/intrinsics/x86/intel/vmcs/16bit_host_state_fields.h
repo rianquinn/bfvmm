@@ -61,8 +61,8 @@ namespace host_es_selector
 
     namespace rpl
     {
-        constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto mask = 0x00000003ULL;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -83,14 +83,14 @@ namespace host_es_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace ti
     {
-        constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto mask = 0x00000004ULL;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -129,14 +129,23 @@ namespace host_es_selector
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace index
     {
-        constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto mask = 0x0000FFF8ULL;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -157,16 +166,16 @@ namespace host_es_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        dump_vmcs_nhex(level, msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
@@ -192,8 +201,8 @@ namespace host_cs_selector
 
     namespace rpl
     {
-        constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto mask = 0x00000003ULL;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -214,14 +223,14 @@ namespace host_cs_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace ti
     {
-        constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto mask = 0x00000004ULL;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -260,14 +269,23 @@ namespace host_cs_selector
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace index
     {
-        constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto mask = 0x0000FFF8ULL;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -288,16 +306,16 @@ namespace host_cs_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        dump_vmcs_nhex(level, msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
@@ -323,8 +341,8 @@ namespace host_ss_selector
 
     namespace rpl
     {
-        constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto mask = 0x00000003ULL;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -345,14 +363,14 @@ namespace host_ss_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace ti
     {
-        constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto mask = 0x00000004ULL;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -391,14 +409,23 @@ namespace host_ss_selector
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace index
     {
-        constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto mask = 0x0000FFF8ULL;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -419,16 +446,16 @@ namespace host_ss_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        dump_vmcs_nhex(level, msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
@@ -454,8 +481,8 @@ namespace host_ds_selector
 
     namespace rpl
     {
-        constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto mask = 0x00000003ULL;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -476,14 +503,14 @@ namespace host_ds_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace ti
     {
-        constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto mask = 0x00000004ULL;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -522,14 +549,23 @@ namespace host_ds_selector
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace index
     {
-        constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto mask = 0x0000FFF8ULL;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -550,16 +586,16 @@ namespace host_ds_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        dump_vmcs_nhex(level, msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
@@ -585,8 +621,8 @@ namespace host_fs_selector
 
     namespace rpl
     {
-        constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto mask = 0x00000003ULL;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -607,14 +643,14 @@ namespace host_fs_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace ti
     {
-        constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto mask = 0x00000004ULL;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -653,14 +689,23 @@ namespace host_fs_selector
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace index
     {
-        constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto mask = 0x0000FFF8ULL;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -681,16 +726,16 @@ namespace host_fs_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        dump_vmcs_nhex(level, msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
@@ -716,8 +761,8 @@ namespace host_gs_selector
 
     namespace rpl
     {
-        constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto mask = 0x00000003ULL;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -738,14 +783,14 @@ namespace host_gs_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace ti
     {
-        constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto mask = 0x00000004ULL;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -784,14 +829,23 @@ namespace host_gs_selector
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace index
     {
-        constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto mask = 0x0000FFF8ULL;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -812,16 +866,16 @@ namespace host_gs_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        dump_vmcs_nhex(level, msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 
@@ -847,8 +901,8 @@ namespace host_tr_selector
 
     namespace rpl
     {
-        constexpr const auto mask = 0x00000003U;
-        constexpr const auto from = 0;
+        constexpr const auto mask = 0x00000003ULL;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "rpl";
 
         inline auto get()
@@ -869,14 +923,14 @@ namespace host_tr_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace ti
     {
-        constexpr const auto mask = 0x00000004U;
-        constexpr const auto from = 2;
+        constexpr const auto mask = 0x00000004ULL;
+        constexpr const auto from = 2ULL;
         constexpr const auto name = "ti";
 
         inline auto is_enabled()
@@ -915,14 +969,23 @@ namespace host_tr_selector
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace index
     {
-        constexpr const auto mask = 0x0000FFF8U;
-        constexpr const auto from = 3;
+        constexpr const auto mask = 0x0000FFF8ULL;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "index";
 
         inline auto get()
@@ -943,16 +1006,16 @@ namespace host_tr_selector
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        rpl::dump(level);
-        ti::dump(level);
-        index::dump(level);
+        dump_vmcs_nhex(level, msg);
+        rpl::dump(level, msg);
+        ti::dump(level, msg);
+        index::dump(level, msg);
     }
 }
 

@@ -26,9 +26,7 @@
 #include <memory>
 
 #include <bfvcpuid.h>
-
 #include <user_data.h>
-#include <debug_ring/debug_ring.h>
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -44,6 +42,11 @@
 #endif
 #else
 #define EXPORT_VCPU
+#endif
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
 #endif
 
 // -----------------------------------------------------------------------------
@@ -88,20 +91,11 @@
 /// specific vCPUs will be created from, but it also provides some of the base
 /// functionality that is common between all vCPUs.
 ///
-/// Each vCPU is given its own debug ring. The bootstrap core is a special
-/// core. All std::cout that is not wrapped in the output_to_vcpu function
-/// is redirected to serial and the bootstrap core, which is vcpuid == 0,
-/// or the first vCPU to be created on the host OS. Each debug ring provides
-/// a set of tags that can be used to identify the debug ring from a memory
-/// dump. The vCPU ID is also provided so that you can figure out which
-/// debug ring you're looking at.
-///
 /// The init, fini, run and hlt functions must be executed in the proper
 /// order. Each vCPU must be initialized and finalized. The destructor for
 /// the vCPU should not be used as destructors are labeled "noexcept" by
 /// default. Instead the init and fini functions act as constructors /
-/// destructors that can handle errors if they should arise. Doing this
-/// will also provide debugging support with the debug rings.
+/// destructors that can handle errors if they should arise.
 ///
 /// Note that these should not be created directly, but instead should be
 /// created by the vcpu_manager, which uses the vcpu_factory to actually
@@ -118,7 +112,7 @@ public:
 
     /// Constructor
     ///
-    /// Creates a vCPU with the provided id and debug ring. This constructor
+    /// Creates a vCPU with the provided id. This constructor
     /// provides a means to override and replace the internal resources of the
     /// vCPU. Note that if one of the resources is set to nullptr, a default
     /// will be constructed in its place, providing a means to select which
@@ -128,10 +122,8 @@ public:
     /// @ensures none
     ///
     /// @param id the id of the vcpu
-    /// @param dr the debug ring the vcpu should use. If you provide nullptr,
-    ///     a default debug ring will be created.
     ///
-    vcpu(vcpuid::type id, std::unique_ptr<debug_ring> dr = nullptr);
+    vcpu(vcpuid::type id);
 
     /// Destructor
     ///
@@ -280,34 +272,9 @@ public:
     virtual bool is_guest_vm_vcpu()
     { return (m_id & (vcpuid::guest_mask & ~vcpuid::reserved)) != 0; }
 
-    /// Write to Debug Ring
-    ///
-    /// Each vCPU has its own debug ring. If this is the bootstrap core
-    /// (vcpuid == 0), all std::cout / std::cerr calls go to this vCPU.
-    /// To redirect output to a core other than the bootstrap core, use the
-    /// output_to_vcpu function in debug.h.
-    ///
-    /// Note that when using this function, output does not go to serial.
-    /// This can cause issues when debugging a core specific problem that
-    /// hangs the system (as getting the debug ring requires a running
-    /// system). To overcome this issue, each debug ring has a unique tag
-    /// that can be used to identify the debug ring from a memory dump.
-    /// Right next to the tag is the vCPU's ID that can be used to identify
-    /// which vCPU the debug ring belongs to. From there, one must simply
-    /// manually parse the ring.
-    ///
-    /// @expects none
-    /// @ensures none
-    ///
-    /// @param str the string to write to the debug ring. If the ring is
-    ///     bigger than DEBUG_RING_SIZE, the write is ignored.
-    ///
-    virtual void write(const std::string &str) noexcept;
-
 private:
 
     vcpuid::type m_id;
-    std::unique_ptr<debug_ring> m_debug_ring;
 
     bool m_is_running{false};
     bool m_is_initialized{false};
@@ -320,5 +287,9 @@ public:
     vcpu(const vcpu &) = delete;
     vcpu &operator=(const vcpu &) = delete;
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

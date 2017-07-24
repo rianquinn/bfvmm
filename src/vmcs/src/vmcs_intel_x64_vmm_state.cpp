@@ -27,35 +27,13 @@
 using namespace x64;
 using namespace intel_x64;
 
-tss_x64 g_tss{};
-gdt_x64 g_gdt{7};
-idt_x64 g_idt{256};
-
-static auto gdt_setup = false;
-
 vmcs_intel_x64_vmm_state::vmcs_intel_x64_vmm_state()
 {
-    if (!gdt_setup) {
-        g_gdt.set_access_rights(1, access_rights::ring0_cs_descriptor);
-        g_gdt.set_access_rights(2, access_rights::ring0_ss_descriptor);
-        g_gdt.set_access_rights(3, access_rights::ring0_fs_descriptor);
-        g_gdt.set_access_rights(4, access_rights::ring0_gs_descriptor);
-        g_gdt.set_access_rights(5, access_rights::ring0_tr_descriptor);
-
-        g_gdt.set_base(1, 0);
-        g_gdt.set_base(2, 0);
-        g_gdt.set_base(3, 0);
-        g_gdt.set_base(4, 0);
-        g_gdt.set_base(5, reinterpret_cast<gdt_x64::base_type>(&g_tss));
-
-        g_gdt.set_limit(1, 0xFFFFFFFF);
-        g_gdt.set_limit(2, 0xFFFFFFFF);
-        g_gdt.set_limit(3, 0xFFFFFFFF);
-        g_gdt.set_limit(4, 0xFFFFFFFF);
-        g_gdt.set_limit(5, sizeof(g_tss));
-
-        gdt_setup = true;
-    }
+    m_gdt.set(1, nullptr, 0xFFFFFFFF, access_rights::ring0_cs_descriptor);
+    m_gdt.set(2, nullptr, 0xFFFFFFFF, access_rights::ring0_ss_descriptor);
+    m_gdt.set(3, nullptr, 0xFFFFFFFF, access_rights::ring0_fs_descriptor);
+    m_gdt.set(4, nullptr, 0xFFFFFFFF, access_rights::ring0_gs_descriptor);
+    m_gdt.set(5, &m_tss, sizeof(m_tss), access_rights::ring0_tr_descriptor);
 
     m_cs_index = 1;
     m_ss_index = 2;

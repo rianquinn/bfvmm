@@ -26,14 +26,13 @@
 
 vcpu_intel_x64::vcpu_intel_x64(
     vcpuid::type id,
-    std::unique_ptr<debug_ring> debug_ring,
     std::unique_ptr<vmxon_intel_x64> vmxon,
     std::unique_ptr<vmcs_intel_x64> vmcs,
     std::unique_ptr<exit_handler_intel_x64> exit_handler,
     std::unique_ptr<vmcs_intel_x64_state> vmm_state,
     std::unique_ptr<vmcs_intel_x64_state> guest_state) :
 
-    vcpu(id, std::move(debug_ring)),
+    vcpu(id),
     m_vmxon(std::move(vmxon)),
     m_vmcs(std::move(vmcs)),
     m_exit_handler(std::move(exit_handler)),
@@ -82,8 +81,10 @@ vcpu_intel_x64::init(user_data *data)
     m_exit_handler->set_vmcs(m_vmcs.get());
     m_exit_handler->set_state_save(m_state_save.get());
 
-    bfdebug_break2(1)
-    bfdebug_nhex(1, "init vcpu", id());
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_brk2(1, msg)
+        bfdebug_nhex(1, "init vcpu", id(), msg);
+    });
 
     vcpu::init(data);
 }
@@ -118,7 +119,8 @@ vcpu_intel_x64::run(user_data *data)
         }
 
         auto ___ = gsl::on_failure([&] {
-            if (this->is_host_vm_vcpu()) {
+            if (this->is_host_vm_vcpu())
+            {
                 m_vmxon->stop();
             }
         });

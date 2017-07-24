@@ -58,8 +58,8 @@ namespace address_of_io_bitmap_a
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace address_of_io_bitmap_b
@@ -82,8 +82,8 @@ namespace address_of_io_bitmap_b
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace address_of_msr_bitmap
@@ -106,8 +106,8 @@ namespace address_of_msr_bitmap
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace vm_exit_msr_store_address
@@ -130,8 +130,8 @@ namespace vm_exit_msr_store_address
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace vm_exit_msr_load_address
@@ -154,8 +154,8 @@ namespace vm_exit_msr_load_address
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace vm_entry_msr_load_address
@@ -178,8 +178,8 @@ namespace vm_entry_msr_load_address
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace executive_vmcs_pointer
@@ -202,8 +202,8 @@ namespace executive_vmcs_pointer
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace pml_address
@@ -229,8 +229,8 @@ namespace pml_address
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace tsc_offset
@@ -253,8 +253,8 @@ namespace tsc_offset
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace virtual_apic_address
@@ -277,8 +277,8 @@ namespace virtual_apic_address
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace apic_access_address
@@ -304,8 +304,8 @@ namespace apic_access_address
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace posted_interrupt_descriptor_address
@@ -328,8 +328,8 @@ namespace posted_interrupt_descriptor_address
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace vm_function_controls
@@ -359,7 +359,7 @@ namespace vm_function_controls
     namespace eptp_switching
     {
         constexpr const auto mask = 0x0000000000000001ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "eptp_switching";
 
         inline auto is_enabled()
@@ -398,14 +398,23 @@ namespace vm_function_controls
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace reserved
     {
         constexpr const auto mask = 0xFFFFFFFFFFFFFFFEULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "reserved";
 
         inline auto get()
@@ -426,15 +435,15 @@ namespace vm_function_controls
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        eptp_switching::dump(level);
-        reserved::dump(level);
+        dump_vmcs_nhex(level, msg);
+        eptp_switching::dump(level, msg);
+        reserved::dump(level, msg);
     }
 }
 
@@ -464,7 +473,7 @@ namespace ept_pointer
     namespace memory_type
     {
         constexpr const auto mask = 0x0000000000000007ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "memory_type";
 
         constexpr const auto uncacheable = 0U;
@@ -488,14 +497,14 @@ namespace ept_pointer
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace page_walk_length_minus_one
     {
         constexpr const auto mask = 0x0000000000000038ULL;
-        constexpr const auto from = 3;
+        constexpr const auto from = 3ULL;
         constexpr const auto name = "page_walk_length_minus_one";
 
         inline auto get()
@@ -516,14 +525,14 @@ namespace ept_pointer
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace accessed_and_dirty_flags
     {
         constexpr const auto mask = 0x0000000000000040ULL;
-        constexpr const auto from = 6;
+        constexpr const auto from = 6ULL;
         constexpr const auto name = "accessed_and_dirty_flags";
 
         inline auto is_enabled()
@@ -562,14 +571,23 @@ namespace ept_pointer
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace phys_addr
     {
         constexpr const auto mask = 0x0000FFFFFFFFF000ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "phys_addr";
 
         inline auto get()
@@ -590,14 +608,14 @@ namespace ept_pointer
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
     namespace reserved
     {
         constexpr const auto mask = 0xFFFF000000000F80ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "reserved";
 
         inline auto get()
@@ -618,18 +636,18 @@ namespace ept_pointer
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        memory_type::dump(level);
-        page_walk_length_minus_one::dump(level);
-        accessed_and_dirty_flags::dump(level);
-        phys_addr::dump(level);
-        reserved::dump(level);
+        dump_vmcs_nhex(level, msg);
+        memory_type::dump(level, msg);
+        page_walk_length_minus_one::dump(level, msg);
+        accessed_and_dirty_flags::dump(level, msg);
+        phys_addr::dump(level, msg);
+        reserved::dump(level, msg);
     }
 }
 
@@ -656,8 +674,8 @@ namespace eoi_exit_bitmap_0
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace eoi_exit_bitmap_1
@@ -683,8 +701,8 @@ namespace eoi_exit_bitmap_1
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace eoi_exit_bitmap_2
@@ -710,8 +728,8 @@ namespace eoi_exit_bitmap_2
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace eoi_exit_bitmap_3
@@ -737,8 +755,8 @@ namespace eoi_exit_bitmap_3
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace eptp_list_address
@@ -765,8 +783,8 @@ namespace eptp_list_address
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace vmread_bitmap_address
@@ -792,8 +810,8 @@ namespace vmread_bitmap_address
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace vmwrite_bitmap_address
@@ -819,8 +837,8 @@ namespace vmwrite_bitmap_address
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace virtualization_exception_information_address
@@ -846,8 +864,8 @@ namespace virtualization_exception_information_address
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace xss_exiting_bitmap
@@ -873,8 +891,8 @@ namespace xss_exiting_bitmap
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace encls_exiting_bitmap
@@ -900,8 +918,8 @@ namespace encls_exiting_bitmap
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 namespace tsc_multiplier
@@ -927,8 +945,8 @@ namespace tsc_multiplier
     inline void set_if_exists(value_type val, bool verbose = false)
     { set_vmcs_field_if_exists(val, addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 }

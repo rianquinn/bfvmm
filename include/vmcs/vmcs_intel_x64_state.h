@@ -22,7 +22,7 @@
 #ifndef VMCS_INTEL_X64_STATE_H
 #define VMCS_INTEL_X64_STATE_H
 
-#include <intrinsics/x86/common_x64.h>
+#include <bftypes.h>
 #include <intrinsics/x86/intel_x64.h>
 
 // -----------------------------------------------------------------------------
@@ -39,6 +39,11 @@
 #endif
 #else
 #define EXPORT_VMCS
+#endif
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
 #endif
 
 // -----------------------------------------------------------------------------
@@ -295,7 +300,11 @@ public:
     virtual bool is_guest()
     { return false; }
 
-    virtual void dump() const {}
+    virtual void dump(int level = 0, std::string *msg = nullptr) const
+    {
+        bfignored(level);
+        bfignored(msg);
+    }
 
 public:
 
@@ -305,5 +314,9 @@ public:
     vmcs_intel_x64_state(const vmcs_intel_x64_state &) = delete;
     vmcs_intel_x64_state &operator=(const vmcs_intel_x64_state &) = delete;
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

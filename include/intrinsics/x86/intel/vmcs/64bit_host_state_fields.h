@@ -62,7 +62,7 @@ namespace host_ia32_pat
     namespace pa0
     {
         constexpr const auto mask = 0x00000000000000FFULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "pa0";
 
         inline auto get()
@@ -86,7 +86,7 @@ namespace host_ia32_pat
         namespace memory_type
         {
             constexpr const auto mask = 0x0000000000000007ULL;
-            constexpr const auto from = 0;
+            constexpr const auto from = 0ULL;
             constexpr const auto name = "memory_type";
 
             inline auto get()
@@ -107,14 +107,14 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0x00000000000000F8ULL;
-            constexpr const auto from = 3;
+            constexpr const auto from = 3ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -135,22 +135,22 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            memory_type::dump(level);
-            reserved::dump(level);
+            dump_vmcs_nhex(level, msg);
+            memory_type::dump(level, msg);
+            reserved::dump(level, msg);
         }
     }
 
     namespace pa1
     {
         constexpr const auto mask = 0x000000000000FF00ULL;
-        constexpr const auto from = 8;
+        constexpr const auto from = 8ULL;
         constexpr const auto name = "pa1";
 
         inline auto get()
@@ -174,7 +174,7 @@ namespace host_ia32_pat
         namespace memory_type
         {
             constexpr const auto mask = 0x0000000000000700ULL;
-            constexpr const auto from = 8;
+            constexpr const auto from = 8ULL;
             constexpr const auto name = "memory_type";
 
             inline auto get()
@@ -195,14 +195,14 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0x000000000000F800ULL;
-            constexpr const auto from = 11;
+            constexpr const auto from = 11ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -223,22 +223,22 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            memory_type::dump(level);
-            reserved::dump(level);
+            dump_vmcs_nhex(level, msg);
+            memory_type::dump(level, msg);
+            reserved::dump(level, msg);
         }
     }
 
     namespace pa2
     {
         constexpr const auto mask = 0x0000000000FF0000ULL;
-        constexpr const auto from = 16;
+        constexpr const auto from = 16ULL;
         constexpr const auto name = "pa2";
 
         inline auto get()
@@ -262,7 +262,7 @@ namespace host_ia32_pat
         namespace memory_type
         {
             constexpr const auto mask = 0x0000000000070000ULL;
-            constexpr const auto from = 16;
+            constexpr const auto from = 16ULL;
             constexpr const auto name = "memory_type";
 
             inline auto get()
@@ -283,14 +283,14 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0x0000000000F80000ULL;
-            constexpr const auto from = 19;
+            constexpr const auto from = 19ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -311,22 +311,22 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            memory_type::dump(level);
-            reserved::dump(level);
+            dump_vmcs_nhex(level, msg);
+            memory_type::dump(level, msg);
+            reserved::dump(level, msg);
         }
     }
 
     namespace pa3
     {
         constexpr const auto mask = 0x00000000FF000000ULL;
-        constexpr const auto from = 24;
+        constexpr const auto from = 24ULL;
         constexpr const auto name = "pa3";
 
         inline auto get()
@@ -350,7 +350,7 @@ namespace host_ia32_pat
         namespace memory_type
         {
             constexpr const auto mask = 0x0000000007000000ULL;
-            constexpr const auto from = 24;
+            constexpr const auto from = 24ULL;
             constexpr const auto name = "memory_type";
 
             inline auto get()
@@ -371,14 +371,14 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0x00000000F8000000ULL;
-            constexpr const auto from = 27;
+            constexpr const auto from = 27ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -399,22 +399,22 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            memory_type::dump(level);
-            reserved::dump(level);
+            dump_vmcs_nhex(level, msg);
+            memory_type::dump(level, msg);
+            reserved::dump(level, msg);
         }
     }
 
     namespace pa4
     {
         constexpr const auto mask = 0x000000FF00000000ULL;
-        constexpr const auto from = 32;
+        constexpr const auto from = 32ULL;
         constexpr const auto name = "pa4";
 
         inline auto get()
@@ -438,7 +438,7 @@ namespace host_ia32_pat
         namespace memory_type
         {
             constexpr const auto mask = 0x0000000700000000ULL;
-            constexpr const auto from = 32;
+            constexpr const auto from = 32ULL;
             constexpr const auto name = "memory_type";
 
             inline auto get()
@@ -459,14 +459,14 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0x000000F800000000ULL;
-            constexpr const auto from = 35;
+            constexpr const auto from = 35ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -487,22 +487,22 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            memory_type::dump(level);
-            reserved::dump(level);
+            dump_vmcs_nhex(level, msg);
+            memory_type::dump(level, msg);
+            reserved::dump(level, msg);
         }
     }
 
     namespace pa5
     {
         constexpr const auto mask = 0x0000FF0000000000ULL;
-        constexpr const auto from = 40;
+        constexpr const auto from = 40ULL;
         constexpr const auto name = "pa5";
 
         inline auto get()
@@ -526,7 +526,7 @@ namespace host_ia32_pat
         namespace memory_type
         {
             constexpr const auto mask = 0x0000070000000000ULL;
-            constexpr const auto from = 40;
+            constexpr const auto from = 40ULL;
             constexpr const auto name = "memory_type";
 
             inline auto get()
@@ -547,14 +547,14 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0x0000F80000000000ULL;
-            constexpr const auto from = 43;
+            constexpr const auto from = 43ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -575,22 +575,22 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            memory_type::dump(level);
-            reserved::dump(level);
+            dump_vmcs_nhex(level, msg);
+            memory_type::dump(level, msg);
+            reserved::dump(level, msg);
         }
     }
 
     namespace pa6
     {
         constexpr const auto mask = 0x00FF000000000000ULL;
-        constexpr const auto from = 48;
+        constexpr const auto from = 48ULL;
         constexpr const auto name = "pa6";
 
         inline auto get()
@@ -614,7 +614,7 @@ namespace host_ia32_pat
         namespace memory_type
         {
             constexpr const auto mask = 0x0007000000000000ULL;
-            constexpr const auto from = 48;
+            constexpr const auto from = 48ULL;
             constexpr const auto name = "memory_type";
 
             inline auto get()
@@ -635,14 +635,14 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0x00F8000000000000ULL;
-            constexpr const auto from = 51;
+            constexpr const auto from = 51ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -663,22 +663,22 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            memory_type::dump(level);
-            reserved::dump(level);
+            dump_vmcs_nhex(level, msg);
+            memory_type::dump(level, msg);
+            reserved::dump(level, msg);
         }
     }
 
     namespace pa7
     {
         constexpr const auto mask = 0xFF00000000000000ULL;
-        constexpr const auto from = 56;
+        constexpr const auto from = 56ULL;
         constexpr const auto name = "pa7";
 
         inline auto get()
@@ -702,7 +702,7 @@ namespace host_ia32_pat
         namespace memory_type
         {
             constexpr const auto mask = 0x0700000000000000ULL;
-            constexpr const auto from = 56;
+            constexpr const auto from = 56ULL;
             constexpr const auto name = "memory_type";
 
             inline auto get()
@@ -723,14 +723,14 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
         namespace reserved
         {
             constexpr const auto mask = 0xF800000000000000ULL;
-            constexpr const auto from = 59;
+            constexpr const auto from = 59ULL;
             constexpr const auto name = "reserved";
 
             inline auto get()
@@ -751,29 +751,29 @@ namespace host_ia32_pat
             inline void set_if_exists(value_type val, bool verbose = false)
             { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-            inline void dump(int level)
-            { dump_vmcs_subnhex(level); }
+            inline void dump(int level, std::string *msg = nullptr)
+            { dump_vmcs_subnhex(level, msg); }
         }
 
-        inline void dump(int level)
+        inline void dump(int level, std::string *msg = nullptr)
         {
-            dump_vmcs_nhex(level);
-            memory_type::dump(level);
-            reserved::dump(level);
+            dump_vmcs_nhex(level, msg);
+            memory_type::dump(level, msg);
+            reserved::dump(level, msg);
         }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        pa0::dump(level);
-        pa1::dump(level);
-        pa2::dump(level);
-        pa3::dump(level);
-        pa4::dump(level);
-        pa5::dump(level);
-        pa6::dump(level);
-        pa7::dump(level);
+        dump_vmcs_nhex(level, msg);
+        pa0::dump(level, msg);
+        pa1::dump(level, msg);
+        pa2::dump(level, msg);
+        pa3::dump(level, msg);
+        pa4::dump(level, msg);
+        pa5::dump(level, msg);
+        pa6::dump(level, msg);
+        pa7::dump(level, msg);
     }
 }
 
@@ -800,7 +800,7 @@ namespace host_ia32_efer
     namespace sce
     {
         constexpr const auto mask = 0x0000000000000001ULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "sce";
 
         inline auto is_enabled()
@@ -839,14 +839,23 @@ namespace host_ia32_efer
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace lme
     {
         constexpr const auto mask = 0x0000000000000100ULL;
-        constexpr const auto from = 8;
+        constexpr const auto from = 8ULL;
         constexpr const auto name = "lme";
 
         inline auto is_enabled()
@@ -885,14 +894,23 @@ namespace host_ia32_efer
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace lma
     {
         constexpr const auto mask = 0x0000000000000400ULL;
-        constexpr const auto from = 10;
+        constexpr const auto from = 10ULL;
         constexpr const auto name = "lma";
 
         inline auto is_enabled()
@@ -931,14 +949,23 @@ namespace host_ia32_efer
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace nxe
     {
         constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11;
+        constexpr const auto from = 11ULL;
         constexpr const auto name = "nxe";
 
         inline auto is_enabled()
@@ -977,14 +1004,23 @@ namespace host_ia32_efer
         inline void disable_if_exists(bool verbose = false)
         { clear_vmcs_field_bit_if_exists(addr, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subbool(level); }
+        inline void set(bool val)
+        { val ? enable() : disable(); }
+
+        inline auto set(value_type field, bool val)
+        { return val ? enable(field) : disable(field); }
+
+        inline void set_if_exists(bool val, bool verbose = false)
+        { val ? enable_if_exists(verbose) : disable_if_exists(verbose); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subbool(level, msg); }
     }
 
     namespace reserved
     {
         constexpr const auto mask = 0xFFFFFFFFFFFFF2FEULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
         constexpr const auto name = "reserved";
 
         inline auto get()
@@ -1005,18 +1041,18 @@ namespace host_ia32_efer
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        sce::dump(level);
-        lme::dump(level);
-        lma::dump(level);
-        nxe::dump(level);
-        reserved::dump(level);
+        dump_vmcs_nhex(level, msg);
+        sce::dump(level, msg);
+        lme::dump(level, msg);
+        lma::dump(level, msg);
+        nxe::dump(level, msg);
+        reserved::dump(level, msg);
     }
 }
 
@@ -1043,7 +1079,7 @@ namespace host_ia32_perf_global_ctrl
     namespace reserved
     {
         constexpr const auto mask = 0xFFFFFFF8FFFFFFFCULL;
-        constexpr const auto from = 0;
+        constexpr const auto from = 0ULL;
 
         inline auto get()
         { return get_bits(get_vmcs_field(addr, name, exists()), mask) >> from; }
@@ -1063,14 +1099,14 @@ namespace host_ia32_perf_global_ctrl
         inline void set_if_exists(value_type val, bool verbose = false)
         { set_vmcs_field_bits_if_exists(val, addr, mask, from, name, verbose, exists()); }
 
-        inline void dump(int level)
-        { dump_vmcs_subnhex(level); }
+        inline void dump(int level, std::string *msg = nullptr)
+        { dump_vmcs_subnhex(level, msg); }
     }
 
-    inline void dump(int level)
+    inline void dump(int level, std::string *msg = nullptr)
     {
-        dump_vmcs_nhex(level);
-        reserved::dump(level);
+        dump_vmcs_nhex(level, msg);
+        reserved::dump(level, msg);
     }
 }
 

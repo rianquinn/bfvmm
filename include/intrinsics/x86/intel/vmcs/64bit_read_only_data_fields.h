@@ -56,8 +56,8 @@ namespace guest_physical_address
     inline auto get_if_exists(bool verbose = false)
     { return get_vmcs_field_if_exists(addr, name, verbose, exists()); }
 
-    inline void dump(int level)
-    { dump_vmcs_nhex(level); }
+    inline void dump(int level, std::string *msg = nullptr)
+    { dump_vmcs_nhex(level, msg); }
 }
 
 }

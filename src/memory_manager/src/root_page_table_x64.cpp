@@ -263,10 +263,13 @@ root_pt() noexcept
     static std::unique_ptr<root_page_table_x64> rpt;
 
     if (!rpt) {
-        rpt = std::make_unique<root_page_table_x64>(true);
 
-        try {
-            for (const auto &md : g_mm->descriptors()) {
+        guard_exceptions([&] {
+
+            rpt = std::make_unique<root_page_table_x64>(true);
+
+            for (const auto &md : g_mm->descriptors())
+            {
                 auto attr = memory_attr::invalid;
 
                 if (md.type == (MEMORY_TYPE_R | MEMORY_TYPE_W)) {
@@ -278,13 +281,7 @@ root_pt() noexcept
 
                 rpt->map_4k(md.virt, md.phys, attr);
             }
-        }
-        catch (std::exception &e) {
-            rpt.reset();
-
-            bferror << "failed to construct root page tables: " << e.what() << bfendl;
-            root_page_table_terminate();
-        }
+        });
     }
 
     return rpt.get();

@@ -105,10 +105,12 @@ vmxon_intel_x64::check_ia32_vmx_cr0_fixed_msr()
         throw std::logic_error("invalid cr0");
     }
 
-    bfdebug_pass(1, "check cr0 is valid");
-    bfdebug_subnhex(1, "cr0", cr0);
-    bfdebug_subnhex(1, "ia32_vmx_cr0_fixed0", ia32_vmx_cr0_fixed0);
-    bfdebug_subnhex(1, "ia32_vmx_cr0_fixed1", ia32_vmx_cr0_fixed1);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "check cr0 is valid", msg);
+        bfdebug_subnhex(1, "cr0", cr0, msg);
+        bfdebug_subnhex(1, "ia32_vmx_cr0_fixed0", ia32_vmx_cr0_fixed0, msg);
+        bfdebug_subnhex(1, "ia32_vmx_cr0_fixed1", ia32_vmx_cr0_fixed1, msg);
+    });
 }
 
 void
@@ -122,10 +124,12 @@ vmxon_intel_x64::check_ia32_vmx_cr4_fixed_msr()
         throw std::logic_error("invalid cr4");
     }
 
-    bfdebug_pass(1, "check cr4 is valid");
-    bfdebug_subnhex(1, "cr4", cr4);
-    bfdebug_subnhex(1, "ia32_vmx_cr4_fixed0", ia32_vmx_cr4_fixed0);
-    bfdebug_subnhex(1, "ia32_vmx_cr4_fixed1", ia32_vmx_cr4_fixed1);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "check cr4 is valid", msg);
+        bfdebug_subnhex(1, "cr4", cr4, msg);
+        bfdebug_subnhex(1, "ia32_vmx_cr4_fixed0", ia32_vmx_cr4_fixed0, msg);
+        bfdebug_subnhex(1, "ia32_vmx_cr4_fixed1", ia32_vmx_cr4_fixed1, msg);
+    });
 }
 
 void
@@ -139,8 +143,10 @@ vmxon_intel_x64::check_ia32_feature_control_msr()
     intel_x64::msrs::ia32_feature_control::enable_vmx_outside_smx::enable();
     intel_x64::msrs::ia32_feature_control::lock_bit::enable();
 
-    bfdebug_pass(1, "vmx feature controls enable vmx outside smx enabled");
-    bfdebug_pass(1, "vmx feature controls lock bit enabled");
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "vmx feature controls enable vmx outside smx enabled", msg);
+        bfdebug_pass(1, "vmx feature controls lock bit enabled", msg);
+    });
 }
 
 void
@@ -165,17 +171,21 @@ vmxon_intel_x64::create_vmxon_region()
     gsl::span<uint32_t> id{m_vmxon_region.get(), 1024};
     id[0] = gsl::narrow<uint32_t>(intel_x64::msrs::ia32_vmx_basic::revision_id::get());
 
-    bfdebug_pass(1, "create vmxon region");
-    bfdebug_subnhex(1, "virt address", m_vmxon_region.get());
-    bfdebug_subnhex(1, "phys address", m_vmxon_region_phys);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "create vmxon region", msg);
+        bfdebug_subnhex(1, "virt address", m_vmxon_region.get(), msg);
+        bfdebug_subnhex(1, "phys address", m_vmxon_region_phys, msg);
+    });
 }
 
 void
 vmxon_intel_x64::release_vmxon_region() noexcept
 {
-    bfdebug_pass(1, "release vmxon region");
-    bfdebug_subnhex(1, "virt address", m_vmxon_region.get());
-    bfdebug_subnhex(1, "phys address", m_vmxon_region_phys);
+    bfdebug_transaction(1, [&](std::string * msg) {
+        bfdebug_pass(1, "release vmxon region", msg);
+        bfdebug_subnhex(1, "virt address", m_vmxon_region.get(), msg);
+        bfdebug_subnhex(1, "phys address", m_vmxon_region_phys, msg);
+    });
 
     m_vmxon_region.reset();
     m_vmxon_region_phys = 0;
@@ -221,7 +231,7 @@ vmxon_intel_x64::execute_vmxoff()
     { m_vmxon_enabled = false; });
 
     if (!m_vmxon_enabled) {
-        bferror << "execute_vmxoff: vmx operation already disabled" << bfendl;
+        bfalert_info(0, "execute_vmxoff: vmx operation already disabled");
         return;
     }
 

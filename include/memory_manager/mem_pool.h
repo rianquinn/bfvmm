@@ -80,7 +80,7 @@ template<size_t total_size, size_t block_shift>
 class mem_pool
 {
     static_assert(total_size > 0, "total size must be larger than 0");
-    static_assert(total_size % (1 << block_shift) == 0, "total size must be a multiple of block size");
+    static_assert(total_size % (1ULL << block_shift) == 0, "total size must be a multiple of block size");
     static_assert((MAX_PAGE_SHIFT >= block_shift) &&(block_shift > 0), "block shift must be larger than 0");
 
 public:

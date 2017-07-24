@@ -27,10 +27,6 @@
 #include <bfdebug.h>
 #include <vmcs/vmcs_intel_x64_state.h>
 
-extern tss_x64 g_tss;
-extern gdt_x64 g_gdt;
-extern idt_x64 g_idt;
-
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
@@ -45,6 +41,11 @@ extern idt_x64 g_idt;
 #endif
 #else
 #define EXPORT_VMCS
+#endif
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
 #endif
 
 // -----------------------------------------------------------------------------
@@ -94,117 +95,107 @@ public:
     { return m_rflags; }
 
     gdt_x64::integer_pointer gdt_base() const override
-    { return g_gdt.base(); }
+    { return m_gdt.base(); }
     idt_x64::integer_pointer idt_base() const override
-    { return g_idt.base(); }
+    { return m_idt.base(); }
 
     gdt_x64::size_type gdt_limit() const override
-    { return g_gdt.limit(); }
+    { return m_gdt.limit(); }
     idt_x64::size_type idt_limit() const override
-    { return g_idt.limit(); }
+    { return m_idt.limit(); }
 
     gdt_x64::limit_type cs_limit() const override
-    { return g_gdt.limit(m_cs_index); }
+    { return m_gdt.limit(m_cs_index); }
     gdt_x64::limit_type ss_limit() const override
-    { return g_gdt.limit(m_ss_index); }
+    { return m_gdt.limit(m_ss_index); }
     gdt_x64::limit_type fs_limit() const override
-    { return g_gdt.limit(m_fs_index); }
+    { return m_gdt.limit(m_fs_index); }
     gdt_x64::limit_type gs_limit() const override
-    { return g_gdt.limit(m_gs_index); }
+    { return m_gdt.limit(m_gs_index); }
     gdt_x64::limit_type tr_limit() const override
-    { return g_gdt.limit(m_tr_index); }
+    { return m_gdt.limit(m_tr_index); }
 
     gdt_x64::access_rights_type cs_access_rights() const override
-    { return g_gdt.access_rights(m_cs_index); }
+    { return m_gdt.access_rights(m_cs_index); }
     gdt_x64::access_rights_type ss_access_rights() const override
-    { return g_gdt.access_rights(m_ss_index); }
+    { return m_gdt.access_rights(m_ss_index); }
     gdt_x64::access_rights_type fs_access_rights() const override
-    { return g_gdt.access_rights(m_fs_index); }
+    { return m_gdt.access_rights(m_fs_index); }
     gdt_x64::access_rights_type gs_access_rights() const override
-    { return g_gdt.access_rights(m_gs_index); }
+    { return m_gdt.access_rights(m_gs_index); }
     gdt_x64::access_rights_type tr_access_rights() const override
-    { return g_gdt.access_rights(m_tr_index); }
+    { return m_gdt.access_rights(m_tr_index); }
 
     gdt_x64::base_type cs_base() const override
-    { return g_gdt.base(m_cs_index); }
+    { return m_gdt.base(m_cs_index); }
     gdt_x64::base_type ss_base() const override
-    { return g_gdt.base(m_ss_index); }
+    { return m_gdt.base(m_ss_index); }
     gdt_x64::base_type fs_base() const override
-    { return g_gdt.base(m_fs_index); }
+    { return m_gdt.base(m_fs_index); }
     gdt_x64::base_type gs_base() const override
-    { return g_gdt.base(m_gs_index); }
+    { return m_gdt.base(m_gs_index); }
     gdt_x64::base_type tr_base() const override
-    { return g_gdt.base(m_tr_index); }
+    { return m_gdt.base(m_tr_index); }
 
     intel_x64::msrs::value_type ia32_pat_msr() const override
     { return m_ia32_pat_msr; }
     intel_x64::msrs::value_type ia32_efer_msr() const override
     { return m_ia32_efer_msr; }
 
-    void dump() const override
+    void dump(int level = 0, std::string *msg = nullptr) const override
     {
-        bfdebug << "----------------------------------------" << bfendl;
-        bfdebug << "- vmcs_intel_x64_vmm_state dump        -" << bfendl;
-        bfdebug << "----------------------------------------" << bfendl;
+        bferror_lnbr(level, msg);
+        bferror_info(level, "vmcs_intel_x64_vmm_state", msg);
+        bferror_brk1(level, msg);
 
-        bfdebug << bfendl;
-        bfdebug << "segment selectors:" << bfendl;
-        bfdebug << "    - m_cs: " << view_as_pointer(m_cs) << bfendl;
-        bfdebug << "    - m_ss: " << view_as_pointer(m_ss) << bfendl;
-        bfdebug << "    - m_fs: " << view_as_pointer(m_fs) << bfendl;
-        bfdebug << "    - m_gs: " << view_as_pointer(m_gs) << bfendl;
-        bfdebug << "    - m_tr: " << view_as_pointer(m_tr) << bfendl;
+        bfdebug_info(level, "segment selectors", msg);
+        bfdebug_subnhex(level, "m_cs", m_cs, msg);
+        bfdebug_subnhex(level, "m_ss", m_ss, msg);
+        bfdebug_subnhex(level, "m_fs", m_fs, msg);
+        bfdebug_subnhex(level, "m_gs", m_gs, msg);
+        bfdebug_subnhex(level, "m_tr", m_tr, msg);
 
-        bfdebug << bfendl;
-        bfdebug << "segment base:" << bfendl;
-        bfdebug << "    - cs_base(): " << view_as_pointer(cs_base()) << bfendl;
-        bfdebug << "    - ss_base(): " << view_as_pointer(ss_base()) << bfendl;
-        bfdebug << "    - fs_base(): " << view_as_pointer(fs_base()) << bfendl;
-        bfdebug << "    - gs_base(): " << view_as_pointer(gs_base()) << bfendl;
-        bfdebug << "    - tr_base(): " << view_as_pointer(tr_base()) << bfendl;
+        bfdebug_info(level, "segment base", msg);
+        bfdebug_subnhex(level, "cs_base()", cs_base(), msg);
+        bfdebug_subnhex(level, "ss_base()", ss_base(), msg);
+        bfdebug_subnhex(level, "fs_base()", fs_base(), msg);
+        bfdebug_subnhex(level, "gs_base()", gs_base(), msg);
+        bfdebug_subnhex(level, "tr_base()", tr_base(), msg);
 
-        bfdebug << bfendl;
-        bfdebug << "segment limit:" << bfendl;
-        bfdebug << "    - cs_limit(): " << view_as_pointer(cs_limit()) << bfendl;
-        bfdebug << "    - ss_limit(): " << view_as_pointer(ss_limit()) << bfendl;
-        bfdebug << "    - fs_limit(): " << view_as_pointer(fs_limit()) << bfendl;
-        bfdebug << "    - gs_limit(): " << view_as_pointer(gs_limit()) << bfendl;
-        bfdebug << "    - tr_limit(): " << view_as_pointer(tr_limit()) << bfendl;
+        bfdebug_info(level, "segment limit", msg);
+        bfdebug_subnhex(level, "cs_limit()", cs_limit(), msg);
+        bfdebug_subnhex(level, "ss_limit()", ss_limit(), msg);
+        bfdebug_subnhex(level, "fs_limit()", fs_limit(), msg);
+        bfdebug_subnhex(level, "gs_limit()", gs_limit(), msg);
+        bfdebug_subnhex(level, "tr_limit()", tr_limit(), msg);
 
-        bfdebug << bfendl;
-        bfdebug << "segment acess rights:" << bfendl;
-        bfdebug << "    - cs_access_rights(): " << view_as_pointer(cs_access_rights()) << bfendl;
-        bfdebug << "    - ss_access_rights(): " << view_as_pointer(ss_access_rights()) << bfendl;
-        bfdebug << "    - fs_access_rights(): " << view_as_pointer(fs_access_rights()) << bfendl;
-        bfdebug << "    - gs_access_rights(): " << view_as_pointer(gs_access_rights()) << bfendl;
-        bfdebug << "    - tr_access_rights(): " << view_as_pointer(tr_access_rights()) << bfendl;
+        bfdebug_info(level, "segment access rights", msg);
+        bfdebug_subnhex(level, "cs_access_rights()", cs_access_rights(), msg);
+        bfdebug_subnhex(level, "ss_access_rights()", ss_access_rights(), msg);
+        bfdebug_subnhex(level, "fs_access_rights()", fs_access_rights(), msg);
+        bfdebug_subnhex(level, "gs_access_rights()", gs_access_rights(), msg);
+        bfdebug_subnhex(level, "tr_access_rights()", tr_access_rights(), msg);
 
-        bfdebug << bfendl;
-        bfdebug << "registers:" << bfendl;
-        bfdebug << "    - m_cr0: " << view_as_pointer(m_cr0) << bfendl;
-        bfdebug << "    - m_cr3: " << view_as_pointer(m_cr3) << bfendl;
-        bfdebug << "    - m_cr4: " << view_as_pointer(m_cr4) << bfendl;
+        bfdebug_info(level, "registers", msg);
+        bfdebug_subnhex(level, "m_cr0", m_cr0, msg);
+        bfdebug_subnhex(level, "m_cr3", m_cr3, msg);
+        bfdebug_subnhex(level, "m_cr4", m_cr4, msg);
 
-        bfdebug << bfendl;
-        bfdebug << "flags:" << bfendl;
-        bfdebug << "    - m_rflags: " << view_as_pointer(m_rflags) << bfendl;
+        bfdebug_info(level, "flags", msg);
+        bfdebug_subnhex(level, "m_rflags", m_rflags, msg);
 
-        bfdebug << bfendl;
-        bfdebug << "gdt/idt:" << bfendl;
-        bfdebug << "    - g_gdt.base(): " << view_as_pointer(g_gdt.base()) << bfendl;
-        bfdebug << "    - g_gdt.limit(): " << view_as_pointer(g_gdt.limit()) << bfendl;
-        bfdebug << "    - g_idt.base(): " << view_as_pointer(g_idt.base()) << bfendl;
-        bfdebug << "    - g_idt.limit(): " << view_as_pointer(g_idt.limit()) << bfendl;
+        bfdebug_info(level, "gdt/idt", msg);
+        bfdebug_subnhex(level, "m_gdt.base()", m_gdt.base(), msg);
+        bfdebug_subnhex(level, "m_gdt.limit()", m_gdt.limit(), msg);
+        bfdebug_subnhex(level, "m_idt.base()", m_idt.base(), msg);
+        bfdebug_subnhex(level, "m_idt.limit()", m_idt.limit(), msg);
 
-        bfdebug << bfendl;
-        bfdebug << "model specific registers:" << bfendl;
-        bfdebug << "    - m_ia32_pat_msr: " << view_as_pointer(m_ia32_pat_msr) << bfendl;
-        bfdebug << "    - m_ia32_efer_msr: " << view_as_pointer(m_ia32_efer_msr) << bfendl;
-
-        bfdebug << bfendl;
+        bfdebug_info(level, "msrs", msg);
+        bfdebug_subnhex(level, "m_ia32_pat_msr", m_ia32_pat_msr, msg);
+        bfdebug_subnhex(level, "m_ia32_efer_msr", m_ia32_efer_msr, msg);
     }
 
-private:
+protected:
 
     x64::segment_register::value_type m_cs{0};
     x64::segment_register::value_type m_ss{0};
@@ -227,6 +218,12 @@ private:
     intel_x64::msrs::value_type m_ia32_pat_msr{0};
     intel_x64::msrs::value_type m_ia32_efer_msr{0};
 
+    tss_x64 m_tss{};
+    std::unique_ptr<gsl::byte[]> m_ist1;
+
+    gdt_x64 m_gdt{512};
+    idt_x64 m_idt{256};
+
 public:
 
     vmcs_intel_x64_vmm_state(vmcs_intel_x64_vmm_state &&) noexcept = delete;
@@ -235,5 +232,9 @@ public:
     vmcs_intel_x64_vmm_state(const vmcs_intel_x64_vmm_state &) = delete;
     vmcs_intel_x64_vmm_state &operator=(const vmcs_intel_x64_vmm_state &) = delete;
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

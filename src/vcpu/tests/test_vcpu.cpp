@@ -20,48 +20,16 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <catch/catch.hpp>
-
 #include <vcpu/vcpu.h>
-#include <debug_ring/debug_ring.h>
 
 TEST_CASE("vcpu: invalid_id")
 {
-    CHECK_THROWS(std::make_unique<vcpu>(vcpuid::reserved, nullptr));
-}
-
-TEST_CASE("vcpu: null_debug_ring")
-{
-    CHECK_NOTHROW(std::make_unique<vcpu>(0, nullptr));
+    CHECK_THROWS(std::make_unique<vcpu>(vcpuid::reserved));
 }
 
 TEST_CASE("vcpu: valid")
 {
-    auto dr = std::unique_ptr<debug_ring>(nullptr);
-    CHECK_NOTHROW(std::make_unique<vcpu>(0, std::move(dr)));
-}
-
-TEST_CASE("vcpu: write_empty_string")
-{
-    char rb[DEBUG_RING_SIZE];
-    debug_ring_resources_t *drr = nullptr;
-    auto &&vc = std::make_unique<vcpu>(0);
-
-    vc->write("");
-    get_drr(0, &drr);
-
-    CHECK(debug_ring_read(drr, static_cast<char *>(rb), DEBUG_RING_SIZE) == 0);
-}
-
-TEST_CASE("vcpu: write_hello_world")
-{
-    char rb[DEBUG_RING_SIZE];
-    debug_ring_resources_t *drr = nullptr;
-    auto &&vc = std::make_unique<vcpu>(0);
-
-    vc->write("hello world");
-    get_drr(0, &drr);
-
-    CHECK(debug_ring_read(drr, static_cast<char *>(rb), DEBUG_RING_SIZE) == 11);
+    CHECK_NOTHROW(std::make_unique<vcpu>(0));
 }
 
 TEST_CASE("vcpu: init_null_attr")

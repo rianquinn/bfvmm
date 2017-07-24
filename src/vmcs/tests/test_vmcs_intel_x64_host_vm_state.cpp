@@ -75,31 +75,33 @@ std::vector<gdt_x64::segment_descriptor_type> test_gdt = {
     0xFF7FFFFFFFFFFFFF
 };
 
-std::vector<idt_x64::interrupt_descriptor_type> test_idt = { 0x0 };
+std::vector<idt_x64::interrupt_descriptor_type> test_idt{512};
 
 void
 setup_gdt()
 {
+    auto limit = test_gdt.size() * sizeof(gdt_x64::segment_descriptor_type);
+
     test_gdtr.base = &test_gdt.at(0);
-    test_gdtr.limit = gsl::narrow_cast<gdt_reg_x64_t::limit_type>(test_gdt.size() *
-                      sizeof(decltype(test_gdt)::value_type));
+    test_gdtr.limit = gsl::narrow_cast<gdt_reg_x64_t::limit_type>(limit);
 }
 
 void
 setup_idt()
 {
+    auto limit = test_idt.size() * sizeof(idt_x64::interrupt_descriptor_type);
+
     test_idtr.base = &test_idt.at(0);
-    test_idtr.limit = gsl::narrow_cast<idt_reg_x64_t::limit_type>(test_idt.size() *
-                      sizeof(decltype(test_idt)::value_type));
+    test_idtr.limit = gsl::narrow_cast<idt_reg_x64_t::limit_type>(limit);
 }
 
-static uint16_t test_read_es() noexcept { return test_es;}
-static uint16_t test_read_cs() noexcept { return test_cs;}
-static uint16_t test_read_ss() noexcept { return test_ss;}
-static uint16_t test_read_ds() noexcept { return test_ds;}
-static uint16_t test_read_fs() noexcept { return test_fs;}
-static uint16_t test_read_gs() noexcept { return test_gs;}
-static uint16_t test_read_tr() noexcept { return test_tr;}
+static uint16_t test_read_es() noexcept { return test_es; }
+static uint16_t test_read_cs() noexcept { return test_cs; }
+static uint16_t test_read_ss() noexcept { return test_ss; }
+static uint16_t test_read_ds() noexcept { return test_ds; }
+static uint16_t test_read_fs() noexcept { return test_fs; }
+static uint16_t test_read_gs() noexcept { return test_gs; }
+static uint16_t test_read_tr() noexcept { return test_tr; }
 static uint16_t test_read_ldtr() noexcept { return test_ldtr; }
 
 static void test_write_es(uint16_t val) noexcept { test_es = val; }
@@ -178,6 +180,9 @@ setup_intrinsics(MockRepository &mocks)
     mocks.OnCallFunc(_write_msr).Do(test_write_msr);
 
     mocks.OnCallFunc(_cpuid_eax).Do(test_cpuid_eax);
+
+    setup_gdt();
+    setup_idt();
 }
 
 TEST_CASE("vmcs: host_vm_state")
@@ -258,7 +263,6 @@ TEST_CASE("vmcs: host_vm_state_gdt_base")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    setup_gdt();
 
     vmcs_intel_x64_host_vm_state state{};
     CHECK(state.gdt_base() == bfrcast(gdt_x64::integer_pointer, test_gdtr.base));
@@ -268,7 +272,6 @@ TEST_CASE("vmcs: host_vm_state_idt_base")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    setup_idt();
 
     vmcs_intel_x64_host_vm_state state{};
     CHECK(state.idt_base() == bfrcast(gdt_x64::integer_pointer, test_idtr.base));
@@ -278,7 +281,6 @@ TEST_CASE("vmcs: host_vm_state_gdt_limit")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    setup_gdt();
 
     vmcs_intel_x64_host_vm_state state{};
     CHECK(state.gdt_limit() == test_gdtr.limit);
@@ -288,17 +290,13 @@ TEST_CASE("vmcs: host_vm_state_idt_limit")
 {
     MockRepository mocks;
     setup_intrinsics(mocks);
-    setup_idt();
 
     vmcs_intel_x64_host_vm_state state{};
     CHECK(state.idt_limit() == test_idtr.limit);
 }
 
-
 TEST_CASE("vmcs: host_vm_state_es_limit")
 {
-    setup_gdt();
-
     SECTION("es_limit == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -322,8 +320,6 @@ TEST_CASE("vmcs: host_vm_state_es_limit")
 
 TEST_CASE("vmcs: host_vm_state_cs_limit")
 {
-    setup_gdt();
-
     SECTION("cs_limit == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -347,8 +343,6 @@ TEST_CASE("vmcs: host_vm_state_cs_limit")
 
 TEST_CASE("vmcs: host_vm_state_ss_limit")
 {
-    setup_gdt();
-
     SECTION("ss_limit == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -372,8 +366,6 @@ TEST_CASE("vmcs: host_vm_state_ss_limit")
 
 TEST_CASE("vmcs: host_vm_state_ds_limit")
 {
-    setup_gdt();
-
     SECTION("ds_limit == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -397,8 +389,6 @@ TEST_CASE("vmcs: host_vm_state_ds_limit")
 
 TEST_CASE("vmcs: host_vm_state_fs_limit")
 {
-    setup_gdt();
-
     SECTION("fs_limit == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -422,8 +412,6 @@ TEST_CASE("vmcs: host_vm_state_fs_limit")
 
 TEST_CASE("vmcs: host_vm_state_gs_limit")
 {
-    setup_gdt();
-
     SECTION("gs_limit == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -447,8 +435,6 @@ TEST_CASE("vmcs: host_vm_state_gs_limit")
 
 TEST_CASE("vmcs: host_vm_state_tr_limit")
 {
-    setup_gdt();
-
     SECTION("tr_limit == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -472,8 +458,6 @@ TEST_CASE("vmcs: host_vm_state_tr_limit")
 
 TEST_CASE("vmcs: host_vm_state_ldtr_limit")
 {
-    setup_gdt();
-
     SECTION("ldtr_limit == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -497,8 +481,6 @@ TEST_CASE("vmcs: host_vm_state_ldtr_limit")
 
 TEST_CASE("vmcs: host_vm_state_es_access_rights")
 {
-    setup_gdt();
-
     SECTION("es_access_rights unusable") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -522,8 +504,6 @@ TEST_CASE("vmcs: host_vm_state_es_access_rights")
 
 TEST_CASE("vmcs: host_vm_state_cs_access_rights")
 {
-    setup_gdt();
-
     SECTION("cs_access_rights unusable") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -547,8 +527,6 @@ TEST_CASE("vmcs: host_vm_state_cs_access_rights")
 
 TEST_CASE("vmcs: host_vm_state_ss_access_rights")
 {
-    setup_gdt();
-
     SECTION("ss_access_rights unusable") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -572,8 +550,6 @@ TEST_CASE("vmcs: host_vm_state_ss_access_rights")
 
 TEST_CASE("vmcs: host_vm_state_ds_access_rights")
 {
-    setup_gdt();
-
     SECTION("ds_access_rights unusable") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -597,8 +573,6 @@ TEST_CASE("vmcs: host_vm_state_ds_access_rights")
 
 TEST_CASE("vmcs: host_vm_state_fs_access_rights")
 {
-    setup_gdt();
-
     SECTION("fs_access_rights unusable") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -622,8 +596,6 @@ TEST_CASE("vmcs: host_vm_state_fs_access_rights")
 
 TEST_CASE("vmcs: host_vm_state_gs_access_rights")
 {
-    setup_gdt();
-
     SECTION("gs_access_rights unusable") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -647,8 +619,6 @@ TEST_CASE("vmcs: host_vm_state_gs_access_rights")
 
 TEST_CASE("vmcs: host_vm_state_tr_access_rights")
 {
-    setup_gdt();
-
     SECTION("tr_access_rights unusable") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -672,8 +642,6 @@ TEST_CASE("vmcs: host_vm_state_tr_access_rights")
 
 TEST_CASE("vmcs: host_vm_state_ldtr_access_rights")
 {
-    setup_gdt();
-
     SECTION("ldtr_access_rights unusable") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -697,8 +665,6 @@ TEST_CASE("vmcs: host_vm_state_ldtr_access_rights")
 
 TEST_CASE("vmcs: host_vm_state_es_base")
 {
-    setup_gdt();
-
     SECTION("es_base == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -722,8 +688,6 @@ TEST_CASE("vmcs: host_vm_state_es_base")
 
 TEST_CASE("vmcs: host_vm_state_cs_base")
 {
-    setup_gdt();
-
     SECTION("cs_base == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -747,8 +711,6 @@ TEST_CASE("vmcs: host_vm_state_cs_base")
 
 TEST_CASE("vmcs: host_vm_state_ss_base")
 {
-    setup_gdt();
-
     SECTION("ss_base == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -772,8 +734,6 @@ TEST_CASE("vmcs: host_vm_state_ss_base")
 
 TEST_CASE("vmcs: host_vm_state_ds_base")
 {
-    setup_gdt();
-
     SECTION("ds_base == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -797,8 +757,6 @@ TEST_CASE("vmcs: host_vm_state_ds_base")
 
 TEST_CASE("vmcs: host_vm_state_fs_base")
 {
-    setup_gdt();
-
     SECTION("fs_base == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -822,8 +780,6 @@ TEST_CASE("vmcs: host_vm_state_fs_base")
 
 TEST_CASE("vmcs: host_vm_state_gs_base")
 {
-    setup_gdt();
-
     SECTION("gs_base == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -847,8 +803,6 @@ TEST_CASE("vmcs: host_vm_state_gs_base")
 
 TEST_CASE("vmcs: host_vm_state_tr_base")
 {
-    setup_gdt();
-
     SECTION("tr_base == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
@@ -872,8 +826,6 @@ TEST_CASE("vmcs: host_vm_state_tr_base")
 
 TEST_CASE("vmcs: host_vm_state_ldtr_base")
 {
-    setup_gdt();
-
     SECTION("ldtr_base == 0") {
         MockRepository mocks;
         setup_intrinsics(mocks);
