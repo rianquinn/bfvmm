@@ -124,13 +124,13 @@ TEST_CASE("vmcs: vmm_state_gdt_not_setup")
     CHECK(g_gdt.base(2) == 0);
     CHECK(g_gdt.base(3) == 0);
     CHECK(g_gdt.base(4) == 0);
-    CHECK(g_gdt.base(5) == bfrcast(gdt_x64::integer_pointer, &g_tss));
+    CHECK(g_gdt.base(5) != 0);
 
     CHECK(g_gdt.limit(1) == 0xFFFFFFFF);
     CHECK(g_gdt.limit(2) == 0xFFFFFFFF);
     CHECK(g_gdt.limit(3) == 0xFFFFFFFF);
     CHECK(g_gdt.limit(4) == 0xFFFFFFFF);
-    CHECK(g_gdt.limit(5) == sizeof(g_tss));
+    CHECK(g_gdt.limit(5) == sizeof(tss_x64));
 }
 
 TEST_CASE("vmcs: vmm_state_segment_registers")

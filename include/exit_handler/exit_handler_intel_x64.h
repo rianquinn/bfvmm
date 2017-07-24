@@ -202,6 +202,10 @@ public:
 
     exit_handler_intel_x64(const exit_handler_intel_x64 &) = delete;
     exit_handler_intel_x64 &operator=(const exit_handler_intel_x64 &) = delete;
+
+
+
+    uint64_t isr_num;
 };
 
 #endif
