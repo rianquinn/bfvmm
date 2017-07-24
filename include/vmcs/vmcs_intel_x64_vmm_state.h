@@ -27,7 +27,6 @@
 #include <bfdebug.h>
 #include <vmcs/vmcs_intel_x64_state.h>
 
-extern tss_x64 g_tss;
 extern gdt_x64 g_gdt;
 extern idt_x64 g_idt;
 
@@ -226,6 +225,9 @@ private:
 
     intel_x64::msrs::value_type m_ia32_pat_msr{0};
     intel_x64::msrs::value_type m_ia32_efer_msr{0};
+
+    tss_x64 m_tss{};
+    std::unique_ptr<gsl::byte[]> m_ist1;
 
 public:
 

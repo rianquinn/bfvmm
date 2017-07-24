@@ -118,7 +118,8 @@ vcpu_intel_x64::run(user_data *data)
         }
 
         auto ___ = gsl::on_failure([&] {
-            if (this->is_host_vm_vcpu()) {
+            if (this->is_host_vm_vcpu())
+            {
                 m_vmxon->stop();
             }
         });

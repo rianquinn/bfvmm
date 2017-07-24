@@ -50,6 +50,10 @@ else()
 
 endif()
 
+list(APPEND SOURCES
+    isr_x64.cpp
+)
+
 add_library(bfvmm_intrinsics SHARED ${SOURCES})
 add_library(bfvmm_intrinsics_static STATIC ${SOURCES})
 

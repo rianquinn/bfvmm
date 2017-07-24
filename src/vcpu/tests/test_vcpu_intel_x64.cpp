@@ -33,6 +33,38 @@
 
 using namespace x64;
 
+gdt_reg_x64_t test_gdtr{};
+idt_reg_x64_t test_idtr{};
+
+std::vector<gdt_x64::segment_descriptor_type> test_gdt = {
+    0x0,
+    0xFF7FFFFFFFFFFFFF,
+    0xFF7FFFFFFFFFFFFF,
+    0xFF7FFFFFFFFFFFFF,
+    0xFF7FFFFFFFFFFFFF,
+    0xFF7FFFFFFFFFFFFF
+};
+
+std::vector<idt_x64::interrupt_descriptor_type> test_idt{512};
+
+void
+setup_gdt()
+{
+    auto limit = test_gdt.size() * sizeof(gdt_x64::segment_descriptor_type);
+
+    test_gdtr.base = &test_gdt.at(0);
+    test_gdtr.limit = gsl::narrow_cast<gdt_reg_x64_t::limit_type>(limit);
+}
+
+void
+setup_idt()
+{
+    auto limit = test_idt.size() * sizeof(idt_x64::interrupt_descriptor_type);
+
+    test_idtr.base = &test_idt.at(0);
+    test_idtr.limit = gsl::narrow_cast<idt_reg_x64_t::limit_type>(limit);
+}
+
 static uint64_t
 test_read_msr(uint32_t addr) noexcept
 { bfignored(addr); return 0; }
@@ -59,11 +91,11 @@ test_read_dr7() noexcept
 
 static void
 test_read_gdt(gdt_reg_x64_t *gdt_reg) noexcept
-{ bfignored(gdt_reg); }
+{ *gdt_reg = test_gdtr; }
 
 static void
 test_read_idt(idt_reg_x64_t *idt_reg) noexcept
-{ bfignored(idt_reg); }
+{ *idt_reg = test_idtr; }
 
 static uint16_t
 test_read_es() noexcept
@@ -136,6 +168,9 @@ setup_intrinsics(MockRepository &mocks)
     mocks.OnCallFunc(_cpuid_ecx).Do(test_cpuid_ecx);
     mocks.OnCallFunc(_cpuid_eax).Do(test_cpuid_eax);
     mocks.OnCallFunc(_cpuid_subebx).Do(test_cpuid_subebx);
+
+    setup_gdt();
+    setup_idt();
 }
 
 static auto

@@ -65,7 +65,7 @@ private_init_vmm(uint64_t arg) noexcept
 
         g_vcm->run_vcpu(arg, pre_run_vcpu(arg));
 
-        bfdebug_nhex(0, "success: host os is now in a vm", arg);
+        bfdebug_info(0, "success: host os is" bfcolor_green " now " bfcolor_end "in a vm");
         return ENTRY_SUCCESS;
     });
 }
@@ -86,7 +86,7 @@ private_fini_vmm(uint64_t arg) noexcept
         g_vcm->hlt_vcpu(arg, pre_hlt_vcpu(arg));
         g_vcm->delete_vcpu(arg, pre_delete_vcpu(arg));
 
-        bfdebug_nhex(0, "success: host os is not in a vm", arg);
+        bfdebug_info(0, "success: host os is" bfcolor_red " not " bfcolor_end "in a vm");
         return ENTRY_SUCCESS;
     });
 }

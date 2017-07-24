@@ -57,24 +57,6 @@ exit_handler_entry:
     mov [gs:0x068], r14
     mov [gs:0x070], r15
 
-%ifdef AVX_SUPPORTED
-    vmovdqa [gs:0x0C0], ymm0
-    vmovdqa [gs:0x0E0], ymm1
-    vmovdqa [gs:0x100], ymm2
-    vmovdqa [gs:0x120], ymm3
-    vmovdqa [gs:0x140], ymm4
-    vmovdqa [gs:0x160], ymm5
-    vmovdqa [gs:0x180], ymm6
-    vmovdqa [gs:0x1A0], ymm7
-    vmovdqa [gs:0x1C0], ymm8
-    vmovdqa [gs:0x1E0], ymm9
-    vmovdqa [gs:0x200], ymm10
-    vmovdqa [gs:0x220], ymm11
-    vmovdqa [gs:0x240], ymm12
-    vmovdqa [gs:0x260], ymm13
-    vmovdqa [gs:0x280], ymm14
-    vmovdqa [gs:0x2A0], ymm15
-%else
     movdqa [gs:0x0C0], xmm0
     movdqa [gs:0x0E0], xmm1
     movdqa [gs:0x100], xmm2
@@ -83,7 +65,6 @@ exit_handler_entry:
     movdqa [gs:0x160], xmm5
     movdqa [gs:0x180], xmm6
     movdqa [gs:0x1A0], xmm7
-%endif
 
     mov rdi, VMCS_GUEST_RIP
     vmread [gs:0x078], rdi

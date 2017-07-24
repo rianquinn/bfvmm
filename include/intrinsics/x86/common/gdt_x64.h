@@ -203,7 +203,7 @@ class EXPORT_INTRINSICS gdt_x64
 public:
 
     using size_type = uint16_t;
-    using index_type = uint16_t;
+    using index_type = uint32_t;
     using integer_pointer = uintptr_t;
     using base_type = uint64_t;
     using limit_type = uint32_t;
@@ -229,7 +229,7 @@ public:
             m_gdt_reg.base = x64::gdt::base::get();
             m_gdt_reg.limit = x64::gdt::limit::get();
 
-            std::copy_n(m_gdt_reg.base, m_gdt_reg.limit >> 3, std::back_inserter(m_gdt));
+            std::copy_n(m_gdt_reg.base, (m_gdt_reg.limit >> 3) + 1, std::back_inserter(m_gdt));
         });
     }
 
@@ -238,7 +238,7 @@ public:
     /// Creates a new GDT, with size defining the number of descriptors
     /// in the GDT.
     ///
-    /// @ensures none
+    /// @expects none
     /// @ensures none
     ///
     /// @param size number of entries in the GDT
@@ -248,7 +248,7 @@ public:
     {
         guard_exceptions([&] {
             m_gdt_reg.base = m_gdt.data();
-            m_gdt_reg.limit = gsl::narrow_cast<size_type>(size << 3);
+            m_gdt_reg.limit = gsl::narrow_cast<size_type>((size << 3) - 1);
         });
     }
 
@@ -559,7 +559,7 @@ public:
         return access_rights_15_12 | access_rights_07_00;
     }
 
-PRIVATE
+    PRIVATE
 
     gdt_reg_x64_t m_gdt_reg;
     std::vector<segment_descriptor_type> m_gdt;
