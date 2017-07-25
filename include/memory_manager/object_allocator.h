@@ -57,7 +57,7 @@ constexpr const auto objtpool_size = 255U;
 /// - page stack: this stack stores a pool of page_t structures, each page_t
 ///   stores the address of a single page that can be used as a backing store
 ///   for allocations. Each page_stack_t can store 255 page_t structures before
-///   anther page_stack_t has to be pushed to the stack
+///   another page_stack_t has to be pushed to the stack
 /// - object stack: this stack stores all of the object_t structures. Each
 ///   object_stack_t can store 255 object_t structures before another
 ///   object_stack_t has to be pushed to the stack.
@@ -73,7 +73,7 @@ constexpr const auto objtpool_size = 255U;
 /// variable is defined. If set to 0, the max number of pages used by the
 /// allocator is unlimited, and all allocations are performed dynamically
 /// on demand. If set to > 0, all memory is pre-allocated and limited. Also
-/// not that the max_pages refers to the total number of pages allocated for
+/// note that the max_pages refers to the total number of pages allocated for
 /// use by the page pool, and does not include pages allocated for the
 /// allocator's internal stacks.
 ///
@@ -90,7 +90,7 @@ constexpr const auto objtpool_size = 255U;
 ///   free them.
 ///
 /// Performance Notes:
-/// - Like most allocators, if the object size if small, the overhead of
+/// - Like most allocators, if the object size is small, the overhead of
 ///   managing this memory is large and vice versa.
 /// - When compared to GCC's default allocators for std::list, this allocator
 ///   outperforms with respect to both allocations, and deallocations with both
@@ -536,7 +536,7 @@ public:
 /// the one provided as is needed. For example, std containers will not only
 /// have to allocate T, but they will also have to allocate nodes. In some
 /// cases, the implementation will embed T in the node resulting in only a
-/// single allocation for each T, that is large than T (consisting of the
+/// single allocation for each T, that is larger than T (consisting of the
 /// extra overhead needed by the container). For this reason, max_pages should
 /// be chosen to not only account for sizeof(T) but also a potential
 /// sizeof(node<T>).
