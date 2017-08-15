@@ -113,7 +113,9 @@ void __oa_free(S *ptr)
 ///   anther page_stack_t has to be pushed to the stack
 /// - object stack: this stack stores all of the object_t structures. Each
 ///   object_stack_t can store 255 object_t structures before another
-///   object_stack_t has to be pushed to the stack.
+///   object_stack_t has to be pushed to the stack. Each object_t stores an
+///   address within a page_t's allocated page, in other words, the object_t
+///   struct actually stores the memory that is given out by the allocator.
 /// - free / used stacks: these stacks store the object_t structures based
 ///   on their current status. object_t structures ready to be allocated are
 ///   stored on the free stack, while object_t structures already allocated
@@ -126,7 +128,7 @@ void __oa_free(S *ptr)
 /// variable is defined. If set to 0, the max number of pages used by the
 /// allocator is unlimited, and all allocations are performed dynamically
 /// on demand. If set to > 0, all memory is pre-allocated and limited. Also
-/// not that the max_pages refers to the total number of pages allocated for
+/// note that the max_pages refers to the total number of pages allocated for
 /// use by the page pool, and does not include pages allocated for the
 /// allocator's internal stacks.
 ///
@@ -139,7 +141,7 @@ void __oa_free(S *ptr)
 /// to deallocate with a new allocator at a later time. For this reason, the
 /// destructor does not cleanup memory if the allocator is still holding onto
 /// objects in the used list. This object allocator should not be used with
-/// Windows MSVC as a result.
+/// Windows MSVC as a result as it will leak memory.
 ///
 /// Limitations:
 /// - The largest allocation that can take place is a page. Any
@@ -149,9 +151,15 @@ void __oa_free(S *ptr)
 ///   previously allocated using the same allocator, corruption is likely.
 ///
 /// TODO:
-/// - Currently the allocator's internal stacks always grow. In the future,
-///   code should be added to detect when resources are no longer needed and
-///   free them.
+/// - For this allocator to be used by the SLAB allocator, the SLAB will have
+///   to know what the size of the allocation was based on the address alone.
+///   To overcome this issue, the maximum allocation should be a page - 64
+///   bytes. The last 64 bytes should be used to store the size of the
+///   allocations in that page, plus some reserved bytes for future use.
+///   This way, the SLAB can mask off the address to calculate the location of
+///   the size of this object without having to do a lookup. The size function
+///   should be implemented as a static function that can get the size of an
+///   object given any address (likely unsafe, but effective).
 ///
 /// Performance Notes:
 /// - Like most allocators, if the object size is small, the overhead of
@@ -169,15 +177,14 @@ void __oa_free(S *ptr)
 ///   implementation does have a different set of goals including thread-safety.
 /// - When compared to Windows, this allocator is significantly better than
 ///   the default implementation. It should be noted that Windows leaks
-///   memory, and allocates additional, nonpage aligned memory in addition to
-///   the memory allocated by this allocator.
+///   memory.
 ///
 class basic_object_allocator
 {
 public:
 
-    using pointer = void *;                                ///< Alloc::pointer
-    using size_type = std::size_t;                         ///< Alloc::size_type
+    using pointer = void *;             ///< Alloc::pointer
+    using size_type = std::size_t;      ///< Alloc::size_type
 
 public:
 
@@ -244,7 +251,7 @@ public:
     {
         if (GSL_UNLIKELY(this != &other)) {
 
-            if (num_used() != 0) {
+            if (m_used_stack_top != nullptr) {
                 bfalert_nhex(0, "basic_object_allocator leaked memory", num_used());
             }
             else {
@@ -764,8 +771,8 @@ public:
     /// @param args the arguments for the new object to be constructed with.
     ///
     template <typename U, typename... Args>
-    void construct(U *p, Args&&... args)
-    { ::new(reinterpret_cast<void *>(p)) U(std::forward<Args>(args)...); }
+    void construct(U *p, Args &&... args)
+    { ::new (reinterpret_cast<void *>(p)) U(std::forward<Args>(args)...); }
 
     /// Destory
     ///
